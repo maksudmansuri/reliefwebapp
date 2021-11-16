@@ -1097,40 +1097,38 @@ class manageAppointmentView(SuccessMessageMixin,View):
 
 def verifybooking(request):
     if request.POST:
-        try:
-            id = request.POST.get("booking_id")
-            booking = Booking.objects.get(id=id)
-            order = get_object_or_404(Orders,booking_for=1,bookingandlabtest=id)
-            phoneotp = get_object_or_404(phoneOPTforoders, order_id = order)
-            user = phoneotp.user #mobile is a user     
+        # try:
+        id = request.POST.get("booking_id")
+        booking = Booking.objects.get(id=id)
+        order = get_object_or_404(Orders,booking_for=1,bookingandlabtest=id)
+        phoneotp = get_object_or_404(phoneOPTforoders, order_id = order)
+        user = phoneotp.user #mobile is a user     
+    
+        postotp=request.POST.get("otp")
         
-            postotp=request.POST.get("otp")
+        showtime = datetime.now(tz=IST)
+        key = phoneotp.otp  # Generating Key
+        if postotp == str(key):  # Verifying the OTP
+            order.is_booking_Verified = True
+            order.save()
+            phoneotp.validated = True          
+            phoneotp.save()
+            is_taken= True
+            booking.is_taken=is_taken
+            booking.status="taken"        
+            booking.taken_date= showtime
+            booking.save()
             
-            showtime = datetime.now(tz=IST)
-            key = phoneotp.otp  # Generating Key
-            print(key)
-            print(postotp)
-            if postotp == str(key):  # Verifying the OTP
-                order.is_booking_Verified = True
-                order.save()
-                phoneotp.validated = True          
-                phoneotp.save()
-                is_taken= True
-                booking.is_taken=is_taken
-                booking.status="taken"        
-                booking.taken_date= showtime
-                booking.save()
-                
-                treatmentreliefpetient = TreatmentReliefPetient(patient=booking.patient.patients,booking=booking,status="CHECKUPED",amount_paid=booking.service.service_charge,is_active=True)
-                treatmentreliefpetient.save()
+            treatmentreliefpetient = TreatmentReliefPetient(patient=booking.patient.patients,booking=booking,status="CHECKUPED",amount_paid=booking.service.service_charge,is_active=True)
+            treatmentreliefpetient.save()
 
-                notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.patient,booking=booking)
-                notification.save()
-                print(notification)
-                messages.add_message(request,messages.SUCCESS,"booking have been Verified Successfuly")
-            else:
-                messages.add_message(request,messages.ERROR,"OTP does not matched")
-            return HttpResponseRedirect(reverse("manage_appointment"))
+            notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.patient,booking=booking)
+            notification.save()
+            print(notification)
+            messages.add_message(request,messages.SUCCESS,"booking have been Verified Successfuly")
+        else:
+            messages.add_message(request,messages.ERROR,"OTP does not matched")
+        return HttpResponseRedirect(reverse("manage_appointment"))
             #emila message for email verification
             # current_site=get_current_site(request) #fetch domain    
             # email_subject='Confirmation email for you booking order',
@@ -1153,9 +1151,9 @@ def verifybooking(request):
             # email_message.send() #send Email
             # messages.add_message(request,messages.SUCCESS,"Sucessfully Singup Please Verify Your Account Email")  
            
-        except Exception as e:
-            messages.add_message(request,messages.ERROR,e)
-            return HttpResponse(e)  # False Call    
+        # except Exception as e:
+        #     messages.add_message(request,messages.ERROR,e)
+        #     return HttpResponse(e)  # False Call    
         
 """
 Update appointment yet not implemented will think more that

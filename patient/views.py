@@ -845,9 +845,9 @@ def BookanAppointmentForHomeVisit(request):
             print(doctorid,hospitalstaffdoctor,serviceid,service,date,time)
             if someone:
                 forsome = get_object_or_404(ForSome,id=someone)
-                booking = Booking(patient = request.user,for_whom=forsome,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge,booking_type="HOME")
+                booking = Booking(patient = request.user,for_whom=forsome,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge,booking_type="HOME",status="booked")
             else:
-                booking = Booking(patient = request.user,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge,booking_type="HOME")
+                booking = Booking(patient = request.user,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge,booking_type="HOME",status="booked")
             booking.save()
             print("booking saved")
             order = Orders(patient=request.user,service=service,amount=service.service_charge,booking_for=1,bookingandlabtest=booking.id,status=1)
