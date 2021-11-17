@@ -1218,7 +1218,7 @@ class ReliefPatientViewsProfile(SuccessMessageMixin,DetailView):
             labtests =LabTest.objects.filter(slot__patient=treatmentreliefpetient.patient.admin,is_active=True,slot__send_to_doctor=True)
             print(labtests)
         except Exception as e:
-            messages.add_message(request,messages.ERROR,"user not available")
+            messages.add_message(request,messages.ERROR,e)
             return HttpResponseRedirect(reverse("manage_relief_patient"))        
         param={'hospital':hospital,'treatmentreliefpetient':treatmentreliefpetient,'oldbooking':oldbooking,'hospitaldoctors':hospitaldoctors,'serviceandcharges':serviceandcharges,'patientfiles':patientfiles,'labtests':labtests}
         return render(request,"hospital/patient_profile.html",param)        
