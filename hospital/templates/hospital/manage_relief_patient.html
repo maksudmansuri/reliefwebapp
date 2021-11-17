@@ -47,9 +47,9 @@
                                         <td>
                                         {% comment %} <img src="assets/images/xs/avatar3.jpg" class="avatar  rounded-circle me-2" alt="profile-image"> {% endcomment %}
                                         <span><a href="{% url 'relief_patient_profile' book.patient.id %}">{{book.booking.patient.name_title}} {{book.patient.admin.first_name}} {{book.patient.admin.last_name}}</a></span></td>
-                                        <td>{{book.booking.patient.patients.dob}}</td>
-                                        <td>{{book.booking.patient.patients.bloodgroup}}</td>
-                                        <td>{{book.booking.patient.patients.gender}}</td>
+                                        <td>{{book.patient.dob}}</td>
+                                        <td>{{book.patient.bloodgroup}}</td>
+                                        <td>{{book.patient.gender}}</td>
                                         <td><h6><span class="badge {% if book.status == "CHECKUPED" %}bg-primary{% endif %}{% if  book.status == "Admit" %}bg-info{% endif %}{% if  book.status == "Discharge" %}bg-success{% endif %}">{{book.status}}</span></td></h6>
                                          <td>
                                         <div class="btn-group" role="group" aria-label="Basic outlined example">
