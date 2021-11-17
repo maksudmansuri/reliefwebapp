@@ -46,7 +46,7 @@
                                         <td>{{book.id}} | P- {{book.patient.id}}</td>
                                         <td>
                                         {% comment %} <img src="assets/images/xs/avatar3.jpg" class="avatar  rounded-circle me-2" alt="profile-image"> {% endcomment %}
-                                        <span><a href="{% url 'relief_patient_profile' book.patient.id %}">{{book.booking.patient.name_title}} {{book.booking.patient.patients.first_name}} {{book.booking.patient.patients.last_name}}</a></span></td>
+                                        <span><a href="{% url 'relief_patient_profile' book.patient.id %}">{{book.booking.patient.name_title}} {{book.patient.admin.first_name}} {{book.patient.admin.last_name}}</a></span></td>
                                         <td>{{book.booking.patient.patients.dob}}</td>
                                         <td>{{book.booking.patient.patients.bloodgroup}}</td>
                                         <td>{{book.booking.patient.patients.gender}}</td>
