@@ -275,7 +275,7 @@
                                             <td>{{book.id}}</td>
                                             <td>
                                             {% comment %} <img src="assets/images/xs/avatar3.jpg" class="avatar  rounded-circle me-2" alt="profile-image"> {% endcomment %}
-                                            <span><a href="{% url 'relief_patient_profile' book.patient.id %}">{{book.booking.applied_date}} {{book.booking.applied_time}}</a></span></td>
+                                            <span><a href="{% url 'relief_patient_profile' book.id %}">{{book.booking.applied_date}} {{book.booking.applied_time}}</a></span></td>
                                             <td>{{book.amount_paid}}</td>
                                             <td><h6><span class="badge {% if book.status == "CHECKUPED" %}bg-primary{% endif %}{% if  book.status == "Admit" %}bg-info{% endif %}{% if  book.status == "Discharge" %}bg-success{% endif %}">{{book.status}}</span></td></h6>
                                             <td>
