@@ -218,4 +218,3 @@ EMAIL_PORT = 587
 
 
 django_heroku.settings(locals())
-

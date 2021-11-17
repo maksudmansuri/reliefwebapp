@@ -106,33 +106,33 @@ class Booking(models.Model):
     #     return lefttime
 
 
-@receiver(post_save, sender=Booking)
-def booking_status_handler(sender,instance,created, **kwargs):
-    if not created:
-        channel_layer = get_channel_layer()
-        data = {}
-        data['booking_id'] = instance.id
-        data['amount'] = instance.amount
-        data['status'] = instance.status
+# @receiver(post_save, sender=Booking)
+# def booking_status_handler(sender,instance,created, **kwargs):
+#     if not created:
+#         channel_layer = get_channel_layer()
+#         data = {}
+#         data['booking_id'] = instance.id
+#         data['amount'] = instance.amount
+#         data['status'] = instance.status
 
-        progress_pecentage = 0
-        if instance.status == "":
-            progress_pecentage = 20
-        if instance.status == "accepted":
-            progress_pecentage = 50
-        if instance.status == "taken":
-            progress_pecentage = 100
-        if instance.status == "rejected":
-            progress_pecentage = 100
+#         progress_pecentage = 0
+#         if instance.status == "":
+#             progress_pecentage = 20
+#         if instance.status == "accepted":
+#             progress_pecentage = 50
+#         if instance.status == "taken":
+#             progress_pecentage = 100
+#         if instance.status == "rejected":
+#             progress_pecentage = 100
 
-        data['progress'] = progress_pecentage
+#         data['progress'] = progress_pecentage
 
-        async_to_sync(channel_layer.group_send)(
-            'booking_%s' % instance.id,{
-                'type' : 'booking_status',
-                'value' : json.dumps(data)
-            }
-        )
+#         async_to_sync(channel_layer.group_send)(
+#             'booking_%s' % instance.id,{
+#                 'type' : 'booking_status',
+#                 'value' : json.dumps(data)
+#             }
+#         )
 
 class ReBooking(models.Model):
     id                      =           models.AutoField(primary_key=True)
