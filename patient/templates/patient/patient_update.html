@@ -41,7 +41,7 @@
                                 <div class="progress-bar bg-warning" role="progressbar" id="progressbar" data-width="0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="display:none; width: 0%;height:30px;border-radius:10px;">0%</div>
                                 </div>
                         </div>
-                        </div>
+                        </div> 
                         <form id="myform" method="post" enctype="multipart/form-data" action="">
                         {% csrf_token %}
                         <div class="tab-content">                     
@@ -57,7 +57,7 @@
                                                     <br> 
                                                 <img alt="Avatar" src="{{patient.profile_pic}}" {% if patient.profile_pic %}style="width:70%;"{% else %} style="width:70%;display:none" {% endif %}class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
                                             </div>
-                                            
+                                             
                                              <div class="col-md-8">
                                                 <label for="profile_pic" class="form-label">Select Profile Pic *</label>
                                                 <input type="file" class="form-control select_media" name="profile_pic">
@@ -80,7 +80,7 @@
                                                 <label for="last_name" class="form-label">Last Name *</label>
                                                 <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" value="{{request.user.last_name}}" required>
                                             </div>
-                                             <div class="col-md-6">
+                                            <div class="col-md-6">
                                                 <label for="Username" class="form-label">Username *</label>
                                                 <input type="text" class="form-control" id="username" name="username" placeholder="Username"  required  disabled="disabled" required value="{{request.user.username}}" >
                                             </div>
@@ -91,7 +91,7 @@
                                             <div class="col-md-6">
                                                 <label for="alternate_mobile" class="form-label">Alternate Phone</label>
                                                 <input type="tel" class="form-control" id="alternate_mobile" name="alternate_mobile" placeholder="Hopital Name" value="{{patient.alternate_mobile}}">
-                                            </div>
+                                            </div> 
                                             <div class="col-md-6">
                                                 <label for="email" class="form-label">Email *</label>
                                                 <input type="email" class="form-control" id="email" name="email" placeholder="email"  required value="{{request.user.email}}" disabled="disabled">

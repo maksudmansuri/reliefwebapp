@@ -24,12 +24,14 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('404',accViews.FourZeroFour , name='404'),
     path('admin/', admin.site.urls),
-    path('', accViews.dologin,name='dologin'),
+    
     path('radmin/', include("radmin.urls")),
-    path('front', include("front.urls")),
+    path('', include("front.urls")),
     path('accounts/', include("accounts.urls")),
     path('hospital/', include("hospital.urls")),
-    path('patient/', include("patient.urls")),
+    
+    path('patient/', include("patient.urls")),   
+
     path('lab/', include("lab.urls")),
     path('pharmacy/', include("pharmacy.urls")),
 
@@ -52,5 +54,5 @@ urlpatterns = [
 
     path('reset/done',auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'),name='password_reset_complete'),
     
-    
+     
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,7 +1,7 @@
 
 from chat.models import Notification
 from patient.models import LabTest, Orders, Slot, phoneOPTforoders
-from lab.models import Medias
+from lab.models import HomeVisitCharges, Medias
 from hospital.models import ServiceAndCharges
 from django.core.files.storage import FileSystemStorage
 from accounts.models import CustomUser, Labs, OPDTime
@@ -163,12 +163,17 @@ class LabUpdateViews(SuccessMessageMixin,UpdateView):
 
 class ServicesViews(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):
-        try:
-            lab = Labs.objects.get(admin=request.user)
-            serviceandcharges = ServiceAndCharges.objects.filter(user=request.user,is_active=True)
-        except Exception as e:
-            return HttpResponse(e)
-        param={'lab':lab,'serviceandcharges':serviceandcharges}
+        # try:
+        lab = Labs.objects.get(admin=request.user)
+        serviceandcharges = ServiceAndCharges.objects.filter(user=request.user,is_active=True)
+        cnt =HomeVisitCharges.objects.filter(lab = lab,is_active=True).count()
+        print(cnt)
+        home = ""
+        if cnt > 0:
+            home = HomeVisitCharges.objects.get(lab = lab,is_active=True)
+        # //except Exception as e:
+        #     pass
+        param={'lab':lab,'serviceandcharges':serviceandcharges,'home':home}
         return render(request,"lab/service_and_prices.html",param) 
 
     def post(self, request, *args, **kwargs):
@@ -184,6 +189,28 @@ class ServicesViews(SuccessMessageMixin,CreateView):
             messages.add_message(request,messages.ERROR,e)
             
         return HttpResponseRedirect(reverse("add_lab_services"))
+
+def HomeServicesViews(request):
+    if request.method == "POST":
+        service_charge = request.POST.get("service_charge")
+        lab_id = request.POST.get("lab_id")
+        lab = get_object_or_404(Labs,id=lab_id)
+        serviceandcharges = HomeVisitCharges(charges=service_charge,is_active=True,lab=lab)
+        serviceandcharges.save()
+        messages.add_message(request,messages.SUCCESS,"Successfully Added")
+    return HttpResponseRedirect(reverse("add_lab_services"))
+
+
+def HomeServicesUpdateViews(request):
+    if request.method == "POST":
+        homevisit_id = request.POST.get("homevisit_id")
+        service_charge = request.POST.get("service_charge")
+        print(service_charge)
+        serviceandcharges = get_object_or_404(HomeVisitCharges,id=homevisit_id)
+        serviceandcharges.charges=service_charge
+        serviceandcharges.save()
+        messages.add_message(request,messages.SUCCESS,"Successfully Update")
+    return HttpResponseRedirect(reverse("add_lab_services"))
 
 def UpdateServicesViews(request):
     if request.method == "POST":

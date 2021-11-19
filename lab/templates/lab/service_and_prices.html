@@ -15,7 +15,8 @@
                     class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
                     <h3 class="fw-bold mb-0">All Tests and Charges</h3>
                     <div class="col-auto d-flex w-sm-100">
-                        <button type="button" class="btn btn-primary btn-set-task w-sm-100 " data-bs-toggle="modal"
+                        <button type="button" class="btn btn-{% if home != ""%}secondary {% else %} primary{% endif %} btn-set-task w-sm-100 " data-bs-toggle="modal" data-bs-target="#{% if home != ""%}homechargeupdate{% else %}homecharge{% endif %}"><i class="icofont-plus-circle me-2 fs-6"></i>{% if home != ""%}Rs. {{home.charges}} Update{% else %} Add {% endif %} Home Visit Charges</button>
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100 " data-bs-toggle="modal" style="margin-left: 20px;"
                             data-bs-target="#depadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add Tests</button>
                         {% comment %} <button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;"
                             data-bs-toggle="modal" data-bs-target="#priceadd"><i
@@ -80,7 +81,76 @@
 
 {% endblock content %}
 {% block modal_fade %}
+<!-- Add Service and price-->
+<div class="modal fade" id="homecharge" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+        <div class="modal-content">
+            <form id="homechargeadd" method="post" action="{% url 'add_lab_homevisit' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depaddLabel">Add Home Charges</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
 
+                <div class="modal-body">
+                    <div class="deadline-form">
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-12">
+                                <label for="depone" class="form-label">Home Charges *</label>
+                                <input type="text" class="form-control" id="service_charge" name="service_charge" requried>
+                                <input type="hidden" id="lab_id" name="lab_id" value="{{lab.id}}">
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button>
+                    {% endcomment %}
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+
+        </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="homechargeupdate" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+        <div class="modal-content">
+            <form id="homechargeadd" method="post" action="{% url 'add_lab_homevisitupdate' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depaddLabel">Update Home Charges</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="deadline-form">
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-12">
+                                <label for="depone" class="form-label">Home Charges *</label>
+                                <input type="text" class="form-control" id="service_charge" name="service_charge" requried value="{{home.charges}}">
+                                <input type="hidden" id="homevisit_id" name="homevisit_id" value="{{home.id}}">
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button>
+                    {% endcomment %}
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+
+        </div>
+        </form>
+    </div>
+</div>
 
 <!-- Add Service and price-->
 <div class="modal fade" id="depadd" tabindex="-1" aria-hidden="true">
@@ -118,7 +188,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label for="depone" class="form-label">Service Charges *</label>
-                                <input type="text" class="form-control" id="service_charge" name="service_charge" requried>
+                                <input type="text" class="form-control" id="home_service" name="home_service" requried>
                             </div>
                         </div>
                     </div>
@@ -200,8 +270,7 @@
 {% block custom_js %}
 <script>
     // project data table
-   
-        
+         
 
 
     //submit form for add staff

@@ -1,0 +1,99 @@
+{% extends './blank-page.html' %}
+{% load static %}
+{% block content %}
+
+<div class="main-wrapper login-body">
+	<div class="login-wrapper">
+		<div class="container">
+			<div class="loginbox">
+				<div class="login-left">
+					<img class="img-fluid" src="{% static 'newstatic/admin/assets/img/logo-white.png' %} " alt="Logo">
+				</div> 
+				<div class="login-right">
+					<div class="login-right-wrap">
+						<h1>Login</h1>
+						<p class="account-subtitle">Access to our dashboard</p>
+
+						<form method="post">
+                            {% csrf_token %}
+							<div class="form-group">
+								<input class="form-control" type="text" placeholder="Enter Email or Mobiel Nunber" name="username">
+							</div>
+							<div class="form-group">
+								<input class="form-control" type="password" placeholder="***************" name="password" id="password">
+							</div>
+							<div class="form-group">
+								<button class="btn btn-primary w-100" type="submit">Login</button>
+							</div>
+							<div class="col-12">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" value="lsRememberMe" id="rememberMe">
+									<label class="form-check-label" for="flexCheckDefault">
+										Remember me
+									</label> 
+								</div>
+							</div>
+						</form>
+
+						<div class="text-center forgotpass"><a  href="{% url 'password_reset' %}">Forgot Password?</a></div>
+						<div class="login-or">
+							<span class="or-line"></span>
+							<span class="span-or">or</span>
+						</div>
+ 
+						<div class="social-login">
+							<span>Login with</span>
+							<a href="#" class="facebook"><i class="fa fa-facebook"></i></a><a href="#" class="google"><i
+									class="fa fa-google"></i></a>
+						</div>
+						<div class="text-center dont-have mt-4">
+							<span>Don't have an account yet? 
+								<a class="dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+									Sign up here
+								</a>
+								<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+									<li><a class="dropdown-item" href="{% url 'patientsingup' %}">As a Patient</a></li>
+									<li><a class="dropdown-item" href="{% url 'hospitalsingup' %}">As a Hospital</a></li>
+									{% comment %} <li><a class="dropdown-item" href="{% url 'doctorsingup' %}">As a Doctor</a></li> {% endcomment %}
+									<li><a class="dropdown-item" href="{% url 'labsingup' %}">As a Laboratory</a></li>
+									<li><a class="dropdown-item" href="{% url 'pharmacysingup' %}">As a Pharmacist</a></li>
+								</ul>
+								</span>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    const rmCheck = document.getElementById("rememberMe"),
+    emailInput = document.getElementById("username");
+    passwordInput = document.getElementById("password");
+
+    if (localStorage.checkbox && localStorage.checkbox !== "") {
+    rmCheck.setAttribute("checked", "checked");
+    emailInput.value = localStorage.username;
+    passwordInput.value = localStorage.password;
+    } else {
+    rmCheck.removeAttribute("checked");
+    emailInput.value = "";
+    passwordInput.value = "";
+    }
+
+    function lsRememberMe() {
+    if (rmCheck.checked && emailInput.value && passwordInput.value  !== "") {
+        localStorage.username = emailInput.value;
+        localStorage.password = passwordInput.value;
+        localStorage.checkbox = rmCheck.value;
+    } else {
+        localStorage.username = "";
+        localStorage.checkbox = "";
+    }
+    }
+</script>
+{% endblock custom_js %}

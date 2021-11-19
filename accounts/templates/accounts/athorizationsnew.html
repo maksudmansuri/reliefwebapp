@@ -1,0 +1,86 @@
+{% extends './blank-page.html' %}
+{% load static %}
+{% block custom_css %} 
+{% endblock custom_css %}
+{% block title %}Authorization Signup{% endblock title %}
+{% block content %}
+  
+	<div class="main-wrapper login-body">
+		<div class="login-wrapper">
+			<div class="container">
+				<div class="loginbox">
+					<div class="login-left">
+						<img class="img-fluid" src="{% static 'newstatic/admin/assets/img/logo-white.png' %} " alt="Logo">
+					</div>
+					<div class="login-right">
+						<div class="login-right-wrap">
+							<h1>Register</h1>
+							<p class="account-subtitle">Access to our dashboard</p>
+
+							<form method="post" action="{% url 'Authorizedsingup' %}">
+                            {% csrf_token %}
+								<div class="form-group">
+									<input class="form-control" type="text" placeholder="Username" name="username" id="username">
+								</div>
+								<div class="form-group">
+									<input class="form-control" type="email" placeholder="name@example.com" name="email" id="email">
+								</div>
+								<div class="form-group">
+									<input class="form-control" type="tel"  placeholder="9898******" name="phone" id="phone">
+								</div>
+								<div class="form-group">
+									<input class="form-control" type="password" placeholder="Password" name="password" id="password1">
+						 		</div>
+								<div class="form-group">
+									<input class="form-control" type="password" placeholder="Confirm Password" name="password2" id="password2">
+								</div>
+								<div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')">
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            I accept the <a href="#" title="Terms and Conditions">Terms and Conditions</a>
+                                        </label>
+                                    </div>
+                                </div>
+								<div class="form-group mb-0">
+									<button class="btn btn-primary w-100" disabled="disabled" value="check" id="acceptbtn" type="submit">Register</button>
+								</div>
+							</form>
+
+							<div class="login-or">
+								<span class="or-line"></span>
+								<span class="span-or">or</span>
+							</div>
+
+							<div class="social-login">
+								<span>Register with</span>
+								<a href="#" class="facebook"><i class="fa fa-facebook"></i></a><a href="#" class="google"><i
+										class="fa fa-google"></i></a>
+							</div>
+
+							<div class="text-center dont-have">Already have an account? <a href="{% url 'dologin' %}">Login</a></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+  
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    function checkedFunc(element1Id) {
+    
+        var myLayer = document.getElementById('acceptbtn');
+        var element1 = document.getElementById(element1Id);
+    if (element1.checked == true) {
+            myLayer.class = "submit";
+            myLayer.removeAttribute("disabled");
+    } else {
+            myLayer.class = "button:disabled";
+            myLayer.setAttribute("disabled","disabled");
+    };
+    }
+</script>
+{% endblock custom_js %}

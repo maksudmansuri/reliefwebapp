@@ -103,15 +103,15 @@ Personal Details of Patients
 """
 class patientdDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
-        try: 
+        try:  
             patient = get_object_or_404(Patients, admin=request.user.id)
 
-            if patient.fisrt_name and patient.last_name and patient.address and patient.city and patient.zip_Code and patient.state and patient.country and patient.dob and patient.profile_pic and patient.gender and patient.bloodgroup:
-                return render(request,"patient/index.html")            
-            else:
-                messages.add_message(request,messages.ERROR,"Some detail still Missing !")
+            # if patient.fisrt_name and patient.last_name and patient.address and patient.city and patient.zip_Code and patient.state and patient.country and patient.dob and patient.profile_pic and patient.gender and patient.bloodgroup:
+            return render(request,"patient/patient-dashboard.html")            
+            # else:
+            #     messages.add_message(request,messages.ERROR,"Some detail still Missing !")
             
-            return render(request,"patient/patient_update.html",{'patient':patient})
+            # return render(request,"patient/patient_update.html",{'patient':patient})
         except Exception as e:
             return HttpResponse(e)
     
@@ -124,12 +124,12 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
             return HttpResponse(e)
     
     def post(self,request, *agrs, **kwargs):
-        profile_pic = request.FILES.get('profile_pic')
+        profile_pic = request.FILES.get('profile_pic') 
         name_title = request.POST.get('name_title')
         alternate_mobile = request.POST.get('alternate_mobile')
         address = request.POST.get('address')
         city = request.POST.get('city')
-        zip_Code = request.POST.get('zip_Code')
+        zip_Code = request.POST.get('zip_Code') 
         print(zip_Code)
         state = request.POST.get('state')
         print(state)
@@ -144,7 +144,8 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
         print(age1)
         try:            
             user= request.user
-            user.patients.name_title=name_title
+            # user.patients.name_title=name_title
+            user.name_title=name_title
             user.patients.fisrt_name=user.first_name
             user.patients.last_name=user.last_name
             if profile_pic:

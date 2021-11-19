@@ -1,4 +1,5 @@
-from accounts.models import CustomUser
+from django.db.models.fields import AutoField
+from accounts.models import CustomUser, Labs
 from django.db import models
 
 # Create your models here.
@@ -15,4 +16,12 @@ class Medias(models.Model):
     updated_at              =           models.DateTimeField(auto_now_add=True)
     objects                 =           models.Manager()
 
-    
+class HomeVisitCharges(models.Model):
+    id                      =           models.AutoField(primary_key=True)
+    lab                    =           models.ForeignKey(Labs, on_delete=models.CASCADE)
+    charges                 =           models.FloatField(default=0,blank=True,null=True)
+    is_active               =           models.BooleanField(default=False)     
+    is_default              =           models.BooleanField(default=False)     
+    created_date            =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now_add=True)
+    objects                 =           models.Manager()

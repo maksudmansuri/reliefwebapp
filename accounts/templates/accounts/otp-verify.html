@@ -1,0 +1,124 @@
+{% extends './blank-page.html' %} 
+{% load static %}
+{% block custom_css %}
+<style>
+      input[type=number] {
+          height: 45px;
+          width: 65px;
+          font-size: 25px;
+          text-align: center;
+          border: 1px solid #000000;
+      }
+      input[type=number]::-webkit-inner-spin-button,
+      input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    </style>
+    <script>
+      function getCodeBoxElement(index) {
+        return document.getElementById('codeBox' + index);
+      }
+      function onKeyUpEvent(index, event) {
+        const eventCode = event.which || event.keyCode;
+        if (getCodeBoxElement(index).value.length === 1) {
+          if (index !== 4) {
+            getCodeBoxElement(index+ 1).focus();
+          } else {
+            getCodeBoxElement(index).blur();
+            // Submit code
+            console.log('submit code ');
+          }
+        }
+        if (eventCode === 8 && index !== 1) {
+          getCodeBoxElement(index - 1).focus();
+        }
+      }
+      function onFocusEvent(index) {
+        for (item = 1; item < index; item++) {
+          const currentElement = getCodeBoxElement(item);
+          if (!currentElement.value) {
+              currentElement.focus();
+              break;
+          }
+        }
+      }
+    </script>
+{% endblock custom_css %}
+    
+{% block content %}
+
+
+<div class="main-wrapper login-body">
+	<div class="login-wrapper">
+		<div class="container">
+			<div class="loginbox">
+				<div class="login-left">
+					<img class="img-fluid" src="{% static 'newstatic/admin/assets/img/logo-white.png' %} " alt="Logo">
+				</div> 
+				<div class="login-right">
+					<div class="login-right-wrap">
+						<h1>Mobile</h1>
+						<p class="account-subtitle">Access to our dashboard</p>
+
+						<form method="post" class="row g-1 p-3 p-md-4" action="{% url 'OTP_Gen' user.phone %}" method="post">
+                            {% csrf_token %}
+                                <div class="col">
+                                    <div class="mb-2">
+                                        <input class="form-control form-control-lg text-center"  id="codeBox1" type="tel" maxlength="1" onkeyup="onKeyUpEvent(1, event)" onfocus="onFocusEvent(1)" name="first" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-2">
+                                        <input class="form-control form-control-lg text-center" id="codeBox2" type="tel" maxlength="1" onkeyup="onKeyUpEvent(2, event)" onfocus="onFocusEvent(2)" name="second" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-2">
+                                        <input class="form-control form-control-lg text-center" id="codeBox3" type="tel" maxlength="1" onkeyup="onKeyUpEvent(3, event)" onfocus="onFocusEvent(3)" name="third" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-2">
+                                        <input class="form-control form-control-lg text-center" id="codeBox4" type="tel" maxlength="1" onkeyup="onKeyUpEvent(4, event)" onfocus="onFocusEvent(4)" name="forth" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 text-center mt-4">
+                                    <button title="submit"class="btn btn-primary w-100 text-uppercase">Verify {{user.otp}}</button>
+                                </div>
+                                <div class="col-12 text-center mt-4">
+                                    <span >Haven't received it? <a href="{% url 'resendOTP' user.phone %}">Resend a new code.</a></span>
+                                </div>
+						</form>
+
+						
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+                
+   
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    function checkedFunc(element1Id) {
+    
+        var myLayer = document.getElementById('acceptbtn');
+        var element1 = document.getElementById(element1Id);
+    if (element1.checked == true) {
+            myLayer.class = "submit";
+            myLayer.removeAttribute("disabled");
+    } else {
+            myLayer.class = "button:disabled";
+            myLayer.setAttribute("disabled","disabled");
+    };
+    }
+
+    
+</script>
+{% endblock custom_js %}

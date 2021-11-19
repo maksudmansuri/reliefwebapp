@@ -1,6 +1,8 @@
 
+from decimal import Context
 from typing import Counter
 from django.contrib.messages import views
+from django.core.files.storage import FileSystemStorage
 from django.db.models.signals import post_delete
 from django.http import request, response
 from django.http.response import HttpResponseRedirect
@@ -10,7 +12,9 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls.base import reverse_lazy, translate_url
 from django.views.generic.base import RedirectView, TemplateResponseMixin
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
+
+from accounts import profilePic
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login,logout,authenticate
@@ -25,7 +29,7 @@ from .utils import generate_token
 import base64
 import pyotp
 from django.core.exceptions import ObjectDoesNotExist
-from datetime import datetime
+from datetime import date, datetime, timedelta
 import random
 import http.client
 import ast
@@ -53,7 +57,7 @@ def verifyPhone(request,phone):
     except ObjectDoesNotExist:
         messages.add_message(request,messages.ERROR,"Mobile number does not Exits")
         return render(request,"accounts/OTPVerification.html")  # False Call
-    return render(request,"accounts/OTPVerification.html",{'user':user})  #  Call
+    return render(request,"accounts/otp-verify.html",{'user':user})  #  Call
 
 def resendOTP(request,phone):
     user = get_object_or_404(CustomUser,phone=phone)
@@ -118,15 +122,86 @@ def verifyOTP(request,phone):
         )
         print(message)
         email_message=EmailMessage(
-            email_subject,
+            email_subject, 
             message,
             settings.EMAIL_HOST_USER,
             [user.email]
         )#compose email
         print(email_message)
         email_message.send() #send Email
-        messages.add_message(request,messages.SUCCESS,"Sucessfully Singup Please Verify Your Account Email")        
-        return HttpResponseRedirect(reverse("dologin"))
+        messages.add_message(request,messages.SUCCESS,"Sucessfully Singup Please Verify Your Account Email")
+        if user is not None:
+            if user.is_active == True:
+                login(request,user)
+                # request.session['logged in']=True
+                if user.user_type=="1":
+                    if 'next' in request.POST:
+                        return redirect(request.POST.get('next'))
+                    # elif user.profile_pic:
+                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                    else:
+                        return HttpResponseRedirect(reverse('radmin_home'))
+                        # return HttpResponseRedirect(reverse('admin:index'))
+                if user.user_type=="2":
+                    if 'next' in request.POST:
+                        return redirect(request.POST.get('next'))
+                    # elif user.profile_pic:
+                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                    else: 
+                        return HttpResponseRedirect(reverse('hospital_dashboard'))
+                elif user.user_type=="3":
+                    if 'next' in request.POST:
+                        return redirect(request.POST.get('next'))
+                    # elif user.profile_pic:
+                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                    else:
+                        return HttpResponseRedirect(reverse('admin_home'))
+                elif user.user_type=="4":
+                    if 'next' in request.POST:
+                        return redirect(request.POST.get('next'))
+                    # elif user.profile_pic:
+                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                    # print(" i am here but not goinf inside1")
+                    # if user.profile_pic == None:
+                    #     print(" i am here but not goinf inside2")
+                    #     return HttpResponseRedirect(reverse('patientregisterstep1',kwargs={'user_id':user.id}))
+                    # elif user.first_name == None:
+                    #     print(" i am here but not goinf inside3")
+                    #     return HttpResponseRedirect(reverse('patientregisterstep2',kwargs={'user_id':user.id}))
+                    # elif user.patients.address == None:
+                    #     print(" i am here but not goinf inside4")
+                    #     return HttpResponseRedirect(reverse('patientregisterstep3',kwargs={'user_id':user.id}))
+                    else:
+                        return HttpResponseRedirect(reverse('patient_home'))
+                elif user.user_type=="5":
+                    if 'next' in request.POST:
+                        return redirect(request.POST.get('next'))
+                    # elif user.profile_pic:
+                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                    else:
+                        return HttpResponseRedirect(reverse('lab_home'))
+                elif user.user_type=="6":
+                    if 'next' in request.POST:
+                        return redirect(request.POST.get('next'))
+                    # elif user.profile_pic:
+                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                    else:
+                        return HttpResponseRedirect(reverse('pharmacy_home'))
+                else:
+                # For Djnago default Admin Login 
+                    return HttpResponseRedirect(reverse('admin:index'))
+                    
+                    # return RedirectView.as_view(url=reverse_lazy('admin:index'))
+                    # return HttpResponseRedirect(reverse('admin_home'))
+            else:
+                # message.add_message(request,messages.ERROR,"Please Verify Your Account First")
+                return redirect('/accounts/dologin')
+        else: 
+            # print(user.is_active)
+            # messages.add_message(request,messages.ERROR,"User Not Found you haved to Register First")
+            return redirect("dologin")
+       
+        # return HttpResponseRedirect(reverse("patientregisterstep1",kwargs={'user_id':user.id}))
         # return HttpResponseRedirect(reverse("dologin"))
 
 def dologin(request):
@@ -165,6 +240,13 @@ def dologin(request):
                         return redirect(request.POST.get('next'))
                     # elif user.profile_pic:
                     #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                    # print("hello",user.profile_pic,user.first_name,user.patients.address)
+                    # if user.profile_pic is None:
+                    #     return HttpResponseRedirect(reverse("patientregisterstep1",kwargs={'user_id':user.id}))
+                    # elif user.first_name is None:
+                    #     return HttpResponseRedirect(reverse('patientregisterstep2',kwargs={'user_id':user.id}))
+                    # elif user.patients.address is None:
+                    #     return HttpResponseRedirect(reverse('patientregisterstep3',kwargs={'user_id':user.id}))
                     else:
                         return HttpResponseRedirect(reverse('patient_home'))
                 elif user.user_type=="5":
@@ -194,12 +276,12 @@ def dologin(request):
             # print(user.is_active)
             # messages.add_message(request,messages.ERROR,"User Not Found you haved to Register First")
             return redirect("dologin")
-    return render(request,'accounts/dologin.html')
+    return render(request,'accounts/login.html')
        
 class HospitalSingup(SuccessMessageMixin,CreateView):
-    template_name="accounts/hospitalsingup.html"
-    model=CustomUser
-    fields=["first_name","last_name","email","phone","username","password"]
+    template_name="accounts/hospitalsingupnew.html"
+    model=CustomUser 
+    fields=["email","phone","username","password"]
     success_message = "Hospital User Created"  
     def form_valid(self,form):
         #Saving Custom User Object for Merchant User
@@ -228,7 +310,7 @@ class HospitalSingup(SuccessMessageMixin,CreateView):
         user.otp = str(key)
         user.save()
             # print('In validate phone :'+user.otp_session_id)
-        messages.add_message(self.request,messages.SUCCESS,"OTP sent successfully") 
+        messages.add_message(self.request,messages.SUCCESS,"OTP has been sent successfully") 
         return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
         # else:
         #     messages.add_message(self.request,messages.ERROR,"OTP sending Failed") 
@@ -254,24 +336,22 @@ class DoctorSingup(SuccessMessageMixin,CreateView):
         return HttpResponseRedirect(reverse("dologin"))
 
 class PatientSingup(SuccessMessageMixin,CreateView):
-    template_name="accounts/patientsingup.html"
+    template_name="accounts/patientsingupnew.html"
     model=CustomUser
-    fields=["first_name","last_name","email","phone","username","password"]
-    success_message = "Hospital User Created" 
-
+    fields=["email","phone","username","password"]
+    success_message = "Patient Account Created" 
+ 
     def form_valid(self,form):
         #Saving Custom User Object for Merchant User
-        print('i m here at Hospital singup')
         user=form.save(commit=False)
         user.user_type=4
         user.set_password(form.cleaned_data["password"])
-        print('just one step ahead save?')   
         user.counter += 1  # Update Counter At every Call
         user.is_active= True
         user.save() # Save the data
-        print('user saved!')  
         mobile= user.phone
         key = send_otp(mobile)
+        print("i am here")
         # keygen = generateKey()
         # key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
         # key = base64.b32encode((send_otp(mobile).encode()))
@@ -289,11 +369,119 @@ class PatientSingup(SuccessMessageMixin,CreateView):
         user.otp = str(key)
         user.save()
             # print('In validate phone :'+user.otp_session_id)
-        messages.add_message(self.request,messages.SUCCESS,"OTP sent successfully") 
+        messages.add_message(self.request,messages.SUCCESS,"OTP has been sent successfully") 
         return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
 
+class PatientSingupStep1(UpdateView):
+    def get(self, request, *args, **kwargs) :
+        user_id=kwargs['user_id']
+        user = get_object_or_404(CustomUser,id=user_id)
+        param = {'user':user}
+        return render(request,"accounts/patient-register-step1.html",param)
+
+    def post(self, request, *args, **kwargs) :
+        user_id=kwargs['user_id']
+        user = get_object_or_404(CustomUser,id=user_id)
+        profile_pic = request.FILES.get("profile_pic")
+        if profile_pic:
+            fs=FileSystemStorage()
+            filename1=fs.save(profile_pic.name,profile_pic)
+            profile_pic_url=fs.url(filename1)
+            user.profile_pic=profile_pic_url
+            user.save()
+            user.patients.profile_pic=profile_pic_url
+            user.patients.save()
+        else:
+            messages.add_message(request,messages.SUCCESS,"Profile ppictureic not uploaded")
+            return HttpResponseRedirect(reverse("patientregisterstep1",kwargs={'user_id':user.id}))
+        messages.add_message(request,messages.SUCCESS,"Sucessfully uploaded profile picture")
+        return HttpResponseRedirect(reverse("patientregisterstep2",kwargs={'user_id':user.id}))
+
+class PatientSingupStep2(UpdateView):
+    def get(self, request, *args, **kwargs) :
+        user_id=kwargs['user_id']
+        user = get_object_or_404(CustomUser,id=user_id)
+        param = {'user':user}
+        return render(request,"accounts/patient-register-step2.html",param)
+    
+    def post(self, request, *args, **kwargs) :
+        user_id=kwargs['user_id'] 
+        user = get_object_or_404(CustomUser,id=user_id)
+        name_title = request.POST.get('name_title')
+        fisrt_name = request.POST.get('fisrt_name')
+        last_name = request.POST.get('last_name')
+        gender = request.POST.get('gender')
+        dob = request.POST.get('dob')
+        bloodgroup = request.POST.get('bloodgroup')
+        age1 = (date.today() - datetime.strptime(dob, "%Y-%m-%d").date()) // timedelta(days=365.2425)
+        print(user,name_title,fisrt_name,last_name,gender,dob,bloodgroup,age1)
+        
+        user.patients.name_title=name_title
+        user.name_title = name_title
+        user.first_name = fisrt_name
+        user.last_name = name_title
+        # user.patients.name_title=name_title
+        user.patients.fisrt_name=fisrt_name
+        user.patients.last_name=last_name
+        user.patients.gender=gender
+        user.patients.dob=dob
+        user.patients.bloodgroup=bloodgroup
+        user.patients.age=age1
+        user.patients.save()
+        user.save()      
+        
+            # messages.add_message(request,messages.SUCCESS,"Profile pictureic not uploaded")
+            # return HttpResponseRedirect(reverse("patientregisterstep2",kwargs={'user_id':user.id}))
+        messages.add_message(request,messages.SUCCESS,"Sucessfully uploaded profile picture")
+        return HttpResponseRedirect(reverse("patientregisterstep3",kwargs={'user_id':user.id}))
+
+class PatientSingupStep3(UpdateView):
+    def get(self, request, *args, **kwargs) :
+        user_id=kwargs['user_id']
+        user = get_object_or_404(CustomUser,id=user_id)
+        param = {'user':user}
+        
+        return render(request,"accounts/patient-register-step3.html",param)
+    
+    def post(self, request, *args, **kwargs) :
+        user_id=kwargs['user_id'] 
+        user = get_object_or_404(CustomUser,id=user_id)
+        alternate_mobile = request.POST.get('alternate_mobile')
+        address = request.POST.get('address')
+        city = request.POST.get('city')
+        zip_Code = request.POST.get('zip_Code') 
+        state = request.POST.get('state')
+        country = request.POST.get('country')
+        if alternate_mobile == None or address == None or city == None or zip_Code == None or  state == None or country == None:
+            user.patients.alternate_mobile=alternate_mobile
+            user.patients.address=address
+            user.patients.city=city
+            user.patients.state=state
+            user.patients.zip_Code=zip_Code
+            user.patients.country=country
+            user.patients.save()
+        else:
+            messages.add_message(request,messages.SUCCESS,"Profile pictureic not uploaded")
+            return HttpResponseRedirect(reverse("patientregisterstep3",kwargs={'user_id':user.id}))
+        messages.add_message(request,messages.SUCCESS,"Sucessfully uploaded profile picture")
+        return HttpResponseRedirect(reverse('patient_home'))
+
+# class PatientSingupStep4(UpdateView):
+#     def get(self, request, *args, **kwargs) :
+#         user_id=kwargs['user_id']
+#         user = get_object_or_404(CustomUser,id=user_id)
+#         param = {'user':user}
+#         return render(request,"accounts/patient-register-step4.html",param)
+
+# class PatientSingupStep5(UpdateView):
+#     def get(self, request, *args, **kwargs) :
+#         user_id=kwargs['user_id']
+#         user = get_object_or_404(CustomUser,id=user_id)
+#         param = {'user':user}
+#         return render(request,"accounts/patient-register-step5.html",param)
+
 class AuthorizedSingup(SuccessMessageMixin,CreateView):
-    template_name="accounts/athorizations.html"
+    template_name="accounts/athorizationsnew.html"
     model=CustomUser
     fields=["email","phone","username","password"]
     success_message = "Admin User Created" 
@@ -308,11 +496,11 @@ class AuthorizedSingup(SuccessMessageMixin,CreateView):
         print('just one step ahead save?')   
         user.save() # Save the data
         return HttpResponseRedirect(reverse("dologin"))
-
+ 
 class LabSingup(SuccessMessageMixin,CreateView):
-    template_name="accounts/labsingup.html"
+    template_name="accounts/labsingupnew.html"
     model=CustomUser
-    fields=["first_name","last_name","email","phone","username","password"]
+    fields=["email","phone","username","password"]
     success_message = "LAB User Created"  
     def form_valid(self,form):
         #Saving Custom User Object for Merchant User
@@ -346,9 +534,9 @@ class LabSingup(SuccessMessageMixin,CreateView):
         return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
 
 class PharmacySingup(SuccessMessageMixin,CreateView):
-    template_name="accounts/pharmacysingup.html"
+    template_name="accounts/pharmacysingupnew.html"
     model=CustomUser
-    fields=["first_name","last_name","email","phone","username","password"]
+    fields=["email","phone","username","password"]
     success_message = "Hospital User Created"  
     def form_valid(self,form):
         #Saving Custom User Object for Merchant User
@@ -484,7 +672,7 @@ def activate(request,uidb64,token):
 #     return HttpResponseRedirect(reverse("dologin"))
 
 def FourZeroFour(request):
-    return render(request ,'accounts/404.html',)
+    return render(request ,'accounts/error-404.html',)
 
 
 def logout_view(request):

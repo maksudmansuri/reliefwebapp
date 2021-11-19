@@ -8,6 +8,8 @@ urlpatterns = [
     path('',views.LabDashboardViews.as_view(),name="lab_home"),
     path('lab_update',views.LabUpdateViews.as_view(),name="lab_update"),
 
+    path('add_lab_homevisitupdate',views.HomeServicesUpdateViews,name="add_lab_homevisitupdate"),
+    path('add_lab_homevisit',views.HomeServicesViews,name="add_lab_homevisit"),
     path('add_lab_services',views.ServicesViews.as_view(),name="add_lab_services"),
     path('update_lab_services',views.UpdateServicesViews,name="update_lab_services"),
     path('delete_lab_services/<id>',views.deleteServicesViews,name="delete_lab_services"),
