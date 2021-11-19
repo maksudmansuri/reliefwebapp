@@ -1,7 +1,10 @@
 from django.urls import path
 from .import views
   
-urlpatterns = [  
+urlpatterns = [ 
+
+    path('specialist_hospital',views.AddHospitalSpecialistView.as_view(),name="specialist_hospital"),
+    
     path('',views.indexView,name="radmin_home"),
     path('admin_hospital_all',views.HospitalallViews.as_view(),name="manage_hospital_admin"),
     path('hospital_delete_admin/<id>',views.HospitalDelete,name="hospital_delete_admin"),

@@ -1,8 +1,10 @@
+from django.contrib import messages
+from django.http.request import HttpRequest
 from patient.models import Booking, LabTest, Orders, Slot
 from django.core.files.storage import FileSystemStorage
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseBase, HttpResponseRedirect
 from hospital.models import ContactPerson, HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, Insurances, ServiceAndCharges
-from accounts.models import CustomUser, HospitalPhones, Hospitals, Labs, Patients, Pharmacy
+from accounts.models import CustomUser, HospitalPhones, Hospitals, Labs, Patients, Pharmacy, Specailist
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -12,9 +14,30 @@ from django.db.models import Q
    
 def indexView(request):
        
-    return render(request,"radmin/index.html")
- 
- 
+    return render(request,"radmin/newindex.html")
+
+class AddHospitalSpecialistView(SuccessMessageMixin,CreateView):
+    
+    def get(self, request, *args, **kwargs):      
+        speciallist=Specailist.objects.all()
+        param={'speciallists':speciallist}
+        return render(request,"radmin/specialities.html",param)
+    
+    def post(self, request, *args, **kwargs):
+        specialist_name=request.POST.get("specialist_name")
+        specialist_icon=request.FILES.get("specialist_icon")
+       
+        fs=FileSystemStorage()
+        filename1=fs.save(specialist_icon.name,specialist_icon)
+        profile_pic_url=fs.url(filename1)
+        try:
+            specailist = Specailist(specialist_name=specialist_name,specialist_icon=profile_pic_url)
+            specailist.save()
+        except Exception as e:
+            return HttpResponse(e)
+            messages.add_message(request,messages.ERROR,e)
+        messages.add_message(request,messages.SUCCESS,"Succesfully Added")
+        return HttpResponseRedirect(reverse("specialist_hospital")) 
 """
 Hospitals All Views
 """

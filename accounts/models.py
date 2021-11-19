@@ -106,6 +106,15 @@ class PhoneOTP(models.Model):
     def __str__(self):
         return str(self.phone) + ' is sent ' + str(self.otp)   
 
+class Specailist(models.Model):
+    id                  =models.AutoField(primary_key=True)
+    specialist_name               =models.CharField(max_length=500,null=True,blank=True)
+    specialist_icon         =models.FileField(upload_to="Hospital/specialist/images/%Y/%m/%d/",max_length=500,null=True,default="")
+    created_at          =models.DateTimeField(auto_now_add=True)
+    updated_at          =models.DateTimeField(auto_now_add=True)
+    objects             =models.Manager()
+ 
+
 class AdminHOD(models.Model):
     id                  =models.AutoField(primary_key=True)
     admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
@@ -317,7 +326,7 @@ class OPDTime(models.Model):
     created_at              =           models.DateTimeField(auto_now=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
-    
+ 
 @receiver(post_save,sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender,instance=None,created=False,**kwargs):
     if created:

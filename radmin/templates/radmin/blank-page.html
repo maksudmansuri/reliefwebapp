@@ -1,0 +1,48 @@
+{% load static %}
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+	<title>Doccure - Dashboard</title>
+
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'newstatic/admin/assets/img/favicon.png' %} ">
+
+	<link rel="stylesheet" href="{% static 'newstatic/admin/assets/css/bootstrap.min.css' %}">
+
+	<link rel="stylesheet" href="{% static 'newstatic/admin/assets/css/font-awesome.min.css' %}">
+
+	<link rel="stylesheet" href="{% static 'newstatic/admin/assets/css/feathericon.min.css' %}">
+	<link rel="stylesheet" href="{% static 'newstatic/admin/assets/plugins/morris/morris.css' %}">
+
+	<link rel="stylesheet" href="{% static 'newstatic/admin/assets/css/style.css' %}">
+	<!--[if lt IE 9]>
+			<script src="assets/js/html5shiv.min.js"></script>
+			<script src="assets/js/respond.min.js"></script>
+		<![endif]-->
+</head>
+
+<body>
+    {% include 'radmin/newnavbar.html'%}
+    {% include 'radmin/newsidebar.html'%}
+    <div class="main-wrapper">
+    {% block content %}
+    {% endblock content %}
+    </div>
+    {% block custom_modal %}{% endblock custom_modal %}
+
+	<script src="{% static 'newstatic/admin//assets/js/jquery-3.6.0.min.js' %}"></script>
+
+	<script src="{% static 'newstatic/admin/assets/js/bootstrap.bundle.min.js' %}"></script>
+
+	<script src="{% static 'newstatic/admin/assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+	<script src="{% static 'newstatic/admin/assets/plugins/raphael/raphael.min.js' %}"></script>
+	<script src="{% static 'newstatic/admin/assets/plugins/morris/morris.min.js' %}"></script>
+	<script src="{% static 'newstatic/admin/assets/js/chart.morris.js' %}"></script>
+
+	<script src="{% static 'newstatic/admin/assets/js/script.js' %}"></script>
+    {% block custom_js %}{% endblock custom_js %}
+</body>
+
+</html>
