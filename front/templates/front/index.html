@@ -97,7 +97,7 @@ Booking{% endblock title %}
 		<section class="category-sec">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<div class="set-category">
 							<div class="d-flex align-items-center">
 								<div class="img-holder">
@@ -105,7 +105,7 @@ Booking{% endblock title %}
 											alt="" /></a>
 								</div>
 								<div class="info-holder">
-									<h3>Visit a Doctor</h3>
+									<h3>Visit a Hospital</h3>
 									<p>We hire the best specialists to deliver top-notch diagnostic services for you.
 									</p>
 									<a href="booking.html" class="book-now">Book Now <i
@@ -115,7 +115,7 @@ Booking{% endblock title %}
 							<h1>01</h1>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<div class="set-category light">
 							<div class="d-flex align-items-center">
 								<div class="img-holder">
@@ -123,7 +123,7 @@ Booking{% endblock title %}
 											alt="" /></a>
 								</div>
 								<div class="info-holder">
-									<h3>Find a Pharmacy</h3>
+									<h3>Find a Laboratory</h3>
 									<p>We provide the a wide range of medical services, so every person could have the
 										opportunity.</p>
 									<a href="booking.html" class="book-now">Book Now <i
@@ -133,7 +133,7 @@ Booking{% endblock title %}
 							<h1>02</h1>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<div class="set-category lighter">
 							<div class="d-flex align-items-center">
 								<div class="img-holder">
@@ -141,7 +141,25 @@ Booking{% endblock title %}
 											alt="" /></a>
 								</div>
 								<div class="info-holder">
-									<h3>Find a Lab</h3>
+									<h3>Blood Doner</h3>
+									<p>We use the first-class medical equipment for timely diagnostics of various
+										diseases.</p>
+									<a href="booking.html" class="book-now">Book Now <i
+											class="fas fa-long-arrow-alt-right"></i></a>
+								</div>
+							</div>
+							<h1>03</h1>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="set-category lighter">
+							<div class="d-flex align-items-center">
+								<div class="img-holder">
+									<a href="javascript:void(0);"><img src="{% static 'newstatic/assets/img/icons/set-cat-03.png'%}"
+											alt="" /></a>
+								</div>
+								<div class="info-holder">
+									<h3>Find a Ambulance</h3>
 									<p>We use the first-class medical equipment for timely diagnostics of various
 										diseases.</p>
 									<a href="booking.html" class="book-now">Book Now <i
@@ -315,8 +333,232 @@ Booking{% endblock title %}
 			</div>
 		</section>
 
+		<section class="book-doctor">
+			<div class="container">
+				<div class="sec-header">
+					<h2>Book Our Best Doctor</h2>
+					<span class="bottom-border"></span>
+				</div>
+				<div class="row"> 
+					<div class="col-md-12">
+						<div class="book-slider slider">
+						{% for hospital in hospitals %}
+							<div class="profile-widget">
+								<a href="doctor-profile.html">
+									<img src="{{hospital.profile_pic}}" alt="" />
+								</a>
+								<div class="pro-content">
+									<div class="row row-sm">
+										<div class="col-md-6">
+											<span class="amt">$20 - $50</span>
+										</div>
+										<div class="col-md-6 text-end">
+											<a href="#" class="star"><i class="fas fa-star"></i></a>
+										</div>
+									</div>
+									<div class="provider-info">
+										<h3><a href="doctor-profile.html">{{hospital.hopital_name}}</a></h3>
+										<div>
+											<h5>{{hospital.specialist}} </h5>
+											<div class="rating">
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star"></i>
+												<span class="d-inline-block average-rating">3.5</span>
+											</div>
+										</div>
+										<a href="#" class="side-arrow">
+											<i class="fas fa-chevron-right"></i>
+										</a>
+										<div class="content-info">
+											<ul class="available-info">
+												<li>
+													<i class="fas fa-map-marker-alt"></i>{{hospital.city}} , {{hospital.country}} 
+												</li>
+												<li>
+													<i class="far fa-clock"></i> 450 Consultations
+												</li>
+											</ul>
+											<div class="row row-sm">
+												<div class="col-6">
+													<a href="{% url 'hospital_details' hospital.id%}" class="btn view-btn" tabindex="0">View
+														Profile</a>
+												</div>
+												<div class="col-6">
+													<a href="{% url 'hospital_details' hospital.id%}" class="btn book-btn" tabindex="0">Book
+														Now</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+							
+						</div>
+					</div>
+				</div>
+				<div class="row justify-content-center mt-4">
+					<div class="col-md-12 text-center">
+						<a href="doctor-profile.html" class="view-btn d-inline-block">View More</a>
+					</div>
+				</div>
+			</div>
+		</section>
 
-		<section class="browse-speciality">
+		<section class="book-doctor">
+			<div class="container">
+				<div class="sec-header">
+					<h2>Book Our Best Laboratory</h2>
+					<span class="bottom-border"></span>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="book-slider slider">
+						{% for lab in labs %}
+							<div class="profile-widget">
+								<a href="doctor-profile.html">
+									<img src="{{lab.profile_pic}}" alt="" />
+								</a>
+								<div class="pro-content">
+									<div class="row row-sm">
+										<div class="col-md-6">
+											<span class="amt">$20 - $50</span>
+										</div>
+										<div class="col-md-6 text-end">
+											<a href="#" class="star"><i class="fas fa-star"></i></a>
+										</div>
+									</div>
+									<div class="provider-info">
+										<h3><a href="doctor-profile.html">{{lab.lab_name}}</a></h3>
+										<div>
+											<h5>{{lab.specialist}} </h5>
+											<div class="rating">
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star"></i>
+												<span class="d-inline-block average-rating">3.5</span>
+											</div>
+										</div>
+										<a href="#" class="side-arrow">
+											<i class="fas fa-chevron-right"></i>
+										</a>
+										<div class="content-info">
+											<ul class="available-info">
+												<li>
+													<i class="fas fa-map-marker-alt"></i> {{lab.city}} , {{lab.country}} 
+												</li>
+												<li>
+													<i class="far fa-clock"></i> 450 Consultations
+												</li>
+											</ul>
+											<div class="row row-sm">
+												<div class="col-6">
+													<a href="{% url 'laboratory_details' lab.id %}" class="btn view-btn" tabindex="0">View
+														Profile</a>
+												</div>
+												<div class="col-6">
+													<a href="{% url 'laboratory_details' lab.id %}" class="btn book-btn" tabindex="0">Book
+														Now</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+							
+						</div>
+					</div>
+				</div>
+				<div class="row justify-content-center mt-4">
+					<div class="col-md-12 text-center">
+						<a href="doctor-profile.html" class="view-btn d-inline-block">View More</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="book-doctor">
+			<div class="container">
+				<div class="sec-header">
+					<h2>Book Our Best Laboratory</h2>
+					<span class="bottom-border"></span>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="book-slider slider">
+						{% for pharmacy in pharmacys %}
+							<div class="profile-widget">
+								<a href="doctor-profile.html">
+									<img src="{{pharmacy.profile_pic}}" alt="" />
+								</a>
+								<div class="pro-content">
+									<div class="row row-sm">
+										<div class="col-md-6">
+											<span class="amt">$20 - $50</span>
+										</div>
+										<div class="col-md-6 text-end">
+											<a href="#" class="star"><i class="fas fa-star"></i></a>
+										</div>
+									</div>
+									<div class="provider-info">
+										<h3><a href="doctor-profile.html">{{pharmacy.pharmacy_name}}</a></h3>
+										<div>
+											<h5>{{pharmacy.specialist}} </h5>
+											<div class="rating">
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star"></i>
+												<span class="d-inline-block average-rating">3.5</span>
+											</div>
+										</div>
+										<a href="#" class="side-arrow">
+											<i class="fas fa-chevron-right"></i>
+										</a>
+										<div class="content-info">
+											<ul class="available-info">
+												<li>
+													<i class="fas fa-map-marker-alt"></i> {{pharmacy.city}} , {{pharmacy.country}} 
+												</li>
+												<li>
+													<i class="far fa-clock"></i> 450 Consultations
+												</li>
+											</ul>
+											<div class="row row-sm">
+												<div class="col-6">
+													<a href="{% url 'pharmacy_details' pharmacy.id %}" class="btn view-btn" tabindex="0">View
+														Profile</a>
+												</div>
+												<div class="col-6">
+													<a href="{% url 'pharmacy_details' pharmacy.id %}" class="btn book-btn" tabindex="0">Book
+														Now</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+							
+						</div>
+					</div>
+				</div>
+				<div class="row justify-content-center mt-4">
+					<div class="col-md-12 text-center">
+						<a href="doctor-profile.html" class="view-btn d-inline-block">View More</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		{% comment %} <section class="browse-speciality">
 			<div class="container">
 				<div class="sec-header">
 					<h2>Browse by Specialities</h2>
@@ -437,7 +679,7 @@ Booking{% endblock title %}
 					</div>
 				</div>
 			</div>
-		</section>
+		</section> {% endcomment %}
 
 
 		<section class="patient-select">
@@ -483,285 +725,7 @@ Booking{% endblock title %}
 		</section>
 
 
-		<section class="book-doctor">
-			<div class="container">
-				<div class="sec-header">
-					<h2>Book Our Best Doctor</h2>
-					<span class="bottom-border"></span>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<div class="book-slider slider">
-							<div class="profile-widget">
-								<a href="doctor-profile.html">
-									<img src="{% static 'newstatic/assets/img/doctors/book-doc-01.jpg'%}" alt="" />
-								</a>
-								<div class="pro-content">
-									<div class="row row-sm">
-										<div class="col-md-6">
-											<span class="amt">$20 - $50</span>
-										</div>
-										<div class="col-md-6 text-end">
-											<a href="#" class="star"><i class="fas fa-star"></i></a>
-										</div>
-									</div>
-									<div class="provider-info">
-										<h3><a href="doctor-profile.html">Dr. Ruby Perrin</a></h3>
-										<div>
-											<h5>PSICOLOGIST </h5>
-											<div class="rating">
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star"></i>
-												<span class="d-inline-block average-rating">3.5</span>
-											</div>
-										</div>
-										<a href="#" class="side-arrow">
-											<i class="fas fa-chevron-right"></i>
-										</a>
-										<div class="content-info">
-											<ul class="available-info">
-												<li>
-													<i class="fas fa-map-marker-alt"></i> Georgia, USA
-												</li>
-												<li>
-													<i class="far fa-clock"></i> 450 Consultations
-												</li>
-											</ul>
-											<div class="row row-sm">
-												<div class="col-6">
-													<a href="javascript:void(0);" class="btn view-btn" tabindex="0">View
-														Profile</a>
-												</div>
-												<div class="col-6">
-													<a href="booking.html" class="btn book-btn" tabindex="0">Book
-														Now</a>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="profile-widget">
-								<a href="doctor-profile.html">
-									<img src="{% static 'newstatic/assets/img/doctors/book-doc-02.jpg'%}" alt="" />
-								</a>
-								<div class="pro-content">
-									<div class="row row-sm">
-										<div class="col-md-6">
-											<span class="amt">$20 - $50</span>
-										</div>
-										<div class="col-md-6 text-end">
-											<a href="#" class="star"><i class="fas fa-star"></i></a>
-										</div>
-									</div>
-									<div class="provider-info">
-										<h3><a href="doctor-profile.html">Dr. Darren Elder</a></h3>
-										<div>
-											<h5>PSICOLOGIST </h5>
-											<div class="rating">
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star"></i>
-												<span class="d-inline-block average-rating">3.5</span>
-											</div>
-										</div>
-										<a href="#" class="side-arrow">
-											<i class="fas fa-chevron-right"></i>
-										</a>
-										<div class="content-info">
-											<ul class="available-info">
-												<li>
-													<i class="fas fa-map-marker-alt"></i> Georgia, USA
-												</li>
-												<li>
-													<i class="far fa-clock"></i> 450 Consultations
-												</li>
-											</ul>
-											<div class="row row-sm">
-												<div class="col-6">
-													<a href="doctor-profile.html" class="btn view-btn" tabindex="0">View
-														Profile</a>
-												</div>
-												<div class="col-6">
-													<a href="booking.html" class="btn book-btn" tabindex="0">Book
-														Now</a>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="profile-widget">
-								<a href="#">
-									<img src="{% static 'newstatic/assets/img/doctors/book-doc-03.jpg'%}" alt="" />
-								</a>
-								<div class="pro-content">
-									<div class="row row-sm">
-										<div class="col-md-6">
-											<span class="amt">$20 - $50</span>
-										</div>
-										<div class="col-md-6 text-end">
-											<a href="#" class="star"><i class="fas fa-star"></i></a>
-										</div>
-									</div>
-									<div class="provider-info">
-										<h3><a href="doctor-profile.html">Dr. Paul Richard</a></h3>
-										<div>
-											<h5>PSICOLOGIST </h5>
-											<div class="rating">
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star"></i>
-												<span class="d-inline-block average-rating">3.5</span>
-											</div>
-										</div>
-										<a href="#" class="side-arrow">
-											<i class="fas fa-chevron-right"></i>
-										</a>
-										<div class="content-info">
-											<ul class="available-info">
-												<li>
-													<i class="fas fa-map-marker-alt"></i> Georgia, USA
-												</li>
-												<li>
-													<i class="far fa-clock"></i> 450 Consultations
-												</li>
-											</ul>
-											<div class="row row-sm">
-												<div class="col-6">
-													<a href="doctor-profile.html" class="btn view-btn" tabindex="0">View
-														Profile</a>
-												</div>
-												<div class="col-6">
-													<a href="booking.html" class="btn book-btn" tabindex="0">Book
-														Now</a>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="profile-widget">
-								<a href="#">
-									<img src="{% static 'newstatic/assets/img/doctors/book-doc-04.jpg'%}" alt="" />
-								</a>
-								<div class="pro-content">
-									<div class="row row-sm">
-										<div class="col-md-6">
-											<span class="amt">$20 - $50</span>
-										</div>
-										<div class="col-md-6 text-end">
-											<a href="#" class="star"><i class="fas fa-star"></i></a>
-										</div>
-									</div>
-									<div class="provider-info">
-										<h3><a href="doctor-profile.html">Dr. Linda Tobin</a></h3>
-										<div>
-											<h5>PSICOLOGIST </h5>
-											<div class="rating">
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star"></i>
-												<span class="d-inline-block average-rating">3.5</span>
-											</div>
-										</div>
-										<a href="#" class="side-arrow">
-											<i class="fas fa-chevron-right"></i>
-										</a>
-										<div class="content-info">
-											<ul class="available-info">
-												<li>
-													<i class="fas fa-map-marker-alt"></i> Georgia, USA
-												</li>
-												<li>
-													<i class="far fa-clock"></i> 450 Consultations
-												</li>
-											</ul>
-											<div class="row row-sm">
-												<div class="col-6">
-													<a href="doctor-profile.html" class="btn view-btn" tabindex="0">View
-														Profile</a>
-												</div>
-												<div class="col-6">
-													<a href="booking.html" class="btn book-btn" tabindex="0">Book
-														Now</a>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="profile-widget">
-								<a href="#">
-									<img src="{% static 'newstatic/assets/img/doctors/book-doc-05.jpg'%}" alt="" />
-								</a>
-								<div class="pro-content">
-									<div class="row row-sm">
-										<div class="col-md-6">
-											<span class="amt">$20 - $50</span>
-										</div>
-										<div class="col-md-6 text-end">
-											<a href="#" class="star"><i class="fas fa-star"></i></a>
-										</div>
-									</div>
-									<div class="provider-info">
-										<h3><a href="doctor-profile.html">Dr. Marvin Paul</a></h3>
-										<div>
-											<h5>PSICOLOGIST </h5>
-											<div class="rating">
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star"></i>
-												<span class="d-inline-block average-rating">3.5</span>
-											</div>
-										</div>
-										<a href="#" class="side-arrow">
-											<i class="fas fa-chevron-right"></i>
-										</a>
-										<div class="content-info">
-											<ul class="available-info">
-												<li>
-													<i class="fas fa-map-marker-alt"></i> Georgia, USA
-												</li>
-												<li>
-													<i class="far fa-clock"></i> 450 Consultations
-												</li>
-											</ul>
-											<div class="row row-sm">
-												<div class="col-6">
-													<a href="doctor-profile.html" class="btn view-btn" tabindex="0">View
-														Profile</a>
-												</div>
-												<div class="col-6">
-													<a href="booking.html" class="btn book-btn" tabindex="0">Book
-														Now</a>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row justify-content-center mt-4">
-					<div class="col-md-12 text-center">
-						<a href="doctor-profile.html" class="view-btn d-inline-block">View More</a>
-					</div>
-				</div>
-			</div>
-		</section>
+		
 
 
 		<section class="aval-features">

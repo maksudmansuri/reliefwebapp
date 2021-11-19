@@ -5,16 +5,17 @@ from django.views.generic import View
 
 from django.contrib import messages
 
-from accounts.models import Hospitals
+from accounts.models import Hospitals, Labs, Pharmacy
+from patient.models import PicturesForMedicine
 # Create your views here.
 
 class FrontView(View):
     def get(self, request, *args, **kwargs):
-        # try:
-        #     hospital=Hospitals.objects.get(admin=request.user)
-        #     # departments = Departments.objects.filter(hospital=hospital)
-        # except Exception as e:
-        #     messages.add_message(request,messages.ERROR,"something went wrong")
-        #     # return HttpResponseRedirect(reverse("manage_staff"))        
-        # param={'hospital':hospital}
-        return render(request,"front/index.html")
+       
+        hospitals=Hospitals.objects.filter(admin__is_active=True,is_verified = True,is_deactive=False)
+        labs=Labs.objects.filter(admin__is_active=True,is_verified = True)
+        pharmacys=Pharmacy.objects.filter(admin__is_active=True,is_verified = True)
+        # departments = Departments.objects.filter(hospital=hospital)
+        print(hospitals)
+        param={'hospitals':hospitals,'labs':labs,'pharmacys':pharmacys}
+        return render(request,"front/index.html",param)

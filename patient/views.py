@@ -100,14 +100,23 @@ def verifyOTP(request,orderID):
 
 """
 Personal Details of Patients
-"""
+""" 
 class patientdDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
         try:  
-            patient = get_object_or_404(Patients, admin=request.user.id)
-
+            patient = get_object_or_404(Patients, admin=request.user.id) 
+            booking = Booking.objects.filter(patient=request.user)
+            labbooks = Slot.objects.filter(patient = request.user)
+            booking_labtest_list =[]
+            for labbook in labbooks:            
+                labtests = LabTest.objects.filter(slot=labbook)
+                booking_labtest_list.append({'labbook':labbook,'labtests':labtests}) 
+            pharmacy = PicturesForMedicine.objects.filter(patient=request.user)
+            print(booking)
+            param = {'patient':patient,'bookings':booking,'booking_labtest_list':booking_labtest_list,'pharmacys':pharmacy}
             # if patient.fisrt_name and patient.last_name and patient.address and patient.city and patient.zip_Code and patient.state and patient.country and patient.dob and patient.profile_pic and patient.gender and patient.bloodgroup:
-            return render(request,"patient/patient-dashboard.html")            
+            
+            return render(request,"patient/patient-dashboard.html",param)            
             # else:
             #     messages.add_message(request,messages.ERROR,"Some detail still Missing !")
             

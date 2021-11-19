@@ -1,44 +1,6 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-	<meta charset="utf-8">
-	<title>{% block title %} Relief Pro - Hospital,Labs and Pharmacy Online Booking | Emergency
-		Booking{% endblock title %}</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-
-	<link href="{% static 'newstatic/assets/img/favicon.png' %}" rel="icon">
-
-	<link rel="stylesheet" href="{% static 'newstatic/assets/css/bootstrap.min.css'%}">
-
-	<link rel="stylesheet" href="{% static 'newstatic/assets/plugins/fontawesome/css/fontawesome.min.css'%}">
-	<link rel="stylesheet" href="{% static 'newstatic/assets/plugins/fontawesome/css/all.min.css'%}">
-
-	
-
-	<link rel="stylesheet" href="{% static 'newstatic/assets/plugins/swiper/css/swiper.min.css'%}">
-	<link rel="stylesheet" href="{% static 'newstatic/assets/css/style.css'%}">
-
-	{% block custom_css %}
-	{% endblock custom_css %}
-
-	<!--[if lt IE 9]>
-			<script src="assets/js/html5shiv.min.js"></script>
-			<script src="assets/js/respond.min.js"></script>
-		<![endif]-->
-</head>
-
-<body>
-
-	<div class="main-wrapper">
-		{% include 'front/headersnipet.html' %}
-
-		{% block content %}
-		{% endblock content %}
-		
 
 
+ 
 		<footer class="footer">
 
 			<div class="footer-top">
@@ -48,7 +10,7 @@
 
 							<div class="footer-widget footer-about">
 								<div class="footer-logo">
-									<img src="{% static 'newstatic/assets/img/logo.png'%}" width="200" alt="logo">
+									<img src="assets/img/footer-logo.png" alt="logo">
 								</div>
 								<div class="footer-about-content">
 									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
@@ -119,8 +81,8 @@
 									</p>
 									<p class="mb-0">
 										<i class="fas fa-envelope"></i>
-										<a href="cdn-cgi/l/email-protection" class="__cf_email__"
-											data-cfemail="c8aca7ababbdbaad88adb0a9a5b8a4ade6aba7a5">[email&#160;protected]</a>
+										<a href="/cdn-cgi/l/email-protection" class="__cf_email__"
+											data-cfemail="04606b676771766144617c65697468612a676b69">[email&#160;protected]</a>
 									</p>
 								</div>
 							</div>
@@ -158,23 +120,3 @@
 			</div>
 
 		</footer>
-
-	</div>
-
-
-	<script data-cfasync="false" src="{% static 'newstatic/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js'%}"></script>
-	<script src="{% static 'newstatic/assets/js/jquery-3.6.0.min.js'%}"></script>
-
-	<script src="{% static 'newstatic/assets/js/bootstrap.bundle.min.js'%}"></script>	
-
-	<script src="{% static 'newstatic/assets/plugins/swiper/js/swiper.min.js'%}"></script>
-	<script src="{% static 'newstatic/assets/js/slick.js'%}"></script>
-	
-	<script src="{% static 'newstatic/assets/js/script.js'%}"></script>
-
-
-	{% block custom_js %}
-	{% endblock custom_js %}
-</body>
-
-</html>

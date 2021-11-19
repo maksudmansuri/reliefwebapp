@@ -21,6 +21,8 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     pass
                 elif modulename == "media.views":
                     pass
+                elif modulename == "front.views":
+                    pass
                 elif modulename == "django.contrib.auth.views":
                     pass
                 elif  modulename == "chat.views":
@@ -31,6 +33,8 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                 if modulename == "hospital.views" or modulename == "django.views.static":
                     pass
                 elif modulename == "accounts.logoutview":
+                    pass
+                elif modulename == "front.views":
                     pass
                 elif modulename == "media":
                     pass
@@ -44,6 +48,8 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                 if modulename == "customers.views" or modulename == "django.views.static":
                     pass
                 elif modulename == "accounts.profilePic":
+                    pass
+                elif modulename == "front.views":
                     pass
                 elif modulename == "front.views":
                     pass
@@ -64,6 +70,8 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     pass
                 elif modulename == "accounts.logoutview":
                     pass
+                elif modulename == "front.views":
+                    pass
                 elif modulename == "django.contrib.auth.views":
                     pass
                 elif modulename == "media":
@@ -78,6 +86,8 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     pass
                 elif modulename == "django.contrib.auth.views":
                     pass
+                elif modulename == "front.views":
+                    pass
                 elif modulename == "media":
                     pass
                 else:
@@ -87,6 +97,8 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                 if modulename == "pharmacy.views" or modulename == "django.views.static":
                     pass
                 elif modulename == "accounts.logoutview":
+                    pass
+                elif modulename == "front.views":
                     pass
                 elif modulename == "django.contrib.auth.views":
                     pass
@@ -111,6 +123,8 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                 # if modulename == "django.contrib.auth.views":
                 #     pass
                 if modulename == "accounts.adminView":
+                    pass
+                elif modulename == "front.views":
                     pass
                 print("admin")
                 return HttpResponseRedirect(reverse('admin:index'))

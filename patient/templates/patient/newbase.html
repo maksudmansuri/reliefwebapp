@@ -23,17 +23,26 @@
 			<script src="assets/js/html5shiv.min.js"></script>
 			<script src="assets/js/respond.min.js"></script>
 		<![endif]-->
-</head>
+</head> 
 <body> 
         {% include 'patient/newnavbar.html' %}
-        {% block content %}
+       
+        <div class="content">
+			<div class="container-fluid">
+				<div class="row">
 
-        {% endblock content %}
+					{% include 'patient/newsidebar.html' %}
+                        {% block content %}
 
+                        {% endblock content %}
+                    	
+				</div>
+			</div>
+		</div>
         {% block modal_fade %}
         {% endblock modal_fade %}
 
-
+       {% include 'patient/newfootersnipet.html' %}
 	<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 	<script src="{% static 'newstatic/assets/js/jquery-3.6.0.min.js' %}"></script>
 
