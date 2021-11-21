@@ -16,10 +16,23 @@
                 <!-- Menu: Sub menu ul -->               
                     <ul class="sub-menu collapse {% if request.path == radmin_home %} show {% endif %}" id="dashboard">
                         <li><a class="ms-link {% if request.path == radmin_home %} active {% endif %}" href="{% url 'radmin_home' %}">Admiin Dashboard</a></li>
-                        <li><a class="ms-link" href="coviddashboard.html"> Covid-19 Dashboard</a></li>
+                        {% comment %} <li><a class="ms-link" href="coviddashboard.html"> Covid-19 Dashboard</a></li> {% endcomment %}
                     </ul>
-                </li> 
-            
+                </li>  
+                {% url 'specialist_hospital' as specialist_hospital %}
+                {% url 'specialist_lab' as specialist_lab %}
+                {% url 'specialist_pharmacy' as specialist_pharmacy %}
+                <li class="collapsed">
+                <a class="m-link {% if request.path == specialist_hospital %} active {% endif %} {% if request.path == specialist_lab %} active {% endif %} {% if request.path == specialist_pharmacy %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#specialist" href="#">
+                <i class="icofont-ui-user-group fs-5"></i> <span>Specialist</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
+                <!-- Menu: Sub menu ul -->               
+                    <ul class="sub-menu collapse {% if request.path == specialist_hospital %} show {% endif %}{% if request.path == specialist_lab %} show {% endif %}{% if request.path == specialist_pharmacy %} show {% endif %}" id="specialist">
+                        <li><a class="ms-link {% if request.path == specialist_hospital %} active {% endif %}" href="{% url 'specialist_hospital' %}">Hospital</a></li>
+                        <li><a class="ms-link {% if request.path == specialist_lab %} active {% endif %}" href="{% url 'specialist_lab' %}">Labs</a></li>
+                        <li><a class="ms-link {% if request.path == specialist_pharmacy %} active {% endif %}" href="{% url 'specialist_pharmacy' %}">Pharmacy</a></li>
+                        {% comment %} <li><a class="ms-link" href="coviddashboard.html"> Covid-19 Dashboard</a></li> {% endcomment %}
+                    </ul>
+                </li>
                 {% url 'manage_hospital_admin' as manage_hospital_admin %}
                 {% url 'hospital_profile_admin' as hospital_profile_admin %}
                 {% url 'doctor_profile_admin' as doctor_profile_admin %}
@@ -54,6 +67,18 @@
                         
                     </ul>
                 </li>
+
+                {% url 'loaction_area' as loaction_area %}
+                 <li><a class="ms-link {% if request.path == loaction_area %} active {% endif %}" href="{% url 'loaction_area' %}"><i class="icofont-location-pin fs-5"></i> <span> Location</span></a></li>
+                {% comment %} <li class="collapsed">
+                <a class="m-link {% if request.path == loaction_area %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#location" href="#">
+                <i class="icofont-location-pin fs-5"></i> <span>Location</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
+                <!-- Menu: Sub menu ul -->               
+                    <ul class="sub-menu collapse {% if request.path == loaction_area %} show {% endif %}" id="location">
+                        <li><a class="ms-link {% if request.path == loaction_area %} active {% endif %}" href="{% url 'radmin_home' %}"> Location</a></li>
+                        {% comment %} <li><a class="ms-link" href="coviddashboard.html"> Covid-19 Dashboard</a></li> 
+                    </ul>
+                </li>   
                
                 {% comment %} <li class="collapsed">
                     <a class="m-link" data-bs-toggle="collapse" data-bs-target="#menu-Doctor" href="#">

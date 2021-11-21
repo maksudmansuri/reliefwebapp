@@ -1,21 +1,26 @@
 from django.contrib import messages
+from django.http import response
 from django.http.request import HttpRequest
 from patient.models import Booking, LabTest, Orders, Slot
 from django.core.files.storage import FileSystemStorage
-from django.http.response import HttpResponse, HttpResponseBase, HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseBase, HttpResponseRedirect, JsonResponse
 from hospital.models import ContactPerson, HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, Insurances, ServiceAndCharges
-from accounts.models import CustomUser, HospitalPhones, Hospitals, Labs, Patients, Pharmacy, Specailist
+from accounts.models import CustomUser, HospitalPhones, Hospitals, LabSpecailist, Labs, Patients, Pharmacy, PharmacySpecailist, Specailist
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
 from django.db.models import Q
+
+from radmin.models import City, Country, State
 # Create your views here.
    
 def indexView(request):
        
-    return render(request,"radmin/newindex.html")
-
+    return render(request,"radmin/index.html")
+"""
+Hospital Specialist Categories
+"""
 class AddHospitalSpecialistView(SuccessMessageMixin,CreateView):
     
     def get(self, request, *args, **kwargs):      
@@ -34,10 +39,135 @@ class AddHospitalSpecialistView(SuccessMessageMixin,CreateView):
             specailist = Specailist(specialist_name=specialist_name,specialist_icon=profile_pic_url)
             specailist.save()
         except Exception as e:
-            return HttpResponse(e)
             messages.add_message(request,messages.ERROR,e)
         messages.add_message(request,messages.SUCCESS,"Succesfully Added")
         return HttpResponseRedirect(reverse("specialist_hospital")) 
+
+def updateHospitalSpecialist(request,id):
+    specialist_name=request.POST.get("specialist_name")
+    specialist_icon=request.FILES.get("specialist_icon")
+    print(specialist_icon,specialist_name)
+    
+    try:
+        specailist = get_object_or_404(Specailist,id=id)
+        specailist.specialist_name=specialist_name
+        if specialist_icon:
+            fs=FileSystemStorage()
+            filename1=fs.save(specialist_icon.name,specialist_icon)
+            profile_pic_url=fs.url(filename1)
+            specailist.specialist_icon=profile_pic_url
+        specailist.save()
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,e)
+    messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
+    return HttpResponseRedirect(reverse("specialist_hospital")) 
+
+def deleteHospitalSpecialist(request,id):
+    specailist = get_object_or_404(Specailist,id=id)
+    specailist.delete()
+    messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
+    return HttpResponseRedirect(reverse("specialist_hospital")) 
+""" 
+Lab Specialist Categories
+"""
+class AddLabSpecialistView(SuccessMessageMixin,CreateView):
+    
+    def get(self, request, *args, **kwargs):      
+        speciallist=LabSpecailist.objects.all()
+        param={'speciallists':speciallist}
+        return render(request,"radmin/lab-specialities.html",param)
+    
+    def post(self, request, *args, **kwargs):
+        specialist_name=request.POST.get("specialist_name")
+        specialist_icon=request.FILES.get("specialist_icon")
+       
+        fs=FileSystemStorage()
+        filename1=fs.save(specialist_icon.name,specialist_icon)
+        profile_pic_url=fs.url(filename1)
+        try:
+            specailist = LabSpecailist(specialist_name=specialist_name,specialist_icon=profile_pic_url)
+            specailist.save()
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,e)
+        messages.add_message(request,messages.SUCCESS,"Succesfully Added")
+        return HttpResponseRedirect(reverse("specialist_lab")) 
+
+def updateLabSpecialist(request,id):
+    specialist_name=request.POST.get("specialist_name")
+    specialist_icon=request.FILES.get("specialist_icon")
+    print(specialist_icon,specialist_name)
+    
+    try:
+        specailist = get_object_or_404(LabSpecailist,id=id)
+        specailist.specialist_name=specialist_name
+        if specialist_icon:
+            fs=FileSystemStorage()
+            filename1=fs.save(specialist_icon.name,specialist_icon)
+            profile_pic_url=fs.url(filename1)
+            specailist.specialist_icon=profile_pic_url
+        specailist.save()
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,e)
+    messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
+    return HttpResponseRedirect(reverse("specialist_lab")) 
+
+def deleteLabSpecialist(request,id):
+    specailist = get_object_or_404(LabSpecailist,id=id)
+    specailist.delete()
+    messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
+    return HttpResponseRedirect(reverse("specialist_lab")) 
+"""
+Pharmacy Specialist Categories
+"""
+class AddPharmacySpecialistView(SuccessMessageMixin,CreateView):
+    
+    def get(self, request, *args, **kwargs):      
+        speciallist=PharmacySpecailist.objects.all()
+        param={'speciallists':speciallist}
+        return render(request,"radmin/pharmacy-specialities.html",param)
+    
+    def post(self, request, *args, **kwargs):
+        specialist_name=request.POST.get("specialist_name")
+        specialist_icon=request.FILES.get("specialist_icon")
+       
+        fs=FileSystemStorage()
+        filename1=fs.save(specialist_icon.name,specialist_icon)
+        profile_pic_url=fs.url(filename1)
+        try:
+            specailist = PharmacySpecailist(specialist_name=specialist_name,specialist_icon=profile_pic_url)
+            specailist.save()
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,e)
+        messages.add_message(request,messages.SUCCESS,"Succesfully Added")
+        return HttpResponseRedirect(reverse("specialist_pharmacy")) 
+
+def updatePharmacySpecialist(request,id):
+    specialist_name=request.POST.get("specialist_name")
+    specialist_icon=request.FILES.get("specialist_icon")
+    print(specialist_icon,specialist_name)
+    
+    try:
+        specailist = get_object_or_404(PharmacySpecailist,id=id)
+        specailist.specialist_name=specialist_name
+        if specialist_icon:
+            fs=FileSystemStorage()
+            filename1=fs.save(specialist_icon.name,specialist_icon)
+            profile_pic_url=fs.url(filename1)
+            specailist.specialist_icon=profile_pic_url
+        specailist.save()
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,e)
+    messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
+    return HttpResponseRedirect(reverse("specialist_pharmacy")) 
+
+def deletePharmacySpecialist(request,id):
+    specailist = get_object_or_404(PharmacySpecailist,id=id)
+    specailist.delete()
+    messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
+    return HttpResponseRedirect(reverse("specialist_pharmacy")) 
+
+
+
 """
 Hospitals All Views
 """
@@ -303,4 +433,86 @@ class PatientDetailsViews(DetailView):
 
         param = {'patient':patient,'allslot_list':allslot_list,'booking':booking}  
         return render(request,"radmin/patient_profile.html",param)
+
+
+"""
+Add Location country state and city
+"""
+class AddCountriesView(SuccessMessageMixin,CreateView):
+    
+    def get(self, request, *args, **kwargs):      
+        countries=Country.objects.all()
+        states=State.objects.all()
+        cities=City.objects.all()
+        state_country_wise_list =[]
+        for country in countries:
+            state_list = State.objects.filter(country=country)
+            state_country_wise_list.append({'country':country,'state_list':state_list})
+        param={'countries':countries,'states':states,'cities':cities,'state_country_wise_list':state_country_wise_list}
+        return render(request,"radmin/add-location.html",param)
+    
+    def post(self, request, *args, **kwargs):
+        area = request.POST.get("area")
+        if area == "country":
+            country_name=request.POST.get("country_name")
+            try:
+                country = Country(country_name=country_name)
+                country.save()
+            except Exception as e:
+                messages.add_message(request,messages.ERROR,e)
+            messages.add_message(request,messages.SUCCESS,"Succesfully Added")
+        if area == "state":
+            state_name=request.POST.get("state_name")
+            country=request.POST.get("country")
+            print(country)
+            country_name = get_object_or_404(Country,id=country)
+            try:
+                state = State(state_name=state_name,country=country_name)
+                state.save()
+            except Exception as e:
+                messages.add_message(request,messages.ERROR,e)
+            messages.add_message(request,messages.SUCCESS,"Succesfully Added")
+        if area == "city":
+            city_name=request.POST.get("city_name")
+            state=request.POST.get("state")           
+            # country=request.POST.get("country")
+            # print(city_name,state,country)
+            state_name = get_object_or_404(State,id=state) 
+            country_name = get_object_or_404(Country,id=state_name.country.id)
+            try:
+                state = City(city_name=city_name,state=state_name,country=country_name)
+                state.save()
+            except Exception as e:
+                messages.add_message(request,messages.ERROR,e)
+            messages.add_message(request,messages.SUCCESS,"Succesfully Added")     
+        return HttpResponseRedirect(reverse("loaction_area")) 
+
+def deleteCountry(request,id):
+    country = get_object_or_404(Country,id=id)
+    country.delete()
+    messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
+    return HttpResponseRedirect(reverse("loaction_area")) 
+
+def deleteState(request,id):
+    state = get_object_or_404(State,id=id)
+    state.delete()
+    messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
+    return HttpResponseRedirect(reverse("loaction_area")) 
+
+def deleteCity(request,id):
+    city = get_object_or_404(City,id=id)
+    city.delete()
+    messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
+    return HttpResponseRedirect(reverse("loaction_area")) 
+
+# def findState(request):
+#     country_id = request.POST.get("country_id")
+#     countries=Country.objects.all()
+#     states=State.objects.all()
+#     findstates=State.objects.filter(country=country_id)
+#     cities=City.objects.all()
+#     # param={'countries':countries,'states':states,'cities':cities,'findstates':findstates}
+#     response = {'findstates':findstates}
+#     return  HttpResponse(findstates)
+
 

@@ -1,10 +1,31 @@
 from django.urls import path
 from .import views
-  
-urlpatterns = [ 
+   
+urlpatterns = [  
 
+    #locations country , state, city, area
+
+    # path('find_state',views.findState,name="find_state"),
+
+    path('loaction_area',views.AddCountriesView.as_view(),name="loaction_area"),
+    path('delete_country/<id>',views.deleteCountry,name="delete_country"),
+    path('delete_state/<id>',views.deleteState,name="delete_state"),
+    path('delete_city/<id>',views.deleteCity,name="delete_city"),
+       
+    #specialist hospital labs, pharmacy
     path('specialist_hospital',views.AddHospitalSpecialistView.as_view(),name="specialist_hospital"),
+    path('update_specialist_hospital/<id>',views.updateHospitalSpecialist,name="update_specialist_hospital"),
+    path('delete_specialist_hospital/<id>',views.deleteHospitalSpecialist,name="delete_specialist_hospital"),
+
+    path('specialist_lab',views.AddLabSpecialistView.as_view(),name="specialist_lab"),
+    path('update_specialist_lab/<id>',views.updateLabSpecialist,name="update_specialist_lab"),
+    path('delete_specialist_lab/<id>',views.deleteLabSpecialist,name="delete_specialist_lab"),
+
+    path('specialist_pharmacy',views.AddPharmacySpecialistView.as_view(),name="specialist_pharmacy"),
+    path('update_specialist_pharmacy/<id>',views.updatePharmacySpecialist,name="update_specialist_pharmacy"),
+    path('delete_specialist_pharmacy/<id>',views.deletePharmacySpecialist,name="delete_specialist_pharmacy"),
     
+
     path('',views.indexView,name="radmin_home"),
     path('admin_hospital_all',views.HospitalallViews.as_view(),name="manage_hospital_admin"),
     path('hospital_delete_admin/<id>',views.HospitalDelete,name="hospital_delete_admin"),
@@ -16,6 +37,7 @@ urlpatterns = [
     path('pharmacy_delete_admin/<id>',views.PharmacyDelete,name="pharmacy_delete_admin"),
     path('manage_accident_admin',views.AccidentAllViews.as_view(),name="manage_accident_admin"),
     path('accident_delete_admin/<id>',views.AccidentDelete,name="accident_delete_admin"),
+    
     # Appointment Hospital Labs Pharmcy  Accident
     path('hospital_appointment_admin',views.HosAppointmentAllViews.as_view(),name="hospital_appointment_admin"),
     path('labs_appointment_admin',views.LabsAppointmentAllViews.as_view(),name="labs_appointment_admin"),

@@ -29,7 +29,7 @@ from django.utils.encoding import force_bytes,force_text,DjangoUnicodeDecodeErro
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from accounts.utils import generate_token
 import base64
-import pyotp
+import pyotp 
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime,timedelta
 import random
@@ -37,14 +37,13 @@ import http.client
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage, message
-from django.conf import settings
-import ast
+
 conn = http.client.HTTPConnection("2factor.in")
 from django.utils.decorators import method_decorator
 from django.db.models.signals import post_save
 from channels.layers import get_channel_layer 
 from django.db import transaction
-# Create your views here.
+# Create your views here. 
 class generateKey:
     @staticmethod
     def returnValue(bookindId):
@@ -128,35 +127,41 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
     def get(self, request, *args, **kwargs):
         try: 
             patient = get_object_or_404(Patients, admin=request.user.id)
-            return render(request,"patient/patient_update.html",{'patient':patient})
+            return render(request,"patient/profile-settings.html",{'patient':patient})
         except Exception as e:
             return HttpResponse(e)
     
     def post(self,request, *agrs, **kwargs):
         profile_pic = request.FILES.get('profile_pic') 
         name_title = request.POST.get('name_title')
+        fisrt_name = request.POST.get('fisrt_name')
+        last_title = request.POST.get('last_title')
         alternate_mobile = request.POST.get('alternate_mobile')
         address = request.POST.get('address')
         city = request.POST.get('city')
         zip_Code = request.POST.get('zip_Code') 
-        print(zip_Code)
         state = request.POST.get('state')
-        print(state)
         country = request.POST.get('country')
-        print(country)
         gender = request.POST.get('gender')
+      
         dob = request.POST.get('dob')
+        
         bloodgroup = request.POST.get('bloodgroup')
         age1 = (date.today() - datetime.strptime(dob, "%Y-%m-%d").date()) // timedelta(days=365.2425)
+       
         # import datetime
         # age = (datetime.date.today() - datetime.datetime.strptime(dob, "%Y-%m-%d").date())/365
-        print(age1)
-        try:            
+        try: 
+            print(name_title,profile_pic,alternate_mobile,address,city,state,zip_Code,country,gender,bloodgroup,age1)
             user= request.user
+            print(user.first_name)         
+            print(user.last_name)         
             # user.patients.name_title=name_title
             user.name_title=name_title
-            user.patients.fisrt_name=user.first_name
-            user.patients.last_name=user.last_name
+            user.first_name = fisrt_name
+            user.last_title = last_title
+            user.patients.fisrt_name=fisrt_name
+            user.patients.last_name=last_title
             if profile_pic:
                 fs=FileSystemStorage()
                 filename1=fs.save(profile_pic.name,profile_pic)
@@ -669,95 +674,102 @@ def CancelPictureForMedicineViews(request,id):
 """
 Add Someone As patient and Update  and delete
 """
-def AddSomeoneAsPatient(request):
-    if request.method == "POST":
-        action =request.POST.get("action")
-        fisrt_name = request.POST.get("fisrt_name")
-        last_name = request.POST.get("last_name")
-        name_title = request.POST.get("name_title")
-        age = request.POST.get("age")
-        email = request.POST.get("email")
-        add_notes = request.POST.get("add_notes")
-        phone = request.POST.get("phone")
-        ID_number = request.POST.get("ID_number")
-        status = request.POST.get("status")
-        ID_proof = request.FILES.get("ID_proof")
-        address = request.POST.get("address")
-        city = request.POST.get("city")
-        gender = request.POST.get("gender")
-        bloodgroup = request.POST.get("bloodgroup")
-        id = request.POST.get("id")
-        did = request.POST.get("did")
-        someoneid = request.POST.get("someoneid")
-        state = "Gujarat"
-        country = "India"
-        zip_Code = request.POST.get("zip_Code")
-        page_name = request.POST.get("page_name")
-        if action == "add":            
-            # for Hospital staff user creation
-            try:
-                profile_pic_url = ""
-                if ID_proof:
-                    fs=FileSystemStorage()
-                    filename=fs.save(ID_proof.name,ID_proof)
-                    media_url=fs.url(filename)
-                    profile_pic_url = media_url
-                print("insdie id_proof")     
-            
-                patient=get_object_or_404(Patients,admin=request.user)
-                someone = ForSome(patient=patient,name_title=name_title,fisrt_name=fisrt_name,last_name=last_name,address=address,city=city,state=state,country=country,zip_Code=zip_Code,age=age,phone=phone,ID_proof=profile_pic_url,add_notes=add_notes,gender=gender,is_active=True,email=email,bloodgroup=bloodgroup)        
-                someone.save()            
-                messages.add_message(request,messages.SUCCESS,"Successfully Added")
-                if page_name == "HOMEVISIT":
-                    return HttpResponseRedirect(reverse("home_visit_doctor", kwargs={'id':id,"did":did}))
-                if page_name == "OPD":
+class AddSomeoneAsPatient(SuccessMessageMixin,CreateView):
+    def get(self, request, *args, **kwargs):
+        patient=get_object_or_404(Patients,admin=request.user)
+        someone = ForSome.objects.filter(patient=patient)
+        param = {'someones':someone}
+        return render(request,'patient/dependent.html',param)
+
+    def AddSomeoneAsPatient(request):
+        if request.method == "POST":
+            action =request.POST.get("action")
+            fisrt_name = request.POST.get("fisrt_name")
+            last_name = request.POST.get("last_name")
+            name_title = request.POST.get("name_title")
+            age = request.POST.get("age")
+            email = request.POST.get("email")
+            add_notes = request.POST.get("add_notes")
+            phone = request.POST.get("phone")
+            ID_number = request.POST.get("ID_number")
+            status = request.POST.get("status")
+            ID_proof = request.FILES.get("ID_proof")
+            address = request.POST.get("address")
+            city = request.POST.get("city")
+            gender = request.POST.get("gender")
+            bloodgroup = request.POST.get("bloodgroup")
+            id = request.POST.get("id")
+            did = request.POST.get("did")
+            someoneid = request.POST.get("someoneid")
+            state = "Gujarat"
+            country = "India"
+            zip_Code = request.POST.get("zip_Code")
+            page_name = request.POST.get("page_name")
+            if action == "add":            
+                # for Hospital staff user creation
+                try:
+                    profile_pic_url = ""
+                    if ID_proof:
+                        fs=FileSystemStorage()
+                        filename=fs.save(ID_proof.name,ID_proof)
+                        media_url=fs.url(filename)
+                        profile_pic_url = media_url
+                    print("insdie id_proof")     
+                
+                    patient=get_object_or_404(Patients,admin=request.user)
+                    someone = ForSome(patient=patient,name_title=name_title,fisrt_name=fisrt_name,last_name=last_name,address=address,city=city,state=state,country=country,zip_Code=zip_Code,age=age,phone=phone,ID_proof=profile_pic_url,add_notes=add_notes,gender=gender,is_active=True,email=email,bloodgroup=bloodgroup)        
+                    someone.save()            
+                    messages.add_message(request,messages.SUCCESS,"Successfully Added")
+                    if page_name == "HOMEVISIT":
+                        return HttpResponseRedirect(reverse("home_visit_doctor", kwargs={'id':id,"did":did}))
+                    if page_name == "OPD":
+                        return HttpResponseRedirect(reverse("bookappoinment", kwargs={'id':id,"did":did}))
+                    if page_name == "LAB":
+                        return HttpResponseRedirect(reverse("laboratory_details", kwargs={'id':id}))
+                    # if page_name == "ONLINE":
+                    # if page_name == "SETTING":
+                except Exception as e:
+                    return HttpResponse(e)
+            elif action == "update":
+                try:
+                    profile_pic_url = ""
+                    if ID_proof:
+                        fs=FileSystemStorage()
+                        filename=fs.save(ID_proof.name,ID_proof)
+                        media_url=fs.url(filename)
+                        profile_pic_url = media_url
+                    print("insdie id_proof")     
+                
+                    patient=get_object_or_404(Patients,admin=request.user)
+                    someone = get_object_or_404(ForSome,id=someoneid)
+                    someone.patient=patient
+                    someone.name_title=name_title
+                    someone.fisrt_name=fisrt_name
+                    someone.last_name=last_name
+                    someone.address=address
+                    someone.city=city
+                    someone.state=state
+                    someone.country=country
+                    someone.zip_Code=zip_Code
+                    someone.age=age
+                    someone.phone=phone
+                    someone.ID_proof=profile_pic_url
+                    someone.add_notes=add_notes
+                    someone.gender=gender
+                    someone.is_active=True
+                    someone.email=email
+                    someone.bloodgroup=bloodgroup        
+                    someone.save()            
+                    messages.add_message(request,messages.SUCCESS,"Successfully updated")
                     return HttpResponseRedirect(reverse("bookappoinment", kwargs={'id':id,"did":did}))
-                if page_name == "LAB":
-                    return HttpResponseRedirect(reverse("laboratory_details", kwargs={'id':id}))
-                # if page_name == "ONLINE":
-                # if page_name == "SETTING":
-            except Exception as e:
-                return HttpResponse(e)
-        elif action == "update":
-            try:
-                profile_pic_url = ""
-                if ID_proof:
-                    fs=FileSystemStorage()
-                    filename=fs.save(ID_proof.name,ID_proof)
-                    media_url=fs.url(filename)
-                    profile_pic_url = media_url
-                print("insdie id_proof")     
-            
+                except Exception as e:
+                    return HttpResponse(e)       
+            elif action == "delete":
                 patient=get_object_or_404(Patients,admin=request.user)
-                someone = get_object_or_404(ForSome,id=someoneid)
-                someone.patient=patient
-                someone.name_title=name_title
-                someone.fisrt_name=fisrt_name
-                someone.last_name=last_name
-                someone.address=address
-                someone.city=city
-                someone.state=state
-                someone.country=country
-                someone.zip_Code=zip_Code
-                someone.age=age
-                someone.phone=phone
-                someone.ID_proof=profile_pic_url
-                someone.add_notes=add_notes
-                someone.gender=gender
-                someone.is_active=True
-                someone.email=email
-                someone.bloodgroup=bloodgroup        
-                someone.save()            
-                messages.add_message(request,messages.SUCCESS,"Successfully updated")
-                return HttpResponseRedirect(reverse("bookappoinment", kwargs={'id':id,"did":did}))
-            except Exception as e:
-                return HttpResponse(e)       
-        elif action == "delete":
-            patient=get_object_or_404(Patients,admin=request.user)
-            patient.is_active= delete()
-            messages.add_message(request,messages.SUCCESS,"Successfully Deleted")
-        else:
-            return HttpResponse("on other side")
+                patient.is_active= False
+                messages.add_message(request,messages.SUCCESS,"Successfully Deleted")
+            else:
+                return HttpResponse("on other side")
    
 """
 Checkout page

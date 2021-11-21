@@ -151,7 +151,7 @@ $(document).ready(function() {
         console.log("inside hospital") 
 
        $.ajax({
-            type: 'POST',
+            type: 'POST', 
             url: "{% url 'manage_appointment' %}",
             data:{
                 'a_id':$(this).data('index'),

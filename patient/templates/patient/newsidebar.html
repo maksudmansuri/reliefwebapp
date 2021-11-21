@@ -7,10 +7,10 @@
 										<img src="{{request.user.profile_pic}}" alt="User Image">
 									</a>
 									<div class="profile-det-info">
-										<h3>Richard Wilson</h3>
+										<h3>{{user.name_title}}. {{user.first_name}} {{user.last_name}}</h3>
 										<div class="patient-details">
-											<h5><i class="fas fa-birthday-cake"></i> 24 Jul 1983, 38 years</h5>
-											<h5 class="mb-0"><i class="fas fa-map-marker-alt"></i> Newyork, USA</h5>
+											<h5><i class="fas fa-birthday-cake"></i> {{user.patients.dob}},  {{user.patients.age}} years</h5>
+											<h5 class="mb-0"><i class="fas fa-map-marker-alt"></i> {{user.patients.city}}, {{user.patients.state}} ,{{user.patients.country}}</h5>
 										</div>
 									</div>
 								</div>
@@ -18,20 +18,22 @@
 							<div class="dashboard-widget">
 								<nav class="dashboard-menu">
 									<ul>
-										<li class="active">
-											<a href="patient-dashboard.html">
+										{% url 'patient_home' as patient_home %}
+										<li {% if request.path == patient_home %}class="active"{% endif %}>
+											<a href="{% url 'patient_home' %}">
 												<i class="fas fa-columns"></i>
 												<span>Dashboard</span>
 											</a>
 										</li>
-										<li>
+										{% comment %} <li>
 											<a href="favourites.html">
 												<i class="fas fa-bookmark"></i>
 												<span>Favourites</span>
 											</a>
-										</li>
-										<li>
-											<a href="dependent.html">
+										</li> {% endcomment %}
+										{% url 'add_someone_as_patient' as add_someone_as_patient %}
+										<li {% if request.path == add_someone_as_patient %}class="active"{% endif %}> 
+											<a href="{% url 'add_someone_as_patient' %}">
 												<i class="fas fa-users"></i>
 												<span>Dependent</span>
 											</a>
@@ -68,20 +70,22 @@
 												<span>Medical Details</span>
 											</a>
 										</li>
-										<li>
-											<a href="profile-settings.html">
+										{% url 'patient_update' as patient_update %}
+										<li {% if request.path == patient_update %}class="active"{% endif %}>
+											<a href="{% url 'patient_update' %}">
 												<i class="fas fa-user-cog"></i>
 												<span>Profile Settings</span>
 											</a>
 										</li>
-										<li>
-											<a href="change-password.html">
+										{% url 'password_change_patient' as password_change_patient %}
+										<li {% if request.path == password_change_patient %}class="active"{% endif %}>
+											<a href="{% url 'password_change_patient' %}">
 												<i class="fas fa-lock"></i>
 												<span>Change Password</span>
 											</a>
 										</li>
 										<li>
-											<a href="index.html">
+											<a href="{% url 'dologout' %}">
 												<i class="fas fa-sign-out-alt"></i>
 												<span>Logout</span>
 											</a>

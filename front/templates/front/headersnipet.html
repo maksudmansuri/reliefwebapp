@@ -139,8 +139,8 @@
                                     class="avatar-img rounded-circle">
                             </div>
                             <div class="user-text">
-                                <h6>Richard Wilson</h6>
-                                <p class="text-muted mb-0">Patient</p>
+                                <h6>{{request.user.first_name}} {{request.user.last_name}}</h6>
+                                {% comment %} <p class="text-muted mb-0">Patient</p> {% endcomment %}
                             </div>
                         </div>
                         <a class="dropdown-item" href="{% url 'patient_home' %}">Dashboard</a>

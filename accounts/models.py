@@ -114,6 +114,21 @@ class Specailist(models.Model):
     updated_at          =models.DateTimeField(auto_now_add=True)
     objects             =models.Manager()
  
+class LabSpecailist(models.Model):
+    id                  =models.AutoField(primary_key=True)
+    specialist_name               =models.CharField(max_length=500,null=True,blank=True)
+    specialist_icon         =models.FileField(upload_to="Lab/specialist/images/%Y/%m/%d/",max_length=500,null=True,default="")
+    created_at          =models.DateTimeField(auto_now_add=True)
+    updated_at          =models.DateTimeField(auto_now_add=True)
+    objects             =models.Manager()
+
+class PharmacySpecailist(models.Model):
+    id                  =models.AutoField(primary_key=True)
+    specialist_name               =models.CharField(max_length=500,null=True,blank=True)
+    specialist_icon         =models.FileField(upload_to="Pharmacy/specialist/images/%Y/%m/%d/",max_length=500,null=True,default="")
+    created_at          =models.DateTimeField(auto_now_add=True)
+    updated_at          =models.DateTimeField(auto_now_add=True)
+    objects             =models.Manager()
 
 class AdminHOD(models.Model):
     id                  =models.AutoField(primary_key=True)

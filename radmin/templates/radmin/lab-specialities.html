@@ -1,0 +1,183 @@
+{% extends 'radmin/base.html' %}
+{% load static %}
+{% block title %} :: Relief Pro::  Specialist for Labs{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block content %}
+ 
+    <!-- Body: Body -->       
+<div class="body d-flex py-lg-3 py-md-2">
+    <div class="container-xxl">
+        <div class="row align-items-center">
+            <div class="border-0 mb-4">
+                <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                    <h3 class="fw-bold mb-0">All Labs Specialist</h3>
+                    <div class="col-auto d-flex w-sm-100">
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100" data-bs-toggle="modal" data-bs-target="#depadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add</button>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- Row end  -->
+        <div class="row clearfix g-3">
+            <div class="col-sm-12">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Specialist</th> 
+                                    <th>Actions</th>  
+                                </tr>
+                            </thead> 
+                            <tbody>
+                            {% for speciallist in speciallists %}
+                                <tr>
+                                    <td>
+                                        <span class="fw-bold">SP-{{forloop.counter}}</span>
+                                    </td>
+                                    <td>
+                                        <img class="avatar rounded-circle" src="{{speciallist.specialist_icon}}" alt="">
+                                        <span class="fw-bold ms-1">{{speciallist.specialist_name}}</span>
+                                    </td>
+                                  
+                                       <td class=" dt-body-right">
+                                                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#edit_specialities_details{{speciallist.id}}"><i class="icofont-edit text-success"></i></button>
+                                                    <button type="button" class="btn btn-outline-secondary deleterow1" data-bs-toggle="modal" data-bs-target="#delete_specialities_details{{speciallist.id}}"><i class="icofont-ui-delete text-danger"></i></button>
+                                                </div>
+                                            </td><!-- /btn-group -->
+                                    
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div><!-- Row End -->
+    </div>
+</div>
+ 
+{% endblock content %}
+{% block modal_fade %}
+<!-- Add Department-->
+        <div class="modal fade" id="depadd" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depaddLabel"> Specialist Add</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="deadline-form">
+                        <form method="post" enctype="multipart/form-data" >
+						{% csrf_token %}
+                            <div class="row g-3 mb-3">
+                              <div class="col-sm-6">
+                                <label for="depone" class="form-label">Specialities</label>
+                                <input type="text" class="form-control" id="specialist_name" name="specialist_name" required>
+                              </div>
+                              <div class="col-sm-6">
+                                <label for="deptwo" class="form-label">Image</label>
+                                <input type="file" class="form-control" id="deptwo" name="specialist_icon" required>
+                              </div>
+                            </div>
+							 <div class="modal-footer">
+								<button type="submit" class="btn btn-primary">Add</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							</div>	
+                        </form>
+                    </div>
+                </div>
+               
+            </div>
+            </div>
+        </div>
+
+        <!-- Edit Department-->
+        {% for speciallist in speciallists %}
+        <div class="modal fade" id="edit_specialities_details{{speciallist.id}}" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depeditLabel"> Specialist Edit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="deadline-form">
+                        <form method="post" enctype="multipart/form-data" action="{% url 'update_specialist_lab' speciallist.id %}">
+						{% csrf_token %}
+                            <div class="row g-3 mb-3">
+                              <div class="col-sm-6">
+                                <label for="depone" class="form-label">Specialities</label>
+                                <input type="text" class="form-control" name="specialist_name" value="{{speciallist.specialist_name}}">
+                              </div>
+                              <div class="col-sm-6">
+                                <label for="deptwo" class="form-label">Image</label>
+                                <input type="file" class="form-control" name="specialist_icon" value="{{speciallist.specialist_icon}}">
+                              </div>
+                            </div>
+							 <div class="modal-footer">
+								<button type="submit" class="btn btn-primary">Update</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							</div>	
+                        </form>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div> 
+        {% endfor %}
+
+		<!--Delete Specialist-->
+        {% for speciallist in speciallists %}
+        <div class="modal fade" id="delete_specialities_details{{speciallist.id}}" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depeditLabel"> Specialist Edit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body"> 
+                    <div class="deadline-form">
+						<h4 class="modal-title">Delete</h4>
+						<p class="mb-4">Are you sure want to delete?</p>
+						<form method="post" action="{% url 'delete_specialist_lab' speciallist.id %}">
+							{% csrf_token %}
+							<button type="submit" class="btn btn-primary" >YES </button>
+							<button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
+						</form>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div> 
+        {% endfor %}
+{% endblock modal_fade %}
+
+{% block custom_js %}
+<script>
+    // project data table
+    $(document).ready(function() {
+        $('#myProjectTable')
+        .addClass( 'nowrap' )
+        .dataTable( {
+            responsive: true,
+            columnDefs: [
+                { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+        $('.deleterow').on('click',function(){
+        var tablename = $(this).closest('table').DataTable();  
+        tablename
+            .row( $(this)
+            .parents('tr') )
+            .remove()
+            .draw();
+
+        } );
+    });
+</script>
+{% endblock custom_js %}

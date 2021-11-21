@@ -10,7 +10,7 @@
 						<li class="active">
 							<a href="index.html"><i class="fe fe-home"></i> <span>Dashboard</span></a>
 						</li>
-						<li>
+						<li> 
 							<a href="appointment-list.html"><i class="fe fe-layout"></i> <span>Appointments</span></a>
 						</li>
                         <li class="submenu">
@@ -18,8 +18,8 @@
 									class="menu-arrow"></span></a>
 							<ul style="display: none;">
 								<li><a href="{% url 'specialist_hospital' %}"> Hospital </a></li>
-								<li><a href="blog-details.html"> Labs</a></li>
-								<li><a href="add-blog.html"> Pharmacy</a></li>
+								<li><a href="{% url 'specialist_lab' %}"> Labs</a></li>
+								<li><a href="{% url 'specialist_pharmacy' %}"> Pharmacy</a></li>
 							</ul>
 						</li>
 						

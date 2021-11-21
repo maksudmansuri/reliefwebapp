@@ -1,0 +1,287 @@
+{% extends 'radmin/base.html' %}
+{% load static %}
+{% block title %} :: Relief Pro::  Hospitals Rooms{% endblock title %}
+
+{% block custom_css %}
+<style>
+.ScrollStyle
+{
+    max-height: 150px;
+    overflow-y: scroll;
+}
+
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+ 
+    <!-- Body: Body -->       
+<div class="body d-flex py-lg-3 py-md-2">
+    <div class="container-xxl">
+        <div class="row align-items-center">
+            <div class="border-0 mb-4">
+                <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                    <h3 class="fw-bold mb-0">All Rooms</h3>
+                    <div class="col-auto d-flex w-sm-100">
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100 " data-bs-toggle="modal" data-bs-target="#addcountry"><i class="icofont-plus-circle me-2 fs-6"></i>Add Country</button>
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;" data-bs-toggle="modal" data-bs-target="#addstate"><i class="icofont-plus-circle me-2 fs-6"></i>Add State</button>
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;" data-bs-toggle="modal" data-bs-target="#addcity"><i class="icofont-plus-circle me-2 fs-6"></i>Add City</button>
+                    </div>
+                   
+                </div>
+            </div>
+        </div> <!-- Row end  -->
+        <div class="row clearfix g-3">
+            <div class="col-sm-12">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>City</th>   
+                                    <th>State</th> 
+                                    <th>Country</th>
+                                    <th>Action</th>
+                                    
+                                </tr>
+                            </thead> 
+                            <tbody>
+                            {% for city in cities %}
+                                <tr>
+                                    <td>
+                                        <span class="fw-bold">{{forloop.counter}}</span>
+                                    </td>
+                                    <td>
+                                        <span class="fw-bold">{{city.city_name}}</span>
+                                    </td>
+                                    <td>
+                                        
+                                        <span class="fw-bold ms-1">{{city.state.state_name}}</span>
+                                    </td>
+                                    <td>
+                                        {{city.country.country_name}}
+                                    </td>
+                                    
+                                    <td>
+                                           
+                                            <a type="button" class="btn btn-outline-secondary deleterow" id="deleteroom" href="{% url 'delete_city' city.id %}" ><i class="icofont-ui-delete text-danger"></i><a>
+
+                                        </div>
+                                    </td>
+                                    
+                                   
+                                    
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div><!-- Row End -->
+    </div>
+</div>
+ 
+{% endblock content %}
+{% block modal_fade %}
+<!--Add country-->
+        <div class="modal fade" id="addcountry" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+            <div class="modal-content">
+            <form id="roomadd" method="post">
+            {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depaddLabel">Add Country</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="rooms_price" class="form-label">Country</label>
+                        <input type="text" class="form-control" name="country_name" required>
+                        <input type="hidden" class="form-control" name="area" value="country">
+                    </div>
+                    
+                   
+                </div>
+                <div class="card-body basic-custome-color ">
+                    <div class="table-responsive ScrollStyle">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                <th>sr</th>
+                                <th scope="col">Country</th>
+                                <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody  > 
+                            {% for country in countries %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{country.country_name}}</td>                                
+                                   <td> 
+                                        <a type="button" class="btn btn-outline-secondary" href="{% url 'delete_country' country.id %}" ><i class="icofont-ui-delete text-danger"></i><a>
+                                    </td> 
+                                </tr>
+                            {% endfor %}  
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button> {% endcomment %}
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+                
+            
+
+            </form>
+            </div>
+            </div>
+        </div>
+
+<!--Add State-->
+        <div class="modal fade" id="addstate" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+            <div class="modal-content">
+            <form id="roomadd" method="post">
+            {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depaddLabel">Add State</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+                     <div class="mb-3">
+                        <label  class="form-label">Country *</label>
+                        <select class="form-select" aria-label="Default select example" name="country" required>
+                        <option value="">selecte</option>
+                        {% for country1 in countries %}
+                            <option value="{{country1.id}}">{{country1.country_name}}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rooms_price" class="form-label">State</label>
+                        <input type="text" class="form-control" name="state_name" required>
+                        <input type="hidden" class="form-control" name="area" value="state">
+                    </div>
+                   
+                   
+                </div>
+                <div class="card-body basic-custome-color ">
+                    <div class="table-responsive ScrollStyle">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                <th>sr</th>
+                                <th scope="col">state</th>
+                                <th scope="col">Country</th>
+                                <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody  > 
+                            {% for state in states %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{state.state_name}}</td>                                
+                                    <td>{{state.country.country_name}}</td>                                
+                                   <td> 
+                                        <a type="button" class="btn btn-outline-secondary"  href="{% url 'delete_state' state.id %}" ><i class="icofont-ui-delete text-danger"></i><a>
+                                    </td> 
+                                </tr>
+                            {% endfor %}  
+                            </tbody>
+                        </table>
+                    </div>
+                </div> 
+                <div class="modal-footer">
+                    {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button> {% endcomment %}
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+                
+            
+
+            </form>
+            </div>
+            </div>
+        </div>
+
+
+<!--Add City-->
+        <div class="modal fade" id="addcity" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+            <div class="modal-content">
+            <form id="" method="post">
+            {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depaddLabel">Add City</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+                     <div class="mb-3">
+                        <label  class="form-label">Country *</label>
+                        <select class="form-select country-dropdown" aria-label="Default select example" name="state" id="country-dropdown" required>                        
+                        <option disabled selected>Choose State</option>
+                            {% for countrystate in state_country_wise_list  %}
+                                <optgroup label={{ countrystate.country.country_name}}>
+                                {% for state in countrystate.state_list  %}
+                                    <option value="{{state.id}}">{{state.state_name}}</option>
+                                {% endfor %}   
+                                </optgroup>     
+                            {% endfor %}
+                        </select>
+                        
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="rooms_price" class="form-label">City</label>
+                        <input type="text" class="form-control" name="city_name" required>
+                        <input type="hidden" class="form-control" name="area" value="city">
+                    </div>
+                   
+                   
+                </div>
+               
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div> 
+                
+            
+
+            </form>
+            </div>
+            </div>
+        </div>
+
+
+
+{% endblock modal_fade %}
+
+{% block custom_js %}
+{% comment %} 
+<script>
+
+     $(document).ready(function () {
+         $('.country-dropdown').on('change', function () {
+             console.log("inside")
+             var country_id = this.value;
+             $.ajax({
+                 url: "{% url 'find_state' %}",
+                 type: "POST",
+                 data: {
+                    'country_id': country_id,
+                    'csrfmiddlewaretoken': "{{csrf_token}}",
+                 },
+                 success: function (result) {
+                     console.log(result)
+                     $("#state-dropdown").html(result);
+                 }
+             });
+         });
+        
+     }); 
+</script> {% endcomment %}
+{% endblock custom_js %}
