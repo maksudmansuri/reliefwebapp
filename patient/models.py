@@ -21,11 +21,13 @@ from asgiref.sync import async_to_sync,sync_to_async
 # Create your models here.
 class ForSome(models.Model):
     id                  =models.AutoField(primary_key=True)
-    name_title          =models.CharField(max_length=50,blank=True,null=True,default="")
+    profile_pic         =models.FileField(upload_to="user/profile_pic",max_length=500,null=True,default="")
     patient             =models.ForeignKey(Patients,on_delete=models.CASCADE)
+    relationship        =models.CharField(max_length=50,blank=True,null=True,default="")
+    name_title          =models.CharField(max_length=50,blank=True,null=True,default="")
     fisrt_name          =models.CharField(max_length=250,blank=True,null=True,default="")
-    email               =models.EmailField(max_length=254,blank=True,null=True,default="xyz@gmail.com")
     last_name           =models.CharField(max_length=250,blank=True,null=True,default="")
+    email               =models.EmailField(max_length=254,blank=True,null=True,default="xyz@gmail.com")
     address             =models.CharField(max_length=500,blank=True,null=True,default="")
     city                =models.CharField(max_length=250,blank=True,null=True,default="")
     state               =models.CharField(max_length=250,blank=True,null=True,default="")

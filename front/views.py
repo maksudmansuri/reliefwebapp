@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.db.models import Q
 from accounts.models import Hospitals, Labs, Pharmacy
 from hospital.models import HospitalMedias
-from patient.views import HospitalListViews
 
 # Create your views here.
  
@@ -42,7 +41,7 @@ class SearchHospitalView(ListView):
         return hospital_media_list
    
     def get_context_data(self,**kwargs):
-        context=super(HospitalListViews,self).get_context_data(**kwargs)
+        context=super(SearchHospitalView,self).get_context_data(**kwargs)
         context["filter"]=self.request.GET.get("filter","")
         context["orderby"]=self.request.GET.get("orderby","id")
         context["all_table_fields"]=Hospitals._meta.get_fields()

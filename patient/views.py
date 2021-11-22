@@ -681,9 +681,9 @@ class AddSomeoneAsPatient(SuccessMessageMixin,CreateView):
         param = {'someones':someone}
         return render(request,'patient/dependent.html',param)
 
-    def AddSomeoneAsPatient(request):
+    def post(self, request, *args, **kwargs):
         if request.method == "POST":
-            action =request.POST.get("action")
+            where =request.POST.get("where")
             fisrt_name = request.POST.get("fisrt_name")
             last_name = request.POST.get("last_name")
             name_title = request.POST.get("name_title")
@@ -694,6 +694,7 @@ class AddSomeoneAsPatient(SuccessMessageMixin,CreateView):
             ID_number = request.POST.get("ID_number")
             status = request.POST.get("status")
             ID_proof = request.FILES.get("ID_proof")
+            profile_pic = request.FILES.get("profile_pic")
             address = request.POST.get("address")
             city = request.POST.get("city")
             gender = request.POST.get("gender")
@@ -704,20 +705,31 @@ class AddSomeoneAsPatient(SuccessMessageMixin,CreateView):
             state = "Gujarat"
             country = "India"
             zip_Code = request.POST.get("zip_Code")
+            relationship = request.POST.get("relationship")
             page_name = request.POST.get("page_name")
-            if action == "add":            
+            print("inside add someone view")
+            if where == "add":            
                 # for Hospital staff user creation
                 try:
                     profile_pic_url = ""
-                    if ID_proof:
-                        fs=FileSystemStorage()
-                        filename=fs.save(ID_proof.name,ID_proof)
-                        media_url=fs.url(filename)
-                        profile_pic_url = media_url
+                   
+
+                    ID_proof_url = ""
+                    
                     print("insdie id_proof")     
                 
                     patient=get_object_or_404(Patients,admin=request.user)
-                    someone = ForSome(patient=patient,name_title=name_title,fisrt_name=fisrt_name,last_name=last_name,address=address,city=city,state=state,country=country,zip_Code=zip_Code,age=age,phone=phone,ID_proof=profile_pic_url,add_notes=add_notes,gender=gender,is_active=True,email=email,bloodgroup=bloodgroup)        
+                    someone = ForSome(patient=patient,name_title=name_title,fisrt_name=fisrt_name,last_name=last_name,address=address,city=city,state=state,country=country,zip_Code=zip_Code,age=age,phone=phone,add_notes=add_notes,gender=gender,is_active=True,email=email,bloodgroup=bloodgroup,relationship=relationship)
+                    if profile_pic:
+                        fs=FileSystemStorage()
+                        filename=fs.save(profile_pic.name,profile_pic)
+                        media_url=fs.url(filename)
+                        someone.profile_pic = media_url
+                    if ID_proof:
+                        fs1=FileSystemStorage()
+                        filename=fs1.save(ID_proof.name,ID_proof)
+                        id_media_url=fs1.url(filename)
+                        someone.ID_proof = id_media_url   
                     someone.save()            
                     messages.add_message(request,messages.SUCCESS,"Successfully Added")
                     if page_name == "HOMEVISIT":
@@ -726,18 +738,15 @@ class AddSomeoneAsPatient(SuccessMessageMixin,CreateView):
                         return HttpResponseRedirect(reverse("bookappoinment", kwargs={'id':id,"did":did}))
                     if page_name == "LAB":
                         return HttpResponseRedirect(reverse("laboratory_details", kwargs={'id':id}))
+                    if page_name == "depedent_page":
+                        return HttpResponseRedirect(reverse("add_someone_as_patient"))
                     # if page_name == "ONLINE":
                     # if page_name == "SETTING":
                 except Exception as e:
                     return HttpResponse(e)
-            elif action == "update":
+            elif where == "update":
                 try:
-                    profile_pic_url = ""
-                    if ID_proof:
-                        fs=FileSystemStorage()
-                        filename=fs.save(ID_proof.name,ID_proof)
-                        media_url=fs.url(filename)
-                        profile_pic_url = media_url
+                   
                     print("insdie id_proof")     
                 
                     patient=get_object_or_404(Patients,admin=request.user)
@@ -753,24 +762,51 @@ class AddSomeoneAsPatient(SuccessMessageMixin,CreateView):
                     someone.zip_Code=zip_Code
                     someone.age=age
                     someone.phone=phone
-                    someone.ID_proof=profile_pic_url
+                    if ID_proof:
+                        fs1=FileSystemStorage()
+                        filename=fs1.save(ID_proof.name,ID_proof)
+                        id_media_url=fs1.url(filename)
+                        someone.ID_proof = id_media_url
                     someone.add_notes=add_notes
                     someone.gender=gender
                     someone.is_active=True
                     someone.email=email
-                    someone.bloodgroup=bloodgroup        
+                    someone.bloodgroup=bloodgroup
+                    if profile_pic:
+                        fs=FileSystemStorage()
+                        filename=fs.save(profile_pic.name,profile_pic)
+                        media_url=fs.url(filename)
+                        someone.profile_pic= media_url
+                    someone.relationship=relationship
                     someone.save()            
                     messages.add_message(request,messages.SUCCESS,"Successfully updated")
-                    return HttpResponseRedirect(reverse("bookappoinment", kwargs={'id':id,"did":did}))
+                    if page_name == "HOMEVISIT":
+                        return HttpResponseRedirect(reverse("home_visit_doctor", kwargs={'id':id,"did":did}))
+                    if page_name == "OPD":
+                        return HttpResponseRedirect(reverse("bookappoinment", kwargs={'id':id,"did":did}))
+                    if page_name == "LAB":
+                        return HttpResponseRedirect(reverse("laboratory_details", kwargs={'id':id}))
+                    if page_name == "depedent_page":
+                        return HttpResponseRedirect(reverse("add_someone_as_patient"))
                 except Exception as e:
                     return HttpResponse(e)       
-            elif action == "delete":
-                patient=get_object_or_404(Patients,admin=request.user)
-                patient.is_active= False
-                messages.add_message(request,messages.SUCCESS,"Successfully Deleted")
             else:
                 return HttpResponse("on other side")
-   
+
+def ForSomeDeactive(request,id):
+    forsome =get_object_or_404(ForSome ,id=id)
+    forsome.is_active =False
+    forsome.save()
+    messages.add_message(request,messages.SUCCESS,"Successfully Deactivated")
+    return HttpResponseRedirect(reverse("add_someone_as_patient"))
+
+def ForSomeActive(request,id):
+    forsome =get_object_or_404(ForSome ,id=id)
+    forsome.is_active =True
+    forsome.save()
+    messages.add_message(request,messages.SUCCESS,"Successfully Acticated")
+    return HttpResponseRedirect(reverse("add_someone_as_patient"))
+
 """
 Checkout page
 """

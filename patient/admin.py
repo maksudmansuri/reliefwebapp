@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from patient.models import Booking, ForSome, ReBooking,phoneOPTforoders,Orders,LabTest,Temp,patientFile,PatientBottelAndInjections,PatientMedicine,PatientReports,PatientSymptons,PicturesForMedicine,TreatmentReliefPetient,Admited,FollowedUp,Slot,ReBooking,ForSome
+from patient.models import Booking, ForSome, ReBooking,phoneOPTforoders,Orders,LabTest,Temp,patientFile,PatientBottelAndInjections,PatientMedicine,PatientReports,PatientSymptons,PicturesForMedicine,TreatmentReliefPetient,Admited,FollowedUp,Slot,ReBooking
 # Register your models here.
 
 admin.site.register(Booking)

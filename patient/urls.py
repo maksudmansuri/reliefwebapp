@@ -40,6 +40,8 @@ urlpatterns = [
 
     # add Some one as petient add , update , delete
     path('add_someone_as_patient', views.AddSomeoneAsPatient.as_view(), name="add_someone_as_patient"),
+    path('deactive_someone_as_patient/<id>', views.ForSomeDeactive, name="deactive_someone_as_patient"),
+    path('active_someone_as_patient/<id>', views.ForSomeActive, name="active_someone_as_patient"),
 
     path('<booking_id>',views.bookingConfirmation,name="booking_confirmation"),
     path('lab/<slot_id>',views.slotConfirmation,name="lab_confirmation"),
