@@ -72,6 +72,8 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     pass
                 elif modulename == "front.views":
                     pass
+                elif modulename == "patient.PatientPassword":
+                    pass
                 elif modulename == "django.contrib.auth.views":
                     pass
                 elif modulename == "media":

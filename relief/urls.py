@@ -21,7 +21,9 @@ from relief import settings
 from django.conf.urls.static import static
 from accounts import views as accViews
 from django.contrib.auth import views as auth_views
+from patient import PatientPassword as patientAuth
 urlpatterns = [
+
     path('404',accViews.FourZeroFour , name='404'),
     path('admin/', admin.site.urls),
     
@@ -46,9 +48,9 @@ urlpatterns = [
 
     path('password_change/',auth_views.PasswordChangeView.as_view(template_name='password_change.html'),name='password_change'),
 
-    path('password_change_patient/done',auth_views.PasswordChangeDonePatientView.as_view(template_name='password_change_done_patient.html'),name='password_change_done_patient'),
+    path('password_change_patient/done',patientAuth.PasswordChangeDonePatientView.as_view(template_name='password_change_done_patient.html'),name='password_change_done_patient'),
 
-    path('password_change_patient/',auth_views.PasswordChangePatientView.as_view(template_name='password_change_patient.html'),name='password_change_patient'),
+    path('password_change_patient/',patientAuth.PasswordChangePatientView.as_view(template_name='password_change_patient.html'),name='password_change_patient'),
 
     path('password_reset/done',auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_done.html'),name='password_reset_done'),
     
