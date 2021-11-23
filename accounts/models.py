@@ -72,7 +72,7 @@ class CustomUser(AbstractBaseUser):
     otp_session_id  = models.CharField(max_length=120, null=True, default = "")
     otp              = models.CharField(max_length=120, null=True, default = "")
     profile_pic         =models.FileField(upload_to="user/profile_pic",max_length=500,null=True,default="")
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'email' 
 
     REQUIRED_FIELDS = ['username',]
 

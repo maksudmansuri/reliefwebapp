@@ -42,6 +42,12 @@ urlpatterns = [
     #deaprtment manage add update delete 
     path('manage_room',views.manageRoomclassView.as_view(),name="manage_room"),
     path('update_room',views.updateRoom,name="update_room"),
+   
+    #Ambulance manage add update delete 
+    path('manage_ambulance',views.manageAmbulanceclassView.as_view(),name="manage_ambulance"), 
+    path('update_ambulance',views.updateAmbulance,name="update_ambulance"),
+    path('delete_ambulance/<id>',views.deleteAmbulance,name="delete_ambulance"),
+
 
     # Add Doctor Update Doctor
     path('manage_doctor',views.manageDoctorView.as_view(),name="manage_doctor"),
@@ -76,12 +82,19 @@ urlpatterns = [
     #add media delete
     path('manage_gallery',views.manageGalleryView.as_view(),name="manage_gallery"),
     path('delete_gallery',views.deleteGallery,name="delete_gallery"),
-    #active deactive delete Doctor Schedual 
+    #active deactive delete Doctor Schedual  
     path('delete_doctorschedual/<id>/<sid>',views.deleteHospitalDoctorschedual,name="delete_doctorschedual"),
     # path('add_staff',views.addStaffView.as_view(),name="add_staff"),
     #delete price add price
     path('add_price',views.PriceCreate,name="add_price"),
     path('delete_price/<id>',views.deletePrice,name="delete_price"),
     
-    re_path('verifybooking',views.verifybooking,name="verifybooking")
+    re_path('verifybooking',views.verifybooking,name="verifybooking"),
+    
+    #Blog Urls
+    path('add_blog',views.addBlogView.as_view(),name="add_blog"),
+    path('list_blog',views.blogListView.as_view(),name="list_blog"),
+    path('edit_blog/<id>',views.EditBlogUpdateView.as_view,name="edit_blog"),
+
+
 ]  

@@ -1,12 +1,14 @@
 from os import stat_result
+from django.core.files.storage import default_storage
+from django.core.validators import RegexValidator
 
 from django.db.models.deletion import DO_NOTHING
-import hospital
-from django.db import models
-from django.db.models.fields import AutoField, CharField, IntegerField, related
-from accounts.models import DoctorForHospital, HospitalDoctors, Hospitals,CustomUser
 
-# Create your models here.
+from django.db import models
+
+from accounts.models import HospitalDoctors, Hospitals,CustomUser
+
+# Create your models here. 
 
 class HospitalStaffs(models.Model):
     id                  =models.AutoField(primary_key=True)
@@ -253,5 +255,38 @@ class ServiceAndCharges(models.Model):
     def __str__(self): 
         return self.service_name
 
-
- 
+class AmbulanceDetails(models.Model):  
+    id                      =           models.AutoField(primary_key=True)
+    hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE)
+    profile_pic                =           models.FileField(upload_to="hospital/services/images",blank=True,null=True,default="")
+    drive_name              =           models.CharField(max_length=500,blank=True,null=True,default="")
+    phone_regex             =           RegexValidator( regex = r'^\+?1?\d{9,10}$', message ="Phone number must be entered in the format +919999999999. Up to 10 digits allowed.")
+    drive_number            =            models.CharField('Phone',validators =[phone_regex], max_length=10, unique = True)                                          
+    doctor                  =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE,blank=True,null=True)
+    vehicle_type            =           models.CharField(max_length=500,blank=True,null=True,default="")
+    vehicle_number          =           models.CharField(max_length=500,blank=True,null=True,default="",unique = True)
+    charge                  =           models.FloatField(blank=True,null=True,default=0.0)
+    occupied                =           models.BooleanField(default=False,blank=True,null=True)
+    Area                    =           models.CharField(max_length=500,blank=True,null=True,default="")
+    is_active               =           models.BooleanField(blank=True,null=True,default=False)
+    created_at              =           models.DateTimeField(auto_now=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
+    
+    def __str__(self): 
+        return self.vehicle_number
+  
+class Blog(models.Model):
+    id                      =           models.AutoField(primary_key=True)
+    hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE)
+    doctor                  =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE,blank=True,null=True)
+    blog_title              =           models.CharField(max_length=500,blank=True,null=True,default="",unique = True)
+    blog_content            =           models.TextField(max_length=5000,blank=True,null=True,default="")
+    blog_image              =           models.FileField(upload_to="hospital/blog/images",blank=True,null=True,default="")
+    is_active               =           models.BooleanField(blank=True,null=True,default=False)
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
+     
+    def __str__(self): 
+        return self.blog_title

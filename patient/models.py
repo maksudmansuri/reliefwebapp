@@ -1,16 +1,13 @@
 import datetime
 import json
 from time import timezone
-import channels
 from channels.layers import get_channel_layer
 from django.contrib import admin
 from django.db.models.fields import IntegerField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.http import request
-import pharmacy
 from django.db.models.base import Model
-import patient
 from django.contrib.auth.models import User
 from hospital.models import HospitalRooms, HospitalServices, HospitalStaffDoctors, ServiceAndCharges
 from accounts.models import CustomUser, Hospitals, Labs, Patients, Pharmacy

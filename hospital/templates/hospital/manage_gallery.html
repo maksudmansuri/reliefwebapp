@@ -35,9 +35,9 @@
                     </form>
 
                     {% if hospitalmedia.media_type == "1" %}
-                   <img style="width:220;height:200px;" src="{{hospitalmedia.media_content}}" class="card-img-top img_preview">                    
+                        <img style="width:220;height:200px;" src="{{hospitalmedia.media_content}}" class="card-img-top img_preview">                    
                     {% elif hospitalmedia.media_type == "2" %}
-                    <video style="width:220;height:200px" src="{{hospitalmedia.media_content}}" class="card-img-top video_preview" controls> 
+                        <video style="width:220;height:200px" src="{{hospitalmedia.media_content}}" class="card-img-top video_preview" controls> 
                     {% endif %}
                     
                     

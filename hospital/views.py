@@ -1,3 +1,4 @@
+from accounts import models
 from chat.models import Notification
 import patient
 from patient.models import Booking, LabTest, Orders, Slot, TreatmentReliefPetient, patientFile, phoneOPTforoders
@@ -12,7 +13,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.files.storage import FileSystemStorage
-from hospital.models import ContactPerson, DepartmentPhones, Departments, HospitalMedias, HospitalRooms, HospitalServices, HospitalStaffDoctorSchedual, HospitalStaffDoctors, HospitalStaffs, HospitalsPatients, Insurances, RoomOrBadTypeandRates, ServiceAndCharges
+from hospital.models import AmbulanceDetails, Blog, ContactPerson, DepartmentPhones, Departments, HospitalMedias, HospitalRooms, HospitalServices, HospitalStaffDoctorSchedual, HospitalStaffDoctors, HospitalStaffs, HospitalsPatients, Insurances, RoomOrBadTypeandRates, ServiceAndCharges
 from accounts.models import CustomUser, DoctorForHospital, HospitalDoctors, HospitalPhones, Hospitals, OPDTime, Patients
 from django.urls import reverse
 from datetime import datetime
@@ -460,12 +461,100 @@ def deactiveRoom(request,id):
         hospitalroom.save()
     # hospitals_list=Hospitals.objects.filter((Q(is_appiled=True) | Q(is_verified=True))  & Q(admin__is_active=True) & Q(admin__user_type=3))
     return HttpResponseRedirect(reverse("manage_room"))
-
+ 
 def deleteHospitalRoom(request,id):
     hospitalroom = HospitalRooms.objects.get(id=id)
     hospitalroom.delete()
     messages.add_message(request,messages.SUCCESS,"Successfully Deleted")
     return HttpResponseRedirect(reverse("manage_room"))
+
+class manageAmbulanceclassView(SuccessMessageMixin,CreateView):
+    def get(self, request, *args, **kwargs):
+        hospital=Hospitals.objects.get(admin=request.user)
+        doctors = HospitalStaffDoctors.objects.filter(hospital=hospital)
+        ambulances = AmbulanceDetails.objects.filter(hospital=hospital)
+        print("hello ambulance")
+        param={'hospital':hospital,'ambulances':ambulances,'doctors':doctors}
+        return render(request,"hospital/manage_ambulance.html",param)
+
+    def post(self, request, *args, **kwargs):
+        vehicle_number = request.POST.get("vehicle_number")
+        drive_name = request.POST.get("drive_name")
+        drive_number = request.POST.get("drive_number")
+        charge = request.POST.get("charge")
+        vehicle_type = request.POST.get("vehicle_type")
+        doctor = request.POST.get("doctor")
+        profile_pic = request.FILES.get("profile_pic")
+        print(profile_pic)
+        is_active = request.POST.get("is_active")
+        active = False
+        if is_active == "on":
+            active= True
+        hospital=get_object_or_404(Hospitals,admin=request.user)
+        
+        try:
+            hospitalroom = AmbulanceDetails(hospital=hospital,vehicle_number=vehicle_number,drive_name=drive_name,drive_number=drive_number,charge=charge,vehicle_type=vehicle_type,is_active=active)
+            if profile_pic:
+                fs=FileSystemStorage()
+                filename1=fs.save(profile_pic.name,profile_pic)
+                profile_pic_url=fs.url(filename1)
+                hospitalroom.profile_pic=profile_pic_url
+            if doctor:
+                doctor =get_object_or_404(HospitalStaffDoctors,id=doctor)
+                hospitalroom.doctor=doctor
+            hospitalroom.save()
+        except:
+            messages.add_message(request,messages.ERROR,"Connection Error Try after some time")
+            return HttpResponseRedirect(reverse("manage_ambulance"))
+        return HttpResponseRedirect(reverse("manage_ambulance"))
+
+def updateAmbulance(request):
+    if request.method == "POST":
+        id= request.POST.get("id")
+        vehicle_number = request.POST.get("vehicle_number")
+        drive_name = request.POST.get("drive_name")
+        drive_number = request.POST.get("drive_number")
+        charge = request.POST.get("charge")
+        vehicle_type = request.POST.get("vehicle_type")
+        is_active = request.POST.get("is_active")
+        doctor = request.POST.get("doctor")
+        profile_pic = request.FILES.get("profile_pic")
+
+        active = False
+        if is_active == "on":
+            active= True
+        try:
+            hospital=get_object_or_404(Hospitals,admin=request.user)
+            
+            hospitalroom =get_object_or_404(AmbulanceDetails,id=id)
+            hospitalroom.hospital=hospital
+            hospitalroom.vehicle_number=vehicle_number
+            hospitalroom.drive_name=drive_name
+            hospitalroom.drive_number=drive_number
+            hospitalroom.charge=charge
+            hospitalroom.vehicle_type=vehicle_type
+            hospitalroom.is_active=active
+            if profile_pic:
+                fs=FileSystemStorage()
+                filename1=fs.save(profile_pic.name,profile_pic)
+                profile_pic_url=fs.url(filename1)
+                hospitalroom.profile_pic=profile_pic_url
+            if doctor:
+                doctor = get_object_or_404(HospitalStaffDoctors,id=doctor)
+                hospitalroom.doctor=doctor
+            hospitalroom.save()
+        except:
+            messages.add_message(request,messages.ERROR,"Connection Error Try after some time")
+            return HttpResponseRedirect(reverse("manage_ambulance"))
+        messages.add_message(request,messages.SUCCESS,"Successfully Updated")
+        return HttpResponseRedirect(reverse("manage_ambulance"))
+
+
+def deleteAmbulance(request,id):
+    hospitalroom = AmbulanceDetails.objects.get(id=id)
+    hospitalroom.delete()
+    messages.add_message(request,messages.SUCCESS,"Successfully Deleted")
+    return HttpResponseRedirect(reverse("manage_ambulance"))
 
 def PriceCreate(request):
     if request.method == "POST":
@@ -1222,7 +1311,7 @@ class ReliefPatientViewsProfile(SuccessMessageMixin,DetailView):
             return HttpResponseRedirect(reverse("manage_relief_patient"))        
         param={'hospital':hospital,'treatmentreliefpetient':treatmentreliefpetient,'oldbooking':oldbooking,'hospitaldoctors':hospitaldoctors,'serviceandcharges':serviceandcharges,'patientfiles':patientfiles,'labtests':labtests}
         return render(request,"hospital/patient_profile.html",param)        
-
+ 
 def ReliefPatientViewsFiles(request,id):
     if request.method == "POST":
         file = request.FILES.get("file")
@@ -1283,3 +1372,58 @@ def deleteReliefHospitalPatient(request,id):
     patient.save()
     messages.add_message(request,messages.SUCCESS,"Successfully Delete")
     return HttpResponseRedirect(reverse("manage_relief_patient"))
+
+""" Blog """
+
+class addBlogView(SuccessMessageMixin,CreateView):
+    def get(self, request, *args, **kwargs):        
+        blogs = Blog.objects.all()
+        hospital=Hospitals.objects.get(admin=request.user) 
+        doctors = HospitalStaffDoctors.objects.filter(hospital=hospital)
+        param={'blogs':blogs,'doctors':doctors}
+        return render(request,"hospital/add-blog.html",param)  
+
+    def post(self, request, *args, **kwargs):
+        blog_title = request.POST.get('blog_title')         
+        content = request.POST.get('content')
+        blog_image = request.FILES.get('blog_image')
+        doctor = request.POST.get('doctor')
+        # try:
+        hospital=Hospitals.objects.get(admin=request.user) 
+        doctor = get_object_or_404(HospitalStaffDoctors,id=doctor)
+        blog = Blog(blog_title=blog_title,blog_content=content,blog_image=blog_image,hospital=hospital,doctor=doctor)
+        blog.save()
+        # except Exception as e:
+            # messages.add_message(request,messages.ERROR,"Something Wrong with connnections")
+            # return HttpResponseRedirect(reverse("add_blog"))
+        return HttpResponseRedirect(reverse("list_blog"))
+ 
+class EditBlogUpdateView(SuccessMessageMixin,UpdateView):
+    def get(self, request, *args, **kwargs):
+        id=kwargs['id']        
+        blog =get_object_or_404(Blog,id=id)
+        hospital=Hospitals.objects.get(admin=request.user) 
+        doctors = HospitalStaffDoctors.objects.filter(hospital=hospital)
+        param={'blog':blog,'doctors':doctors}
+        return render(request,"hospital/edit-blog.html",param)  
+
+    def post(self, request, *args, **kwargs):
+        blog_title = request.POST.get('blog_title')         
+        content = request.POST.get('content')
+        blog_image = request.FILES.get('blog_image')
+        doctor = request.POST.get('doctor')
+        # try:
+        hospital=Hospitals.objects.get(admin=request.user) 
+        doctor = get_object_or_404(HospitalStaffDoctors,id=doctor)
+        blog = Blog(blog_title=blog_title,blog_content=content,blog_image=blog_image,hospital=hospital,doctor=doctor)
+        blog.save()
+        # except Exception as e:
+            # messages.add_message(request,messages.ERROR,"Something Wrong with connnections")
+            # return HttpResponseRedirect(reverse("add_blog"))
+        return HttpResponseRedirect(reverse("list_blog"))
+ 
+
+
+class blogListView(ListView):
+    model = Blog
+    template_name = "hospital/blog.html"
