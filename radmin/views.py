@@ -1,11 +1,11 @@
 from django.contrib import messages
 from django.http import response
 from django.http.request import HttpRequest
-from patient.models import Booking, LabTest, Orders, Slot
+from patient.models import Booking, LabTest, Orders, PicturesForMedicine, Slot
 from django.core.files.storage import FileSystemStorage
 from django.http.response import HttpResponse, HttpResponseBase, HttpResponseRedirect, JsonResponse
 from hospital.models import ContactPerson, HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, Insurances, ServiceAndCharges
-from accounts.models import CustomUser, HospitalPhones, Hospitals, LabSpecailist, Labs, Patients, Pharmacy, PharmacySpecailist, Specailist
+from accounts.models import CustomUser, HospitalPhones, Hospitals, Labs, Patients, Pharmacy, Specailist
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -31,12 +31,16 @@ class AddHospitalSpecialistView(SuccessMessageMixin,CreateView):
     def post(self, request, *args, **kwargs):
         specialist_name=request.POST.get("specialist_name")
         specialist_icon=request.FILES.get("specialist_icon")
+        hover_icon=request.FILES.get("hover_icon")
        
         fs=FileSystemStorage()
         filename1=fs.save(specialist_icon.name,specialist_icon)
         profile_pic_url=fs.url(filename1)
+        fs1=FileSystemStorage()
+        filename2=fs1.save(hover_icon.name,hover_icon)
+        hover_icon_url=fs1.url(filename2)
         try:
-            specailist = Specailist(specialist_name=specialist_name,specialist_icon=profile_pic_url)
+            specailist = Specailist(specialist_name=specialist_name,specialist_icon=profile_pic_url,hover_icon=hover_icon_url)
             specailist.save()
         except Exception as e:
             messages.add_message(request,messages.ERROR,e)
@@ -46,9 +50,10 @@ class AddHospitalSpecialistView(SuccessMessageMixin,CreateView):
 def updateHospitalSpecialist(request,id):
     specialist_name=request.POST.get("specialist_name")
     specialist_icon=request.FILES.get("specialist_icon")
+    hover_icon=request.FILES.get("hover_icon")
     print(specialist_icon,specialist_name)
     
-    try:
+    try: 
         specailist = get_object_or_404(Specailist,id=id)
         specailist.specialist_name=specialist_name
         if specialist_icon:
@@ -56,6 +61,11 @@ def updateHospitalSpecialist(request,id):
             filename1=fs.save(specialist_icon.name,specialist_icon)
             profile_pic_url=fs.url(filename1)
             specailist.specialist_icon=profile_pic_url
+        if hover_icon:
+            fs1=FileSystemStorage()
+            filename2=fs1.save(hover_icon.name,hover_icon)
+            hover_icon_url=fs1.url(filename2)
+            specailist.hover_icon=hover_icon_url
         specailist.save()
     except Exception as e:
         messages.add_message(request,messages.ERROR,e)
@@ -67,106 +77,6 @@ def deleteHospitalSpecialist(request,id):
     specailist.delete()
     messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
     return HttpResponseRedirect(reverse("specialist_hospital")) 
-""" 
-Lab Specialist Categories
-"""
-class AddLabSpecialistView(SuccessMessageMixin,CreateView):
-    
-    def get(self, request, *args, **kwargs):      
-        speciallist=LabSpecailist.objects.all()
-        param={'speciallists':speciallist}
-        return render(request,"radmin/lab-specialities.html",param)
-    
-    def post(self, request, *args, **kwargs):
-        specialist_name=request.POST.get("specialist_name")
-        specialist_icon=request.FILES.get("specialist_icon")
-       
-        fs=FileSystemStorage()
-        filename1=fs.save(specialist_icon.name,specialist_icon)
-        profile_pic_url=fs.url(filename1)
-        try:
-            specailist = LabSpecailist(specialist_name=specialist_name,specialist_icon=profile_pic_url)
-            specailist.save()
-        except Exception as e:
-            messages.add_message(request,messages.ERROR,e)
-        messages.add_message(request,messages.SUCCESS,"Succesfully Added")
-        return HttpResponseRedirect(reverse("specialist_lab")) 
-
-def updateLabSpecialist(request,id):
-    specialist_name=request.POST.get("specialist_name")
-    specialist_icon=request.FILES.get("specialist_icon")
-    print(specialist_icon,specialist_name)
-    
-    try:
-        specailist = get_object_or_404(LabSpecailist,id=id)
-        specailist.specialist_name=specialist_name
-        if specialist_icon:
-            fs=FileSystemStorage()
-            filename1=fs.save(specialist_icon.name,specialist_icon)
-            profile_pic_url=fs.url(filename1)
-            specailist.specialist_icon=profile_pic_url
-        specailist.save()
-    except Exception as e:
-        messages.add_message(request,messages.ERROR,e)
-    messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
-    return HttpResponseRedirect(reverse("specialist_lab")) 
-
-def deleteLabSpecialist(request,id):
-    specailist = get_object_or_404(LabSpecailist,id=id)
-    specailist.delete()
-    messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
-    return HttpResponseRedirect(reverse("specialist_lab")) 
-"""
-Pharmacy Specialist Categories
-"""
-class AddPharmacySpecialistView(SuccessMessageMixin,CreateView):
-    
-    def get(self, request, *args, **kwargs):      
-        speciallist=PharmacySpecailist.objects.all()
-        param={'speciallists':speciallist}
-        return render(request,"radmin/pharmacy-specialities.html",param)
-    
-    def post(self, request, *args, **kwargs):
-        specialist_name=request.POST.get("specialist_name")
-        specialist_icon=request.FILES.get("specialist_icon")
-       
-        fs=FileSystemStorage()
-        filename1=fs.save(specialist_icon.name,specialist_icon)
-        profile_pic_url=fs.url(filename1)
-        try:
-            specailist = PharmacySpecailist(specialist_name=specialist_name,specialist_icon=profile_pic_url)
-            specailist.save()
-        except Exception as e:
-            messages.add_message(request,messages.ERROR,e)
-        messages.add_message(request,messages.SUCCESS,"Succesfully Added")
-        return HttpResponseRedirect(reverse("specialist_pharmacy")) 
-
-def updatePharmacySpecialist(request,id):
-    specialist_name=request.POST.get("specialist_name")
-    specialist_icon=request.FILES.get("specialist_icon")
-    print(specialist_icon,specialist_name)
-    
-    try:
-        specailist = get_object_or_404(PharmacySpecailist,id=id)
-        specailist.specialist_name=specialist_name
-        if specialist_icon:
-            fs=FileSystemStorage()
-            filename1=fs.save(specialist_icon.name,specialist_icon)
-            profile_pic_url=fs.url(filename1)
-            specailist.specialist_icon=profile_pic_url
-        specailist.save()
-    except Exception as e:
-        messages.add_message(request,messages.ERROR,e)
-    messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
-    return HttpResponseRedirect(reverse("specialist_pharmacy")) 
-
-def deletePharmacySpecialist(request,id):
-    specailist = get_object_or_404(PharmacySpecailist,id=id)
-    specailist.delete()
-    messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
-    return HttpResponseRedirect(reverse("specialist_pharmacy")) 
-
-
 
 """
 Hospitals All Views
@@ -348,8 +258,12 @@ Appointment all view
 """
 class HosAppointmentAllViews(ListView):
     model = Booking
-    template_name = "radmin/appointment_hospital_all.html" 
+    template_name = "radmin/appointment_hospital_all.html"
 
+class PhaAppointmentAllViews(ListView):
+    model = PicturesForMedicine
+    template_name = "radmin/appointment_pharmacy_all.html"
+ 
 class LabsAppointmentAllViews(ListView):
     def get(self, request, *args, **kwargs):
         allslot = Slot.objects.filter(is_active=True)

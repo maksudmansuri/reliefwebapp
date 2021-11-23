@@ -5,20 +5,21 @@ from django.views.generic import View,ListView
 
 from django.contrib import messages
 from django.db.models import Q
-from accounts.models import Hospitals, Labs, Pharmacy
+from accounts.models import Hospitals, Labs, Pharmacy, Specailist
 from hospital.models import HospitalMedias
 
 # Create your views here.
- 
+  
 class FrontView(View):
     def get(self, request, *args, **kwargs):
-       
+        
         hospitals=Hospitals.objects.filter(admin__is_active=True,is_verified = True,is_deactive=False)
         labs=Labs.objects.filter(admin__is_active=True,is_verified = True)
         pharmacys=Pharmacy.objects.filter(admin__is_active=True,is_verified = True)
+        specilist = Specailist.objects.all()
         # departments = Departments.objects.filter(hospital=hospital)
-        print(hospitals)
-        param={'hospitals':hospitals,'labs':labs,'pharmacys':pharmacys}
+        print(hospitals) 
+        param={'hospitals':hospitals,'labs':labs,'pharmacys':pharmacys,'specilist':specilist}
         return render(request,"front/index.html",param)
 
 class SearchHospitalView(ListView):
@@ -39,7 +40,7 @@ class SearchHospitalView(ListView):
             hospital_media_list.append({'hospital':hospital,'medias':medias})
         print(hospital_media_list)        
         return hospital_media_list
-   
+    
     def get_context_data(self,**kwargs):
         context=super(SearchHospitalView,self).get_context_data(**kwargs)
         context["filter"]=self.request.GET.get("filter","")

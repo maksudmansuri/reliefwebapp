@@ -86,7 +86,7 @@ class CustomUser(AbstractBaseUser):
 
     def has_module_perms(self,app_label):
         return True    
-
+ 
 class PhoneOTP(models.Model):
     
     # id=models.AutoField(primary_key=True)
@@ -106,29 +106,33 @@ class PhoneOTP(models.Model):
     def __str__(self):
         return str(self.phone) + ' is sent ' + str(self.otp)   
 
-class Specailist(models.Model):
-    id                  =models.AutoField(primary_key=True)
-    specialist_name               =models.CharField(max_length=500,null=True,blank=True)
-    specialist_icon         =models.FileField(upload_to="Hospital/specialist/images/%Y/%m/%d/",max_length=500,null=True,default="")
-    created_at          =models.DateTimeField(auto_now_add=True)
-    updated_at          =models.DateTimeField(auto_now_add=True)
-    objects             =models.Manager()
- 
-class LabSpecailist(models.Model):
-    id                  =models.AutoField(primary_key=True)
-    specialist_name               =models.CharField(max_length=500,null=True,blank=True)
-    specialist_icon         =models.FileField(upload_to="Lab/specialist/images/%Y/%m/%d/",max_length=500,null=True,default="")
-    created_at          =models.DateTimeField(auto_now_add=True)
-    updated_at          =models.DateTimeField(auto_now_add=True)
-    objects             =models.Manager()
+class Specailist(models.Model): 
+    id                              =models.AutoField(primary_key=True)
+    specialist_name                 =models.CharField(max_length=500,null=True,blank=True)
+    specialist_icon                 =models.FileField(upload_to="Hospital/specialist/images/",max_length=500,null=True,default="")
+    hover_icon                      =models.FileField(upload_to="Hospital/specialist/images/hover/%Y/%m/%d/",max_length=500,null=True,default="")
+    created_at                      =models.DateTimeField(auto_now_add=True)
+    updated_at                      =models.DateTimeField(auto_now_add=True)
+    objects                         =models.Manager()
+    
+    def __str__(self):
+        return self.specialist_name
 
-class PharmacySpecailist(models.Model):
-    id                  =models.AutoField(primary_key=True)
-    specialist_name               =models.CharField(max_length=500,null=True,blank=True)
-    specialist_icon         =models.FileField(upload_to="Pharmacy/specialist/images/%Y/%m/%d/",max_length=500,null=True,default="")
-    created_at          =models.DateTimeField(auto_now_add=True)
-    updated_at          =models.DateTimeField(auto_now_add=True)
-    objects             =models.Manager()
+# class LabSpecailist(models.Model):
+#     id                  =models.AutoField(primary_key=True)
+#     specialist_name               =models.CharField(max_length=500,null=True,blank=True)
+#     specialist_icon         =models.FileField(upload_to="Lab/specialist/images/%Y/%m/%d/",max_length=500,null=True,default="")
+#     created_at          =models.DateTimeField(auto_now_add=True)
+#     updated_at          =models.DateTimeField(auto_now_add=True)
+#     objects             =models.Manager()
+
+# class PharmacySpecailist(models.Model):
+#     id                  =models.AutoField(primary_key=True)
+#     specialist_name               =models.CharField(max_length=500,null=True,blank=True)
+#     specialist_icon         =models.FileField(upload_to="Pharmacy/specialist/images/%Y/%m/%d/",max_length=500,null=True,default="")
+#     created_at          =models.DateTimeField(auto_now_add=True)
+#     updated_at          =models.DateTimeField(auto_now_add=True)
+#     objects             =models.Manager()
 
 class AdminHOD(models.Model):
     id                  =models.AutoField(primary_key=True)
@@ -202,10 +206,10 @@ class Patients(models.Model):
     created_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
     updated_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
     objects             =models.Manager()
-    
+     
     def __str__(self):
         self.is_active =True
-        return self.fisrt_name +" "+ self.last_name
+        return self.admin.phone 
         
 class HospitalDoctors(models.Model):
     id                  =models.AutoField(primary_key=True)

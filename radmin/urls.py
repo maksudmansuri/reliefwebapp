@@ -11,20 +11,13 @@ urlpatterns = [
     path('delete_country/<id>',views.deleteCountry,name="delete_country"),
     path('delete_state/<id>',views.deleteState,name="delete_state"),
     path('delete_city/<id>',views.deleteCity,name="delete_city"),
-       
+         
     #specialist hospital labs, pharmacy
     path('specialist_hospital',views.AddHospitalSpecialistView.as_view(),name="specialist_hospital"),
     path('update_specialist_hospital/<id>',views.updateHospitalSpecialist,name="update_specialist_hospital"),
     path('delete_specialist_hospital/<id>',views.deleteHospitalSpecialist,name="delete_specialist_hospital"),
 
-    path('specialist_lab',views.AddLabSpecialistView.as_view(),name="specialist_lab"),
-    path('update_specialist_lab/<id>',views.updateLabSpecialist,name="update_specialist_lab"),
-    path('delete_specialist_lab/<id>',views.deleteLabSpecialist,name="delete_specialist_lab"),
-
-    path('specialist_pharmacy',views.AddPharmacySpecialistView.as_view(),name="specialist_pharmacy"),
-    path('update_specialist_pharmacy/<id>',views.updatePharmacySpecialist,name="update_specialist_pharmacy"),
-    path('delete_specialist_pharmacy/<id>',views.deletePharmacySpecialist,name="delete_specialist_pharmacy"),
-    
+  
 
     path('',views.indexView,name="radmin_home"),
     path('admin_hospital_all',views.HospitalallViews.as_view(),name="manage_hospital_admin"),
@@ -41,6 +34,7 @@ urlpatterns = [
     # Appointment Hospital Labs Pharmcy  Accident
     path('hospital_appointment_admin',views.HosAppointmentAllViews.as_view(),name="hospital_appointment_admin"),
     path('labs_appointment_admin',views.LabsAppointmentAllViews.as_view(),name="labs_appointment_admin"),
+    path('pha_appointment_admin',views.PhaAppointmentAllViews.as_view(),name="pha_appointment_admin"),
 
     #Profiel for Hospital, Labs , Pharmcy, Patient 
     path('hospital_profile_admin/<id>',views.HospitalDetailsViews.as_view(),name="hospital_profile_admin"),
@@ -49,7 +43,7 @@ urlpatterns = [
     path('pharmacy_profile_admin/<id>',views.PharmacyDetailsViews.as_view(),name="pharmacy_profile_admin"),
     path('patient_profile_admin/<id>',views.PatientDetailsViews.as_view(),name="patient_profile_admin"),
    
- 
+  
     # ACTIVATE DEACTIVATE HOSPITAL, DOCTOR, PATIENT, LABS, PHARMACY ,ACCIDENT
     path('hospitalactivate/<id>',views.HospitalActivate,name="hospitalactivate"),
     path('hospitaldeactivate/<id>',views.HospitalDeactivate,name="hospitaldeactivate"),

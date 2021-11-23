@@ -20,16 +20,16 @@
                     </ul>
                 </li>  
                 {% url 'specialist_hospital' as specialist_hospital %}
-                {% url 'specialist_lab' as specialist_lab %}
-                {% url 'specialist_pharmacy' as specialist_pharmacy %}
+                {% comment %} {% url 'specialist_lab' as specialist_lab %}
+                {% url 'specialist_pharmacy' as specialist_pharmacy %} {% endcomment %}
                 <li class="collapsed">
                 <a class="m-link {% if request.path == specialist_hospital %} active {% endif %} {% if request.path == specialist_lab %} active {% endif %} {% if request.path == specialist_pharmacy %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#specialist" href="#">
                 <i class="icofont-ui-user-group fs-5"></i> <span>Specialist</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
                 <!-- Menu: Sub menu ul -->               
                     <ul class="sub-menu collapse {% if request.path == specialist_hospital %} show {% endif %}{% if request.path == specialist_lab %} show {% endif %}{% if request.path == specialist_pharmacy %} show {% endif %}" id="specialist">
                         <li><a class="ms-link {% if request.path == specialist_hospital %} active {% endif %}" href="{% url 'specialist_hospital' %}">Hospital</a></li>
-                        <li><a class="ms-link {% if request.path == specialist_lab %} active {% endif %}" href="{% url 'specialist_lab' %}">Labs</a></li>
-                        <li><a class="ms-link {% if request.path == specialist_pharmacy %} active {% endif %}" href="{% url 'specialist_pharmacy' %}">Pharmacy</a></li>
+                        {% comment %} <li><a class="ms-link {% if request.path == specialist_lab %} active {% endif %}" href="{% url 'specialist_lab' %}">Labs</a></li>
+                        <li><a class="ms-link {% if request.path == specialist_pharmacy %} active {% endif %}" href="{% url 'specialist_pharmacy' %}">Pharmacy</a></li> {% endcomment %}
                         {% comment %} <li><a class="ms-link" href="coviddashboard.html"> Covid-19 Dashboard</a></li> {% endcomment %}
                     </ul>
                 </li>
@@ -57,13 +57,15 @@
 
                 {% url 'hospital_appointment_admin' as hospital_appointment_admin %}
                 {% url 'labs_appointment_admin' as labs_appointment_admin %}
+                {% url 'pha_appointment_admin' as pha_appointment_admin %}
                 <li class="collapsed">
-                <a class="m-link {% if request.path == hospital_appointment_admin %} active {% endif %}{% if request.path == labs_appointment_admin %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#Appointment" href="#">
+                <a class="m-link {% if request.path == hospital_appointment_admin %} active {% endif %}{% if request.path == labs_appointment_admin %} active {% endif %}{% if request.path == pha_appointment_admin %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#Appointment" href="#">
                 <i class="icofont-notebook fs-5"></i> <span>Manage Appointments</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
                 <!-- Menu: Sub menu ul -->
                     <ul class="sub-menu collapse{% if request.path == hospital_appointment_admin %} show{% endif %}{% if request.path == labs_appointment_admin %} show{% endif %}" id="Appointment">
                         <li><a class="ms-link {% if request.path == hospital_appointment_admin %} active{% endif %}" href="{% url 'hospital_appointment_admin' %}">Hospital Appointments</a></li>
                         <li><a class="ms-link {% if request.path == labs_appointment_admin %} active{% endif %}" href="{% url 'labs_appointment_admin' %}">Labs Appointments</a></li>
+                        <li><a class="ms-link {% if request.path == pha_appointment_admin %} active{% endif %}" href="{% url 'pha_appointment_admin' %}">Pharmacy Appointments</a></li>
                         
                     </ul>
                 </li>

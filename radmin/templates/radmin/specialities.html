@@ -38,7 +38,7 @@
                                         <span class="fw-bold">SP-{{forloop.counter}}</span>
                                     </td>
                                     <td>
-                                        <img class="avatar rounded-circle" src="{{speciallist.specialist_icon}}" alt="">
+                                        <img class="avatar rounded-circle" src="{{speciallist.hover_icon}}" alt="">
                                         <span class="fw-bold ms-1">{{speciallist.specialist_name}}</span>
                                     </td>
                                   
@@ -75,13 +75,17 @@
                         <form method="post" enctype="multipart/form-data" >
 						{% csrf_token %}
                             <div class="row g-3 mb-3">
-                              <div class="col-sm-6">
+                              <div class="col-sm-12">
                                 <label for="depone" class="form-label">Specialities</label>
                                 <input type="text" class="form-control" id="specialist_name" name="specialist_name" required>
                               </div>
                               <div class="col-sm-6">
                                 <label for="deptwo" class="form-label">Image</label>
                                 <input type="file" class="form-control" id="deptwo" name="specialist_icon" required>
+                              </div>
+                              <div class="col-sm-6">
+                                <label for="deptwo" class="form-label">hover Image</label>
+                                <input type="file" class="form-control" name="hover_icon" required>
                               </div>
                             </div>
 							 <div class="modal-footer">
@@ -110,13 +114,17 @@
                         <form method="post" enctype="multipart/form-data" action="{% url 'update_specialist_hospital' speciallist.id %}">
 						{% csrf_token %}
                             <div class="row g-3 mb-3">
-                              <div class="col-sm-6">
+                              <div class="col-sm-12">
                                 <label for="depone" class="form-label">Specialities</label>
                                 <input type="text" class="form-control" name="specialist_name" value="{{speciallist.specialist_name}}">
                               </div>
                               <div class="col-sm-6">
                                 <label for="deptwo" class="form-label">Image</label>
                                 <input type="file" class="form-control" name="specialist_icon" value="{{speciallist.specialist_icon}}">
+                              </div>
+                               <div class="col-sm-6">
+                                <label for="deptwo" class="form-label">hover Image</label>
+                                <input type="file" class="form-control" name="hover_icon" value="{{speciallist.hover_icon}}">
                               </div>
                             </div>
 							 <div class="modal-footer">

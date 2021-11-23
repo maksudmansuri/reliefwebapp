@@ -4,7 +4,7 @@
 Booking{% endblock title %}
 
 {% block custom_css %} 	
-
+ 
 {% endblock custom_css %}
 
 
@@ -219,22 +219,24 @@ Booking{% endblock title %}
 					<h2>Clinic and Specialities</h2>
 					<span class="bottom-border"></span>
 				</div>
-				<div class="row">
+				<div class="row"> 
 					<div class="col-md-12">
 						<div class="clinic-slider slider">
+						{% for spes in specilist %}
 							<div class="profile-widget">
 								<div class="brower-box">
 									<a href="javascript:void(0);">
-										<img class="img-fluid" alt="User Image" src="{% static 'newstatic/assets/img/icons/clinic-01.png'%}">
+										<img class="img-fluid" alt="User Image" src="{{spes.specialist_icon}}">
 										<img class="img-fluid hover" alt=""
-											src="{% static 'newstatic/assets/img/icons/clinic-hover-01.png'%}" />
+											src="{{spes.hover_icon}}" />
 									</a>
-									<h4>Orthopedic</h4>
+									<h4>{{spes.specialist_name}}</h4> 
 									<p>124 <span>Doctors</span></p>
-									<a href="doctor-profile.html" class="arrow"><i class="fas fa-chevron-right"></i></a>
+									<a href="#" class="arrow"><i class="fas fa-chevron-right"></i></a>
 								</div>
-							</div>
-							<div class="profile-widget">
+							</div> 
+						{% endfor %}
+							{% comment %} <div class="profile-widget">
 								<div class="brower-box">
 									<a href="javascript:void(0);">
 										<img class="img-fluid" alt="User Image" src="{% static 'newstatic/assets/img/icons/clinic-02.png'%}">
@@ -365,7 +367,7 @@ Booking{% endblock title %}
 									<p>124 <span>Doctors</span></p>
 									<a href="doctor-profile.html" class="arrow"><i class="fas fa-chevron-right"></i></a>
 								</div>
-							</div>
+							</div> {% endcomment %}
 						</div>
 					</div>
 				</div>
@@ -733,10 +735,10 @@ Booking{% endblock title %}
 									</span>
 								</div>
 								<div>
-									<h2>ARE YOU A DOCTOR?</h2>
+									<h2>IS IT A HOSPITAL ?</h2>
 									<p>The service allows you to get maximum visibility online and to manage
 										appointments and contacts coming from the site, in a simple and fast way.</p>
-									<a href="booking.html" class="book-now">Book Now</a>
+									<a href="{% url 'hospitalsingup' %}" class="book-now">SINGUP</a>
 								</div>
 							</div>
 						</div>
@@ -750,11 +752,48 @@ Booking{% endblock title %}
 									</span>
 								</div>
 								<div>
-									<h2>ARE YOU A DOCTOR?</h2>
+									<h2>ARE YOU A PATIENT?</h2>
 									<p>Choosing a specialist has never been so fast! You can filter search
 										results by location and medical specialization, and book medical examination
 										online.</p>
-									<a href="booking.html" class="book-now">Book Now</a>
+									<a href="{% url 'patientsingup' %}" class="book-now">SINGUP</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="select-box">
+							<div class="d-flex align-items-center">
+								<div class="image-holder">
+									<span>
+										<img src="{% static 'newstatic/assets/img/icons/doct-01.png'%}" alt="" />
+									</span>
+								</div>
+								<div>
+									<h2>IS IT A PHARMACY ?</h2>
+									<p>The service allows you to get maximum visibility online and to manage
+										appointments and contacts coming from the site, in a simple and fast way.</p>
+									<a href="{% url 'pharmacysingup' %}" class="book-now">SINGUP</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="select-box theme">
+							<div class="d-flex align-items-center">
+								<div class="image-holder">
+									<span>
+										<img src="{% static 'newstatic/assets/img/icons/doct-02.png'%}" alt="" />
+									</span>
+								</div>
+								<div>
+									<h2>IS IT A LABORATORY ?</h2>
+									<p>The service allows you to get maximum visibility online and to manage
+										appointments and contacts coming from the site, in a simple and fast way.</p>
+									<a href="{% url 'labsingup' %}" class="book-now">SINGUP</a>
 								</div>
 							</div>
 						</div>
@@ -762,8 +801,8 @@ Booking{% endblock title %}
 				</div>
 			</div>
 		</section>
-		
-		<section class="aval-features">
+		 
+		{% comment %} <section class="aval-features">
 			<div class="custom-contain">
 				<div class="row">
 					<div class="col-lg-5 col-md-6 feature">
@@ -809,6 +848,120 @@ Booking{% endblock title %}
 					</div>
 				</div>
 			</div>
+		</section> {% endcomment %}
+ 
+		<section class="our-blog-section">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="section-heading">
+							<h2>Blogs and News</h2>
+							<p>Read Professional Articles and Latest Articles</p>
+						</div>
+					</div>
+					<div class="col-md-6 text-end">
+						<div class="owl-nav slide-nav-4 text-end nav-control"></div>
+					</div>
+				</div>
+				<div class="owl-carousel blogs owl-theme">
+					<div class="item">
+						<div class="our-blogs">
+							<div class="blogs-img">
+								<a href="blog-details.html"><img src="{% static 'newstatic/assets/img/blog-1.jpg' %}" alt=""
+										class="img-fluid"></a>
+								<div class="blogs-overlay d-flex">
+									<img src="{% static 'newstatic/assets/img/doctors/doctor-thumb-01.jpg' %} " alt="" class="img-fluid">
+									<span class="blogs-writter">Dr. Ruby Perrin</span>
+								</div>
+							</div>
+							<div class="blogs-info">
+								<span>Director</span>
+								{% comment %} <a href="blog-details.html">
+									<h4>Doccure – Making your clinic painless visit?</h4>
+								</a>
+								<p>Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.
+								</p>
+								<span class="blogs-time"><i class="far fa-clock"></i> 3 Dec 2021</span> {% endcomment %}
+							</div>
+							{% comment %} <div class="blogs-nav">
+								<a href="blog-details.html" class="blogs-btn">Read More</a>
+							</div> {% endcomment %}
+						</div>
+					</div>
+					{% comment %} <div class="item">
+						<div class="our-blogs">
+							<div class="blogs-img">
+								<a href="blog-details.html"><img src="assets/img/blog-2.jpg" alt=""
+										class="img-fluid"></a>
+								<div class="blogs-overlay d-flex">
+									<img src="assets/img/doctors/doctor-thumb-01.jpg" alt="" class="img-fluid">
+									<span class="blogs-writter">Dr. Ruby Perrin</span>
+								</div>
+							</div>
+							<div class="blogs-info">
+								<span>Neurology</span>
+								<a href="blog-details.html">
+									<h4>What are the benefits of Online Doctor Booking?</h4>
+								</a>
+								<p>Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.
+								</p>
+								<span class="blogs-time"><i class="far fa-clock"></i> 3 Dec 2021</span>
+							</div>
+							<div class="blogs-nav">
+								<a href="blog-details.html" class="blogs-btn">Read More</a>
+							</div>
+						</div>
+					</div>
+					<div class="item">
+						<div class="our-blogs">
+							<div class="blogs-img">
+								<a href="blog-details.html"><img src="assets/img/blog-3.jpg" alt=""
+										class="img-fluid"></a>
+								<div class="blogs-overlay d-flex">
+									<img src="assets/img/doctors/doctor-thumb-01.jpg" alt="" class="img-fluid">
+									<span class="blogs-writter">Dr. Ruby Perrin</span>
+								</div>
+							</div>
+							<div class="blogs-info">
+								<span>Orthopedic</span>
+								<a href="blog-details.html">
+									<h4>Benefits of consulting with an Online Doctor</h4>
+								</a>
+								<p>Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.
+								</p>
+								<span class="blogs-time"><i class="far fa-clock"></i> 3 Dec 2021</span>
+							</div>
+							<div class="blogs-nav">
+								<a href="blog-details.html" class="blogs-btn">Read More</a>
+							</div>
+						</div>
+					</div>
+					<div class="item">
+						<div class="our-blogs">
+							<div class="blogs-img">
+								<a href="blog-details.html"><img src="assets/img/blog-4.jpg" alt=""
+										class="img-fluid"></a>
+								<div class="blogs-overlay d-flex">
+									<img src="assets/img/doctors/doctor-thumb-01.jpg" alt="" class="img-fluid">
+									<span class="blogs-writter">Dr. Ruby Perrin</span>
+								</div>
+							</div>
+							<div class="blogs-info">
+								<span>Cardiologist</span>
+								<a href="blog-details.html">
+									<h4>5 Great reasons to use an Online Doctor</h4>
+								</a>
+								<p>Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.
+								</p>
+								<span class="blogs-time"><i class="far fa-clock"></i> 3 Dec 2021</span>
+							</div>
+							<div class="blogs-nav">
+								<a href="blog-details.html" class="blogs-btn">Read More</a>
+							</div>
+						</div>
+					</div> {% endcomment %}
+				</div>
+			</div>
 		</section>
 
 		<section class="blogs-section">
@@ -846,7 +999,7 @@ Booking{% endblock title %}
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6 col-lg-3">
+					{% comment %} <div class="col-md-6 col-lg-3">
 						<div class="blog-wrapper">
 							<div class="wrap-image">
 								<a href="blog-details.html">
@@ -929,7 +1082,7 @@ Booking{% endblock title %}
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> {% endcomment %}
 				</div>
 				<div class="row justify-content-center">
 					<div class="col-md-12 text-center">

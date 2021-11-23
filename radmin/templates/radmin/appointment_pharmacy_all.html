@@ -28,14 +28,14 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Patient Name</th> 
-                                    <th>Hospital Name</th>    
+                                    <th>Pharmacy Name</th>    
                                     <th>Amount</th> 
                                     <th>Status</th>   
                                     <th>Actions</th>  
                                 </tr>
                             </thead> 
-                            <tbody>
-                            {% for hospital in booking_list %}
+                            <tbody> 
+                            {% for hospital in picturesformedicine_list %}
                                 <tr>
                                     <td> 
                                         B-<span class="fw-bold">{{hospital.id}}</span>
@@ -44,7 +44,7 @@
                                         <span class="fw-bold ms-1">{{hospital.patient.patients}}</span>
                                     </td>
                                     <td>
-                                        {{hospital.hospitalstaffdoctor.hospital}}
+                                        {{hospital.pharmacy.pharmacy_name}}
                                     </td>
                                     <td>
                                          {{hospital.amount}}
