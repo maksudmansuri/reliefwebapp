@@ -1400,6 +1400,7 @@ class addBlogView(SuccessMessageMixin,CreateView):
  
 class EditBlogUpdateView(SuccessMessageMixin,UpdateView):
     def get(self, request, *args, **kwargs):
+        print("no error till here i am at editblogupdateview")
         id=kwargs['id']        
         blog =get_object_or_404(Blog,id=id)
         hospital=Hospitals.objects.get(admin=request.user) 
@@ -1408,21 +1409,40 @@ class EditBlogUpdateView(SuccessMessageMixin,UpdateView):
         return render(request,"hospital/edit-blog.html",param)  
 
     def post(self, request, *args, **kwargs):
+        id=kwargs['id']
         blog_title = request.POST.get('blog_title')         
         content = request.POST.get('content')
         blog_image = request.FILES.get('blog_image')
         doctor = request.POST.get('doctor')
-        # try:
-        hospital=Hospitals.objects.get(admin=request.user) 
-        doctor = get_object_or_404(HospitalStaffDoctors,id=doctor)
-        blog = Blog(blog_title=blog_title,blog_content=content,blog_image=blog_image,hospital=hospital,doctor=doctor)
-        blog.save()
-        # except Exception as e:
-            # messages.add_message(request,messages.ERROR,"Something Wrong with connnections")
-            # return HttpResponseRedirect(reverse("add_blog"))
+        try:
+            hospital=Hospitals.objects.get(admin=request.user) 
+            doctor = get_object_or_404(HospitalStaffDoctors,id=doctor)
+            blog = get_object_or_404(Blog,id=id)
+            blog.blog_title=blog_title
+            blog.blog_content=content
+            if blog_image:
+                blog.blog_image=blog_image
+            blog.hospital=hospital
+            blog.doctor=doctor
+            blog.save()
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"Something Wrong with connnections")
+            return HttpResponseRedirect(reverse("add_blog"))
         return HttpResponseRedirect(reverse("list_blog"))
  
+def activeBlog(request,id): 
+    blog = get_object_or_404(Blog,id=id)
+    blog.is_active=True        
+    blog.save()
+    messages.add_message(request,messages.SUCCESS,"Successfull Active")
+    return HttpResponseRedirect(reverse("list_blog"))
 
+def inactiveBlog(request,id):
+    blog = get_object_or_404(Blog,id=id)
+    blog.is_active=False        
+    blog.save()
+    messages.add_message(request,messages.SUCCESS,"Successfull Inactive")
+    return HttpResponseRedirect(reverse("list_blog"))
 
 class blogListView(ListView):
     model = Blog

@@ -234,7 +234,7 @@ Booking{% endblock title %}
 									<p>124 <span>Doctors</span></p>
 									<a href="#" class="arrow"><i class="fas fa-chevron-right"></i></a>
 								</div>
-							</div> 
+							</div>  
 						{% endfor %}
 							{% comment %} <div class="profile-widget">
 								<div class="brower-box">
@@ -527,7 +527,7 @@ Booking{% endblock title %}
 		<section class="book-doctor">
 			<div class="container">
 				<div class="sec-header">
-					<h2>Book Our Best Laboratory</h2>
+					<h2>Book Our Best Pharmacist</h2>
 					<span class="bottom-border"></span>
 				</div>
 				<div class="row">
@@ -541,7 +541,7 @@ Booking{% endblock title %}
 								<div class="pro-content">
 									<div class="row row-sm">
 										<div class="col-md-6">
-											<span class="amt">$20 - $50</span>
+											{% comment %} <span class="amt">$20 - $50</span> {% endcomment %}
 										</div>
 										<div class="col-md-6 text-end">
 											<a href="#" class="star"><i class="fas fa-star"></i></a>
@@ -850,19 +850,23 @@ Booking{% endblock title %}
 			</div>
 		</section> {% endcomment %}
  
-		<section class="our-blog-section">
+		<section class="our-blog-section Team">
 			<div class="container">
-				<div class="row">
+				<div class="sec-header">
+					<h2>Our Team</h2>
+					<span class="bottom-border"></span>
+				</div>
+				{% comment %} <div class="row">
 					<div class="col-md-6">
 						<div class="section-heading">
-							<h2>Blogs and News</h2>
+							<h2>Our Team</h2>
 							<p>Read Professional Articles and Latest Articles</p>
 						</div>
 					</div>
 					<div class="col-md-6 text-end">
 						<div class="owl-nav slide-nav-4 text-end nav-control"></div>
 					</div>
-				</div>
+				</div> {% endcomment %}
 				<div class="owl-carousel blogs owl-theme">
 					<div class="item">
 						<div class="our-blogs">
@@ -971,11 +975,12 @@ Booking{% endblock title %}
 					<span class="bottom-border"></span>
 				</div>
 				<div class="row">
+				{% for blog in blogs %}
 					<div class="col-md-6 col-lg-3">
 						<div class="blog-wrapper">
 							<div class="wrap-image">
 								<a href="blog-details.html">
-									<img src="{% static 'newstatic/assets/img/blog/blog-wrap-01.jpg'%}" alt="" />
+									<img src="/media/{{blog.blog_image}}" height="200" alt="" />
 								</a>
 							</div>
 							<div class="wrap-content">
@@ -983,22 +988,22 @@ Booking{% endblock title %}
 									<span class="sp-title">Urology</span>
 									<div class="post-author">
 										<a href="doctor-profile.html">
-											<img src="{% static 'newstatic/assets/img/doctors/doctor-thumb-01.jpg'%}" alt="Post Author">
-											<span>Ruby Perrin</span>
+											<img src="{{blog.doctor.doctor.profile_pic}} " alt="Post Author">
+											<span>{{blog.doctor.doctor.fisrt_name}} {{blog.doctor.doctor.last_name}}</span>
 										</a>
 									</div>
 									<p class="date-cart">25 <span>Jan 2021</span></p>
 								</div>
 								<div class="wrap-content-body">
-									<h3><a href="blog-details.html">Doccure – Making your clinic painless visit?</a>
+									<h3><a href="blog-details.html">{{blog.blog_title}}</a>
 									</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod
-										tempor.</p>
+									<p>{{blog.blog_content|safe|truncatechars:10}}</p>
 									<a href="blog-details.html" class="read-txt">Read More</a>
 								</div>
 							</div>
 						</div>
 					</div>
+				{% endfor %}
 					{% comment %} <div class="col-md-6 col-lg-3">
 						<div class="blog-wrapper">
 							<div class="wrap-image">

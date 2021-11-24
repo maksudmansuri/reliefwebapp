@@ -6,7 +6,7 @@ from django.views.generic import View,ListView
 from django.contrib import messages
 from django.db.models import Q
 from accounts.models import Hospitals, Labs, Pharmacy, Specailist
-from hospital.models import HospitalMedias
+from hospital.models import Blog, HospitalMedias
 
 # Create your views here.
   
@@ -17,11 +17,12 @@ class FrontView(View):
         labs=Labs.objects.filter(admin__is_active=True,is_verified = True)
         pharmacys=Pharmacy.objects.filter(admin__is_active=True,is_verified = True)
         specilist = Specailist.objects.all()
+        blogs = Blog.objects.filter(is_active=True)
         # departments = Departments.objects.filter(hospital=hospital)
         print(hospitals) 
-        param={'hospitals':hospitals,'labs':labs,'pharmacys':pharmacys,'specilist':specilist}
+        param={'hospitals':hospitals,'labs':labs,'pharmacys':pharmacys,'specilist':specilist,'blogs':blogs}
         return render(request,"front/index.html",param)
-
+ 
 class SearchHospitalView(ListView):
     paginate_by = 10
     model = Hospitals

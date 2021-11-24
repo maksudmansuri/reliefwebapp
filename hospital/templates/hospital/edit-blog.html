@@ -287,9 +287,9 @@
 						<div class="col-sm-12">
 							<h3 class="page-title">Add Blog</h3>
 							<ul class="breadcrumb">
-								<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+								<li class="breadcrumb-item"><a href="{% url 'hospital_dashboard' %}">Dashboard</a></li>
 								<li class="breadcrumb-item"><a href="javascript:(0);">Pages</a></li>
-								<li class="breadcrumb-item active">Add Blog</li>
+								<li class="breadcrumb-item active">Edit Blog</li>
 							</ul>
 						</div>
 					</div>
@@ -319,7 +319,7 @@
 											<div class="col-lg-12">
 												<div class="form-group">
 													<label  class="form-label">Posted By<span class="text-danger">*</span></label>
-													<select class="form-select" aria-label="Default select example" name="doctor">
+													<select class="form-select" aria-label="Default select example" name="doctor" required>
 													<option value="" disabled selected>Select Doctor</option>
 													{% for doctor in doctors %}
 														<option value="{{doctor.id}}" {% if blog.doctor == doctor %}selected{% endif %}>{{doctor.doctor.name_title}} {{doctor.doctor.fisrt_name}} {{doctor.doctor.last_name}}</option>
@@ -337,7 +337,7 @@
 												
 													<input class="form-control" type="text" name="blog_title"
 														id="blog_title"
-														required=""
+														required
                                                         value="{{blog.blog_title}}">
 												</div>
 											</div> 
@@ -350,7 +350,7 @@
 												<div class="form-group">
 													<label>Descriptions <span class="text-danger">*</span></label>
 													<textarea id="content" class="form-control summernote-simple"
-														name="content">value="{{blog.blog_content|safe}}"</textarea>
+														name="content" required>{{blog.blog_content|safe}}"</textarea>
 													
 												</div>
 											</div>
@@ -363,7 +363,7 @@
 													<i class="fas fa-cloud-upload-alt"></i>
 													<span>Upload Blog Images *</span>
 													<input type="file" name="blog_image" id="blog_image"
-														accept="image/jpeg, image/png, image/gif,">
+														accept="image/jpeg, image/png, image/gif," required>
 												</div>
 												<div id="uploadPreview">
 													<ul class="upload-wrap">
