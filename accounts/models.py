@@ -225,6 +225,7 @@ class HospitalDoctors(models.Model):
     phone               =models.CharField(max_length=50,default="",blank=True,null=True)
     degree              =models.CharField(max_length=50,default="",blank=True,null=True)
     specialist          =models.CharField(max_length=50,default="",blank=True,null=True)
+    about               =models.CharField(max_length=500,default="",blank=True,null=True)
     dob                 =models.DateField(blank=True,null=True,default="")
     alternate_mobile    =models.CharField(max_length=250,blank=True,null=True,default="")
     profile_pic         =models.FileField(upload_to="Doctor/profile/images/%Y/%m/%d/",blank=True,null=True)

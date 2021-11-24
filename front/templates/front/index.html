@@ -108,7 +108,7 @@ Booking{% endblock title %}
 									<h3>Visit a Hospital</h3>
 									<p>We hire the best specialists to deliver top-notch diagnostic services for you.
 									</p>
-									<a href="booking.html" class="book-now">Book Now <i
+									<a href="{% url 'search_hospital' %}" class="book-now">Book Now <i
 											class="fas fa-long-arrow-alt-right"></i></a>
 								</div>
 							</div>
@@ -979,26 +979,27 @@ Booking{% endblock title %}
 					<div class="col-md-6 col-lg-3">
 						<div class="blog-wrapper">
 							<div class="wrap-image">
-								<a href="blog-details.html">
+								<a href="{% url 'blog_details' blog.id %}">
 									<img src="/media/{{blog.blog_image}}" height="200" alt="" />
 								</a>
 							</div>
 							<div class="wrap-content">
 								<div class="d-flex">
-									<span class="sp-title">Urology</span>
+									{% comment %} <span class="sp-title">Urology</span> {% endcomment %}
+									<br>
 									<div class="post-author">
 										<a href="doctor-profile.html">
 											<img src="{{blog.doctor.doctor.profile_pic}} " alt="Post Author">
 											<span>{{blog.doctor.doctor.fisrt_name}} {{blog.doctor.doctor.last_name}}</span>
 										</a>
 									</div>
-									<p class="date-cart">25 <span>Jan 2021</span></p>
+									<p class="date-cart">{{blog.updated_at|date:"d"}} <span>{{blog.updated_at|date:"M Y"}}</span></p>
 								</div>
 								<div class="wrap-content-body">
-									<h3><a href="blog-details.html">{{blog.blog_title}}</a>
+									<h3><a href="{% url 'blog_details' blog.id %}">{{blog.blog_title}}</a>
 									</h3>
 									<p>{{blog.blog_content|safe|truncatechars:10}}</p>
-									<a href="blog-details.html" class="read-txt">Read More</a>
+									<a href="{% url 'blog_details' blog.id %}" class="read-txt">Read More</a>
 								</div>
 							</div>
 						</div>
@@ -1091,7 +1092,7 @@ Booking{% endblock title %}
 				</div>
 				<div class="row justify-content-center">
 					<div class="col-md-12 text-center">
-						<a href="blog-details.html" class="view-btn d-inline-block">View More</a>
+						<a href="{% url 'blog_list' %}" class="view-btn d-inline-block">View More</a>
 					</div>
 				</div>
 			</div>

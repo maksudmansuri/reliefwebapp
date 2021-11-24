@@ -1,7 +1,7 @@
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls.base import reverse
-from django.views.generic import View,ListView
+from django.views.generic import View,ListView,DetailView
 
 from django.contrib import messages
 from django.db.models import Q
@@ -22,9 +22,26 @@ class FrontView(View):
         print(hospitals) 
         param={'hospitals':hospitals,'labs':labs,'pharmacys':pharmacys,'specilist':specilist,'blogs':blogs}
         return render(request,"front/index.html",param)
- 
+
+class BlogListView(ListView):
+    model = Blog
+    template_name = "front/blog-grid.html"
+    paginate_by = 5
+    queryset = Blog.objects.filter(is_active=True)
+
+class BlogDetailsView(DetailView):
+    model = Blog
+    template_name = "front/blog-details.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["blog_list"] = Blog.objects.filter(is_active = True) 
+        return context
+    
+    
+
 class SearchHospitalView(ListView):
-    paginate_by = 10
+    paginate_by = 5
     model = Hospitals
     template_name = "front/hospital-search.html"
 
@@ -47,5 +64,6 @@ class SearchHospitalView(ListView):
         context["filter"]=self.request.GET.get("filter","")
         context["orderby"]=self.request.GET.get("orderby","id")
         context["all_table_fields"]=Hospitals._meta.get_fields()
+        context["hospital_media_list"]=Hospitals._meta.get_fields()
         return context
     
