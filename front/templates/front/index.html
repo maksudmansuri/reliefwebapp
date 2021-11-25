@@ -1,216 +1,22 @@
 {% extends './blank-page.html' %}
-{% load static %}
+{% load static %} 
 {% block title %} Relief Pro - Hospital,Labs and Pharmacy Online Booking | Emergency
 Booking{% endblock title %}
 
 {% block custom_css %} 	
- 
+<style>
+.header-four .header-nav {
+	background-color: #2264c5;
+	border: none;
+}
+</style>
 {% endblock custom_css %}
 
 
 {% block content %} 
 
-	 
-
-
-		<div class="home-banner">
-			<div class="dot-slider slider">
-
-				<div class="profile-widget">
-					<div class="pro-img">
-						<a href="javascript:void(0);">
-							<img class="img-fluid" src="{% static 'newstatic/assets/img/slider/slider-4.jpg'%}" alt="">
-						</a>
-					</div>
-				</div>
-
-
-				<div class="profile-widget">
-					<div class="pro-img">
-						<a href="javascript:void(0);">
-							<img class="img-fluid" src="{% static 'newstatic/assets/img/slider/slider-5.jpg'%}" alt="">
-						</a>
-					</div>
-				</div>
-
-
-				<div class="profile-widget">
-					<div class="pro-img">
-						<a href="javascript:void(0);">
-							<img class="img-fluid" src="{% static 'newstatic/assets/img/slider/slider-6.jpg'%}" alt="">
-						</a>
-					</div>
-				</div>
-
-
-				<div class="profile-widget">
-					<div class="pro-img">
-						<a href="javascript:void(0);">
-							<img class="img-fluid" src="{% static 'newstatic/assets/img/slider/slider-7.jpg'%}" alt="">
-						</a>
-					</div>
-				</div>
-
-			</div>
-			<div class="container">
-				<div class="banner-wrapper doc-form">
-					<div class="app-form">
-						<h2>Search Hospital,Laboratory and Pharmacy <br> <span class="header-highlight">Make an Appointment</span></h2>
-						<form action="#" class="doctor-search-form">
-							<div class="row">
-								<div class="col-md-6 col-lg-6">
-									<div class="form-group">
-										<div class="form-custom">
-											<input type="text" class="form-control" value=""
-												placeholder="Search Location">
-											<i class="far fa-compass"></i>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-6">
-									<div class="form-group">
-										<div class="form-custom">
-											<input type="text" class="form-control" value="" placeholder="Gender">
-											<i class="far fa-smile"></i>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-7 col-lg-8">
-									<div class="form-group">
-										<div class="form-custom">
-											<input type="text" class="form-control" value="" placeholder="Department">
-											<i class="fas fa-user-check"></i>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-5 col-lg-4">
-									<a href="search.html" class="btn banner-btn">MAKE APPOINTMENT</a>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-
-
-		<section class="category-sec">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-4">
-						<div class="set-category">
-							<div class="d-flex align-items-center">
-								<div class="img-holder">
-									<a href="javascript:void(0);"><img src="{% static 'newstatic/assets/img/icons/set-cat-01.png'%}"
-											alt="" /></a>
-								</div>
-								<div class="info-holder">
-									<h3>Visit a Hospital</h3>
-									<p>We hire the best specialists to deliver top-notch diagnostic services for you.
-									</p>
-									<a href="{% url 'search_hospital' %}" class="book-now">Book Now <i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<h1>01</h1>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="set-category light">
-							<div class="d-flex align-items-center">
-								<div class="img-holder">
-									<a href="javascript:void(0);"><img src="{% static 'newstatic/assets/img/icons/set-cat-02.png'%}"
-											alt="" /></a>
-								</div>
-								<div class="info-holder">
-									<h3>Find a Laboratory</h3>
-									<p>We provide the a wide range of medical services, so every person could have the
-										opportunity.</p>
-									<a href="booking.html" class="book-now">Book Now <i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<h1>02</h1>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="set-category lighter">
-							<div class="d-flex align-items-center">
-								<div class="img-holder">
-									<a href="javascript:void(0);"><img src="{% static 'newstatic/assets/img/icons/set-cat-03.png'%}"
-											alt="" /></a>
-								</div>
-								<div class="info-holder">
-									<h3>Blood Doner</h3>
-									<p>We use the first-class medical equipment for timely diagnostics of various
-										diseases.</p>
-									<a href="booking.html" class="book-now">Book Now <i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<h1>03</h1>
-						</div>
-					</div>
-				</div>
-				</br>
-				<div class="row">
-					<div class="col-md-4">
-						<div class="set-category">
-							<div class="d-flex align-items-center">
-								<div class="img-holder">
-									<a href="javascript:void(0);"><img src="{% static 'newstatic/assets/img/icons/set-cat-01.png'%}"
-											alt="" /></a>
-								</div>
-								<div class="info-holder">
-									<h3>Find a Pharmacy</h3>
-									<p>We hire the best specialists to deliver top-notch diagnostic services for you.
-									</p>
-									<a href="booking.html" class="book-now">Book Now <i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<h1>04</h1>
-						</div> 
-					</div>
-					<div class="col-md-4">
-						<div class="set-category light">
-							<div class="d-flex align-items-center">
-								<div class="img-holder">
-									<a href="javascript:void(0);"><img src="{% static 'newstatic/assets/img/icons/set-cat-02.png'%}"
-											alt="" /></a>
-								</div>
-								<div class="info-holder">
-									<h3>Online Consultancy</h3>
-									<p>We provide the a wide range of medical services, so every person could have the
-										opportunity.</p>
-									<a href="booking.html" class="book-now">Book Now <i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<h1>05</h1>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="set-category lighter">
-							<div class="d-flex align-items-center">
-								<div class="img-holder">
-									<a href="javascript:void(0);"><img src="{% static 'newstatic/assets/img/icons/set-cat-03.png'%}"
-											alt="" /></a>
-								</div>
-								<div class="info-holder">
-									<h3>Find a Ambulance</h3>
-									<p>We use the first-class medical equipment for timely diagnostics of various
-										diseases.</p>
-									<a href="booking.html" class="book-now">Book Now <i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<h1>06</h1>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
+		{% include 'front/banner.html' %}
+		{% include 'front/category.html' %}
 
 
 		<section class="clinic-section">

@@ -5,8 +5,8 @@ from django.views.generic import View,ListView,DetailView
 
 from django.contrib import messages
 from django.db.models import Q
-from accounts.models import Hospitals, Labs, Pharmacy, Specailist
-from hospital.models import Blog, HospitalMedias
+from accounts.models import AdminHOD, Hospitals, Labs, Pharmacy, Specailist
+from hospital.models import Blog, HospitalMedias, ServiceAndCharges
 
 # Create your views here.
   
@@ -41,7 +41,6 @@ class BlogDetailsView(DetailView):
     
 
 class SearchHospitalView(ListView):
-    paginate_by = 5
     model = Hospitals
     template_name = "front/hospital-search.html"
 
@@ -52,10 +51,14 @@ class SearchHospitalView(ListView):
             hospitals=Hospitals.objects.filter( Q(is_verified=True,is_deactive=False,admin__is_active=True) and (Q(hopital_name__contains=filter_val) | Q(about__contains=filter_val) | Q(city__contains=filter_val) | Q(specialist__contains=filter_val))).order_by(order_by)
         else:
             hospitals=Hospitals.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True).order_by(order_by)
+        
         hospital_media_list = []
         for hospital in hospitals:
+            print(hospital.admin)
+            amount = ServiceAndCharges.objects.filter(user=hospital.admin,service_name = "OPD")
+            print(amount)
             medias = HospitalMedias.objects.filter(is_active=True,hospital=hospital)           
-            hospital_media_list.append({'hospital':hospital,'medias':medias})
+            hospital_media_list.append({'hospital':hospital,'medias':medias,'amount':amount})
         print(hospital_media_list)        
         return hospital_media_list
     
@@ -64,6 +67,5 @@ class SearchHospitalView(ListView):
         context["filter"]=self.request.GET.get("filter","")
         context["orderby"]=self.request.GET.get("orderby","id")
         context["all_table_fields"]=Hospitals._meta.get_fields()
-        context["hospital_media_list"]=Hospitals._meta.get_fields()
         return context
     

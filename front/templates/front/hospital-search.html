@@ -121,24 +121,24 @@ Booking{% endblock title %}
 
 					</div>
 					<div class="col-md-12 col-lg-8 col-xl-9">
-						{% for hospitalandmedias in hospital_media_list %}
+						{% for hospital in object_list %}
 								<div class="card">
 									<div class="card-body">
 										<div class="doctor-widget">
 											<div class="doc-info-left">
 												<div class="doctor-img">
 													<a href="doctor-profile.html">
-														<img src="assets/img/doctors/doctor-thumb-01.jpg" class="img-fluid"
+														<img src="{{hospital.hospital.admin.profile_pic}}" class="img-fluid"
 															alt="User Image">
 													</a>
 												</div>
 												<div class="doc-info-cont">
-													<h4 class="doc-name"><a href="doctor-profile.html">Dr. Ruby Perrin</a></h4>
-													<p class="doc-speciality">MDS - Periodontology and Oral Implantology, BDS
-													</p>
+													<h4 class="doc-name"><a href="doctor-profile.html">{{hospital.hospital.hopital_name}}</a></h4>
+													{% comment %} <p class="doc-speciality">{{hospital.hospital.specialist}}
+													</p> {% endcomment %}
 													<h5 class="doc-department"><img
-															src="assets/img/specialities/specialities-05.png" class="img-fluid"
-															alt="Speciality">Dentist</h5>
+															src="{% static 'newstatic/assets/img/specialities/specialities-05.png' %}" class="img-fluid"
+															alt="Speciality">{{hospital.hospital.specialist}}</h5>
 													<div class="rating">
 														<i class="fas fa-star filled"></i>
 														<i class="fas fa-star filled"></i>
@@ -148,35 +148,18 @@ Booking{% endblock title %}
 														<span class="d-inline-block average-rating">(17)</span>
 													</div>
 													<div class="clinic-details">
-														<p class="doc-location"><i class="fas fa-map-marker-alt"></i> Florida,
-															USA</p>
+														<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{hospital.hospital.city}},{{hospital.hospital.state}}</p>
 														<ul class="clinic-gallery">
+														{% for media in hospital.medias %}
 															<li>
-																<a href="assets/img/features/feature-01.jpg"
+																<a href="{{media.media_content}}"
 																	data-fancybox="gallery">
-																	<img src="assets/img/features/feature-01.jpg" alt="Feature">
+																	<img src="{{media.media_content}}" alt="Feature">
 																</a>
 															</li>
-															<li>
-																<a href="assets/img/features/feature-02.jpg"
-																	data-fancybox="gallery">
-																	<img src="assets/img/features/feature-02.jpg" alt="Feature">
-																</a>
-															</li>
-															<li>
-																<a href="assets/img/features/feature-03.jpg"
-																	data-fancybox="gallery">
-																	<img src="assets/img/features/feature-03.jpg" alt="Feature">
-																</a>
-															</li>
-															<li>
-																<a href="assets/img/features/feature-04.jpg"
-																	data-fancybox="gallery">
-																	<img src="assets/img/features/feature-04.jpg" alt="Feature">
-																</a>
-															</li>
+														{% endfor %}
 														</ul>
-													</div>
+													</div> 
 													<div class="clinic-services">
 														<span>Dental Fillings</span>
 														<span> Whitneing</span>
@@ -184,16 +167,16 @@ Booking{% endblock title %}
 												</div>
 											</div>
 											<div class="doc-info-right">
-												<div class="clini-infos">
+												{% comment %} <div class="clini-infos">
 													<ul>
 														<li><i class="far fa-thumbs-up"></i> 98%</li>
 														<li><i class="far fa-comment"></i> 17 Feedback</li>
-														<li><i class="fas fa-map-marker-alt"></i> Florida, USA</li>
-														<li><i class="far fa-money-bill-alt"></i> $300 - $1000 <i
+														<li><i class="fas fa-map-marker-alt"></i> {{hospital.hospital.city}},{{hospital.hospital.state}}</li>
+														<li><i class="far fa-money-bill-alt"></i>{{hospital.amount.service_charge}}<i
 																class="fas fa-info-circle" data-bs-toggle="tooltip"
 																title="Lorem Ipsum"></i> </li>
 													</ul>
-												</div>
+												</div> {% endcomment %}
 												<div class="clinic-booking">
 													<a class="view-pro-btn" href="doctor-profile.html">View Profile</a>
 													<a class="apt-btn" href="booking.html">Book Appointment</a>
