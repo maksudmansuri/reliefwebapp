@@ -73,10 +73,9 @@
                                                 <label  class="form-label">Specilist IN *</label>
                                                 <select class="form-select" aria-label="Default select example" name="specialist">
                                                     <option selected disabled>Specilist</option>
-                                                    <option {% if hospital.specialist == "PHYSICIAN" %}selected{% endif %} value="PHYSICIAN">PHYSICIAN</option>
-                                                    <option {% if hospital.specialist == "SURGEN" %}selected{% endif %} value="SURGEN">SURGEN</option>
-                                                    <option {% if hospital.specialist == "CARDIOLOGY" %}selected{% endif %} value="CARDIOLOGY">CARDIOLOGY</option>
-                                                    <option {% if hospital.specialist == "NEUROLOGISTS" %}selected{% endif %} value="NEUROLOGISTS">NEUROLOGISTS</option>
+                                                    {% for specailist in specailists %}
+                                                    <option {% if specailist.specialist_name == hospital.specailist %}selected{% endif %} value="{{specailist}}">{{specailist.specialist_name}}</option>
+                                                    {% endfor %}
                                                 </select>
                                             </div> 
                                             <div class="col-md-12">

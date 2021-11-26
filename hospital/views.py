@@ -14,7 +14,7 @@ from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.files.storage import FileSystemStorage
 from hospital.models import AmbulanceDetails, Blog, ContactPerson, DepartmentPhones, Departments, HospitalMedias, HospitalRooms, HospitalServices, HospitalStaffDoctorSchedual, HospitalStaffDoctors, HospitalStaffs, HospitalsPatients, Insurances, RoomOrBadTypeandRates, ServiceAndCharges
-from accounts.models import CustomUser, DoctorForHospital, HospitalDoctors, HospitalPhones, Hospitals, OPDTime, Patients
+from accounts.models import CustomUser, DoctorForHospital, HospitalDoctors, HospitalPhones, Hospitals, OPDTime, Patients, Specailist
 from django.urls import reverse
 from datetime import datetime
 import pytz
@@ -34,18 +34,18 @@ def OccupiedRoom(request):
 class hospitaldDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
         try: 
-            # hospital = Hospitals.objects.get(admin=request.user.id)
-            # contacts = HospitalPhones.objects.filter(hospital=hospital)
-            # insurances = Insurances.objects.filter(hospital=hospital)
+            hospital = Hospitals.objects.get(admin=request.user.id)
+            contacts = HospitalPhones.objects.filter(hospital=hospital)
+            insurances = Insurances.objects.filter(hospital=hospital)
 
-            # if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.profile_pic and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile and contacts:
-            rooms = HospitalRooms.objects.filter(is_active=True,hospital=request.user.hospitals)
-            param = {'rooms':rooms}
-            return render(request,"hospital/index.html",param)
-            
-            # messages.add_message(request,messages.ERROR,"Some detail still Missing !")
-            # param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
-            # return render(request,"hospital/hospital_update.html",param)
+            if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.profile_pic and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile and contacts:
+                rooms = HospitalRooms.objects.filter(is_active=True,hospital=request.user.hospitals)
+                param = {'rooms':rooms}
+                return render(request,"hospital/index.html",param)
+            else:
+                messages.add_message(request,messages.ERROR,"Some detail still Missing !")
+                param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
+                return render(request,"hospital/hospital_update.html",param)
         except Exception as e:
             return HttpResponse(e)
         
@@ -60,9 +60,12 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
             contacts = HospitalPhones.objects.filter(hospital=hospital)
             insurances = Insurances.objects.filter(hospital=hospital)
             opdtime=OPDTime.objects.get(user=request.user)
+            specailists = Specailist.objects.all()
+            print("hello")
+            print(specailists)
         except Exception as e:
             return None
-        param={'hospital':hospital,'insurances':insurances,'contacts':contacts,'opdtime':opdtime}
+        param={'hospital':hospital,'insurances':insurances,'contacts':contacts,'opdtime':opdtime,'specailists':specailists}
         return render(request,"hospital/hospital_update.html",param) 
     
     def post(self, request, *args, **kwargs):
