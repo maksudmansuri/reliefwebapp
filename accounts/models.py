@@ -108,6 +108,7 @@ class PhoneOTP(models.Model):
 
 class Specailist(models.Model): 
     id                              =models.AutoField(primary_key=True)
+    category                        =models.CharField(max_length=500,null=True,blank=True,default="Health Tips") 
     specialist_name                 =models.CharField(max_length=500,null=True,blank=True)
     specialist_icon                 =models.FileField(upload_to="Hospital/specialist/images/",max_length=500,null=True,default="")
     hover_icon                      =models.FileField(upload_to="Hospital/specialist/images/hover/%Y/%m/%d/",max_length=500,null=True,default="")
@@ -154,8 +155,9 @@ class Hospitals(models.Model):
     state               =models.CharField(max_length=50,blank=True,null=True,default="")
     country             =models.CharField(max_length=50,blank=True,null=True,default="")
     landline            =models.CharField(max_length=50,blank=True,null=True,default="")
-    SPECIALIST_TYPE_CHOICE=((1,"PHYSICIAN"),(2,"SURGEN"),(3,"CARDIOLOGY"),(4,"NEUROLOGISTS"))
-    specialist          =models.CharField(max_length=256,blank=True,null=True,default="",choices=SPECIALIST_TYPE_CHOICE)
+    # SPECIALIST_TYPE_CHOICE=((1,"PHYSICIAN"),(2,"SURGEN"),(3,"CARDIOLOGY"),(4,"NEUROLOGISTS"))
+    # specialist          =models.CharField(max_length=256,blank=True,null=True,default="",choices=SPECIALIST_TYPE_CHOICE)
+    specialist          =models.ForeignKey(Specailist,on_delete=models.CASCADE,blank=True,null=True)
     profile_pic         =models.FileField(upload_to="Hospital/profile/images/%Y/%m/%d/",max_length=500,null=True,default="")
     is_appiled          =models.BooleanField(blank=True,null=True,default=False)
     is_verified         =models.BooleanField(blank=True,null=True,default=False)
