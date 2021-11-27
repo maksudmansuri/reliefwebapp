@@ -15,14 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.urls.conf import include, re_path
+from django.urls.conf import include
 from accounts import adminView
 from relief import settings
 from django.conf.urls.static import static
 from accounts import views as accViews
 from django.contrib.auth import views as auth_views
 from patient import PatientPassword as patientAuth
-from django.views.static import serve
 urlpatterns = [
 
     path('404',accViews.FourZeroFour , name='404'),
@@ -60,10 +59,6 @@ urlpatterns = [
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='password_reset_form.html'), name='password_reset'),
 
     path('reset/done',auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'),name='password_reset_complete'),
-    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
-    re_path(r'^media/(?P<path>.*)$', serve , {'document_root': settings.MEDIA_ROOT}),
+    
      
-]
-
-# if settings.DEBUG:
-#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
