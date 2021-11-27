@@ -1394,7 +1394,12 @@ class addBlogView(SuccessMessageMixin,CreateView):
         # try:
         hospital=Hospitals.objects.get(admin=request.user) 
         doctor = get_object_or_404(HospitalStaffDoctors,id=doctor)
-        blog = Blog(blog_title=blog_title,blog_content=content,blog_image=blog_image,hospital=hospital,doctor=doctor)
+        blog = Blog(blog_title=blog_title,blog_content=content,hospital=hospital,doctor=doctor)
+        if blog_image:
+            fs=FileSystemStorage()
+            filename1=fs.save(blog_image.name,blog_image)
+            blog_image_url=fs.url(filename1)
+            blog.blog_image=blog_image_url
         blog.save()
         # except Exception as e:
             # messages.add_message(request,messages.ERROR,"Something Wrong with connnections")
@@ -1424,7 +1429,10 @@ class EditBlogUpdateView(SuccessMessageMixin,UpdateView):
             blog.blog_title=blog_title
             blog.blog_content=content
             if blog_image:
-                blog.blog_image=blog_image
+                fs=FileSystemStorage()
+                filename1=fs.save(blog_image.name,blog_image)
+                blog_image_url=fs.url(filename1)
+                blog.blog_image=blog_image_url
             blog.hospital=hospital
             blog.doctor=doctor
             blog.save()

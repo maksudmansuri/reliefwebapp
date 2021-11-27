@@ -275,7 +275,7 @@ class AmbulanceDetails(models.Model):
     
     def __str__(self): 
         return self.vehicle_number
-   
+    
 class Blog(models.Model):
     id                      =           models.AutoField(primary_key=True)
     hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE)

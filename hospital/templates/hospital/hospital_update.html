@@ -37,7 +37,7 @@
                             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#contact" role="tab">Contact Details</a></li>
                             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#insurance" role="tab">Insurance</a></li>
                             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#personal" role="tab">Personal Details</a></li>
-                        </ul>
+                        </ul> 
                         <div class="row" id="progress_div">
                             <div class="col-lg-12">
                                 <div class="progress mb-3" style="height:auto">
@@ -58,7 +58,7 @@
                                             <div class="col-md-4 profile-av mx-auto text-center w220">
                                                 <label for="profile_pic" class="form-label">Upload Hospital Logo</label>
                                                     <br> 
-                                                <img alt="Avatar" src="{{hospital.profile_pic}}" {% if hospital.profile_pic %}style="width:70%;"{% else %} style="width:70%;display:none" {% endif %}class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
+                                                <img alt="Avatar" src="{{hospital.profile_pic}}" id="currentPhoto" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" {% if hospital.profile_pic %}style="width:70%;"{% else %} style="width:70%;display:none" {% endif %}class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
                                             </div>
                                             
                                              <div class="col-md-6">
@@ -70,11 +70,11 @@
                                                 <input type="text" class="form-control" id="hopital_name" name="hopital_name" placeholder="Hopital Name" value="{{hospital.hopital_name}}" required>
                                             </div>
                                             <div class="col-md-6">
-                                                <label  class="form-label">Specilist IN *</label>
+                                                <label  class="form-label">Specilist *</label>
                                                 <select class="form-select" aria-label="Default select example" name="specialist">
                                                     <option selected disabled>Specilist</option>
-                                                    {% for specailist in specailists %}
-                                                    <option {% if specailist.specialist_name == hospital.specailist %}selected{% endif %} value="{{specailist}}">{{specailist.specialist_name}}</option>
+                                                    {% for specailist1 in specailists %}
+                                                    <option {% if specailist1.specialist_name == hospital.specailist %}selected{% endif %} value="{{specailist1}}">{{specailist1.specialist_name}}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div> 

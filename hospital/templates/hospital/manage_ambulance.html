@@ -149,7 +149,7 @@ span.a {
                             <div class="col-sm-6">
                                 <label  class="form-label">Doctor With Ambulance (Optional)</label>
                                 <select class="form-select" aria-label="Default select example" name="doctor">
-                                <option value="" disabled selected>Select Doctor With Ambulance</option>
+                                <option value="" selected>Select Doctor With Ambulance</option>
                                 {% for doctor in doctors %}
                                     <option value="{{doctor.id}}">{{doctor.doctor.name_title}} {{doctor.doctor.fisrt_name}} {{doctor.doctor.last_name}}</option>
                                 {% endfor %}
