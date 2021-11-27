@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-cq&8ek!(y7z)db8vek(ul2p37o_gd%^s_o^mj102l&)*k9+sds
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['reliefproapp.herokuapp.com/']
+ALLOWED_HOSTS = ['*']
 
 
 
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',   
+    # 'django.contrib.staticfiles',   
     'radmin',
     'hospital',
     'accounts.apps.AccoumtsConfig',
@@ -195,7 +195,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT=os.path.join(BASE_DIR,"static")
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static"
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 STATICFILE_STORAGE = "whitenoise.storage.CompressedMainfestStaticFilesStorage"
