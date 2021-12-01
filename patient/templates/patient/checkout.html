@@ -1,265 +1,233 @@
-{% extends 'patient/base.html' %}
+{% extends 'front/blank-page.html' %}
+
 {% load static %}
-{% block title %} :: I-Health:: Hospital Detail {% endblock title %}
+{% load mathfilters %}
+{% block title %} Relief Pro - Checkout | Hospital,Labs and Pharmacy Online Booking | Emergency
+Booking {% endblock title %}
 
-{% block custom_css %}
-<style>
-    a {
-        text-decoration: none;
-        -webkit-transition: all 0.3s ease-out;
-        -moz-transition: all 0.3s ease-out;
-        -ms-transition: all 0.3s ease-out;
-        -o-transition: all 0.3s ease-out;
-        transition: all 0.3s ease-out;
-    }
-
-    a:hover {
-        -webkit-transition: all 0.3s ease-out;
-        -moz-transition: all 0.3s ease-out;
-        -ms-transition: all 0.3s ease-out;
-        -o-transition: all 0.3s ease-out;
-        transition: all 0.3s ease-out;
-    }
-
-    .style-4 {
-        background: ;
-        color: #fff;
-        font: 13px Montserrat;
-        text-transform: uppercase;
-        padding: 11px;
-        font-weight: 600;
-        max-width: 250px;
-        display: block;
-        text-align: center;
-        margin: 10px auto;
-        position: relative;
-        -moz-transform: skewX(-6deg);
-        -webkit-transform: skewX(-6deg);
-        -o-transform: skewX(-6deg);
-        -ms-transform: skewX(-6deg);
-        transform: skewX(-6deg);
-        box-shadow: inset -150px 0 0 0 #6aab9c, inset 200px 0 0 0 #6aab9c;
-        /* set the 150 for maximum width division */
-        -webkit-transition: box-shadow 0.5s ease-out;
-        -moz-transition: box-shadow 0.5s ease-out;
-        -ms-transition: box-shadow 0.5s ease-out;
-        -o-transition: box-shadow 0.5s ease-out;
-        transition: box-shadow 0.5s ease-out;
-    }
-
-    .style-4:hover {
-        -webkit-transition: box-shadow 0.5s ease-out;
-        -moz-transition: box-shadow 0.5s ease-out;
-        -ms-transition: box-shadow 0.5s ease-out;
-        -o-transition: box-shadow 0.5s ease-out;
-        transition: box-shadow 0.5s ease-out;
-        box-shadow: inset 200px 0 0 0 #9f4d4e, inset -200px 0 0 0 #9f4d4e;
-        /* set the 150 for maximum width division */
-        color: #fff;
-    }
-</style>
-{% endblock custom_css %}
+{% block custom_css %}{% endblock custom_css %}
 
 {% block content %}
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-12">
-            <div class="d-flex justify-content-center">
-            {% if order.booking_for == "1" %}
-                <table class="card p-5">
-                    <tbody><tr>
-                        <td></td>
-                        <td class="text-center">
-                            <table>
-                                <tbody><tr>
-                                    <td class="text-center">
-                                        <h2>&#8377; {{booking.amount}}</h2>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center py-2">
-                                        <h4 class="mb-0">Thanks for using I-Health.</h4>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="pt-2 pb-4">
-                                        <table>
-                                            <tbody><tr>
-                                                <td>
-                                                    Attn: <strong>{{booking.hospitalstaffdoctor.hospital}}</strong> {{booking.hospitalstaffdoctor}}<br>
-                                                    Adress: {{booking.hospitalstaffdoctor.hospital.address1}} {{booking.hospitalstaffdoctor.hospital.address2}} {{booking.hospitalstaffdoctor.hospital.city}}{{booking.hospitalstaffdoctor.hospital.state}}{{booking.hospitalstaffdoctor.hospital.pin_code}}<br>
-                                                    Phone: +88 123 456 789<br>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="pt-2">
-                                                    <table class="table table-bordered">
-                                                        <tbody>
-                                                        <tr>
-                                                            <td class="text-start">{{booking.service}}</td>
-                                                            <td class="text-end">&#8377; {{booking.service.service_charge}}</td>
-                                                        </tr>                                                        
-                                                        <tr>
-                                                            <td class="text-start w-80"><strong>Total</strong></td>
-                                                            <td class="text-end fw-bold">&#8377; {{booking.service.service_charge}}</td>
-                                                        </tr>
-                                                    </tbody></table>
-                                                </td>
-                                            </tr>
-                                        </tbody></table>
-                                    </td>
-                                </tr>
-                            </tbody></table>
-                            <table class="mt-3 text-center w-100">
-                                <tbody>
-                                <tr>
-                                <div class="col-xl-12 posts">
-                                    <a class="btn btn-primary style-4" href="{% url 'paytmprocess' %}"> Proccessed to PAY</a>
-                                </div>
-                                </tr>
-                            </tbody></table>
-                        </td>
-                        <td></td>
-                    </tr>
-                </tbody></table>
-            {% endif %}
-            {% if order.booking_for == "2" %}
-                <table class="card p-5">
-                    <tbody><tr>
-                        <td></td>
-                        <td class="text-center">
-                            <table>
-                                <tbody><tr>
-                                    <td class="text-center">
-                                        <h2>&#8377; {{booking.amount}}</h2>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center py-2">
-                                        <h4 class="mb-0">Thanks for using I-Health.</h4>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="pt-2 pb-4">
-                                        <table>
-                                            <tbody><tr>
-                                                <td>
-                                                    Attn: <strong>{{booking.lab}}</strong> <br>
-                                                    Address: {{booking.lab.address}},{{booking.lab.city}}, {{booking.lab.state}}-{{booking.lab.pin_code}},{{booking.lab.country}}<br>
-                                                    Phone: +88 123 456 789<br>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="pt-2">
-                                                    <table class="table table-bordered">
-                                                        <tbody>
-                                                        {% for service in services %}
-                                                        <tr>
-                                                            <td class="text-start">{{service.service.service_name}}</td>
-                                                            <td class="text-end">&#8377; {{service.service.service_charge}}</td>
-                                                        </tr>
-                                                        {% endfor %}
-                                                        <tr>
-                                                            <td class="text-start w-80"><strong>Total</strong></td>
-                                                            <td class="text-end fw-bold">&#8377; {{booking.amount}}</td>
-                                                        </tr>
-                                                    </tbody></table>
-                                                </td>
-                                            </tr>
-                                        </tbody></table>
-                                    </td>
-                                </tr>
-                              
-                            </tbody></table>
-                            <table class="mt-3 text-center w-100">
-                                <tbody>
-                                <tr> 
-                                <div class="col-xl-12 posts">
-                                    <a class="btn btn-primary style-4" href="{% url 'paytmprocess' %}"> Proccessed to PAY</a>
-                                </div>
-                                </tr>
-                            </tbody></table>
-                        </td>
-                        <td></td>
-                    </tr>
-                </tbody></table>
-            {% endif %}
-            </div>
-        </div>
-        {% comment %} <div class="col-lg-8 col-md-12">
-            <div class="d-flex justify-content-center">
-                <table class="card p-5">
-                    <tbody><tr>
-                        <td></td>
-                        <td class="text-center">
-                            <table>
-                                <tbody><tr>
-                                    <td class="text-center">
-                                        <h2>$48.98 Paid</h2>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center py-2">
-                                        <h4 class="mb-0">Thanks for using I-Health.</h4>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="pt-2 pb-4">
-                                        <table>
-                                            <tbody><tr>
-                                                <td>
-                                                    Attn: <strong>Zydus Hospital</strong> Winston Salem FL 27107<br>
-                                                    Email: info@zydus.com<br>
-                                                    Phone: +88 123 456 789<br>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="pt-2">
-                                                    <table class="table table-bordered">
-                                                        <tbody><tr>
-                                                            <td class="text-start">Extended Production License</td>
-                                                            <td class="text-end">$ 20.99</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="text-start">1 year Production License</td>
-                                                            <td class="text-end">$ 19.99</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="text-start">Production and Distribution n</td>
-                                                            <td class="text-end">$ 8.00</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="text-start w-80"><strong>Total</strong></td>
-                                                            <td class="text-end fw-bold">$ 48.98</td>
-                                                        </tr>
-                                                    </tbody></table>
-                                                </td>
-                                            </tr>
-                                        </tbody></table>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="pt-2 pb-2 text-center">
-                                        <a href="#">View in browser</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="p-0 text-center">
-                                        PXL Inc. 47 Aurora St. South West, CT 06074
-                                    </td>
-                                </tr>
-                            </tbody></table>
-                            <table class="mt-3 text-center w-100">
-                                <tbody><tr>
-                                    <td class="aligncenter content-block">Questions? Email <a href="mailto:">info@pixelwibes.com</a></td>
-                                </tr>
-                            </tbody></table>
-                        </td>
-                        <td></td>
-                    </tr>
-                </tbody></table>
-            </div>
-        </div> {% endcomment %}
-    </div>
+		<div class="breadcrumb-bar">
+			<div class="container-fluid">
+				<div class="row align-items-center">
+					<div class="col-md-12 col-12">
+						<nav aria-label="breadcrumb" class="page-breadcrumb">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="{% url 'front_home' %}">Home</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Checkout</li>
+							</ol>
+						</nav>
+						<h2 class="breadcrumb-title">Checkout</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="content">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-7 col-lg-8">
+						<div class="card">
+							<div class="card-body">
+
+								<form action="booking-success.html">
+
+									{% comment %} <div class="info-widget">
+										<h4 class="card-title">Personal Information</h4>
+										<div class="row">
+											<div class="col-md-6 col-sm-12">
+												<div class="form-group card-label">
+													<label>First Name{{booking.order_id}}</label>
+													<input class="form-control" type="text">
+												</div>
+											</div>
+											<div class="col-md-6 col-sm-12">
+												<div class="form-group card-label">
+													<label>Last Name{{booking.id}}</label>
+													<input class="form-control" type="text">
+												</div>
+											</div>
+											<div class="col-md-6 col-sm-12">
+												<div class="form-group card-label">
+													<label>Email{{booking.status}}</label>
+													<input class="form-control" type="email">
+												</div>
+											</div>
+											<div class="col-md-6 col-sm-12">
+												<div class="form-group card-label">
+													<label>Phone</label>
+													<input class="form-control" type="text">
+												</div>
+											</div>
+										</div>
+										<div class="exist-customer">Existing Customer? <a href="#">Click here to
+												login</a></div>
+									</div> {% endcomment %}
+
+									<div class="payment-widget">
+										<h4 class="card-title">Payment Method</h4>
+
+										<div class="payment-list">
+											<label class="payment-radio credit-card-option">
+												<input type="radio" name="radio" checked>
+												<span class="checkmark"></span>
+												Credit card
+											</label>
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group card-label">
+														<label for="card_name">Name on Card</label>
+														<input class="form-control" id="card_name" type="text">
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group card-label">
+														<label for="card_number">Card Number</label>
+														<input class="form-control" id="card_number"
+															placeholder="1234  5678  9876  5432" type="text">
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group card-label">
+														<label for="expiry_month">Expiry Month</label>
+														<input class="form-control" id="expiry_month" placeholder="MM"
+															type="text">
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group card-label">
+														<label for="expiry_year">Expiry Year</label>
+														<input class="form-control" id="expiry_year" placeholder="YY"
+															type="text">
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group card-label">
+														<label for="cvv">CVV</label>
+														<input class="form-control" id="cvv" type="text">
+													</div>
+												</div>
+											</div>
+										</div>
+
+
+										<div class="payment-list">
+											<label class="payment-radio paypal-option">
+												<input type="radio" name="radio">
+												<span class="checkmark"></span>
+												Paypal
+											</label>
+										</div>
+
+
+										<div class="terms-accept">
+											<div class="custom-checkbox">
+												<input type="checkbox" id="terms_accept">
+												<label for="terms_accept">I have read and accept <a href="#">Terms &amp;
+														Conditions</a></label>
+											</div>
+										</div>
+
+
+										<div class="submit-section mt-4">
+											<button type="submit" class="btn btn-primary submit-btn">Confirm and
+												Pay</button>
+										</div>
+
+									</div>
+								</form>
+
+							</div>
+						</div>
+					</div>
+					<div class="col-md-5 col-lg-4 theiaStickySidebar">
+
+						<div class="card booking-card">
+							<div class="card-header">
+								<h4 class="card-title">Booking Summary</h4>
+							</div>
+							{% if booking.booking_for == "H" %}
+							<div class="card-body">
+								<h4 class="card-title">Hospital Details</h4>
+								<div class="booking-doc-info">
+									<a href="doctor-profile.html" class="booking-doc-img">
+										<img src="{{booking.hospitalstaffdoctor.hospital.profile_pic}}" alt="User Image">
+									</a>
+									<div class="booking-info">
+										<h4><a href="doctor-profile.html">Dr. {{booking.hospitalstaffdoctor.hospital.hopital_name}}</a></h4>
+										{% comment %} <div class="rating">
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star"></i>
+											<span class="d-inline-block average-rating">35</span>
+										</div> {% endcomment %}
+										<div class="clinic-details">
+											<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{booking.hospitalstaffdoctor.hospital.city}} , {{booking.hospitalstaffdoctor.hospital.state}}
+											</p>
+										</div>
+									</div>
+								</div>
+							</br>
+								<h5 class="card-title">Doctor Details</h5>
+								<div class="booking-doc-info">
+									<a href="doctor-profile.html" class="booking-doc-img">
+										<img src="{{booking.hospitalstaffdoctor.doctor.profile_pic}}" alt="User Image">
+									</a>
+									<div class="booking-info">
+										<h4><a href="doctor-profile.html">Dr. {{booking.hospitalstaffdoctor.doctor.fisrt_name}} {{booking.hospitalstaffdoctor.doctor.last_name}}</a></h4>
+										{% comment %} <div class="rating">
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star"></i>
+											<span class="d-inline-block average-rating">35</span>
+										</div> {% endcomment %}
+										<div class="clinic-details">
+											<p class="doc-location"><i class="fas fa-address-card"></i></i> {{booking.hospitalstaffdoctor.doctor.specialist}}
+											</p>
+										</div>
+									</div>
+								</div>
+
+								<div class="booking-summary">
+									<div class="booking-item-wrap">
+										<ul class="booking-date">
+											<li>Date <span>{{booking.applied_date}}</span></li>
+											<li>Time <span>{{booking.applied_time}}</span></li>
+										</ul>
+										<ul class="booking-fee">
+											<li>Consulting Fee <span>&#x20B9; {{booking.amount}}</span></li>
+											{% if booking_type == "EMERGENCY" %}{% endif %}
+											{% if booking_type == "OPD" %}{% endif %}
+											{% if booking_type == "ONLINE" %}{% endif %}
+											{% if booking_type == "HOMEVISIT" %}{% endif %}
+											<li>Video Call <span>&#x20B9;50</span></li>
+											<li>Booking Fee <span>&#x20B9;{{booking.amount |mul:10|div:100}}</span></li>
+										</ul>
+										<div class="booking-total">
+											<ul class="booking-total-list">
+												<li>
+													<span>Total</span>
+													<span class="total-cost">$160</span>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+							{% endif %}
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
 {% endblock content %}
 
 

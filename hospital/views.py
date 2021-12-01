@@ -1,23 +1,28 @@
+from io import StringIO
+from typing import List
+from django.http.request import HttpRequest
 from accounts import models
 from chat.models import Notification
+import hospital
 import patient
 from patient.models import Booking, LabTest, Orders, Slot, TreatmentReliefPetient, patientFile, phoneOPTforoders
 from django.db.models.query_utils import Q
 from django.urls.base import reverse
 from hospital import urls
 from django.contrib import messages
-from django.http.response import HttpResponse, HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseBase, HttpResponseRedirect
 from django.contrib.auth import get_user_model
 from accounts import views
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.files.storage import FileSystemStorage
-from hospital.models import AmbulanceDetails, Blog, ContactPerson, DepartmentPhones, Departments, HospitalMedias, HospitalRooms, HospitalServices, HospitalStaffDoctorSchedual, HospitalStaffDoctors, HospitalStaffs, HospitalsPatients, Insurances, RoomOrBadTypeandRates, ServiceAndCharges
+from hospital.models import AmbulanceDetails, Blog, ContactPerson, DepartmentPhones, Departments, DoctorSchedule, HospitalMedias, HospitalRooms, HospitalServices, HospitalStaffDoctorSchedual, HospitalStaffDoctors, HospitalStaffs, HospitalsPatients, Insurances, RoomOrBadTypeandRates, ServiceAndCharges, TimeSlot
 from accounts.models import CustomUser, DoctorForHospital, HospitalDoctors, HospitalPhones, Hospitals, OPDTime, Patients, Specailist
 from django.urls import reverse
 from datetime import datetime
 import pytz
+from django.core.paginator import Paginator
 IST = pytz.timezone('Asia/Kolkata')
 
 # Create your views here. 
@@ -35,17 +40,20 @@ class hospitaldDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
         try: 
             hospital = Hospitals.objects.get(admin=request.user.id)
-            contacts = HospitalPhones.objects.filter(hospital=hospital)
-            insurances = Insurances.objects.filter(hospital=hospital)
+            
+            bookings = Booking.objects.filter(hospital=hospital)
 
-            if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.profile_pic and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile and contacts:
-                rooms = HospitalRooms.objects.filter(is_active=True,hospital=request.user.hospitals)
-                param = {'rooms':rooms}
-                return render(request,"hospital/index.html",param)
-            else:
-                messages.add_message(request,messages.ERROR,"Some detail still Missing !")
-                param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
-                return render(request,"hospital/hospital_update.html",param)
+        # if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.profile_pic and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile and contacts:
+            # contacts = HospitalPhones.objects.filter(hospital=hospital)
+            # insurances = Insurances.objects.filter(hospital=hospital)
+            rooms = HospitalRooms.objects.filter(is_active=True,hospital=request.user.hospitals)
+            param = {'rooms':rooms,'bookings':bookings}
+            return render(request,"hospital/newindex.html",param)
+        
+        # else:
+            # messages.add_message(request,messages.ERROR,"Some detail still Missing !")
+            # param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
+            # return render(request,"hospital/hospital_update.html",param)
         except Exception as e:
             return HttpResponse(e)
         
@@ -55,18 +63,18 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
         hospital = None
         # contacts = None
         # insurances = None
-        try:
-            hospital = Hospitals.objects.get(admin=request.user.id)
-            contacts = HospitalPhones.objects.filter(hospital=hospital)
-            insurances = Insurances.objects.filter(hospital=hospital)
-            opdtime=OPDTime.objects.get(user=request.user)
-            specailists = Specailist.objects.all()
-            print("hello")
-            print(specailists)
-        except Exception as e:
-            return None
+        # try:
+        hospital = Hospitals.objects.get(admin=request.user.id)
+        contacts = HospitalPhones.objects.filter(hospital=hospital)
+        insurances = Insurances.objects.filter(hospital=hospital)
+        opdtime=OPDTime.objects.get(user=request.user)
+        specailists = Specailist.objects.all()
+        print("hello")
+        print(specailists)
+        # except Exception as e:
+            # return None
         param={'hospital':hospital,'insurances':insurances,'contacts':contacts,'opdtime':opdtime,'specailists':specailists}
-        return render(request,"hospital/hospital_update.html",param) 
+        return render(request,"hospital/doctor-profile-settings.html",param) 
     
     def post(self, request, *args, **kwargs):
         hopital_name = request.POST.get("hopital_name")
@@ -107,36 +115,36 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
         # email = request.POST.get("email")
         name_title = request.POST.get("name_title")
 
-        Sunday = request.POST.get("Sunday")
-        Monday = request.POST.get("Monday")
-        Tuesday = request.POST.get("Tuesday")
-        Wednesday = request.POST.get("Wednesday")
-        Thursday = request.POST.get("Thursday")
-        Friday = request.POST.get("Friday")
-        Saturday = request.POST.get("Saturday")
-        Sunday = request.POST.get("Sunday")
-        opening_time1 = request.POST.get("opening_time")
-        opening_time = datetime.strptime(opening_time1,"%H:%M").time()
-        close_time1 = request.POST.get("close_time")
-        close_time = datetime.strptime(close_time1,"%H:%M").time()
-        break_start_time1 = request.POST.get("break_start_time")
-        break_start_time = datetime.strptime(break_start_time1,"%H:%M").time()
-        break_end_time1 = request.POST.get("break_end_time")
-        break_end_time = datetime.strptime(break_end_time1,"%H:%M").time()
-        if Sunday is None and Monday is None and Tuesday is None and Wednesday is None and Thursday is None and Friday is None and Saturday is None:
-            messages.add_message(request,messages.ERROR,"At least select one day")
-            return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id}))
-        if opening_time >= close_time or break_start_time >= close_time or break_end_time >= close_time or opening_time >= break_start_time  or opening_time >= break_end_time or break_start_time >= break_end_time:
-            messages.add_message(request,messages.ERROR,"Time does not match kindly set Proper time ")
-            print(messages.error)
-            return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id})) 
+        # Sunday = request.POST.get("Sunday")
+        # Monday = request.POST.get("Monday")
+        # Tuesday = request.POST.get("Tuesday")
+        # Wednesday = request.POST.get("Wednesday")
+        # Thursday = request.POST.get("Thursday")
+        # Friday = request.POST.get("Friday")
+        # Saturday = request.POST.get("Saturday")
+        # Sunday = request.POST.get("Sunday")
+        # opening_time1 = request.POST.get("opening_time")
+        # opening_time = datetime.strptime(opening_time1,"%H:%M").time()
+        # close_time1 = request.POST.get("close_time")
+        # close_time = datetime.strptime(close_time1,"%H:%M").time()
+        # break_start_time1 = request.POST.get("break_start_time")
+        # break_start_time = datetime.strptime(break_start_time1,"%H:%M").time()
+        # break_end_time1 = request.POST.get("break_end_time")
+        # break_end_time = datetime.strptime(break_end_time1,"%H:%M").time()
+        # if Sunday is None and Monday is None and Tuesday is None and Wednesday is None and Thursday is None and Friday is None and Saturday is None:
+        #     messages.add_message(request,messages.ERROR,"At least select one day")
+        #     return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id}))
+        # if opening_time >= close_time or break_start_time >= close_time or break_end_time >= close_time or opening_time >= break_start_time  or opening_time >= break_end_time or break_start_time >= break_end_time:
+        #     messages.add_message(request,messages.ERROR,"Time does not match kindly set Proper time ")
+        #     print(messages.error)
+        #     return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id})) 
 
-        print("we are indside a add hspitals")
+        # print("we are indside a add hspitals")
         try:
-            opd = OPDTime.objects.get(user=request.user)
-            opd.delete()
-            opdtime= OPDTime(user=request.user,opening_time=opening_time,close_time=close_time,break_start_time=break_start_time,break_end_time=break_end_time,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,is_active=True)
-            opdtime.save()
+            # opd = OPDTime.objects.get(user=request.user)
+            # opd.delete()
+            # opdtime= OPDTime(user=request.user,opening_time=opening_time,close_time=close_time,break_start_time=break_start_time,break_end_time=break_end_time,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,is_active=True)
+            # opdtime.save()
             hospital = Hospitals.objects.get(admin=request.user.id)
             hospital.hopital_name=hopital_name
             hospital.about=about
@@ -148,7 +156,9 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
             hospital.state=state
             hospital.country=country
             hospital.landline=landline
-            hospital.specialist=specialist
+            if specialist:
+                specialist1 = get_object_or_404(Specailist,id=specialist)
+                hospital.specialist=specialist1
 
             if profile_pic:
                 fs=FileSystemStorage()
@@ -552,7 +562,6 @@ def updateAmbulance(request):
         messages.add_message(request,messages.SUCCESS,"Successfully Updated")
         return HttpResponseRedirect(reverse("manage_ambulance"))
 
-
 def deleteAmbulance(request,id):
     hospitalroom = AmbulanceDetails.objects.get(id=id)
     hospitalroom.delete()
@@ -587,11 +596,14 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
             hospital=Hospitals.objects.get(admin=request.user)
             doctors = HospitalStaffDoctors.objects.filter(hospital=hospital)
             is_virtual_available_check = HospitalStaffDoctors.objects.filter(is_virtual_available=True,hospital=hospital,is_active=True).count()
+            paginator = Paginator(doctors, 6) # Show 25 contacts per page.
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")
-            return HttpResponseRedirect(reverse("manage_staff"))        
-        param={'hospital':hospital,'doctors':doctors,'is_virtual_available_check':is_virtual_available_check}
-        return render(request,"hospital/manage_doctor.html",param)        
+            return HttpResponseRedirect(reverse("manage_doctor"))        
+        param={'hospital':hospital,'doctors':doctors,'is_virtual_available_check':is_virtual_available_check,'page_obj':page_obj}
+        return render(request,"hospital/new_manage_doctor.html",param)        
 
     def post(self, request, *args, **kwargs):
         #for CustomUSer creation
@@ -619,6 +631,7 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
         joindate = request.POST.get("joindate")
         opd_charges = request.POST.get("opd_charges")
         home_charges = request.POST.get("home_charges")
+        online_charges = request.POST.get("online_charges")
         emergency_charges = request.POST.get("emergency_charges")
         is_active = request.POST.get("is_active")
         is_virtual = request.POST.get("is_virtual_available")
@@ -646,7 +659,7 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
         doctor = HospitalDoctors(fisrt_name=first_name,last_name=last_name,address=address,city=city,state=state,country=country,zip_Code=zip_Code,phone=phone,degree=degree,dob=dob,alternate_mobile=alternate_mobile,profile_pic=profile_pic_url,gender=gender,facebook=facebook,instagram=instagram,linkedin=linkedin,specialist=specialist)
         doctor.save()
        
-        staffdoctor= HospitalStaffDoctors(doctor=doctor,hospital=hospital,joindate=joindate,is_active=active,ssn_id=ssn_id,is_virtual_available=is_virtual_available,email=email,emergency_charges=emergency_charges,home_charges=home_charges,opd_charges=opd_charges)
+        staffdoctor= HospitalStaffDoctors(doctor=doctor,hospital=hospital,joindate=joindate,is_active=active,ssn_id=ssn_id,is_virtual_available=is_virtual_available,email=email,emergency_charges=emergency_charges,home_charges=home_charges,online_charges=online_charges,opd_charges=opd_charges)
         staffdoctor.is_active=True
         staffdoctor.save()
        
@@ -681,6 +694,10 @@ def updateDoctor(request):
         # for Hospital staff user creation
         joindate = request.POST.get("joindate")
         is_active = request.POST.get("is_active")
+        opd_charges = request.POST.get("opd_charges")
+        home_charges = request.POST.get("home_charges")
+        online_charges = request.POST.get("online_charges")
+        emergency_charges = request.POST.get("emergency_charges")
         active = False
         if is_active == "on":
             active= True
@@ -702,6 +719,10 @@ def updateDoctor(request):
         staffdoctor= HospitalStaffDoctors(id=id)
         staffdoctor.hospital=hospital
         staffdoctor.joindate=joindate
+        staffdoctor.opd_charges=opd_charges
+        staffdoctor.online_charges=online_charges
+        staffdoctor.emergency_charges=emergency_charges
+        staffdoctor.home_charges=home_charges
         staffdoctor.is_active=active
         staffdoctor.ssn_id=ssn_id
         staffdoctor.email=email
@@ -947,7 +968,7 @@ class manageGalleryView(SuccessMessageMixin,CreateView):
             messages.add_message(request,messages.ERROR,"user not available")
             return HttpResponseRedirect(reverse("manage_staff"))        
         param={'hospital':hospital,'hospitalmedias':hospitalmedias}
-        return render(request,"hospital/manage_gallery.html",param)        
+        return render(request,"hospital/new_manage_gallery.html",param)        
 
     def post(self, request, *args, **kwargs):
         media_type_list = request.POST.get('media_type')        
@@ -967,16 +988,16 @@ class manageGalleryView(SuccessMessageMixin,CreateView):
             print("Meida saved")      
         return HttpResponseRedirect(reverse("manage_gallery"))
 
-def deleteGallery(request):
-    if request.method == "POST":
-        checked_list = request.POST.getlist("id[]")
-        print(checked_list)
-        for deletecheck in checked_list:
-            hospital_media = HospitalMedias.objects.get(id=deletecheck)
-            hospital_media.delete()
-        messages.add_message(request,messages.SUCCESS,"Successfully gellery Deleted")
-        return HttpResponseRedirect(reverse("manage_gallery"))
-
+def deleteGallery(request,id):
+    # if request.method == "POST":
+        # checked = request.POST.get("id")
+        # print(checked_list)
+        # for deletecheck in checked_list:
+    hospital_media = HospitalMedias.objects.get(id=id)
+    hospital_media.delete()
+    messages.add_message(request,messages.SUCCESS,"Successfully gellery Deleted")
+    return HttpResponseRedirect(reverse("manage_gallery"))
+ 
 """
 Patient creations just for hosiptal visit patients but for backend i and adding patient cardential
 """
@@ -1186,7 +1207,6 @@ class manageAppointmentView(SuccessMessageMixin,View):
         except Exception as e:
             return HttpResponse(e)
 
-
 def verifybooking(request):
     if request.POST:
         # try:
@@ -1256,7 +1276,7 @@ Update appointment yet not implemented will think more that
 #         modified_date = request.POST.get("modified_date")
 #         modified_time = request.POST.get("modified_time")
 #         add_note = request.POST.get("add_note")
-#         booking = Booking.objects.get(id=id)
+#         booking = Booking.objects.get(id=id) 
 #         booking.modified_date = modified_date
 #         booking.modified_time = modified_time
 #         booking.add_note = add_note
@@ -1375,6 +1395,83 @@ def deleteReliefHospitalPatient(request,id):
     patient.save()
     messages.add_message(request,messages.SUCCESS,"Successfully Delete")
     return HttpResponseRedirect(reverse("manage_relief_patient"))
+
+""""New Doctor schedule"""
+
+# class DoctorScheduleListView(SuccessMessageMixin,ListView):
+#     def get(self, request, *args, **kwargs):
+        
+#         param={'hospital':hospital,'treatmentreliefpetient':treatmentreliefpetient}
+#         return render(request,"hospital/view-doctor-schedule.html",param)        
+
+#     # def post(self, request, *args, **kwargs):
+#     #     id = request.POST.get('a_id')        
+#     #     status = request.POST.get('status')
+           
+#     #     try:
+#     #         pass
+#     #     except Exception as e:
+#     #         print(e)
+#     #         # return HttpResponse(e)
+       
+#     #     print("Appoinment update saved")      
+#     #     return HttpResponseRedirect(reverse("manage_relief_patient"))
+#     # template_name = "hospital/view-doctor-schedule.html"
+""""NEW DOCTORS SLOT IN BOX"""
+class DoctorScheduleCreateView(SuccessMessageMixin,CreateView):
+    def get(self, request, *args, **kwargs):
+        doctor_id = kwargs['id']
+        doctor = get_object_or_404(HospitalStaffDoctors,id=doctor_id)
+        dates = DoctorSchedule.objects.filter(doctor=doctor).values('scheduleDate','id')
+        schedule_dates ={item['scheduleDate'] for item in dates}
+        schedule_dates_list = []
+        for sch_Dat in schedule_dates:
+            scd_type = DoctorSchedule.objects.filter(scheduleDate=sch_Dat,doctor=doctor).first()
+            scd_type_all = DoctorSchedule.objects.filter(scheduleDate=sch_Dat,doctor=doctor)
+            schedule_dates_list.append({'scd_type':scd_type,'sch_Dat':sch_Dat,'scd_type_all':scd_type_all})
+            
+            # sch_type = DoctorSchedule.objects.values('scheduleDate','id')
+        print(schedule_dates_list)
+
+
+        # schedule_dates = DoctorSchedule.objects.filter()
+        timeslots_15s = TimeSlot.objects.filter(schedule_type="15")
+        timeslots_30s = TimeSlot.objects.filter(schedule_type="30")
+        timeslots_45s = TimeSlot.objects.filter(schedule_type="45")
+        timeslots_60s = TimeSlot.objects.filter(schedule_type="60")
+
+        param = {'timeslots_15s':timeslots_15s,'timeslots_30s':timeslots_30s,'timeslots_45s':timeslots_45s,'timeslots_60s':timeslots_60s,'doctor':doctor,'schedule_dates_list':schedule_dates_list}
+       
+        return render(request,'hospital/view-doctor-schedule.html',param)
+    
+    def post(self, request, *args, **kwargs):
+        timeslot_list = request.POST.getlist('timeslot[]')
+        scheduleDate = request.POST.get('scheduleDate')
+        doctor_id = request.POST.get('doctor_id') 
+        doctor = get_object_or_404(HospitalStaffDoctors,id=doctor_id)
+        doctorschedules = DoctorSchedule.objects.filter(doctor = doctor)
+        for doctorschedule in doctorschedules:
+            print(doctorschedule.scheduleDate)
+            print(scheduleDate)
+            if str(doctorschedule.scheduleDate) == str(scheduleDate):
+                messages.add_message(request,messages.ERROR,"Already Booked date please delete if you want to change")
+                return HttpResponseRedirect(reverse("manage_doctorschedule",kwargs={'id':doctor.id}))
+        is_active =True
+        for timeslot in timeslot_list:
+            timeslot_obj = get_object_or_404(TimeSlot,id=timeslot)
+            doctorschedule = DoctorSchedule(scheduleDate=scheduleDate,doctor=doctor,is_active=is_active,timeslot=timeslot_obj,hospital=request.user.hospitals)
+            doctorschedule.save()
+        messages.add_message(request,messages.SUCCESS,"Suucessfully Created")
+        return HttpResponseRedirect(reverse("manage_doctorschedule",kwargs={'id':doctor.id}))
+
+def deleteTimeSlot(request,id,did):
+    doctor = get_object_or_404(HospitalStaffDoctors,id=did)
+    date1 = DoctorSchedule.objects.get(doctor=doctor,id=id)
+    dates = DoctorSchedule.objects.filter(doctor=doctor,scheduleDate=date1.scheduleDate)
+    for date in dates:
+        date.delete()
+    messages.add_message(request,messages.SUCCESS,"Sucessfully Deleted")
+    return HttpResponseRedirect(reverse("manage_doctorschedule",kwargs={'id':doctor.id}))
 
 """ Blog """
 

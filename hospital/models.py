@@ -1,3 +1,4 @@
+from datetime import time
 from os import stat_result
 from django.core.files.storage import default_storage
 from django.core.validators import RegexValidator
@@ -9,6 +10,60 @@ from django.db import models
 from accounts.models import HospitalDoctors, Hospitals,CustomUser
 
 # Create your models here. 
+
+class TimeSlot(models.Model):
+    id                  =models.AutoField(primary_key=True)
+    session             =models.CharField(blank=True,null=True,default="",max_length=200)
+    schedule_type       =models.CharField(blank=True,null=True,default="",max_length=200)
+    schedule            =models.TimeField(auto_now=False, auto_now_add=False,blank=True,null=True,default="")
+    created_at          =models.DateTimeField(auto_now=True)
+    updated_at          =models.DateTimeField(auto_now=True)
+    objects             =models.Manager()
+
+    def __str__(self):
+        return str(self.schedule)
+
+class HospitalStaffDoctors(models.Model):
+    id                  =models.AutoField(primary_key=True)
+    email               =models.EmailField(default="", max_length=254)
+    doctor              =models.ForeignKey(HospitalDoctors, related_name="hospitaldoctor", on_delete=models.CASCADE)
+    hospital            =models.ForeignKey(Hospitals, related_name="hospitalstaffdoctors", on_delete=models.CASCADE)
+    ssn_id              =models.CharField(max_length=50,default="",blank=True,null=True)
+    opd_charges         =models.FloatField(default=0,blank=True,null=True)
+    home_charges        =models.FloatField(default=0,blank=True,null=True)
+    emergency_charges    =models.FloatField(default=0,blank=True,null=True)
+    online_charges    =models.FloatField(default=0,blank=True,null=True)
+    joindate            =models.DateField(blank=True,null=True,default="") 
+    is_virtual_available=models.BooleanField(blank=True,null=True,default=False)   
+    is_homevisit_available=models.BooleanField(blank=True,null=True,default=False)   
+    is_online           =models.BooleanField(blank=True,null=True,default=False)   
+    is_active           =models.BooleanField(blank=True,null=True,default=False) 
+    created_at          =models.DateTimeField(auto_now=True)
+    updated_at          =models.DateTimeField(auto_now=True)
+    objects             =models.Manager()
+    
+    def __str__(self):
+        return self.doctor.fisrt_name + " " + self.doctor.last_name
+
+
+
+class DoctorSchedule(models.Model):
+    id                  =models.AutoField(primary_key=True)
+    hospital            =models.ForeignKey(Hospitals,on_delete=models.CASCADE,default="",blank=True,null=True)
+    doctor              =models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE)
+    timeslot            =models.ForeignKey(TimeSlot, on_delete=models.CASCADE,blank=True,null=True,default="")
+    scheduleDate        = models.DateField(auto_now=False, auto_now_add=False,blank=True,null=True)
+    is_active           =models.BooleanField(blank=True,null=True,default=False)
+    is_booked           =models.BooleanField(blank=True,null=True,default=False)
+    created_at          =models.DateTimeField(auto_now=True)
+    updated_at          =models.DateTimeField(auto_now=True)
+    objects             =models.Manager()
+
+    def __str__(self):
+        return str(self.timeslot)
+    
+    class Meta:
+        ordering = ['scheduleDate']
 
 class HospitalStaffs(models.Model):
     id                  =models.AutoField(primary_key=True)
@@ -27,26 +82,6 @@ class HospitalStaffs(models.Model):
     def __str__(self):
         return self.name_title + self.first_name + " " + self.last_name
 
-class HospitalStaffDoctors(models.Model):
-    id                  =models.AutoField(primary_key=True)
-    email               =models.EmailField(default="", max_length=254)
-    doctor              =models.ForeignKey(HospitalDoctors, related_name="hospitaldoctor", on_delete=models.CASCADE)
-    hospital            =models.ForeignKey(Hospitals, related_name="hospitalstaffdoctors", on_delete=models.CASCADE)
-    ssn_id              =models.CharField(max_length=50,default="",blank=True,null=True)
-    opd_charges         =models.FloatField(default=0,blank=True,null=True)
-    home_charges        =models.FloatField(default=0,blank=True,null=True)
-    emergency_charges    =models.FloatField(default=0,blank=True,null=True)
-    joindate            =models.DateField(blank=True,null=True,default="")
-    is_virtual_available=models.BooleanField(blank=True,null=True,default=False)   
-    is_homevisit_available=models.BooleanField(blank=True,null=True,default=False)   
-    is_online           =models.BooleanField(blank=True,null=True,default=False)   
-    is_active           =models.BooleanField(blank=True,null=True,default=False) 
-    created_at          =models.DateTimeField(auto_now=True)
-    updated_at          =models.DateTimeField(auto_now=True)
-    objects             =models.Manager()
-    
-    def __str__(self):
-        return self.doctor.fisrt_name + " " + self.doctor.last_name
 
 class HospitalStaffDoctorSchedual(models.Model):
     id                           =models.AutoField(primary_key=True)

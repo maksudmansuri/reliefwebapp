@@ -248,7 +248,7 @@ def dologin(request):
                     # elif user.patients.address is None:
                     #     return HttpResponseRedirect(reverse('patientregisterstep3',kwargs={'user_id':user.id}))
                     else:
-                        return HttpResponseRedirect(reverse('patient_home'))
+                        return HttpResponseRedirect(reverse('front_home'))
                 elif user.user_type=="5":
                     if 'next' in request.POST:
                         return redirect(request.POST.get('next'))

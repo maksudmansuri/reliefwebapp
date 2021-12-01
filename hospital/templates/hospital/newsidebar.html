@@ -1,0 +1,103 @@
+{% load static %}
+    <div class="profile-sidebar">
+        <div class="widget-profile pro-widget-content">
+            <div class="profile-info-widget">
+                <a href="#" class="booking-doc-img">
+                    <img src="{{request.user.profile_pic}}" alt="User Image" id="currentPhoto1" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+                </a>
+                <div class="profile-det-info">
+                    <h3>{{request.user.hospital.hospital_name}}</h3>
+                    <div class="patient-details">
+                        <h5 class="mb-0">{{request.user.hospital.hospital_name}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dashboard-widget">
+            <nav class="dashboard-menu">
+                <ul>
+                    <li class="active">
+                        <a href="{% url 'hospital_dashboard' %}">
+                            <i class="fas fa-columns"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    {% comment %} <li>
+                        <a href="{% url 'hospital_dashboard' %}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Appointments</span>
+                        </a>
+                    </li> {% endcomment %}
+                    {% comment %} <li>
+                        <a href="{% url 'hospital_dashboard' %}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Departments</span>
+                        </a>
+                    </li> {% endcomment %}
+                    <li>
+                        <a href="{% url 'manage_patient' %}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Hospital Patients</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'manage_relief_patient' %}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Relief Patients</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'manage_price' %}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Services</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'manage_ambulance' %}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Ambulance</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'manage_gallery' %}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Gallery</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'list_blog' %}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Blogs</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'manage_doctor' %}">
+                            <i class="fas fa-user-injured"></i>
+                            <span>Doctors</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-file-invoice"></i>
+                            <span>Invoices</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-star"></i>
+                            <span>Reviews</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-comments"></i>
+                            <span>Message</span>
+                            <small class="unread-msg">23</small>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>

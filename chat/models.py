@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch.dispatcher import receiver
 from accounts.models import CustomUser
-from patient.models import Booking, PicturesForMedicine, Slot
+from patient.models import Booking, OrderBooking, PicturesForMedicine, Slot
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 import json
@@ -20,7 +20,7 @@ class Notification(models.Model):
     notification_type =           models.IntegerField()
     from_user =  models.ForeignKey(CustomUser,related_name="notification_from", on_delete=models.CASCADE,null=True)
     to_user =    models.ForeignKey(CustomUser,related_name="notification_to", on_delete=models.CASCADE,null=True)
-    booking =    models.ForeignKey(Booking,related_name="hospitalbooking", on_delete=models.CASCADE,null=True,blank=True)
+    booking =    models.ForeignKey(OrderBooking,related_name="hospitalbooking", on_delete=models.CASCADE,null=True,blank=True)
     slot =       models.ForeignKey(Slot,related_name="labs", on_delete=models.CASCADE,null=True,blank=True)
     picturesmedicine = models.ForeignKey(PicturesForMedicine,related_name="picturesmedicine", on_delete=models.CASCADE,null=True,blank=True)
     user_has_seen  =           models.BooleanField(default=False)

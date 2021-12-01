@@ -53,7 +53,7 @@
                                     <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
                                         <h6 class="mb-0 fw-bold ">Doctor Basic Inforamtion</h6>
                                     </div>
-                                    <div class="card-body">                                
+                                    <div class="card-body">                                 
                                         <div class="row g-3 align-items-center media_div_row">
                                             <div class="col-md-4 profile-av mx-auto text-center w220">
                                                 <label for="profile_pic" class="form-label">Upload Hospital Logo</label>
@@ -530,7 +530,7 @@
 </script>
 
 <script>
-$(document).on("change",".select_media",function(){
+    $(document).on("change",".select_media",function(){
         var img_preview=$(this).parents(".media_div_row").find(".img_preview");
         showPreviewMedia(this,img_preview);
 

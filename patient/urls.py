@@ -5,8 +5,8 @@ urlpatterns = [
     path('', views.patientdDashboardViews.as_view(), name="patient_home"),
     path('patient_update', views.patientdUpdateViews.as_view(), name="patient_update"),
     path('hospital_list', views.HospitalListViews.as_view(), name="hospital_list"),
-    path('hospital_details/<id>', views.HospitalDetailsViews.as_view(), name="hospital_details"),
-    path('bookappoinment/<id>/<did>', views.DoctorsBookAppoinmentViews.as_view(), name="bookappoinment"),
+    # path('hospital_details/<id>', views.HospitalDetailsViews.as_view(), name="hospital_details"),
+    
     path('bookanappointment', views.BookAnAppointmentViews.as_view(), name="bookanappointment"),
     path('labbookanappointment', views.BookAnAppointmentForLABViews.as_view(), name="labbookanappointment"),
     path('viewbookedanappointment', views.ViewBookedAnAppointmentViews.as_view(), name="viewbookedanappointment"),
@@ -47,6 +47,11 @@ urlpatterns = [
     path('lab/<slot_id>',views.slotConfirmation,name="lab_confirmation"),
     path('pharmacy/<booking_id>',views.picturesformedicineConfirmation,name="pharmacy_confirmation"),
 
+    #Addmaedical old files
+    path('add_medical_files1', views.AddSomeoneAsPatient.as_view(), name="add_medical_files"),
+    path('delete_medical_files/<id>', views.DeleteMedicalFiles, name="delete_medical_files"),
+
+    path('hello',views.helllo, name='hello')
 
     
 

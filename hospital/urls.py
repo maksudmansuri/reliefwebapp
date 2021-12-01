@@ -59,7 +59,9 @@ urlpatterns = [
     path('delete_service_price/<id>',views.deleteServicePrice,name="delete_service_price"),
 
      #List  Add Update Doctor schedual  Doctor
-    path('manage_doctorschedule/<id>',views.manageDoctorSchedualView.as_view(),name="manage_doctorschedule"),
+    path('manage_doctorschedule/<id>',views.DoctorScheduleCreateView.as_view(),name="manage_doctorschedule"),
+    
+    path('delete_doctorschedule/<str:id>/<did>',views.deleteTimeSlot,name="delete_doctorschedule"),
     path('update_doctorschedule/<id>/<sid>',views.updateDoctorSchedual,name="update_doctorschedule"),
 
     #active deactive staff
@@ -81,7 +83,7 @@ urlpatterns = [
     path('delete_doctor/<id>',views.deleteHospitalDoctor,name="delete_doctor"),
     #add media delete
     path('manage_gallery',views.manageGalleryView.as_view(),name="manage_gallery"),
-    path('delete_gallery',views.deleteGallery,name="delete_gallery"),
+    path('delete_gallery/<id>',views.deleteGallery,name="delete_gallery"),
     #active deactive delete Doctor Schedual  
     path('delete_doctorschedual/<id>/<sid>',views.deleteHospitalDoctorschedual,name="delete_doctorschedual"),
     # path('add_staff',views.addStaffView.as_view(),name="add_staff"),

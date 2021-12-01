@@ -2,16 +2,17 @@ from datetime import datetime, date, timedelta
 from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import deletion
 from django.db.models.query_utils import Q
+from django.http.request import HttpRequest
 from pyotp.otp import OTP
 from accounts.views import send_otp
 from chat.models import Notification
 from lab.models import Medias
 from django.views.generic.base import View
 # from requests.models import Response
-from hospital.models import HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, ServiceAndCharges
+from hospital.models import DoctorSchedule, HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, ServiceAndCharges
 from patient import models
 import patient
-from patient.models import Booking, ForSome, Orders, LabTest, PicturesForMedicine, Temp, Slot, phoneOPTforoders
+from patient.models import Booking, ForSome, OrderBooking, Orders, LabTest, PicturesForMedicine, Temp, Slot, patientFile, phoneOPTforoders
 from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
@@ -185,6 +186,47 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
         except Exception as e:
             return HttpResponse(e)
 
+class AddMedicalFiles(SuccessMessageMixin,CreateView):
+    def get(self, request, *args, **kwargs):
+        # try: 
+        # print("heloo inside add medical files")
+        # files = AddMedicalFiles.objects.filter(patient__admin=request.user)
+        # for_whoms = ForSome.objects.filter(patient=request.user)
+        # return render(request,"patient/medical-records.html",{'files':files,'for_whoms':for_whoms})
+        return render(request,"patient/medical-records.html")
+        # except Exception as e:
+        #     return HttpResponse(e)
+        
+    # def post(self,request, *agrs, **kwargs):
+    #     for_whom = request.POST.get('for_whom')
+    #     hospital = request.POST.get('hospital')
+    #     prescription = request.FILES.get('prescription')
+    #     symptoms = request.POST.get('symptoms')
+    #     AppoinmentDate = request.POST.get('AppoinmentDate')
+
+    #     hospital1 = Hospitals.objects.get(id=hospital)        
+    #     try:
+    #         addmedical = AddMedicalFiles(symptoms=symptoms,is_active=True,AppoinmentDate=AppoinmentDate,hospital=hospital1,patient = request.user)
+    #         if for_whom:
+    #             for_whom1 = ForSome.objects.get(id=for_whom)
+    #             addmedical.for_whom=for_whom1
+    #         if prescription:
+    #             fs=FileSystemStorage()
+    #             filename1=fs.save(prescription.name,prescription)
+    #             prescription_url=fs.url(filename1)
+    #             addmedical.prescription=prescription_url
+    #         addmedical.save()
+    #         messages.add_message(request,messages.SUCCESS,"Madical Record Created successfully !")
+    #     except Exception as e:
+    #         messages.add_message(request,messages.ERROR,"Connection Error Try after som times !")
+    #     return HttpResponseRedirect(reverse("add_medical_files"))
+
+def DeleteMedicalFiles(request,id):
+    addmedical = get_object_or_404(AddMedicalFiles,id=id)
+    addmedical.dalete()
+    messages.add_message(request,messages.SUCCESS,"Madical Record Deleted successfully !")
+    return HttpResponseRedirect(reverse("add_medical_files"))
+
 """" 
 Hospital list and profile
 """
@@ -224,7 +266,7 @@ class HospitalListViews(ListView):
     #         hospital_media_list.append({'hospital':hospital,'medias':medias})
     #     param = {'hospital_media_list':hospital_media_list}  
     #     return render(request,"patient/hospital_list.html",param)
-    
+     
 class HospitalDetailsViews(DetailView):
     def get(self, request, *args, **kwargs):
         hosital_id=kwargs['id']
@@ -244,29 +286,6 @@ class HospitalDetailsViews(DetailView):
         param = {'hospital':hospital,'hospitalstaffdoctor_list':hospitalstaffdoctor_list,'hospitalservice':hospitalservice}  
         return render(request,"patient/hospital_details.html",param)
  
-class DoctorsBookAppoinmentViews(SuccessMessageMixin,View):
-    def get(self, request, *args, **kwargs):
-        hosital_id=kwargs['id']
-        hositaldcotorid_id=kwargs['did']
-        hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
-        hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,is_active=True,id=hositaldcotorid_id)
-        hospitalservice = ServiceAndCharges.objects.filter(user=hospital.admin)
-        opdtime = OPDTime.objects.get(user=hospital.admin) 
-        someone = ForSome.objects.filter(patient=request.user.patients)
-        hospitalstaffdoctorschedual =HospitalStaffDoctorSchedual.objects.filter(hospitalstaffdoctor=hospitalstaffdoctor)
-        opd_time = []
-        opd_time.append(opdtime.opening_time)
-        
-        # opd_time = []
-        # for dcsh in hospitalstaffdoctorschedual:
-        #     if dcsh.work == "OPD":
-        #         shift = dcsh.shift
-        #         start_time = dcsh.start_time
-        #         end_time = dcsh.end_time
-        #     opd_time.append({'shift':shift,'start_time':start_time,'end_time':end_time})
-        
-        param = {'hospital':hospital,'hospitalservice':hospitalservice,'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalstaffdoctorschedual':hospitalstaffdoctorschedual,'opdtime':opdtime,'someones':someone}  
-        return render(request,"patient/bookappoinment.html",param)
 
 """" 
 History for Hospital Booking
@@ -286,8 +305,6 @@ class ViewBookedAnAppointmentViews(SuccessMessageMixin,ListView):
          
         return render(request,"patient/appointmentlist.html",param)
 
-
-
 def bookingConfirmation(request,booking_id):
     try:
         booking = get_object_or_404(Booking,id=booking_id,patient=request.user )
@@ -300,8 +317,6 @@ def bookingConfirmation(request,booking_id):
     except Exception as e:
         messages.add_message(request,messages.ERROR,"page not found!")
         return render(request , 'accounts/404.html',)
-
-
 
 class BookAnAppointmentViews(SuccessMessageMixin,View):
     def post(self,request, *args, **kwargs):
@@ -449,9 +464,6 @@ def send_otp(phone):
         return key
     else:
         return False
-
-
-     
 
 """"
 History for Lab Booking
@@ -673,7 +685,11 @@ def CancelPictureForMedicineViews(request,id):
 
 """
 Add Someone As patient and Update  and delete
+
 """
+def helllo(request):
+    return HttpRequest("hello")
+
 class AddSomeoneAsPatient(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):
         patient=get_object_or_404(Patients,admin=request.user)
@@ -810,24 +826,164 @@ def ForSomeActive(request,id):
 """
 Checkout page
 """
+# class CheckoutViews(SuccessMessageMixin,CreateView):
+#     def get(self, request, *args, **kwargs):
+#         return render(request,"patient/checkout.html")
+
 def CheckoutViews(request):
-    temp= Temp.objects.get(user=request.user)
-    order = get_object_or_404(Orders,id=temp.order_id)
-    order.status=1
-    order.save()
-    book_for=order.booking_for
-    if book_for == "1":
-        booking = get_object_or_404(Booking,id=order.bookingandlabtest)
-        param ={'order':order,'booking':booking}
-    if book_for == "2":
-        booking = get_object_or_404(Slot,id=order.bookingandlabtest)
-        services = LabTest.objects.filter(slot=booking)
-        param ={'order':order,'booking':booking,'services':services}
-    if book_for == "3":
-        booking = get_object_or_404(PicturesForMedicine,id=order.bookingandlabtest)
-        booking.amount_paid = True
-        param ={'order':order,'booking':booking}
-    return render(request,"patient/checkout.html",param)
+    if request.method == "POST":
+        doctorid = request.POST.get('doctor_id')
+        hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
+        timeslot = request.POST.get('timeslot')
+        someone = request.POST.get('someone')       
+        date = request.POST.get('date')
+        doctorschedule = get_object_or_404(DoctorSchedule,id=timeslot,doctor=hospitalstaffdoctor)
+        where = request.POST.get('where')
+        booking_type = request.POST.get('booking_type')
+        now = datetime.now()
+        now5 = now + timedelta(minutes=5)
+        
+        with transaction.atomic():
+            booking = OrderBooking(patient = request.user,applied_date=date,applied_time=doctorschedule.timeslot.schedule,is_applied=True,is_active=True,status="booked")
+            booking.reject_within_5__lt = now            
+        booking.reject_within_5 = now5
+        if someone:
+            forsome = get_object_or_404(ForSome,id=someone)
+            booking.for_whom=forsome
+        if where == "hospital":
+            booking.hospitalstaffdoctor=hospitalstaffdoctor
+            booking.HLP=hospitalstaffdoctor.hospital.admin
+            booking.payment_status="INPROCESS"
+            booking.booking_for="H"
+            booking.booking_type=booking_type           
+            if booking_type == "EMERGENCY":
+                booking.amount=hospitalstaffdoctor.emergency_charges
+            if booking_type == "OPD":
+                booking.amount=hospitalstaffdoctor.opd_charges
+            if booking_type == "ONLINE":
+                booking.amount=hospitalstaffdoctor.online_charges
+            if booking_type == "HOMEVISIT":
+                booking.amount=hospitalstaffdoctor.home_charges
+        booking.save()
+        doctorschedule.is_booked =True
+        doctorschedule.save()
+        print(booking.reject_within_5__lt)
+        print(booking.reject_within_5)
+
+        print("booking saved")
+        # tc = 0
+        # try:
+        #     tc = Temp.objects.filter(user=request.user).count()
+        # except:
+        #     tc = 0
+        # print("tc check below")
+        # print(tc)
+        # if tc > 0:
+        #     temp = Temp.objects.get(user=request.user)
+        #     temp.delete()
+        # temp =  Temp(user=request.user,order_id=order.id)
+        # temp.save()
+        mobile= request.user.phone
+        key = send_otp(mobile)
+        print(key)
+        if key:
+            obj = phoneOPTforoders(order_id=booking,user=request.user,otp=key)
+            obj.save()
+            notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.hospitalstaffdoctor.hospital.admin,booking=booking)
+            notification.save()
+        param = {'booking':booking}
+        return render(request,'patient/checkout.html',param)
+            # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
+            # res = conn.getresponse()
+            # data = res.read()
+            # data=data.decode("utf-8")
+            # data=ast.literal_eval(data)
+            # print(data)            
+        #     return JsonResponse({'message' : 'success','status': True,'Booking_id':booking.id,"otp":key})
+        # else:
+        #     return JsonResponse({'message' : 'Error','status': False})
+
+        # def new_method(self, now, booking):
+        #     booking.reject_within_5__lt = now
+    
+   
+    # except Exception as e:
+    #         messages.add_message(request,messages.ERROR,"Network Issue try after some time")
+    #         return HttpResponse(e)
+
+            
+            # import checksum generation utility
+            # You can get this utility from https://developer.paytm.com/docs/checksum/
+          
+            # paytmParams = dict()
+
+            # paytmParams["body"] = {
+            #     "requestType"   : "Payment",
+            #     "mid"           : "Vsrdcl31860853647501",
+            #     "websiteName"   : "WEBSTAGING",
+            #     "orderId"       : str(booking.id),
+            #     "callbackUrl"   : "http://127.0.0.1:8000/patient/handlerequest",
+            #     "txnAmount"     : {
+            #         "value"     : str(booking.amount),
+            #         "currency"  : "INR",
+            #     },
+            #     "userInfo"      : {
+            #         "custId"    : str(request.user.phone),
+            #     },
+            # }
+
+            # # Generate checksum by parameters we have in body
+            # # Find your Merchant Key in your Paytm Dashboard at https://dashboard.paytm.com/next/apikeys 
+            # checksum = PaytmChecksum.generateSignature(json.dumps(paytmParams["body"]), "JDhgGD%hhT&OtVEE")
+
+            # paytmParams["head"] = {
+            #     "signature"    : checksum
+            # }
+            
+
+            # post_data = json.dumps(paytmParams)
+
+            # # for Staging
+            # url = "https://securegw.paytm.in/theia/api/v1/initiateTransaction?mid=Vsrdcl31860853647501&orderId="+str(booking.id)
+
+            # # for Production
+            # # url = "https://securegw.paytm.in/theia/api/v1/initiateTransaction?mid=YOUR_MID_HERE&orderId=ORDERID_98765"
+            # response = requests.post(url, data = post_data, headers = {"Content-type": "application/json"}).json()
+            # print(response)
+            # print(response['body']['txnToken'])
+            
+           
+            # paytmParams["head"] = {
+            #     "tokenType"     : "TXN_TOKEN",
+            #     "token"         : response['body']['txnToken']
+            # }
+            # post_data = json.dumps(paytmParams)
+
+            # # for Staging
+            # url = "https://securegw-stage.paytm.in/theia/api/v2/fetchPaymentOptions?mid=Vsrdcl31860853647501&orderId="+str(booking.id)
+            
+
+            # # for Production
+            # # url = "https://securegw.paytm.in/theia/api/v2/fetchPaymentOptions?mid=YOUR_MID_HERE&orderId=ORDERID_98765"
+            # response = requests.post(url, data = post_data, headers = {"Content-type": "application/json"}).json()
+            # print(response)        
+    # temp= Temp.objects.get(user=request.user)
+    # order = get_object_or_404(Orders,id=temp.order_id)
+    # order.status=1
+    # order.save()
+    # book_for=order.booking_for
+    # if book_for == "1":
+    #     booking = get_object_or_404(Booking,id=order.bookingandlabtest)
+    #     param ={'order':order,'booking':booking}
+    # if book_for == "2":
+    #     booking = get_object_or_404(Slot,id=order.bookingandlabtest)
+    #     services = LabTest.objects.filter(slot=booking)
+    #     param ={'order':order,'booking':booking,'services':services}
+    # if book_for == "3":
+    #     booking = get_object_or_404(PicturesForMedicine,id=order.bookingandlabtest)
+    #     booking.amount_paid = True
+    #     param ={'order':order,'booking':booking}
+    
 
 def PayForMedicine(request,id):
     booking = get_object_or_404(PicturesForMedicine,id=id)

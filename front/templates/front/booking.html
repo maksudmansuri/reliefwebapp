@@ -1,0 +1,243 @@
+{% extends 'front/blank-page.html' %}
+{% load static %}
+{% block title %} Relief Pro - Doctor SChedules | Hospital,Labs and Pharmacy Online Booking | Emergency
+Booking {% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block content %}
+
+		<div class="breadcrumb-bar">
+			<div class="container-fluid">
+				<div class="row align-items-center">
+					<div class="col-md-12 col-12">
+						<nav aria-label="breadcrumb" class="page-breadcrumb">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="{% url 'front_home' %}">Home</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Booking</li>
+							</ol>
+						</nav>
+						<h2 class="breadcrumb-title">Booking</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="content">
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-body">
+								<div class="doctor-widget">
+									<div class="doc-info-left">
+										<div class="doctor-img">
+											<img src="{{hospital.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
+												alt="User Image">
+										</div>
+										<div class="doc-info-cont">
+											<h4 class="doc-name">{{hospital.hopital_name}}</h4>
+											<p class="doc-speciality">{{hospital.specialist}}</p>
+											<p class="doc-department"><img src="{{hospital.specialist.hover_icon}}"
+													class="img-fluid" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Speciality">Dentist</p>
+											<div class="rating">
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star"></i>
+												<span class="d-inline-block average-rating">(35)</span>
+											</div>
+											<div class="clinic-details">
+												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{hospital.city}}, {{hospital.state}} - <a
+														href="javascript:void(0);">Get Directions</a></p>
+												<ul class="clinic-gallery">
+												{% for media in medias %}
+												{% if media.media_type == "1" %}
+													<li>
+														<a href="{{media.media_content}}" data-fancybox="gallery">
+															<img src="{{media.media_content}}" alt="Feature">
+														</a>
+													</li>
+												{% endif %}
+												{% endfor %}
+												</ul>
+											</div>
+											{% comment %} <div class="clinic-services">
+												<span>Dental Fillings</span>
+												<span>Teeth Whitneing</span>
+											</div> {% endcomment %}
+										</div>
+									</div>
+									<div class="doc-info-right">
+										{% comment %} <div class="clini-infos">
+											<ul>
+												{% comment %} <li><i class="far fa-thumbs-up"></i> 99%</li>
+												<li><i class="far fa-comment"></i> 35 Feedback</li>
+												<li><i class="fas fa-map-marker-alt"></i> Newyork, USA</li> 
+												<li><i class="far fa-money-bill-alt"></i> &#8377;{{amount.service_charge}} </li>
+											</ul>
+										</div> 
+										{% comment %} <div class="doctor-action">
+											<a href="javascript:void(0)" class="btn btn-white fav-btn">
+												<i class="far fa-bookmark"></i>
+											</a>
+											<a href="chat.html" class="btn btn-white msg-btn">
+												<i class="far fa-comment-alt"></i>
+											</a>
+											<a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+												data-bs-target="#voice_call">
+												<i class="fas fa-phone"></i>
+											</a>
+											<a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+												data-bs-target="#video_call">
+												<i class="fas fa-video"></i>
+											</a>
+										</div> {% endcomment %}
+										{% comment %} <div class="clinic-booking">
+											<a class="apt-btn" href="booking.html">Book Appointment</a>
+										</div> {% endcomment %}
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card">
+							<div class="card-body">
+								
+								<div class="booking-doc-info">
+									<a href="doctor-profile.html" class="booking-doc-img">
+										<img src="{{doctor.doctor.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
+									</a>
+									<div class="booking-info">
+										<h4><a href="doctor-profile.html">Dr. {{doctor.doctor.fisrt_name}} {{doctor.doctor.last_name}}</a></h4>
+				
+										<p class="text-muted mb-0"><i class="far fa-id-card"></i> {{doctor.doctor.specialist}}
+										<p class="text-muted mb-0"><i class="fas fa-map-marker-alt"></i> {{doctor.doctor.city}} {{doctor.doctor.state}}
+										</p>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12 col-sm-4 col-md-6">
+								<span></span>
+								{% if date %}
+								<h4 class="mb-1">Selected Date :- {{date}}</h4>
+								{% else %}
+									<h4 class="mb-1">Today's Date :- {% now "d M Y" %} </h4>
+									<p class="text-muted">{% now "D" %}</p>
+								{% endif %}
+							</div>
+							<div class="col-12 col-sm-8 col-md-6 text-sm-end mb-2">
+								<form method="post" id="newdate">
+									{% csrf_token %}
+									<h4> Select Booking Date</h4>
+									<input type="date" class="form-control scheduleDate" name="scheduleDate" id="scheduleDate" value={{date}} min="2021-05-21" required>
+									<input type="hidden" value="{{doctor.id}}" name="doc_id">
+								
+								</form>
+							</div>
+						</div>
+
+						<form method="post" action="{% url 'checkout' %}" id="bookingform">
+						<div class="card booking-schedule schedule-widget">
+							
+							{% csrf_token %}
+							<div class="schedule-header">
+								<div class="row">
+									<div class="col-md-12">
+
+										<div class="day-slot-header">
+											<h4>Slots</h4>
+										</div>
+
+									</div>
+								</div>
+							</div>
+
+						
+							<div class="schedule-cont">
+								<div class="row">
+									<div class="col-lg-12">
+										
+										<div class="token-slot mt-2">
+											{% for doctorschedule in doctorschedules %}
+												{% if token %}
+											
+												<div class="form-check-inline visits me-0">
+													<label class="visit-btns">
+														<input type="radio" class="form-check-input timeslot" name="timeslot" value="{{doctorschedule.id}}" {% if doctorschedule.is_booked %}disabled{% endif %} id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')" required>
+														<input type="hidden" value="{{date}}" name="date">
+														<input type="hidden" value="{{doctor.id}}" name="doctor_id">
+														<input type="hidden" value="hospital" name="where">
+														<input type="hidden" value="" name="booking_type">
+														<span class="visit-rsn" data-bs-toggle="tooltip" title="{% if doctorschedule.is_booked %}Booked{% else %} {{doctorschedule}}{% endif %}">{{doctorschedule}}
+															</span>
+													</label>
+												</div>
+											                                    
+												{% endif %}  
+											{% endfor %}  
+											</div>
+											
+										
+									</div>
+								</div>
+								
+							</div>
+						
+						</div>
+						<div class="row">
+							
+							<div class="col-12 col-sm-8 col-md-6 text-sm-end">
+								<label class="form-label">Booking Type</label>
+								<select class="form-select" aria-label="Default select example" id="booking_type" name="booking_type" required>
+									<option value="EMERGENCY">EMERGENCY</option>
+									<option value="OPD">OPD</option>
+									<option value="ONLINE">ONLINE</option>
+									<option value="HOMEVISIT">HOME VISIT</option>
+								</select>
+							</div>
+						</div>
+					
+						<div class="submit-section proceed-btn text-end">
+							<a type="submit" onclick="myFunction()" class="btn btn-primary submit-btn"  value="check" id="acceptbtn">Proceed to Pay</a>
+						</div>
+					</form>
+					</div>
+				</div>
+			</div>
+		</div>
+{% endblock content %}
+
+
+{% block modal_fade %}
+{% endblock modal_fade %}
+
+{% block custom_js %}
+<script>
+	var today = new Date().toISOString().split('T')[0];
+	document.getElementsByName("scheduleDate")[0].setAttribute('min', today);
+</script>
+
+<script>
+
+	$(document).ready(function() {
+		$('input.scheduleDate').change(function(){
+			document.getElementById("newdate").submit();		  
+		  
+			});
+		});
+	</script>
+<script>
+function myFunction() {
+	alert("Are you sure you want to book this slot");
+	document.getElementById("bookingform").submit();
+	//window.location.replace("{% url 'checkout' %}");
+}
+</script>
+
+{% endblock custom_js %}
+

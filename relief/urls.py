@@ -24,7 +24,7 @@ from django.contrib.auth import views as auth_views
 from patient import PatientPassword as patientAuth
 urlpatterns = [
 
-    path('404',accViews.FourZeroFour , name='404'),
+    # path('404',accViews.FourZeroFour , name='404'),
     path('admin/', admin.site.urls),
     
     path('radmin/', include("radmin.urls")),

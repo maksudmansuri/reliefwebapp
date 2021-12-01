@@ -151,12 +151,21 @@ Booking{% endblock title %}
 														<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{hospital.hospital.city}},{{hospital.hospital.state}}</p>
 														<ul class="clinic-gallery">
 														{% for media in hospital.medias %}
+															{% if media.media_type == "1" %}
 															<li>
 																<a href="{{media.media_content}}"
 																	data-fancybox="gallery">
 																	<img src="{{media.media_content}}" alt="Feature">
 																</a>
 															</li>
+															{% comment %} {% elif media.media_type == "2" %}
+															<li>
+																<a href="{{media.media_content}}"
+																	data-fancybox="gallery">
+																	<video style="width:40px;height:30px;" controls src="{{media.media_content}}" alt="Feature">
+																</a>
+															</li>{% endcomment %}
+															{% endif %} 
 														{% endfor %}
 														</ul>
 													</div> 
@@ -178,7 +187,7 @@ Booking{% endblock title %}
 													</ul>
 												</div> {% endcomment %}
 												<div class="clinic-booking">
-													<a class="view-pro-btn" href="doctor-profile.html">View Profile</a>
+													<a class="view-pro-btn" href="{% url 'hospital_details' hospital.hospital.id %}">View Profile</a>
 													<a class="apt-btn" href="booking.html">Book Appointment</a>
 												</div>
 											</div>

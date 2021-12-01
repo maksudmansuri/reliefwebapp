@@ -13,9 +13,10 @@ from hospital.models import HospitalRooms, HospitalServices, HospitalStaffDoctor
 from accounts.models import CustomUser, Hospitals, Labs, Patients, Pharmacy
 from django.db import models
 from asgiref.sync import async_to_sync,sync_to_async
-
+import uuid
  
 # Create your models here.
+
 class ForSome(models.Model):
     id                  =models.AutoField(primary_key=True)
     profile_pic         =models.FileField(upload_to="user/profile_pic",max_length=500,null=True,default="")
@@ -45,7 +46,79 @@ class ForSome(models.Model):
     
     def __str__(self): 
         return self.fisrt_name +" "+ self.last_name
- 
+
+class MediacalRecords(models.Model):
+    id                  =           models.AutoField(primary_key=True)
+    patient             =           models.ForeignKey(Patients,on_delete=models.CASCADE)
+    for_whom                =           models.ForeignKey(ForSome, on_delete=models.CASCADE,null=True,blank=True)
+    hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE,null=True,blank=True)
+    prescription            =           models.FileField(upload_to=None, max_length=256,default="",blank=True,null=True)
+    symptoms                =           models.CharField(default="",blank=True,null=True,max_length=500)
+    is_active               =           models.BooleanField(default=False)
+    AppoinmentDate         =           models.DateTimeField(default=datetime.datetime(1970,1,1))
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
+         
+class OrderBooking(models.Model):
+    id                      =           models.AutoField(primary_key=True)
+    order_id                =           models.UUIDField(default=uuid.uuid4, editable=False,null=True, blank=True) 
+    parent                  =           models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
+    patient                 =           models.ForeignKey(CustomUser,related_name="patient", on_delete=models.CASCADE)
+    for_whom                =           models.ForeignKey(ForSome, on_delete=models.CASCADE,null=True,blank=True)
+    hospitalstaffdoctor     =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE,null=True,blank=True)
+    HLP                     =           models.ForeignKey(CustomUser,related_name="merchant", on_delete=models.CASCADE,null=True,blank=True)
+    booking_type            =           models.CharField(default="",blank=True,null=True,max_length=64)#homevisit,emergency,online,test,medicine,opd -> checkout
+    # BOOKING_FOR_CHOICE      =           ((1,"Hospital"),(2,"Laboratory"),(3,"Pharmacy"))
+    booking_for             =           models.CharField(max_length=256,default="",blank=True,null=True)#hospital,lab,pharmcy
+
+    applied_time            =           models.TimeField(blank=True,null=True)
+    applied_date            =           models.DateField(blank=True,null=True)
+    accepted_date           =           models.DateTimeField(blank=True,null=True)
+    otp_verified_datetime   =           models.DateTimeField(blank=True,null=True)
+    taken_date              =           models.DateTimeField(blank=True,null=True)
+    rejected_date           =           models.DateTimeField(blank=True,null=True)
+
+    is_applied              =           models.BooleanField(default=False,blank=True,null=True)
+    is_otp_verified         =           models.BooleanField(default=False,blank=True,null=True)
+    is_cancelled            =           models.BooleanField(default=False)
+
+    reject_within_5         =           models.DateTimeField(default=datetime.datetime(1970,1,1),blank=True, null=True)
+
+    status                  =           models.CharField(default="",blank=True,null=True,max_length=64)#booked,otp_send,otp_verified,service_take,cancelled_by_system,rejected,cancelled_by_user,report_uploaded
+    add_note                =           models.CharField(max_length=5000,blank=True,null=True,default="")
+    is_active               =           models.BooleanField(default=False)
+
+    modified_time           =           models.TimeField(blank=True,null=True)
+    modified_date           =           models.DateField(blank=True,null=True)
+
+    report                  =           models.FileField(max_length=100,blank=True,null=True,default="")#lab
+
+    prescription            =           models.FileField(upload_to=None, max_length=256,default="",blank=True,null=True)#pharma
+    store_invoice           =           models.FileField(upload_to=None, max_length=256,default="",blank=True,null=True)#pharma
+
+    amount                  =           models.FloatField(default=0,blank=True,null=True)
+    # STATUS_TYPE_CHOICE      =           (("INPROCESS","INPROCESS"),("SUCCESS","SUCCESS"),("FAILED","FAILED"),("CANCELLED","CANCELLED"),(REFUNDPROCESS),("REFUNDED","REFUNDED"))
+    payment_status          =           models.CharField(default="",blank=True,null=True,max_length=64)
+
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
+
+    class Meta:
+        ordering = ['-created_at']
+
+class NewLabTest(models.Model):
+    id                      =           models.AutoField(primary_key=True)
+    service                 =           models.ForeignKey(ServiceAndCharges, on_delete=models.CASCADE,blank=True,null=True)
+    booking                 =           models.ForeignKey(OrderBooking,on_delete=models.CASCADE)
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
+    
+    class Meta:
+        ordering = ['-created_at']
+
 class Booking(models.Model): 
     id                      =           models.AutoField(primary_key=True)
     patient                 =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -103,7 +176,6 @@ class Booking(models.Model):
     #     instance = Booking.objects.filter(patient=request.user).first()
     #     lefttime = datetime.datetime.now() - instance.created_at)
     #     return lefttime
-
 
 # @receiver(post_save, sender=Booking)
 # def booking_status_handler(sender,instance,created, **kwargs):
@@ -479,7 +551,7 @@ class LabTest(models.Model):
 class Orders(models.Model):
     id                      =           models.AutoField(primary_key=True)
     patient                 =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    service                 =           models.ForeignKey(ServiceAndCharges, on_delete=models.CASCADE)
+    service                 =           models.ForeignKey(ServiceAndCharges, on_delete=models.CASCADE,blank=True,null=True)
     bookingandlabtest       =           models.CharField(max_length=50,default="",blank=True,null=True)
     BOOKING_FOR_CHOICE      =           ((1,"Hospital"),(2,"Laboratory"),(3,"Pharmacy"))
     booking_for             =           models.CharField(max_length=256,default="",blank=True,null=True,choices=BOOKING_FOR_CHOICE)
@@ -498,9 +570,10 @@ class Orders(models.Model):
     class Meta:
         ordering = ['-updated_at']
 
+
 class phoneOPTforoders(models.Model):
     id =  models.AutoField(primary_key=True)
-    order_id =  models.ForeignKey(Orders,  on_delete=models.CASCADE,null=True,blank=True)
+    order_id =  models.ForeignKey(OrderBooking,  on_delete=models.CASCADE,null=True,blank=True)
     user =  models.ForeignKey(CustomUser,  on_delete=models.CASCADE,null=True,blank=True)
     otp      =  models.CharField(max_length=50,null=True,blank=True,default="")
     count      =  models.IntegerField(null=True,blank=True,default=0)
