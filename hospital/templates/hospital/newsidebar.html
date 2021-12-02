@@ -16,7 +16,8 @@
         <div class="dashboard-widget">
             <nav class="dashboard-menu">
                 <ul>
-                    <li class="active">
+                    {% url 'hospital_dashboard' as hospital_dashboard %}
+                    <li {% if request.path == hospital_dashboard %} class="active" {% endif %} >
                         <a href="{% url 'hospital_dashboard' %}">
                             <i class="fas fa-columns"></i>
                             <span>Dashboard</span>
@@ -34,45 +35,55 @@
                             <span>Departments</span>
                         </a>
                     </li> {% endcomment %}
-                    <li>
+                    
+                    {% url 'manage_patient' as manage_patient %}
+                    <li {% if request.path == manage_patient %} class="active" {% endif %}>
                         <a href="{% url 'manage_patient' %}">
-                            <i class="fas fa-calendar-check"></i>
+                            <i class="fas fa-user-injured"></i>
                             <span>Hospital Patients</span>
                         </a>
                     </li>
-                    <li>
+                    {% url 'manage_relief_patient' as manage_relief_patient %}
+                    <li {% if request.path == manage_relief_patient %} class="active" {% endif %} >
                         <a href="{% url 'manage_relief_patient' %}">
-                            <i class="fas fa-calendar-check"></i>
+                            <i class="fas fa-user-injured"></i>
                             <span>Relief Patients</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="{% url 'manage_price' %}">
-                            <i class="fas fa-calendar-check"></i>
-                            <span>Services</span>
+                    {% url 'manage_room' as manage_room %}
+                    <li {% if request.path == manage_room %} class="active" {% endif %} >
+                        <a href="{% url 'manage_room' %}">
+                            <i class="fas fa-hospital"></i>
+                            <span>Rooms</span>
                         </a>
                     </li>
-                    <li>
+                    {% url 'manage_ambulance' as manage_ambulance %}
+                    <li {% if request.path == manage_ambulance %} class="active" {% endif %} >
                         <a href="{% url 'manage_ambulance' %}">
-                            <i class="fas fa-calendar-check"></i>
+                            <i class="fas fa-ambulance"></i>
                             <span>Ambulance</span>
                         </a>
                     </li>
-                    <li>
+                    {% url 'manage_gallery' as manage_gallery %}
+                    <li {% if request.path == manage_gallery %} class="active" {% endif %} >
                         <a href="{% url 'manage_gallery' %}">
-                            <i class="fas fa-calendar-check"></i>
+                            <i class="far fa-images"></i>
                             <span>Gallery</span>
                         </a>
                     </li>
-                    <li>
+                    {% url 'list_blog' as list_blog %}
+                    {% url 'add_blog' as add_blog %}
+                    {% url 'edit_blog' as edit_blog %}
+                    <li {% if request.path == list_blog %} class="active" {% endif %} {% if request.path == add_blog %} class="active" {% endif %} {% if request.path == edit_blog %} class="active" {% endif %} >
                         <a href="{% url 'list_blog' %}">
-                            <i class="fas fa-calendar-check"></i>
+                            <i class="fas fa-blog"></i>
                             <span>Blogs</span>
                         </a>
                     </li>
-                    <li>
+                    {% url 'manage_doctor' as manage_doctor %}
+                    <li {% if request.path == manage_doctor %} class="active" {% endif %} >
                         <a href="{% url 'manage_doctor' %}">
-                            <i class="fas fa-user-injured"></i>
+                            <i class="fas fa-user-md"></i>
                             <span>Doctors</span>
                         </a>
                     </li>

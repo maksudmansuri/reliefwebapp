@@ -18,7 +18,7 @@ Booking{% endblock title %}
 					<div class="col-md-8 col-12">
 						<nav aria-label="breadcrumb" class="page-breadcrumb">
 							<ol class="breadcrumb">
-								<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+								<li class="breadcrumb-item"><a href="{% url 'front_home' %}">Home</a></li>
 								<li class="breadcrumb-item active" aria-current="page">Search</li>
 							</ol>
 						</nav>
@@ -122,12 +122,12 @@ Booking{% endblock title %}
 					</div>
 					<div class="col-md-12 col-lg-8 col-xl-9">
 						{% for hospital in object_list %}
-								<div class="card">
+								<div class="card product-box" >
 									<div class="card-body">
 										<div class="doctor-widget">
 											<div class="doc-info-left">
 												<div class="doctor-img">
-													<a href="doctor-profile.html">
+													<a href="{% url 'hospital_details' hospital.id %}">
 														<img src="{{hospital.hospital.admin.profile_pic}}" class="img-fluid"
 															alt="User Image">
 													</a>
@@ -198,7 +198,7 @@ Booking{% endblock title %}
 
 
 						<div class="load-more text-center">
-							<a class="btn btn-primary btn-sm" href="javascript:void(0);">Load More</a>
+							<button class="btn btn-primary btn-sm" id="loadMore" href="javascript:void(0);">Load More</button>
 						</div>
 					</div>
 				</div>
@@ -212,5 +212,7 @@ Booking{% endblock title %}
 {% endblock content %}
 
 {% block custom_js %}
-	<script src="{% static 'newstatic/assets/js/slick.js'%}"></script>
+<script>
+
+</script>
 {% endblock custom_js %}

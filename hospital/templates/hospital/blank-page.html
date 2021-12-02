@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"> 
 
 <head>
 	<meta charset="utf-8">
@@ -23,7 +23,9 @@
 	<link rel="stylesheet" href="{% static 'newstatic/assets/plugins/dropzone/dropzone.min.css'%}">
 
 	<link rel="stylesheet" href="{% static 'newstatic/assets/css/feathericon.min.css'%}">
-
+	<link rel="stylesheet" href="{% static '/radmin/assets/plugin/datatables/responsive.dataTables.min.css' %}
+    ">
+	<link rel="stylesheet" href="{% static '/radmin/assets/plugin/datatables/dataTables.bootstrap5.min.css'  %}">
 	<link rel="stylesheet" href="{% static 'newstatic/assets/css/style.css'%}">
 	<!--[if lt IE 9]>
 			<script src="assets/js/html5shiv.min.js"></script>
@@ -98,6 +100,7 @@
 	<script src="{% static 'newstatic/assets/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.js'%}"></script>
 
 	<script src="{% static 'newstatic/assets/js/profile-settings.js'%}"></script>
+	<script src="{% static '/radmin/assets/bundles/dataTables.bundle.js'%}"></script>  
 
 	<script src="{% static 'newstatic/assets/js/script.js'%}"></script>
 	
@@ -141,7 +144,7 @@
         var status_js = document.querySelector('#status')
         status_js.innerHTML = status
     }
-
+	
 </script>
 
 {% block custom_js %}{% endblock custom_js %}

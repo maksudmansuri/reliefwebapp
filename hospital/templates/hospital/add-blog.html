@@ -1,6 +1,6 @@
 
- {% extends 'hospital/base.html' %}
-{% load static %}
+{% extends 'hospital/blank-page.html' %} 
+{% load static %} 
 {% block title %} :: Relief Pro::  Hospitals Add Blog{% endblock title %}
 
 {% block custom_css %}
@@ -279,38 +279,13 @@
 
 {% block content %}
  
-		<div class="page-wrapper">
-			<div class="content container-fluid">
-
-				<div class="page-header">
-					<div class="row">
-						<div class="col-sm-12">
-							<h3 class="page-title">Add Blog</h3>
-							<ul class="breadcrumb">
-								<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-								<li class="breadcrumb-item"><a href="javascript:(0);">Pages</a></li>
-								<li class="breadcrumb-item active">Add Blog</li>
-							</ul>
-						</div>
-					</div>
-				</div>
+<div class="col-md-7 col-lg-8 col-xl-9">
 
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="card">
 							<div class="card-body custom-edit-service">
-								<div class="row mb-5">
-									<div class="col">
-										<ul class="nav nav-tabs nav-tabs-solid">
-											<li class="nav-item">
-												<a class="nav-link" href="{% url 'list_blog' %}">Acitive Blog</a>
-											</li>
-											<li class="nav-item">
-												<a class="nav-link" href="{% url 'list_blog' %}">Pending Blog</a>
-											</li>
-										</ul>
-									</div> 
-								</div> 
+								
  
 								<form method="post" enctype="multipart/form-data">
 									{% csrf_token %}
@@ -364,16 +339,7 @@
 													<input type="file" name="blog_image" id="blog_image"
 														accept="image/jpeg, image/png, image/gif," required="true">
 												</div>
-												<div id="uploadPreview">
-													<ul class="upload-wrap">
-														<li>
-															<div class=" upload-images">
-																<img alt="Blog Image"
-																	src="assets/img/profiles/avatar-17.jpg">
-															</div>
-														</li>
-													</ul>
-												</div>
+												
 											</div>
 										</div>
 									</div>
@@ -389,7 +355,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		
 
 	
 {% endblock content %}

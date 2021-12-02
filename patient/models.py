@@ -9,6 +9,7 @@ from django.dispatch import receiver
 from django.http import request
 from django.db.models.base import Model
 from django.contrib.auth.models import User
+from django.utils.translation import deactivate
 from hospital.models import HospitalRooms, HospitalServices, HospitalStaffDoctors, ServiceAndCharges
 from accounts.models import CustomUser, Hospitals, Labs, Patients, Pharmacy
 from django.db import models
@@ -68,7 +69,7 @@ class OrderBooking(models.Model):
     for_whom                =           models.ForeignKey(ForSome, on_delete=models.CASCADE,null=True,blank=True)
     hospitalstaffdoctor     =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE,null=True,blank=True)
     HLP                     =           models.ForeignKey(CustomUser,related_name="merchant", on_delete=models.CASCADE,null=True,blank=True)
-    booking_type            =           models.CharField(default="",blank=True,null=True,max_length=64)#homevisit,emergency,online,test,medicine,opd -> checkout
+    booking_type            =           models.CharField(default="",blank=True,null=True,max_length=64)#homevisit,emergency,online,test,medicine,opd,rebooking -> checkout
     # BOOKING_FOR_CHOICE      =           ((1,"Hospital"),(2,"Laboratory"),(3,"Pharmacy"))
     booking_for             =           models.CharField(max_length=256,default="",blank=True,null=True)#hospital,lab,pharmcy
 
@@ -80,12 +81,15 @@ class OrderBooking(models.Model):
     rejected_date           =           models.DateTimeField(blank=True,null=True)
 
     is_applied              =           models.BooleanField(default=False,blank=True,null=True)
+    is_accepted             =           models.BooleanField(default=False,blank=True,null=True)
     is_otp_verified         =           models.BooleanField(default=False,blank=True,null=True)
+    is_taken                =           models.BooleanField(default=False,blank=True,null=True)
+    is_rejected             =           models.BooleanField(default=False,blank=True,null=True)
     is_cancelled            =           models.BooleanField(default=False)
-
+ 
     reject_within_5         =           models.DateTimeField(default=datetime.datetime(1970,1,1),blank=True, null=True)
 
-    status                  =           models.CharField(default="",blank=True,null=True,max_length=64)#booked,otp_send,otp_verified,service_take,cancelled_by_system,rejected,cancelled_by_user,report_uploaded
+    status                  =           models.CharField(default="",blank=True,null=True,max_length=64)#BOOKED,OTP_SEND,OTP_VERIFIIED,TAKEN,cancelled_by_system,REJECTED,cancelled_by_user,report_uploaded,BILL_UPLOADED,PH_AMOUNT_PAID
     add_note                =           models.CharField(max_length=5000,blank=True,null=True,default="")
     is_active               =           models.BooleanField(default=False)
 
@@ -106,7 +110,7 @@ class OrderBooking(models.Model):
     objects                 =           models.Manager()
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['-updated_at']
 
 class NewLabTest(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -443,11 +447,11 @@ def pictureformedicine_status_handler(sender,instance,created, **kwargs):
 
 class TreatmentReliefPetient(models.Model):
     id                      =           models.AutoField(primary_key=True)
-    booking                 =           models.ForeignKey(Booking, on_delete=models.CASCADE)
-    patient                 =           models.ForeignKey(Patients, on_delete=models.CASCADE)
+    booking                 =           models.ForeignKey(OrderBooking, on_delete=models.CASCADE,blank=True,null=True)
+    patient                 =           models.ForeignKey(Patients, on_delete=models.CASCADE,blank=True,null=True)
     amount_paid             =           models.FloatField()
-    next_date               =           models.DateTimeField(blank=True,null=True)
-    status                  =           models.CharField(default="",blank=True,null=True,max_length=64)
+    next_date               =           models.DateTimeField(default=datetime.datetime(1970,1,1),blank=True,null=True)
+    status                  =           models.CharField(default="",blank=True,null=True,max_length=64)#ADMITED,DISCHARGED,CHECKEDUP,NEXT_VISIT
     is_active               =           models.BooleanField(default=False)
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
@@ -459,14 +463,14 @@ class TreatmentReliefPetient(models.Model):
 class patientFile(models.Model):
     id                      =           models.AutoField(primary_key=True)
     treatmentreliefpetient  =           models.ForeignKey(TreatmentReliefPetient, on_delete=models.CASCADE)
-    booking                 =           models.ForeignKey(Booking, on_delete=models.CASCADE,null=True)
-    patient                 =           models.ForeignKey(Patients, on_delete=models.CASCADE,null=True)
-    hospitaldoctors         =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE,null=True)
-    amount_paid             =           models.FloatField()
+    booking                 =           models.ForeignKey(OrderBooking, on_delete=models.CASCADE,null=True)
+    patient                 =           models.ForeignKey(Patients, on_delete=models.CASCADE,null=True) #delete after not in use
+    hospitaldoctors         =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE,null=True) #delete after not in use
+    amount_paid             =           models.FloatField(default=0) #delete after not in use
     file                    =           models.FileField(upload_to="patients/documents/fiel/%Y/%m/%d/",blank=True,null=True,default="")
     # file_date               =           models.DateField(blank=True,null=True)
     # file_time               =           models.TimeField(blank=True,null=True)
-    file_purpose            =           models.CharField(default="",blank=True,null=True,max_length=500)
+    file_purpose            =           models.CharField(default="",blank=True,null=True,max_length=500)#delete after not in use
     file_addnote            =           models.TextField(default="",blank=True,null=True,max_length=5000)
     is_active               =           models.BooleanField(default=False)
     created_at              =           models.DateTimeField(auto_now_add=True)

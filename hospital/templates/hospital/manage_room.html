@@ -1,6 +1,6 @@
-{% extends 'hospital/base.html' %}
-{% load static %}
-{% block title %} :: I-Health::  Hospitals Rooms{% endblock title %}
+{% extends 'hospital/blank-page.html' %} 
+{% load static %} 
+{% block title %} Hospital Rooms  {% endblock title %}
 
 {% block custom_css %}
 <style>
@@ -14,10 +14,8 @@
 {% endblock custom_css %}
 
 {% block content %}
- 
-    <!-- Body: Body -->       
-<div class="body d-flex py-lg-3 py-md-2">
-    <div class="container-xxl">
+ <!-- Body: Body -->
+    <div class="col-md-7 col-lg-8 col-xl-9">
         <div class="row align-items-center">
             <div class="border-0 mb-4">
                 <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
@@ -37,8 +35,7 @@
                         <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>Room No</th>
-                                    <th>Department</th> 
+                                    <th>Room No</th>                                   
                                     <th>Floor</th>   
                                     <th>Room Type</th> 
                                     <th>Occupied</th>   
@@ -51,10 +48,7 @@
                                     <td>
                                         <span class="fw-bold">{{room.room_no}}</span>
                                     </td>
-                                    <td>
-                                        
-                                        <span class="fw-bold ms-1">{{room.department}}</span>
-                                    </td>
+                                   
                                     <td>
                                         {{room.floor}}
                                     </td>
@@ -76,9 +70,9 @@
                                     {% endif %}
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{room.id}}"><i class="icofont-edit text-success"></i></button>
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{room.id}}"><i class="far fa-edit"></i></button>
                                             
-                                            <a type="button" class="btn btn-outline-secondary deleterow" id="deleteroom" href="{% url 'delete_room' room.id %}" ><i class="icofont-ui-delete text-danger"></i><a>
+                                            <a type="button" class="btn btn-outline-danger deleterow" id="deleteroom" href="{% url 'delete_room' room.id %}" ><i class="far fa-trash-alt"></i><a>
 
                                         </div>
                                     </td>
@@ -94,7 +88,7 @@
             </div>
         </div><!-- Row End -->
     </div>
-</div>
+
  
 {% endblock content %}
 {% block modal_fade %}
@@ -155,7 +149,7 @@
                                 <td>{{price.room_type}}</td>
                                 <td>{{price.rooms_price}}</td>
                                 <td> 
-                                    <a type="button" class="btn btn-outline-secondary deleterowprice" id="deleteprice" href="{% url 'delete_price' price.id %}" ><i class="icofont-ui-delete text-danger"></i><a>
+                                    <a type="button" class="btn btn-outline-danger " id="deleteprice" href="{% url 'delete_price' price.id %}" ><i class="far fa-trash-alt"></i>   <a>
                                 </td>
                                 </tr>
                             {% endfor %}  
@@ -200,21 +194,13 @@
                             <div class="col-sm-6">
                                 <label  class="form-label">Room Type *</label>
                                 <select class="form-select" aria-label="Default select example" name="room" required>
-                                <option value="">None</option>
+                                <option value="">select</option>
                                 {% for price in prices %}
                                     <option value="{{price.id}}">{{price}} -INR {{price.rooms_price}}</option>
                                 {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-sm-6">
-                                <label  class="form-label">Department *</label>
-                                <select class="form-select" aria-label="Default select example" name="department" required>
-                                <option value="">None</option>
-                                {% for department in departments %}
-                                    <option value="{{department.id}}">{{department}}</option>
-                                {% endfor %}
-                                </select>
-                            </div>
+                       
                             <div class="col-sm-6"></div>
                            <div class="col-sm-6">
                             <label class="custom-switch mt-2">
@@ -245,7 +231,7 @@
         <div class="modal fade" id="depedit{{room.id}}" tabindex="-1"  aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
             <div class="modal-content">
-            <form id="roomupdate" method="post" action="{% url 'update_room' %}">
+            <form id="roomupdate" method="post" action="{% url 'update_room' room.id %}">
             {% csrf_token %}
                 <div class="modal-header">
                     <h5 class="modal-title  fw-bold" id="depaddLabel">Edit Rooms</h5>
@@ -265,22 +251,14 @@
                             </div>                       
                             <div class="col-sm-6">
                                 <label  class="form-label">Room Type *</label>
-                                <select class="form-select" aria-label="Default select example" name="room" value="{{room.room}}" required>
-                                <option value="">None</option>
+                                <select class="form-select" aria-label="Default select example" name="room" required>
+                                <option value="">select</option>
                                 {% for price in prices %}
-                                    <option value="{{price.id}}">{{price}} -INR{{price.rooms_price}}</option>
+                                    <option value="{{price.id}}" {% if room.room == price %}selected{% endif %}>{{price}} -INR{{price.rooms_price}}</option>
                                 {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-sm-6">
-                                <label  class="form-label">Department *</label>
-                                <select class="form-select" aria-label="Default select example" name="department" required>
-                                <option value="">None</option>
-                                {% for department in departments %}
-                                    <option {% if room.department == department %}selected{% endif %} value="{{department.id}}">{{department}}</option>
-                                {% endfor %}
-                                </select>
-                            </div>
+                           
                             <div class="col-sm-6"></div>
                            <div class="col-sm-6">
                             <label class="custom-switch mt-2">
@@ -335,13 +313,7 @@
 
     })
    
-var addSerialNumber = function () {
-    $('table tr').each(function(index) {
-        $(this).find('td:nth-child(1)').html(index+1);
-    });
-};
 
-addSerialNumber();
 
     
 </script>

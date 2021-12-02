@@ -2,13 +2,21 @@ from django.urls import path
 from django.urls.conf import re_path
 from .import views
 from patient import views as patientView
-from accounts import logoutview as profileview
+from front import views as frontView
 
 urlpatterns = [   
     # path('',views.indexView,name="hospital_home"),
     path('',views.hospitaldDashboardViews.as_view(),name="hospital_dashboard"),
     path('hospital_update',views.hospitalUpdateViews.as_view(),name="hospital_update"),
-    path('hospital_profile',profileview.hospitalProfileViews.as_view(),name="hospital_profile"),
+    path('hospital_profile',frontView.HospitalDetailsViews.as_view(),name="hospital_profile"),
+
+    #Order Booking for hospital ,Lab ,pharmacy, 
+    #Hospital
+    path('accept_apt/<id>',views.AcceptAPT,name="accept_apt"),
+    path('accept_otp/<id>',views.AcceptOTP,name="accept_otp"),
+    path('reject_apt/<id>',views.RejectedAPT,name="reject_apt"),
+
+
     
     
     # for treatment tab menu Treatment includes Diseas , Medicine(with time) , Reports , Follow ups dates , Exercise 
@@ -41,7 +49,7 @@ urlpatterns = [
  
     #deaprtment manage add update delete 
     path('manage_room',views.manageRoomclassView.as_view(),name="manage_room"),
-    path('update_room',views.updateRoom,name="update_room"),
+    path('update_room/<id>',views.updateRoom,name="update_room"),
    
     #Ambulance manage add update delete 
     path('manage_ambulance',views.manageAmbulanceclassView.as_view(),name="manage_ambulance"), 

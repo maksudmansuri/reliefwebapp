@@ -33,7 +33,7 @@
 					</li> {% endcomment %}
 					{% url 'add_someone_as_patient' as add_someone_as_patient %}
 					<li {% if request.path == add_someone_as_patient %}class="active"{% endif %}> 
-						<a href="{% url 'hello' %}">
+						<a href="{% url 'add_someone_as_patient' %}">
 							<i class="fas fa-users"></i>
 							<span>Dependent</span>
 						</a>

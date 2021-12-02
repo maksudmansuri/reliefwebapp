@@ -1,5 +1,5 @@
-{% extends 'hospital/base.html' %}
-{% load static %}
+{% extends 'hospital/blank-page.html' %} 
+{% load static %} 
 {% block title %} :: Relief Pro::  Hospitals Ambulance{% endblock title %}
 
 {% block custom_css %}
@@ -14,8 +14,7 @@ span.a {
 {% block content %}
  
     <!-- Body: Body -->       
-<div class="body d-flex py-lg-3 py-md-2">
-    <div class="container-xxl">
+    <div class="col-md-7 col-lg-8 col-xl-9">
         <div class="row align-items-center">
             <div class="border-0 mb-4">
                 <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
@@ -82,9 +81,9 @@ span.a {
                                     {% endif %}
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{ambulance.id}}"><i class="icofont-edit text-success"></i></button>
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{ambulance.id}}"><i class="far fa-edit"></i></button>
                                             
-                                            <a type="button" class="btn btn-outline-secondary deleterow" id="deleteroom" href="{% url 'delete_ambulance' ambulance.id %}" ><i class="icofont-ui-delete text-danger"></i><a>
+                                            <a type="button" class="btn btn-outline-danger deleterow" id="deleteroom" href="{% url 'delete_ambulance' ambulance.id %}" ><i class="far fa-trash-alt"></i><a>
 
                                         </div>
                                     </td>
@@ -100,7 +99,7 @@ span.a {
             </div>
         </div><!-- Row End -->
     </div>
-</div>
+
  
 {% endblock content %}
 {% block modal_fade %}

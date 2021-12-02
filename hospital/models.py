@@ -141,7 +141,7 @@ class RoomOrBadTypeandRates(models.Model):
 class HospitalRooms(models.Model):
     id                  =models.AutoField(primary_key=True)
     hospital            =models.ForeignKey(Hospitals,on_delete=models.CASCADE,default="")
-    department          =models.ForeignKey(Departments,on_delete=models.CASCADE,default="")
+    department          =models.ForeignKey(Departments,on_delete=models.CASCADE,default="",blank=True,null=True)
     room                =models.ForeignKey(RoomOrBadTypeandRates,on_delete=models.CASCADE,default="")
     floor               =models.CharField(max_length=50,default="",blank=True,null=True)
     room_no             =models.CharField(max_length=50,blank=True,null=True,default=1)    

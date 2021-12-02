@@ -830,8 +830,13 @@ Checkout page
 #     def get(self, request, *args, **kwargs):
 #         return render(request,"patient/checkout.html")
 
-def CheckoutViews(request):
-    if request.method == "POST":
+class CheckoutView(SuccessMessageMixin,CreateView):
+    def get(self, request, *args, **kwargs):
+        someones = ForSome.objects.filter(patient=request.user.patients)
+        param = {'booking':booking,'someones':someones}
+        return render(request,'patient/checkout.html',param)
+    
+    def post(self, request, *args, **kwargs):    
         doctorid = request.POST.get('doctor_id')
         hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
         timeslot = request.POST.get('timeslot')
@@ -844,7 +849,7 @@ def CheckoutViews(request):
         now5 = now + timedelta(minutes=5)
         
         with transaction.atomic():
-            booking = OrderBooking(patient = request.user,applied_date=date,applied_time=doctorschedule.timeslot.schedule,is_applied=True,is_active=True,status="booked")
+            booking = OrderBooking(patient = request.user,applied_date=date,applied_time=doctorschedule.timeslot.schedule,is_applied=True,is_active=True,status="BOOKED")
             booking.reject_within_5__lt = now            
         booking.reject_within_5 = now5
         if someone:
@@ -869,7 +874,7 @@ def CheckoutViews(request):
         doctorschedule.save()
         print(booking.reject_within_5__lt)
         print(booking.reject_within_5)
-
+ 
         print("booking saved")
         # tc = 0
         # try:
@@ -891,7 +896,8 @@ def CheckoutViews(request):
             obj.save()
             notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.hospitalstaffdoctor.hospital.admin,booking=booking)
             notification.save()
-        param = {'booking':booking}
+        someones = ForSome.objects.filter(patient=request.user.patients)
+        param = {'booking':booking,'someones':someones}
         return render(request,'patient/checkout.html',param)
             # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
             # res = conn.getresponse()

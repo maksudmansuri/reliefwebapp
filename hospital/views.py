@@ -1,11 +1,12 @@
 from io import StringIO
+from re import escape
 from typing import List
+from django.contrib.auth.models import User
 from django.http.request import HttpRequest
 from accounts import models
 from chat.models import Notification
 import hospital
-import patient
-from patient.models import Booking, LabTest, Orders, Slot, TreatmentReliefPetient, patientFile, phoneOPTforoders
+from patient.models import Booking, LabTest, OrderBooking, Orders, Slot, TreatmentReliefPetient, patientFile, phoneOPTforoders
 from django.db.models.query_utils import Q
 from django.urls.base import reverse
 from hospital import urls
@@ -20,7 +21,7 @@ from django.core.files.storage import FileSystemStorage
 from hospital.models import AmbulanceDetails, Blog, ContactPerson, DepartmentPhones, Departments, DoctorSchedule, HospitalMedias, HospitalRooms, HospitalServices, HospitalStaffDoctorSchedual, HospitalStaffDoctors, HospitalStaffs, HospitalsPatients, Insurances, RoomOrBadTypeandRates, ServiceAndCharges, TimeSlot
 from accounts.models import CustomUser, DoctorForHospital, HospitalDoctors, HospitalPhones, Hospitals, OPDTime, Patients, Specailist
 from django.urls import reverse
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 from django.core.paginator import Paginator
 IST = pytz.timezone('Asia/Kolkata')
@@ -38,25 +39,117 @@ def OccupiedRoom(request):
 
 class hospitaldDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
-        try: 
-            hospital = Hospitals.objects.get(admin=request.user.id)
-            
-            bookings = Booking.objects.filter(hospital=hospital)
+        # try: 
+        hospital = Hospitals.objects.get(admin=request.user.id)
+        showtime = datetime.now(tz=IST).date()
+        print(showtime)
+        bookings = OrderBooking.objects.filter(HLP=hospital.admin,is_taken=False,is_otp_verified=False,is_active=True,is_cancelled = False,is_rejected = False)
+        bookings_now = OrderBooking.objects.filter(HLP=hospital.admin,is_taken=False,is_otp_verified=False,is_active=True,is_cancelled = False,applied_date=showtime,is_rejected = False)
 
         # if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.profile_pic and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile and contacts:
             # contacts = HospitalPhones.objects.filter(hospital=hospital)
             # insurances = Insurances.objects.filter(hospital=hospital)
-            rooms = HospitalRooms.objects.filter(is_active=True,hospital=request.user.hospitals)
-            param = {'rooms':rooms,'bookings':bookings}
-            return render(request,"hospital/newindex.html",param)
+        # rooms = HospitalRooms.objects.filter(is_active=True,hospital=request.user.hospitals)
+        param = {'bookings':bookings,'bookings_now':bookings_now}
+        return render(request,"hospital/newindex.html",param)
         
         # else:
             # messages.add_message(request,messages.ERROR,"Some detail still Missing !")
             # param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
             # return render(request,"hospital/hospital_update.html",param)
-        except Exception as e:
-            return HttpResponse(e)
+        # except Exception as e:
+        #     return HttpResponse(e)
+ 
+def AcceptAPT(request,id):
+    try:
+        apt = get_object_or_404(OrderBooking,id=id,is_cancelled=False,is_active=True)
+        is_applied = False        
+        is_accepted = True
+        status = "OTP_SEND"
         
+        showtime = datetime.now(tz=IST)
+        apt.accepted_date = showtime
+        apt.status=status        
+        apt.is_accepted=is_accepted    
+        apt.is_applied=is_applied
+        apt.save()  
+        notification =  Notification(notification_type="1",from_user= request.user,to_user=apt.patient,booking=apt)
+        notification.save()
+
+        messages.add_message(request,messages.SUCCESS,"Appointment is Accepted")
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,"Error in connection Try after sometimes")
+    return HttpResponseRedirect(reverse("hospital_dashboard"))
+
+def AcceptOTP(request,id):
+    apt = get_object_or_404(OrderBooking,id=id,is_cancelled=False,is_active=True)
+    phoneotp = get_object_or_404(phoneOPTforoders, order_id = apt)
+    user = phoneotp.user #mobile is a user     
+    key = phoneotp.otp  # Generating Key      
+    postotp=request.POST.get("otp")
+    # next_date=request.POST.get("next_date")
+    try:
+             
+        is_accepted = False
+        is_otp_verified =True
+        is_taken =True
+        status = "TAKEN"
+         
+        showtime = datetime.now(tz=IST)
+        
+        if postotp == str(key):  # Verifying the OTP
+            apt.otp_verified_datetime = showtime
+            apt.taken_date = showtime
+            apt.status=status        
+            apt.is_accepted=is_accepted    
+            apt.is_otp_verified=is_otp_verified
+            apt.is_taken=is_taken
+            apt.save() 
+
+            phoneotp.validated = True          
+            phoneotp.save()    
+            
+            treatmentreliefpetient = TreatmentReliefPetient(patient=apt.patient.patients,booking=apt,status="CHECKEDUP",amount_paid=apt.amount,is_active=True)
+            # treatmentreliefpetient.next_date=next_date
+            treatmentreliefpetient.save()
+
+            notification =  Notification(notification_type="1",from_user= request.user,to_user=apt.patient,booking=apt)
+            notification.save()
+            print(notification)
+            messages.add_message(request,messages.SUCCESS,"booking have been Verified Successfuly")
+        else:
+            messages.add_message(request,messages.ERROR,"OTP does not matched")
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,e)
+    return HttpResponseRedirect(reverse("hospital_dashboard"))
+
+def RejectedAPT(request,id):
+    try:
+        apt = get_object_or_404(OrderBooking,id=id,is_cancelled=False,is_active=True)       
+        is_applied = False        
+        is_accepted = False
+        is_otp_verified =False
+        is_taken =False
+        is_rejected =True
+        status = "REJECTED"
+        
+        showtime = datetime.now(tz=IST)
+        apt.accepted_date = showtime
+        apt.status=status        
+        apt.is_accepted=is_accepted    
+        apt.is_applied=is_applied
+        apt.is_otp_verified=is_otp_verified
+        apt.is_taken=is_taken
+        apt.is_rejected=is_rejected
+        apt.save()  
+        notification =  Notification(notification_type="1",from_user= request.user,to_user=apt.patient,booking=apt)
+        notification.save()
+
+        messages.add_message(request,messages.SUCCESS,"Appointment is Rejected")
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,"Error in connection Try after sometimes")
+    return HttpResponseRedirect(reverse("hospital_dashboard"))
+
 class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
     UserModel=get_user_model()
     def get(self, request, *args, **kwargs):
@@ -406,54 +499,46 @@ class manageRoomclassView(SuccessMessageMixin,CreateView):
             roooOrbadtypeandrates = RoomOrBadTypeandRates.objects.filter(hospital=hospital)
             rooms = HospitalRooms.objects.filter(hospital=hospital)
             prices = RoomOrBadTypeandRates.objects.filter(hospital=hospital)
-            departments = Departments.objects.filter(hospital=hospital)
+            # departments = Departments.objects.filter(hospital=hospital)
             # departments = Departments.objects.filter(hospital=hospital)
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")
             return HttpResponseRedirect(reverse("manage_staff"))        
-        param={'hospital':hospital,'rooms':rooms,'departments':departments,'prices':prices}
+        param={'hospital':hospital,'rooms':rooms,'prices':prices}
         return render(request,"hospital/manage_room.html",param)
 
     def post(self, request, *args, **kwargs):
         floor = request.POST.get("floor")
         room_no = request.POST.get("room_no")
         room = request.POST.get("room")
-        department = request.POST.get("department")
-        if department == "":
-            messages.add_message(request,messages.ERROR,"Department not selected")
-            return HttpResponseRedirect(reverse("manage_room"))
-        print(room)
+
         is_active = request.POST.get("is_active")
         active = False
         if is_active == "on":
             active= True
         hospital=Hospitals.objects.get(admin=request.user)
-        department = Departments.objects.get(id=department)
         room_type = RoomOrBadTypeandRates.objects.get(id=room)
-        hospitalroom = HospitalRooms(hospital=hospital,department=department,room=room_type,floor=floor,room_no=room_no,is_active=active)
+        hospitalroom = HospitalRooms(hospital=hospital,room=room_type,floor=floor,room_no=room_no,is_active=active)
         hospitalroom.save()
         # except:
         #     messages.add_message(request,messages.ERROR,"Connection Error Try after some time")
         #     return HttpResponseRedirect(reverse("manage_staff"))
         return HttpResponseRedirect(reverse("manage_room"))
 
-def updateRoom(request):
+def updateRoom(request ,id):
     if request.method == "POST":
-        id= request.POST.get("id")
-        name_title = request.POST.get("name_title")
-        first_name = request.POST.get("first_name")
-        last_name = request.POST.get("last_name")
-        email = request.POST.get("email")
-        mobile = request.POST.get("phone")
+        floor = request.POST.get("floor")
+        room_no = request.POST.get("room_no")
+        room = request.POST.get("room")
         is_active = request.POST.get("is_active")
         active = False
         if is_active == "on":
             active= True
-        hospitalroom = HospitalRooms.objects.get(id=id)
-        hospitalroom.name_title=name_title
-        hospitalroom.first_name=first_name
-        hospitalroom.last_name=last_name
-        hospitalroom.email=email
+        room_type = RoomOrBadTypeandRates.objects.get(id=room)
+        hospitalroom =get_object_or_404(HospitalRooms,id=id)
+        hospitalroom.room=room_type
+        hospitalroom.floor=floor
+        hospitalroom.room_no=room_no
         hospitalroom.is_active=active
         hospitalroom.save()
         messages.add_message(request,messages.SUCCESS,"Successfully Updated")
@@ -507,7 +592,7 @@ class manageAmbulanceclassView(SuccessMessageMixin,CreateView):
         
         try:
             hospitalroom = AmbulanceDetails(hospital=hospital,vehicle_number=vehicle_number,drive_name=drive_name,drive_number=drive_number,charge=charge,vehicle_type=vehicle_type,is_active=active)
-            if profile_pic:
+            if profile_pic: 
                 fs=FileSystemStorage()
                 filename1=fs.save(profile_pic.name,profile_pic)
                 profile_pic_url=fs.url(filename1)
@@ -1052,7 +1137,8 @@ class managePatientView(SuccessMessageMixin,CreateView):
         I Assuming this will only work for patient 
         """
 
-        patient = HospitalsPatients(name_title=name_title,first_name=first_name,last_name=last_name,address=address,city=city,age=age,phone=phone,treatment=treatment,ID_number=ID_number,status=status,ID_proof=profile_pic_url,add_notes=add_notes,gender=gender,is_active=True,email=email)        
+        patient = HospitalsPatients(name_title=name_title,first_name=first_name,last_name=last_name,address=address,city=city,age=age,phone=phone,treatment=treatment,ID_number=ID_number,status=status,ID_proof=profile_pic_url,add_notes=add_notes,gender=gender,is_active=True,email=email)
+        patient.hospital=hospital     
         patient.save()
        
         messages.add_message(request,messages.SUCCESS,"Successfully Added")
@@ -1338,30 +1424,29 @@ class ReliefPatientViewsProfile(SuccessMessageMixin,DetailView):
 def ReliefPatientViewsFiles(request,id):
     if request.method == "POST":
         file = request.FILES.get("file")
-        hospitaldoctors_id = request.POST.get("hospitaldoctors")
-        file_purpose = request.POST.get("file_purpose")
+        # file_purpose = request.POST.get("file_purpose")
         # file_date = request.POST.get("file_date")
         # file_time = request.POST.get("file_time")
         file_addnote = request.POST.get("file_addnote")
-        amount_paid = request.POST.get("amount_paid")
-        print(id,file,hospitaldoctors_id,file_addnote,file_purpose,amount_paid)
+        next_date = request.POST.get("next_date")
+        print(id,file,file_addnote,next_date)
         is_active= True
-        treatmentreliefpetient = TreatmentReliefPetient.objects.get(id=id)
-        hospitaldoctors = HospitalStaffDoctors.objects.get(id=hospitaldoctors_id)
-        patient = treatmentreliefpetient.patient
-        booking = treatmentreliefpetient.booking    
+        treatmentreliefpetient =get_object_or_404(TreatmentReliefPetient,id=id)
+        
         try:
-            patientfile = patientFile(treatmentreliefpetient=treatmentreliefpetient,patient=patient,booking=booking,amount_paid=float(amount_paid),hospitaldoctors=hospitaldoctors,file_purpose=file_purpose,file_addnote=file_addnote,is_active=is_active)
+            patientfile = patientFile(treatmentreliefpetient=treatmentreliefpetient,patient=treatmentreliefpetient.patient,booking=treatmentreliefpetient.booking ,hospitaldoctors=treatmentreliefpetient.booking.hospitalstaffdoctor,file_addnote=file_addnote,is_active=is_active)
             if file:
                 fs=FileSystemStorage()
                 filename1=fs.save(file.name,file)
                 profile_pic_url=fs.url(filename1)
                 patientfile.file=profile_pic_url
             patientfile.save()
-            return HttpResponseRedirect(reverse("relief_patient_profile",kwargs={'id':patient.id}))
+            treatmentreliefpetient.next_date=next_date
+            treatmentreliefpetient.save()
+            return HttpResponseRedirect(reverse("relief_patient_profile",kwargs={'id':treatmentreliefpetient.id}))
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")
-            return HttpResponseRedirect(reverse("relief_patient_profile",kwargs={'id':patient.id}))
+            return HttpResponseRedirect(reverse("relief_patient_profile",kwargs={'id':treatmentreliefpetient.id}))
     
 
 class manageReliefPatientViews(SuccessMessageMixin,ListView):
@@ -1512,6 +1597,29 @@ class EditBlogUpdateView(SuccessMessageMixin,UpdateView):
         doctors = HospitalStaffDoctors.objects.filter(hospital=hospital)
         param={'blog':blog,'doctors':doctors}
         return render(request,"hospital/edit-blog.html",param)  
+    
+    def post(self, request, *args, **kwargs):
+        id=kwargs['id']   
+        blog_title = request.POST.get('blog_title')         
+        content = request.POST.get('content')
+        blog_image = request.FILES.get('blog_image')
+        doctor = request.POST.get('doctor')
+        # try:
+        doctor = get_object_or_404(HospitalStaffDoctors,id=doctor)
+        blog =get_object_or_404(Blog,id=id)
+        blog.blog_title=blog_title
+        blog.blog_content=content
+        blog.doctor=doctor
+        if blog_image:
+            fs=FileSystemStorage()
+            filename1=fs.save(blog_image.name,blog_image)
+            blog_image_url=fs.url(filename1)
+            blog.blog_image=blog_image_url
+        blog.save()
+        # except Exception as e:
+            # messages.add_message(request,messages.ERROR,"Something Wrong with connnections")
+            # return HttpResponseRedirect(reverse("add_blog"))
+        return HttpResponseRedirect(reverse("list_blog"))
 
     def post(self, request, *args, **kwargs):
         id=kwargs['id']
