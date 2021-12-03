@@ -228,7 +228,7 @@ def dologin(request):
                     #     return HttpResponseRedirect(reverse('profile_picUpload'))
                     else: 
                         return HttpResponseRedirect(reverse('hospital_dashboard'))
-                elif user.user_type=="3":
+                elif user.user_type=="3": 
                     if 'next' in request.POST:
                         return redirect(request.POST.get('next'))
                     # elif user.profile_pic:

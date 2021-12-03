@@ -830,13 +830,8 @@ Checkout page
 #     def get(self, request, *args, **kwargs):
 #         return render(request,"patient/checkout.html")
 
-class CheckoutView(SuccessMessageMixin,CreateView):
-    def get(self, request, *args, **kwargs):
-        someones = ForSome.objects.filter(patient=request.user.patients)
-        param = {'booking':booking,'someones':someones}
-        return render(request,'patient/checkout.html',param)
-    
-    def post(self, request, *args, **kwargs):    
+def CheckoutViews(request):
+    if request.method == "POST":
         doctorid = request.POST.get('doctor_id')
         hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
         timeslot = request.POST.get('timeslot')
@@ -896,7 +891,7 @@ class CheckoutView(SuccessMessageMixin,CreateView):
             obj.save()
             notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.hospitalstaffdoctor.hospital.admin,booking=booking)
             notification.save()
-        someones = ForSome.objects.filter(patient=request.user.patients)
+        someones = ForSome.objects.filter(patient=request.user.patients )
         param = {'booking':booking,'someones':someones}
         return render(request,'patient/checkout.html',param)
             # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")

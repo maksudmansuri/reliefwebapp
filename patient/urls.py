@@ -24,7 +24,7 @@ urlpatterns = [
     path('updload_prescription_photo', views.UploadPresPhotoViews.as_view(), name="updload_prescription_photo"),
 
     #checkout for lab and hospital combin 
-    path('checkout/<str:order_id>', views.CheckoutView.as_view(), name="checkout"),
+    path('checkout', views.CheckoutViews, name="checkout"),
     path('payformedicine/<id>', views.PayForMedicine, name="payformedicine"),
     path('paytmprocess', views.PaytmProcessViews, name="paytmprocess"),
 
