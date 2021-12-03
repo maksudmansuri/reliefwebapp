@@ -138,5 +138,5 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                 pass
             else:
                 next = request.path
-                return HttpResponseRedirect(reverse("dologin",kwargs={'next':next})) or modulename == "allauth.account.views" or modulename == "front.views" or modulename == " allauth.socialaccount.views" or request.path == reverse("saccount") or modulename == "allauth.socialaccount.providers.oauth2.views"
+                return HttpResponseRedirect(reverse("dologin")) or modulename == "allauth.account.views" or modulename == "front.views" or modulename == " allauth.socialaccount.views" or request.path == reverse("saccount") or modulename == "allauth.socialaccount.providers.oauth2.views"
 
