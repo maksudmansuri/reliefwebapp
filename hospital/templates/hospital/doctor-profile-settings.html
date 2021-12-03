@@ -1,6 +1,6 @@
 {% extends 'hospital/blank-page.html' %}
 {% load static %}
-{% block title %} Dashboard {% endblock title %}
+{% block title %} Profile Settings {% endblock title %}
 
 {% block custom_css %}{% endblock custom_css %}
 {% block breadcrumb1 %}Profile Settings{% endblock breadcrumb1 %}
@@ -189,7 +189,7 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label>Address Line 1</label>
-						<input type="text" class="form-control" id="address1" name="address2"
+						<input type="text" class="form-control" id="address1" name="address1"
 							placeholder="Hospital Address " value="{{hospital.address1}}" required>
 					</div>
 				</div>
@@ -210,15 +210,14 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label class="control-label">State / Province</label>
-						<input type="text" class="form-control" id="state" name="state" placeholder="state" required
-							disabled value="Gujarat">
+						<input type="text" class="form-control" id="state" name="state" placeholder="state" value="{{hospital.state}}" >
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
 						<label class="control-label">Country</label>
 						<input type="text" class="form-control" id="country" name="country" placeholder="Country"
-							required disabled value="India">
+						value="{{hospital.country}}" >
 					</div>
 				</div>
 				<div class="col-md-6">
@@ -399,12 +398,12 @@
 		<div class="card-body">
 			<div class="row g-3 align-items-center">
 				<div class="col-md-6">
-					<label for="Phone" class="form-label">Phone Number *</label>
+					<label for="Phone" class="form-label">Phone Number </label>
 					<input type="text" class="form-control hospital_mobile" id="mobile" name="hospital_mobile[]"
-						placeholder="Enter Phone Number" value="{{contact.hospital_mobile}}" required>
+						placeholder="Enter Phone Number" value="{{contact.hospital_mobile}}" >
 				</div>
 				<div class="col-md-6">
-					<label for="email" class="form-label">Email *</label>
+					<label for="email" class="form-label">Email </label>
 					<input type="email" class="form-control hospital_email" value="{{contact.hospital_email}}"
 						id="email" name="hospital_email[]" placeholder="Enter Email">
 					<input type="hidden" name="contacts_id[]" value="{{ contact.id }}">
@@ -417,12 +416,12 @@
 
 			<div class="row g-3 align-items-center coontact_div_row first_contact">
 				<div class="col-md-6">
-					<label for="Phone" class="form-label">Phone Number *</label>
+					<label for="Phone" class="form-label">Phone Number </label>
 					<input type="text" class="form-control hospital_mobile" id="mobile" name="hospital_mobile[]"
-						placeholder="Enter Phone Number" required>
+						placeholder="Enter Phone Number">
 				</div>
 				<div class="col-md-6">
-					<label for="email" class="form-label">Email *</label>
+					<label for="email" class="form-label">Email </label>
 					<input type="email" class="form-control hospital_email" id="email" name="hospital_email[]"
 						placeholder="Enter Email">
 					<input type="hidden" name="contacts_id[]" value="blank">

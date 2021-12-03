@@ -11,7 +11,7 @@ urlpatterns = [
     path('blog_details/<pk>',views.BlogDetailsView.as_view(),name="blog_details"),
    
     path('bookappoinment/<id>/<did>', views.DoctorsBookAppoinmentViews.as_view(), name="bookappoinment"),
-
+    path('checkout', views.CheckoutViews, name="checkout"),
     #extra for json
     # path('scheduledatechange', views.ScheduleDateChange, name="scheduledatechange"),
 ]
