@@ -134,7 +134,7 @@ Booking {% endblock title %}
 								<form method="post" id="newdate">
 									{% csrf_token %}
 									<h4> Select Booking Date</h4>
-									<input type="date" class="form-control scheduleDate" name="scheduleDate" id="scheduleDate" value={{date}} min="2021-05-21" required>
+									<input type="date" class="form-control scheduleDate" name="scheduleDate" id="scheduleDate" value={{date}} min="2021-05-21" required >
 									<input type="hidden" value="{{doctor.id}}" name="doc_id">
 								
 								</form>
@@ -168,11 +168,9 @@ Booking {% endblock title %}
 											
 												<div class="form-check-inline visits me-0">
 													<label class="visit-btns">
-														<input type="radio" class="form-check-input timeslot" name="timeslot" value="{{doctorschedule.id}}" {% if doctorschedule.is_booked %}disabled{% endif %} id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')" required>
-														<input type="hidden" value="{{date}}" name="date">
-														<input type="hidden" value="{{doctor.id}}" name="doctor_id">
-														<input type="hidden" value="hospital" name="where">
-														<input type="hidden" value="" name="booking_type">
+														<input type="radio" class="form-check-input timeslot"  name="timeslot" value="{{doctorschedule.id}}" {% if doctorschedule.is_booked %}disabled{% endif %} id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')" required>
+														
+														
 														<span class="visit-rsn" data-bs-toggle="tooltip" title="{% if doctorschedule.is_booked %}Booked{% else %} {{doctorschedule}}{% endif %}">{{doctorschedule}}
 															</span>
 													</label>
@@ -194,11 +192,15 @@ Booking {% endblock title %}
 							<div class="col-12 col-sm-8 col-md-6 text-sm-end">
 								<label class="form-label">Booking Type</label>
 								<select class="form-select" aria-label="Default select example" id="booking_type" name="booking_type" required>
+									<option value="">Select</option>
 									<option value="EMERGENCY">EMERGENCY</option>
 									<option value="OPD">OPD</option>
 									<option value="ONLINE">ONLINE</option>
 									<option value="HOMEVISIT">HOME VISIT</option>
 								</select>
+								<input type="hidden" value="{{date}}" name="date" id="date">
+								<input type="hidden" value="{{doctor.id}}" name="doctor_id">
+								<input type="hidden" value="hospital" name="where">
 							</div>
 						</div>
 					
@@ -233,11 +235,40 @@ Booking {% endblock title %}
 	</script>
 <script>
 function myFunction() {
-	alert("Are you sure you want to book this slot");
-	document.getElementById("bookingform").submit();
+	var date = document.getElementById("scheduleDate").value;
+	console.log(date)
+	if(date != null && date != "" && date != undefined){
+		var timeslot = $("input[type='radio'][name='timeslot']:checked").val();
+		console.log(timeslot)
+		var booking_type = document.getElementById("booking_type").value;
+		console.log(booking_type)
+		if(timeslot != undefined && booking_type != undefined && timeslot != "" && booking_type != ""){
+			alert("Your slot booking is in proceed waitfor moment..");
+			return false;
+		}else{
+			alert("Missing booking type or booking timeslot...");
+			return false;
+		}
+	}else{
+		alert("Select date first!");
+		return false;
+	}
+	
+	
+	
 	//window.location.replace("{% url 'checkout' %}");
 }
 </script>
+
+<script>
+    function IsEmpty() {
+
+      if (document.form.question.value == "") {
+        alert("empty");
+      }
+      return;
+    }
+  </script>
 
 {% endblock custom_js %}
 

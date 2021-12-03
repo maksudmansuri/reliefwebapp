@@ -76,8 +76,6 @@ class HospitalDetailsViews(DetailView):
         hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
         medias = HospitalMedias.objects.filter(is_active=True,hospital=hospital)  
         doctors = HospitalStaffDoctors.objects.filter(is_active=True,hospital=hospital)
-        amount = ServiceAndCharges.objects.get(user=hospital.admin,service_name = "OPD")
-        hospitalservice = ServiceAndCharges.objects.filter(user=hospital.admin)
         # hospitalstaffdoctor_list = []
         # for hospitalstaffdoctor in doctors:
         #     hospitalstaffdoctorschedual = HospitalStaffDoctorSchedual.objects.filter(hospitalstaffdoctor=hospitalstaffdoctor)
@@ -88,7 +86,7 @@ class HospitalDetailsViews(DetailView):
         #             end_time = dcsh.end_time
         #         opd_time.append({'start_time':start_time,'end_time':end_time})
         #     hospitalstaffdoctor_list.append({'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalstaffdoctorschedual':hospitalstaffdoctorschedual})
-        param = {'hospital':hospital,'hospitalservice':hospitalservice,'medias':medias,'amount':amount,'doctors':doctors}  
+        param = {'hospital':hospital,'medias':medias,'doctors':doctors}  
         return render(request,"front/new_hospital_details.html",param)
 
 class DoctorsBookAppoinmentViews(View):
