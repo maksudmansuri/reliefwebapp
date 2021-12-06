@@ -60,7 +60,7 @@ class MediacalRecords(models.Model):
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
-         
+          
 class OrderBooking(models.Model):
     id                      =           models.AutoField(primary_key=True)
     order_id                =           models.UUIDField(default=uuid.uuid4, unique=True, editable=False,null=True, blank=True) 
@@ -97,6 +97,7 @@ class OrderBooking(models.Model):
     modified_date           =           models.DateField(blank=True,null=True)
 
     report                  =           models.FileField(max_length=100,blank=True,null=True,default="")#lab
+    services                =           models.ForeignKey(ServiceAndCharges, on_delete=models.CASCADE,null=True, blank=True)#lab
     
     invoice                 =           models.FileField(upload_to="booking/invoices",max_length=100,blank=True,null=True,default="")#for all hos,lab,pha
 

@@ -1,6 +1,6 @@
 {% extends './blank-page.html' %}
 {% load static %}
-{% block title %} Relief Pro - Search for Hospitals Online Booking | Emergency
+{% block title %} Relief Pro - Search for Doctor Online Consulting | Emergency
 Booking{% endblock title %}
 
 {% block custom_css %} 	
@@ -21,7 +21,7 @@ Booking{% endblock title %}
 								<li class="breadcrumb-item active" aria-current="page">Search</li>
 							</ol>
 						</nav>
-						<h2 class="breadcrumb-title">2245 matches found for : Dentist In Bangalore</h2>
+						<h2 class="breadcrumb-title">{{doctors_number}} matches found</h2>
 					</div>
 					<div class="col-md-4 col-12 d-md-block d-none">
 						<div class="sort-by">
@@ -127,17 +127,21 @@ Booking{% endblock title %}
 											<div class="doc-info-left">
 												<div class="doctor-img">
 													<a href="#">
-														<img src="{{hospital.hospital.admin.profile_pic}}" class="img-fluid"
+														<img src="{{hospital.doctor.profile_pic}}" class="img-fluid"
 															alt="User Image">
 													</a>
 												</div>
 												<div class="doc-info-cont">
-													<h4 class="doc-name"><a href="{% url 'hospital_details' hospital.hospital.id %}">{{hospital.hospital.hopital_name}}</a></h4>
+													<h4 class="doc-name"><a href="{% url 'bookappoinment' hospital.hospital.id hospital.doctor.id %}">Dr. {{hospital.doctor.fisrt_name}} {{hospital.doctor.last_name}}</a></h4>
+                                                    
+                                                    <p class="doc-speciality">{{hospital.hospital.hopital_name|upper}}</p>
+
+                                                    <p class="doc-department"><img src="{{hospital.doctor.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid" alt="Speciality">{{hospital.doctor.specialist|upper}}</p>
 													{% comment %} <p class="doc-speciality">{{hospital.hospital.specialist}}
 													</p> {% endcomment %}
 													<h5 class="doc-department"><img
 															src="{% static 'newstatic/assets/img/specialities/specialities-05.png' %}" class="img-fluid"
-															alt="Speciality">{{hospital.hospital.specialist}}</h5>
+															alt="Speciality">{{hospital.hospital.specialist|upper}}</h5>
 													<div class="rating">
 														<i class="fas fa-star filled"></i>
 														<i class="fas fa-star filled"></i>
@@ -147,26 +151,8 @@ Booking{% endblock title %}
 														<span class="d-inline-block average-rating">(17)</span>
 													</div>
 													<div class="clinic-details">
-														<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{hospital.hospital.city}},{{hospital.hospital.state}}</p>
-														<ul class="clinic-gallery">
-														{% for media in hospital.medias %}
-															{% if media.media_type == "1" %}
-															<li>
-																<a href="{{media.media_content}}"
-																	data-fancybox="gallery">
-																	<img src="{{media.media_content}}" alt="Feature">
-																</a>
-															</li>
-															{% comment %} {% elif media.media_type == "2" %}
-															<li>
-																<a href="{{media.media_content}}"
-																	data-fancybox="gallery">
-																	<video style="width:40px;height:30px;" controls src="{{media.media_content}}" alt="Feature">
-																</a>
-															</li>{% endcomment %}
-															{% endif %} 
-														{% endfor %}
-														</ul>
+														<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{hospital.doctor.city|upper}},{{hospital.doctor.state|upper}}</p>
+													
 													</div> 
 													{% comment %} <div class="clinic-services">
 														<span>Dental Fillings</span>
@@ -175,21 +161,40 @@ Booking{% endblock title %}
 												</div>
 											</div>
 											<div class="doc-info-right">
-												<div class="clini-infos">
-													<ul> 
-														<li title="rooms"><i class="fas fa-person-booth"></i>{{hospital.rooms}} Room</li>
-														<li title="ambulances"><i class="fas fa-ambulance"></i>{{hospital.ambulances}} Ambulance</li>
-														<li><i class="fas fa-map-marker-alt"></i> {{hospital.hospital.city}},{{hospital.hospital.state}}</li>
-														{% comment %} <li><i class="far fa-money-bill-alt"></i>{{hospital.room_min_price}} to {{hospital.room_max_price}}<i
-																class="fas fa-info-circle" data-bs-toggle="tooltip"
-																title="Lorem Ipsum"></i> </li> {% endcomment %}
-													</ul>
-												</div> 
-												<div class="clinic-booking">
-													<a class="view-pro-btn" href="{% url 'hospital_details' hospital.hospital.id %}">View Profile</a>
-													{% comment %} <a class="apt-btn" href="booking.html">Book Appointment</a> {% endcomment %}
+                                                <div class="clini-infos">
+                                                    <ul> 
+                                                        <li><i class="fas fa-first-aid"></i>OPD &#8377;{{hospital.opd_charges}} </li>
+                                                        <li><i class="fas fa-first-aid"></i>Emergency {% if hospital.emergency_charges %}&#8377;{{hospital.emergency_charges}}{% else %} NA {% endif %} </li>
+                                                        <li><i class="fas fa-home"></i>Home Visit  {% if hospital.home_charges %} &#8377;{{hospital.home_charges}}{% else %} NA {% endif %}  </li>
+                                                        <li><i class="fas fa-video"></i>Online {% if hospital.online_charges %} &#8377;{{hospital.online_charges}}{% else %} NA {% endif %}</li>                                                        
+                                                    </ul>
+                                                </div>
+                                                <div class="doctor-action">
+													{% if hospital.emergency_charges %} 
+                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+                                                        data-bs-target="#voice_call">
+														<i class="fas fa-first-aid"></i>
+                                                       
+                                                    </a>
+													{% endif %}
+													{% if hospital.home_charges %} 
+                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+                                                        data-bs-target="#voice_call">
+														<i class="fas fa-home"></i>
+                                                    </a>
+													{% endif %}
+													{% if hospital.is_virtual_available %}
+                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+                                                        data-bs-target="#video_call">
+                                                        <i class="fas fa-video"></i>
+                                                    </a>
+													{% endif %}
+
 												</div>
-											</div>
+                                                <div class="clinic-booking">
+                                                    <a class="apt-btn" href="{% url 'bookappoinment' hospital.hospital.id hospital.doctor.id %}">Book Appointment</a>
+                                                </div>
+                                            </div>
 										</div>
 									</div>
 								</div>

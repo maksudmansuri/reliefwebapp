@@ -1,23 +1,23 @@
-{% extends 'lab/base.html' %}
+{% extends 'lab/blank-page.html' %}
 {% load static %}
-{% block title %} :: I-Health:: Laboratory Tests{% endblock title %}
+{% block title %} Relief Pro : List of Lab Test {% endblock title %}
 
 {% block custom_css %}{% endblock custom_css %}
-
+  
 {% block content %}
-
+ 
 <!-- Body: Body -->
-<div class="body d-flex py-lg-3 py-md-2">
-    <div class="container-xxl">
+
+<div class="col-md-7 col-lg-8 col-xl-9">
         <div class="row align-items-center">
             <div class="border-0 mb-4">
                 <div
                     class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
                     <h3 class="fw-bold mb-0">All Tests and Charges</h3>
                     <div class="col-auto d-flex w-sm-100">
-                        <button type="button" class="btn btn-{% if home != ""%}secondary {% else %} primary{% endif %} btn-set-task w-sm-100 " data-bs-toggle="modal" data-bs-target="#{% if home != ""%}homechargeupdate{% else %}homecharge{% endif %}"><i class="icofont-plus-circle me-2 fs-6"></i>{% if home != ""%}Rs. {{home.charges}} Update{% else %} Add {% endif %} Home Visit Charges</button>
+                        <button type="button" class="btn btn-{% if home != ""%}secondary {% else %} primary{% endif %} btn-set-task w-sm-100 " data-bs-toggle="modal" data-bs-target="#{% if home != ""%}homechargeupdate{% else %}homecharge{% endif %}">Home Visit Charges</i>{% if home != ""%} Rs. {{home.charges}} <i class="far fa-edit"></i>{% else %} <i class="fas fa-plus"></i> {% endif %} </button>
                         <button type="button" class="btn btn-primary btn-set-task w-sm-100 " data-bs-toggle="modal" style="margin-left: 20px;"
-                            data-bs-target="#depadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add Tests</button>
+                            data-bs-target="#depadd"><i class="far fa-add-alt"></i>Add Tests</button>
                         {% comment %} <button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;"
                             data-bs-toggle="modal" data-bs-target="#priceadd"><i
                                 class="icofont-plus-circle me-2 fs-6"></i>Add Price</button> {% endcomment %}
@@ -47,7 +47,7 @@
                                     </td>
                                     <td>
 
-                                        <span class="fw-bold ms-1">{{service.service_name}}</span>
+                                        <span class="fw-bold ms-1">{{service.service_name|upper}}</span>
                                     </td>
                                     <td>
                                        Price is Rs. {{service.service_charge}}
@@ -56,12 +56,10 @@
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic outlined example">
                                             <button type="button" class="btn btn-outline-secondary"
-                                                data-bs-toggle="modal" data-bs-target="#depedit{{service.id}}"><i
-                                                    class="icofont-edit text-success"></i></button>
+                                                data-bs-toggle="modal" data-bs-target="#depedit{{service.id}}"><i class="far fa-edit"></i></button>
 
-                                            <a type="button" class="btn btn-outline-secondary deleterow" id="deleteroom"
-                                                href="{% url 'delete_lab_services' service.id %}"><i
-                                                    class="icofont-ui-delete text-danger"></i><a>
+                                            <a type="button" class="btn btn-outline-danger deleterow" id="deleteroom"
+                                                href="{% url 'delete_lab_services' service.id %}"><i class="far fa-trash-alt"></i><a>
 
                                         </div>
                                     </td>
@@ -76,7 +74,7 @@
                 </div>
             </div>
         </div><!-- Row End -->
-    </div>
+    
 </div>
 
 {% endblock content %}
@@ -97,7 +95,7 @@
                         <div class="row g-3 mb-3">
                             <div class="col-sm-12">
                                 <label for="depone" class="form-label">Home Charges *</label>
-                                <input type="text" class="form-control" id="service_charge" name="service_charge" requried>
+                                <input type="text" class="form-control" id="service_charge1" name="service_charge" requried>
                                 <input type="hidden" id="lab_id" name="lab_id" value="{{lab.id}}">
                             </div>
                         </div>
@@ -188,7 +186,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label for="depone" class="form-label">Service Charges *</label>
-                                <input type="text" class="form-control" id="home_service" name="home_service" requried>
+                                <input type="text" class="form-control" id="home_service4" name="service_charge" requried>
                             </div>
                         </div>
                     </div>
@@ -244,7 +242,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label for="depone" class="form-label">Service Charges</label>
-                                <input type="text" class="form-control" id="service_charge" name="service_charge" value="{{service.service_charge}}">
+                                <input type="text" class="form-control" id="service_charge2" name="service_charge" value="{{service.service_charge}}">
                             </div>
                             <input type="hidden" value="{{service.id}}" name="id">
                         </div>

@@ -1,6 +1,6 @@
 {% extends './blank-page.html' %}
 {% load static %}
-{% block title %} Relief Pro - Search for Hospitals Online Booking | Emergency
+{% block title %} Relief Pro - Search for Doctor Online Consulting | Emergency
 Booking{% endblock title %}
 
 {% block custom_css %} 	
@@ -21,7 +21,7 @@ Booking{% endblock title %}
 								<li class="breadcrumb-item active" aria-current="page">Search</li>
 							</ol>
 						</nav>
-						<h2 class="breadcrumb-title">2245 matches found for : Dentist In Bangalore</h2>
+						<h2 class="breadcrumb-title">{{doctors_number}} matches found</h2>
 					</div>
 					<div class="col-md-4 col-12 d-md-block d-none">
 						<div class="sort-by">
@@ -120,53 +120,32 @@ Booking{% endblock title %}
 
 					</div>
 					<div class="col-md-12 col-lg-8 col-xl-9">
-						{% for hospital in object_list %}
+						{% for ambulacnce in object_list %}
 								<div class="card product-box" >
 									<div class="card-body">
 										<div class="doctor-widget">
 											<div class="doc-info-left">
 												<div class="doctor-img">
 													<a href="#">
-														<img src="{{hospital.hospital.admin.profile_pic}}" class="img-fluid"
+														<img src="{{ambulacnce.profile_pic}}" class="img-fluid"
 															alt="User Image">
 													</a>
 												</div>
 												<div class="doc-info-cont">
-													<h4 class="doc-name"><a href="{% url 'hospital_details' hospital.hospital.id %}">{{hospital.hospital.hopital_name}}</a></h4>
+													<h4 class="doc-name">{{ambulacnce.vehicle_type|upper}}</h4>
+                                                    
+                                                    <p class="doc-speciality">{{ambulacnce.hospital.hopital_name|upper}}</p>
+
+                                                    <p class="doc-department"><img src="{{ambulacnce.hospital.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid" alt="Speciality">{{ambulacnce.hospital.hopital_name|upper}}</p>
+                                                    {% if ambulacnce.doctor %}
+                                                        <p class="doc-department"><img src="{{ambulacnce.doctor.doctor.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid" alt="Speciality"> Dr. {{ambulacnce.doctor.doctor.fisrt_name}} {{ambulacnce.doctor.doctor.last_name}}</p>
+                                                    {% endif %}
 													{% comment %} <p class="doc-speciality">{{hospital.hospital.specialist}}
-													</p> {% endcomment %}
-													<h5 class="doc-department"><img
-															src="{% static 'newstatic/assets/img/specialities/specialities-05.png' %}" class="img-fluid"
-															alt="Speciality">{{hospital.hospital.specialist}}</h5>
-													<div class="rating">
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star"></i>
-														<span class="d-inline-block average-rating">(17)</span>
-													</div>
+													</p> {% endcomment %}																								
 													<div class="clinic-details">
-														<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{hospital.hospital.city}},{{hospital.hospital.state}}</p>
-														<ul class="clinic-gallery">
-														{% for media in hospital.medias %}
-															{% if media.media_type == "1" %}
-															<li>
-																<a href="{{media.media_content}}"
-																	data-fancybox="gallery">
-																	<img src="{{media.media_content}}" alt="Feature">
-																</a>
-															</li>
-															{% comment %} {% elif media.media_type == "2" %}
-															<li>
-																<a href="{{media.media_content}}"
-																	data-fancybox="gallery">
-																	<video style="width:40px;height:30px;" controls src="{{media.media_content}}" alt="Feature">
-																</a>
-															</li>{% endcomment %}
-															{% endif %} 
-														{% endfor %}
-														</ul>
+														<p class="doc-location"><i class="fas fa-ambulacnce"></i><b> Driver Name </b> {{ambulacnce.drive_name|upper}}</p>
+														<p class="doc-location"><i class="fas fa-ambulacnce"></i><b> Vehical Number </b> {{ambulacnce.vehicle_number|upper}}</p>
+													
 													</div> 
 													{% comment %} <div class="clinic-services">
 														<span>Dental Fillings</span>
@@ -175,21 +154,39 @@ Booking{% endblock title %}
 												</div>
 											</div>
 											<div class="doc-info-right">
-												<div class="clini-infos">
-													<ul> 
-														<li title="rooms"><i class="fas fa-person-booth"></i>{{hospital.rooms}} Room</li>
-														<li title="ambulances"><i class="fas fa-ambulance"></i>{{hospital.ambulances}} Ambulance</li>
-														<li><i class="fas fa-map-marker-alt"></i> {{hospital.hospital.city}},{{hospital.hospital.state}}</li>
-														{% comment %} <li><i class="far fa-money-bill-alt"></i>{{hospital.room_min_price}} to {{hospital.room_max_price}}<i
-																class="fas fa-info-circle" data-bs-toggle="tooltip"
-																title="Lorem Ipsum"></i> </li> {% endcomment %}
-													</ul>
-												</div> 
-												<div class="clinic-booking">
-													<a class="view-pro-btn" href="{% url 'hospital_details' hospital.hospital.id %}">View Profile</a>
-													{% comment %} <a class="apt-btn" href="booking.html">Book Appointment</a> {% endcomment %}
+                                                <div class="clini-infos">
+                                                    <ul> 
+                                                        <li><i class="fas fa-first-aid"></i>Charge &#8377;{{ambulacnce.charge}} </li>
+                                                        <li><i class="fas fa-first-aid"></i><b>Mobile</b> {% if ambulacnce.drive_number %}{{ambulacnce.drive_number}}{% else %} NA {% endif %} </li>                                                              
+                                                                                                 
+                                                    </ul>
+                                                </div>
+                                                <div class="doctor-action">
+													{% if hospital.emergency_charges %} 
+                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+                                                        data-bs-target="#voice_call">
+														<i class="fas fa-first-aid"></i>
+                                                       
+                                                    </a>
+													{% endif %}
+													{% if hospital.home_charges %} 
+                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+                                                        data-bs-target="#voice_call">
+														<i class="fas fa-home"></i>
+                                                    </a>
+													{% endif %}
+													{% if hospital.is_virtual_available %}
+                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+                                                        data-bs-target="#video_call">
+                                                        <i class="fas fa-video"></i>
+                                                    </a>
+													{% endif %}
+
 												</div>
-											</div>
+                                                <div class="clinic-booking">
+                                                    <a class="apt-btn"><i class="fas fa-phone-alt" >  {{ambulacnce.drive_number}}</i> </a>
+                                                </div>
+                                            </div>
 										</div>
 									</div>
 								</div>

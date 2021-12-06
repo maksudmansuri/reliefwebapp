@@ -39,34 +39,8 @@
 	<div class="main-wrapper">
 		
 	 
-		{% if request.user.patients %}
-			{% include 'patient/newnavbar.html' %}
-		{% endif %}
-		{% if request.user.hospitals %}
-			{% include 'hospital/newnavbar.html' %}
-		{% endif %}
-		{% if request.user.labs %}
-			{% include 'lab/newnavbar.html' %}
-		{% endif %}
-		{% if request.user.patients %}
-			{% include 'patient/newnavbar.html' %}
-		{% endif %}
-		<div class="breadcrumb-bar">
-			<div class="container-fluid">
-				<div class="row align-items-center">
-					<div class="col-md-12 col-12">
-						<nav aria-label="breadcrumb" class="page-breadcrumb">
-							<ol class="breadcrumb">
-								<li class="breadcrumb-item"><a href="{% url 'hospital_dashboard' %}">Home</a></li>
-								<li class="breadcrumb-item active" aria-current="page">{% block breadcrumb1 %}Password{% endblock breadcrumb1 %}</li>
-							</ol>
-						</nav>
-						<h2 class="breadcrumb-title">{% block pageheading %}Password Change Page{% endblock pageheading %}</h2>
-					</div>
-				</div>
-			</div>
-		</div>
-
+		{% include 'lab/newnavbar.html' %}
+		{% include 'lab/newbreadcrumb.html' %}
 		
    	<div class="content">
 			<div class="container-fluid">
@@ -91,19 +65,8 @@
 				</div>
 				<div class="row">
 					<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
-						{% if request.user.pharmacy %}
-						{% include 'pharmacy/newsidebar.html' %}
-						{% endif %}
-						{% if request.user.hospitals %}
-						{% include 'hospital/newsidebar.html' %}
-						{% endif %}
-						{% if request.user.labs %}
-							{% include 'lab/newsidebar.html' %}
-						{% endif %}
-						{% if request.user.patients %}
-						{% include 'patient/newsidebar.html' %}
-						{% endif %}
-					
+
+					{% include 'lab/newsidebar.html' %}
                     </div>
 				
             {% block content %}

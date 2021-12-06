@@ -1548,7 +1548,7 @@ class DoctorScheduleCreateView(SuccessMessageMixin,CreateView):
             doctorschedule.save()
         messages.add_message(request,messages.SUCCESS,"Suucessfully Created")
         return HttpResponseRedirect(reverse("manage_doctorschedule",kwargs={'id':doctor.id}))
-
+ 
 def deleteTimeSlot(request,id,did):
     doctor = get_object_or_404(HospitalStaffDoctors,id=did)
     date1 = DoctorSchedule.objects.get(doctor=doctor,id=id)

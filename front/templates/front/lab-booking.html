@@ -29,113 +29,102 @@ Booking {% endblock title %}
 				<div class="row">
 					<div class="col-12">
 						<div class="card">
-							<div class="card-body">
-								<div class="doctor-widget">
-									<div class="doc-info-left">
-										<div class="doctor-img">
-											<img src="{{hospital.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
-												alt="User Image">
-										</div>
-										<div class="doc-info-cont">
-											<h4 class="doc-name">{{hospital.hopital_name}}</h4>
-											<p class="doc-speciality">{{hospital.specialist}}</p>
-											<p class="doc-department"><img src="{{hospital.specialist.hover_icon}}"
-													class="img-fluid" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Speciality">Dentist</p>
-											<div class="rating">
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star"></i>
-												<span class="d-inline-block average-rating">(35)</span>
-											</div>
-											<div class="clinic-details">
-												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{hospital.city}}, {{hospital.state}} - <a
-														href="javascript:void(0);">Get Directions</a></p>
-												<ul class="clinic-gallery">
-												{% for media in medias %}
-												{% if media.media_type == "1" %}
-													<li>
-														<a href="{{media.media_content}}" data-fancybox="gallery">
-															<img src="{{media.media_content}}" alt="Feature">
-														</a>
-													</li>
-												{% endif %}
-												{% endfor %}
-												</ul>
-											</div>
-											{% comment %} <div class="clinic-services">
-												<span>Dental Fillings</span>
-												<span>Teeth Whitneing</span>
-											</div> {% endcomment %}
-										</div>
-									</div>
-									<div class="doc-info-right">
-										{% comment %} <div class="clini-infos">
-											<ul>
-												{% comment %} <li><i class="far fa-thumbs-up"></i> 99%</li>
-												<li><i class="far fa-comment"></i> 35 Feedback</li>
-												<li><i class="fas fa-map-marker-alt"></i> Newyork, USA</li> 
-												<li><i class="far fa-money-bill-alt"></i> &#8377;{{amount.service_charge}} </li>
-											</ul>
-										</div> 
-										{% comment %} <div class="doctor-action">
-											<a href="javascript:void(0)" class="btn btn-white fav-btn">
-												<i class="far fa-bookmark"></i>
-											</a>
-											<a href="chat.html" class="btn btn-white msg-btn">
-												<i class="far fa-comment-alt"></i>
-											</a>
-											<a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
-												data-bs-target="#voice_call">
-												<i class="fas fa-phone"></i>
-											</a>
-											<a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
-												data-bs-target="#video_call">
-												<i class="fas fa-video"></i>
-											</a>
-										</div> {% endcomment %}
-										{% comment %} <div class="clinic-booking">
-											<a class="apt-btn" href="booking.html">Book Appointment</a>
-										</div> {% endcomment %}
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card">
-							<div class="card-body">
-								
-								<div class="booking-doc-info">
-									<a href="#" class="booking-doc-img">
-										<img src="{{doctor.doctor.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
-									</a>
-									<div class="booking-info">
-										<h4><a href="#">Dr. {{doctor.doctor.fisrt_name}} {{doctor.doctor.last_name}}</a></h4>
-				
-										<p class="text-muted mb-0"><i class="far fa-id-card"></i> {{doctor.doctor.specialist}}
-										<p class="text-muted mb-0"><i class="fas fa-map-marker-alt"></i> {{doctor.doctor.city}} {{doctor.doctor.state}}
-										</p>
-									</div>
-									
-								</div>
-							</div>
-						</div>
-						<div class="row">
+                            <div class="card-body">
+                                <div class="doctor-widget">
+                                    <div class="doc-info-left">
+                                        <div class="doctor-img">
+                                            <img src="{{lab.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
+                                                alt="User Image">
+                                        </div>
+                                        <div class="doc-info-cont">
+                                            <h4 class="doc-name">{{lab.lab_name}}</h4>
+                                            {% comment %} <p class="doc-speciality">{{lab.specialist}}</p>
+                                            <p class="doc-department"><img src="{{lab.specialist.hover_icon}}" 
+                                                    class="img-fluid" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Speciality">Dentist</p>{% endcomment %}
+                                            <div class="rating">
+                                                <i class="fas fa-star filled"></i>
+                                                <i class="fas fa-star filled"></i>
+                                                <i class="fas fa-star filled"></i>
+                                                <i class="fas fa-star filled"></i>
+                                                <i class="fas fa-star"></i>
+                                                <span class="d-inline-block average-rating">(35)</span>
+                                            </div>
+                                            <div class="clinic-details">
+                                                <p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{lab.city}},{{lab.state}} - <a
+                                                        href="javascript:void(0);">Get Directions</a></p>
+                                                <ul class="clinic-gallery">
+                                                {% for media in medias %}
+                                                {% if media.media_type == "1" %}
+                                                    <li>
+                                                        <a href="{{media.media_content}}" data-fancybox="gallery">
+                                                            <img src="{{media.media_content}}" alt="Feature">
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                                {% endfor %}
+                                                </ul>
+                                            </div>
+                                            <div class="clinic-services">
+                                                {% for service in services %}
+                                                <span>{{service}}</span>
+                                                {% endfor %}
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="doc-info-right">
+                                        <div class="clini-infos">
+                                            <ul>
+                                                {% comment %} <li title="rooms"><i class="fas fa-person-booth"></i>{{T_rooms}} Room</li>
+                                                <li title="ambulances"><i class="fas fa-ambulance"></i>{{T_ambulances}} Ambulance</li>
+                                                <li><i class="fas fa-map-marker-alt"></i> {{hospital.city}},{{hospital.state}}</li> {% endcomment %}
+                                                
+                                            </ul>
+                                        </div>
+                                        {% comment %} <div class="doctor-action">
+                                            <a href="javascript:void(0)" class="btn btn-white fav-btn">
+                                                <i class="far fa-bookmark"></i>
+                                            </a>
+                                            <a href="chat.html" class="btn btn-white msg-btn">
+                                                <i class="far fa-comment-alt"></i>
+                                            </a>
+                                            <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+                                                data-bs-target="#voice_call">
+                                                <i class="fas fa-phone"></i>
+                                            </a>
+                                            <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+                                                data-bs-target="#video_call">
+                                                <i class="fas fa-video"></i>
+                                            </a>
+                                        </div> {% endcomment %}
+                                         
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+					
+						<div class="row"> 
 							<div class="col-12 col-sm-4 col-md-6">
-								<span></span>
-								{% if date %}
-								<h4 class="mb-1">Selected Date :- {{date}}</h4>
-								{% else %}
-									<h4 class="mb-1">Today's Date :- {% now "d M Y" %} </h4>
-									<p class="text-muted">{% now "D" %}</p>
-								{% endif %}
+								<div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Is it for some else ? <a href="#large_someone" data-bs-toggle="modal" class="btn btn-primary btn-sm" tabindex="0">Add New.</span></a>
+                                    </label>
+                                    </div>
+                                    <div>
+                                    <select class="form-select mb-3" aria-label="Default select example" id ="someone" name="someone" disabled ="disabled">
+                                        {% for someone in someones %}
+                                        <option value="{{someone.id}}" selected>{{someone}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    </div>
 							</div>
 							<div class="col-12 col-sm-8 col-md-6 mb-2">
 								<form method="post" id="newdate">
 									{% csrf_token %}
 									<h4> Select Booking Date</h4>
 									<input type="date" class="form-control scheduleDate" name="scheduleDate" id="scheduleDate" value={{date}} min="2021-05-21" required >
-									<input type="hidden" value="{{doctor.id}}" name="doc_id">
 								
 								</form>
 							</div>
@@ -189,43 +178,41 @@ Booking {% endblock title %}
 							</div>
 						
 						</div>
+                        <div class="row">
+							
+							<div class="col-6">
+                                <div class="about_div">
+                                    <div class="about_div_row first_about">
+                                    <select class="form-select mb-3" aria-label="Default select example" id ="serviceid" name="serviceid[]">
+                                        {% for service in services %}
+                                        <option value="{{service.id}}">{{service.service_name}} -> Rs  {{service.service_charge}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <button class="btn btn-primary btn-block add_about" type="button">ADD More Test</button>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <button class="btn btn-danger btn-block remove_about" type="button">REMOVE Test</button>
+                                    </div>
+                                </div>
+                            </div>
+							
+						</div>
+						
 						<div class="row">
 							
 							<div class="col-6">
-								<label class="form-label">Booking Type</label>
-								<select class="form-select" aria-label="Default select example" id="booking_type" name="booking_type" required>
-									<option value="">Select</option>
-									{% if doctor.emergency_charges %}
-									<option value="EMERGENCY">EMERGENCY</option>
-									{% endif %}
-									{% if doctor.opd_charges %}
-									<option value="OPD">OPD</option>
-									{% endif %}
-									{% if doctor.is_virtual_available %}
-									<option value="ONLINE">ONLINE</option>
-									{% endif %}
-									{% if doctor.home_charges %}
-									<option value="HOMEVISIT">HOME VISIT</option>
-									{% endif %}
-								</select>
+								
 								<input type="hidden" value="{{date}}" name="date" id="date">
-								<input type="hidden" value="{{doctor.id}}" name="doctor_id">
-								<input type="hidden" value="hospital" name="orderwhere">
+								<input type="hidden" value="lab" name="orderwhere">
 							</div>
 							<div class="col-6">
-								<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')">
-								<label class="form-check-label" for="flexCheckDefault">
-									Is it for some else ? <a href="#large_someone" data-bs-toggle="modal" class="btn btn-primary btn-sm" tabindex="0">Add New.</span></a>
-								</label>
-							</div>
-								<div>
-								<select class="form-select mb-3" aria-label="Default select example" id ="someone" name="someone" disabled ="disabled">
-									{% for someone in someones %}
-									<option value="{{someone.id}}" selected>{{someone}}</option>
-									{% endfor %}
-								</select>
-								</div>
+								
 							</div>
 							
 						</div>
@@ -517,5 +504,19 @@ Booking {% endblock title %}
         }
     }
 </script>
+<script>
+$(".add_about").click(function(){
+    var about_row=$(".first_about").clone();
+    about_row.removeClass("first_about");  
+    about_row.find(".about_title").val("");
+    $(".about_div").append(about_row);
+});
+$(".remove_about").click(function(){
+    if ($(".about_div").find(".about_div_row").length>1){
+        $(".about_div").children().last().remove();
+    }
+});
+</script>
+
 {% endblock custom_js %}
 

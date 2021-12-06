@@ -1,8 +1,8 @@
 
 from chat.models import Notification
 from patient.models import LabTest, Orders, Slot, phoneOPTforoders
-from lab.models import HomeVisitCharges, Medias
-from hospital.models import ServiceAndCharges
+from lab.models import HomeVisitCharges, LabSchedule, Medias
+from hospital.models import DoctorSchedule, ServiceAndCharges, TimeSlot
 from django.core.files.storage import FileSystemStorage
 from accounts.models import CustomUser, Labs, OPDTime
 from django.contrib.messages.views import SuccessMessageMixin
@@ -42,13 +42,12 @@ class LabUpdateViews(SuccessMessageMixin,UpdateView):
     def get(self, request, *args, **kwargs):
         # hospital = None
         # # contacts = None
-        # # insurances = None
+        # # insurances = None 
         try:
             lab = Labs.objects.get(admin=request.user)
-            opdtime=OPDTime.objects.get(user=request.user)
         except Exception as e:
             return HttpResponse(e)
-        param={'lab':lab,'opdtime':opdtime}
+        param={'lab':lab}
         return render(request,"lab/lab_update.html",param) 
     
     def post(self, request, *args, **kwargs):
@@ -81,36 +80,36 @@ class LabUpdateViews(SuccessMessageMixin,UpdateView):
 
         #Schedule for Labs OPD and Appointment
         
-        Sunday = request.POST.get("Sunday")
-        Monday = request.POST.get("Monday")
-        Tuesday = request.POST.get("Tuesday")
-        Wednesday = request.POST.get("Wednesday")
-        Thursday = request.POST.get("Thursday")
-        Friday = request.POST.get("Friday")
-        Saturday = request.POST.get("Saturday")
-        Sunday = request.POST.get("Sunday")
-        opening_time1 = request.POST.get("opening_time")
-        opening_time = datetime.strptime(opening_time1,"%H:%M").time()
-        close_time1 = request.POST.get("close_time")
-        close_time = datetime.strptime(close_time1,"%H:%M").time()
-        break_start_time1 = request.POST.get("break_start_time")
-        break_start_time = datetime.strptime(break_start_time1,"%H:%M").time()
-        break_end_time1 = request.POST.get("break_end_time")
-        break_end_time = datetime.strptime(break_end_time1,"%H:%M").time()
-        if Sunday is None and Monday is None and Tuesday is None and Wednesday is None and Thursday is None and Friday is None and Saturday is None:
-            messages.add_message(request,messages.ERROR,"At least select one day")
-            return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id}))
-        if opening_time >= close_time and break_start_time >= close_time and break_end_time >= close_time and opening_time >= break_start_time  and opening_time >= break_end_time and break_start_time >= break_end_time:
-            messages.add_message(request,messages.ERROR,"Time does not match kindly set Proper time ")
-            print(messages.error)
-            return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id})) 
+        # Sunday = request.POST.get("Sunday")
+        # Monday = request.POST.get("Monday")
+        # Tuesday = request.POST.get("Tuesday")
+        # Wednesday = request.POST.get("Wednesday")
+        # Thursday = request.POST.get("Thursday")
+        # Friday = request.POST.get("Friday")
+        # Saturday = request.POST.get("Saturday")
+        # Sunday = request.POST.get("Sunday")
+        # opening_time1 = request.POST.get("opening_time")
+        # opening_time = datetime.strptime(opening_time1,"%H:%M").time()
+        # close_time1 = request.POST.get("close_time")
+        # close_time = datetime.strptime(close_time1,"%H:%M").time()
+        # break_start_time1 = request.POST.get("break_start_time")
+        # break_start_time = datetime.strptime(break_start_time1,"%H:%M").time()
+        # break_end_time1 = request.POST.get("break_end_time")
+        # break_end_time = datetime.strptime(break_end_time1,"%H:%M").time()
+        # if Sunday is None and Monday is None and Tuesday is None and Wednesday is None and Thursday is None and Friday is None and Saturday is None:
+        #     messages.add_message(request,messages.ERROR,"At least select one day")
+        #     return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id}))
+        # if opening_time >= close_time and break_start_time >= close_time and break_end_time >= close_time and opening_time >= break_start_time  and opening_time >= break_end_time and break_start_time >= break_end_time:
+        #     messages.add_message(request,messages.ERROR,"Time does not match kindly set Proper time ")
+        #     print(messages.error)
+        #     return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id})) 
 
         print("we are indside a add hspitals")
         try:
-            opd = OPDTime.objects.get(user=request.user)
-            opd.delete()
-            opdtime= OPDTime(user=request.user,opening_time=opening_time,close_time=close_time,break_start_time=break_start_time,break_end_time=break_end_time,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,is_active=True)
-            opdtime.save()
+            # opd = OPDTime.objects.get(user=request.user)
+            # opd.delete()
+            # opdtime= OPDTime(user=request.user,opening_time=opening_time,close_time=close_time,break_start_time=break_start_time,break_end_time=break_end_time,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,is_active=True)
+            # opdtime.save()
             lab = Labs.objects.get(admin=request.user.id)
             lab.lab_name=lab_name
             lab.about=about
@@ -161,6 +160,67 @@ class LabUpdateViews(SuccessMessageMixin,UpdateView):
             
         return HttpResponseRedirect(reverse("lab_update"))
 
+"""
+Lab new slot booking
+"""
+
+class LabScheduleCreateView(SuccessMessageMixin,CreateView):
+    def get(self, request, *args, **kwargs):
+        lab = request.user.labs
+        dates = LabSchedule.objects.filter(lab=lab).values('scheduleDate','id')
+        schedule_dates ={item['scheduleDate'] for item in dates}
+        schedule_dates_list = []
+        for sch_Dat in schedule_dates:
+            scd_type = LabSchedule.objects.filter(scheduleDate=sch_Dat,lab=lab).first()
+            scd_type_all = LabSchedule.objects.filter(scheduleDate=sch_Dat,lab=lab)
+            schedule_dates_list.append({'scd_type':scd_type,'sch_Dat':sch_Dat,'scd_type_all':scd_type_all})
+            
+            sch_type = LabSchedule.objects.values('scheduleDate','id')
+        # print(schedule_dates_list)
+
+
+        schedule_dates = LabSchedule.objects.filter()
+        timeslots_15s = TimeSlot.objects.filter(schedule_type="15")
+        timeslots_30s = TimeSlot.objects.filter(schedule_type="30")
+        timeslots_45s = TimeSlot.objects.filter(schedule_type="45")
+        timeslots_60s = TimeSlot.objects.filter(schedule_type="60")
+
+        param = {'timeslots_15s':timeslots_15s,'timeslots_30s':timeslots_30s,'timeslots_45s':timeslots_45s,'timeslots_60s':timeslots_60s,'schedule_dates_list':schedule_dates_list}
+       
+        return render(request,'lab/view-lab-schedule.html',param)
+    
+    def post(self, request, *args, **kwargs):
+        timeslot_list = request.POST.getlist('timeslot[]')
+        print(timeslot_list)
+        scheduleDate = request.POST.get('scheduleDate')
+        print(scheduleDate)
+        lab = request.user.labs
+        labSchedules = LabSchedule.objects.filter(lab = lab)
+        for doctorschedule in labSchedules:
+            print(doctorschedule.scheduleDate)
+            print(scheduleDate)
+            if str(doctorschedule.scheduleDate) == str(scheduleDate):
+                messages.add_message(request,messages.ERROR,"Already Booked date please delete if you want to change")
+                return HttpResponseRedirect(reverse("manage_labschedule"))
+        is_active =True
+        for timeslot in timeslot_list:
+            timeslot_obj = get_object_or_404(TimeSlot,id=timeslot)
+            labschedule = LabSchedule(scheduleDate=scheduleDate,lab=lab,is_active=is_active,timeslot=timeslot_obj)
+            labschedule.save()
+        messages.add_message(request,messages.SUCCESS,"Suucessfully Created")
+        return HttpResponseRedirect(reverse("manage_labschedule"))
+
+def deleteTimeSlot(request,id):
+    lab = request.user.labs
+    date1 = LabSchedule.objects.get(lab=lab,id=id)
+    dates = LabSchedule.objects.filter(lab=lab,scheduleDate=date1.scheduleDate)
+    for date in dates:
+        date.delete()
+    messages.add_message(request,messages.SUCCESS,"Sucessfully Deleted")
+    return HttpResponseRedirect(reverse("manage_labschedule"))
+
+
+
 class ServicesViews(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):
         # try:
@@ -181,6 +241,7 @@ class ServicesViews(SuccessMessageMixin,CreateView):
             if request.method == "POST":
                 service_name=request.POST.get('service_name')
                 service_charge=request.POST.get('service_charge')
+                print(service_charge)
               
                 serviceandcharges = ServiceAndCharges(user=request.user,service_name=service_name,service_charge=service_charge,is_active=True)
                 serviceandcharges.save()
@@ -405,5 +466,5 @@ def UploadReportViews(request,id):
         messages.add_message(request,messages.SUCCESS,e)
         return HttpResponseRedirect(reverse("view_lab_appointment"))
 
-    
+
     

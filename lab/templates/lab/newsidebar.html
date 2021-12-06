@@ -1,0 +1,87 @@
+{% load static %}
+    <div class="profile-sidebar">
+        <div class="widget-profile pro-widget-content">
+            <div class="profile-info-widget">
+                <a href="#" class="booking-doc-img">
+                    <img src="{{request.user.profile_pic}}" alt="User Image" id="currentPhoto1" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+                </a>
+                <div class="profile-det-info">
+                    <h3>{{request.user.hospital.hospital_name}}</h3>
+                    <div class="patient-details">
+                        <h5 class="mb-0">{{request.user.hospital.hospital_name}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dashboard-widget">
+            <nav class="dashboard-menu">
+                <ul>
+                    {% url 'lab_home' as lab_home %}
+                    <li {% if request.path == lab_home %} class="active" {% endif %} >
+                        <a href="{% url 'lab_home' %}">
+                            <i class="fas fa-columns"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    {% comment %} <li>
+                        <a href="{% url 'hospital_dashboard' %}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Appointments</span>
+                        </a>
+                    </li> {% endcomment %}
+                    {% comment %} <li>
+                        <a href="{% url 'hospital_dashboard' %}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Departments</span>
+                        </a>
+                    </li> {% endcomment %}
+                    
+                    {% url 'add_lab_services' as add_lab_services %}
+                    <li {% if request.path == add_lab_services %} class="active" {% endif %} >
+                        <a href="{% url 'add_lab_services' %}">
+                            <i class="fas fa-vial"></i>
+                            <span>Lab Test</span>
+                        </a>
+                    </li>
+                    
+                 
+                    {% url 'manage_main_gallery' as manage_main_gallery %}
+                    <li {% if request.path == manage_main_gallery %} class="active" {% endif %} >
+                        <a href="{% url 'manage_main_gallery' %}">
+                            <i class="far fa-images"></i>
+                            <span>Gallery</span>
+                        </a>
+                    </li>
+                  
+                    {% url 'manage_labschedule' as manage_labschedule %}
+                    <li {% if request.path == manage_labschedule %} class="active" {% endif %} >
+                        <a href="{% url 'manage_labschedule' %}">
+                            <i class="fas fa-user-md"></i>
+                            <span>View Schedules</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-file-invoice"></i>
+                            <span>Invoices</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-star"></i>
+                            <span>Reviews</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-comments"></i>
+                            <span>Message</span>
+                            <small class="unread-msg">23</small>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>

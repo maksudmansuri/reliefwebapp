@@ -1,6 +1,6 @@
-{% extends 'lab/blank-page.html' %}
+{% extends 'pharmacy/blank-page.html' %}
 {% load static %}
-{% block title %} Relief Pro : List GAller {% endblock title %}
+{% block title %} Relief Pro : Gallery {% endblock title %}
 
 {% block custom_css %}{% endblock custom_css %}
  
@@ -103,7 +103,7 @@ $('#mediaform').submit(function(event){
     };
     $.ajax({
         type: 'POST',
-        url: "{% url 'manage_main_gallery' %}",
+        url: "{% url 'pharmacy_manage_gallery' %}",
         data: formData,
         encode: true 
 
@@ -130,7 +130,7 @@ $('#mediaform').submit(function(event){
                         //url: "{% url 'manage_gallery' %}",
                         //data: formData,
                         //encode: true 
-                        url:"{% url 'delete_main_gallery' %}",
+                        url:"{% url 'delete_pharma_gallery' %}",
                         method:"POST",
                         data:{
                             id,

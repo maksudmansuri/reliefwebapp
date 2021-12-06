@@ -6,13 +6,13 @@ from django.http.request import HttpRequest
 from pyotp.otp import OTP
 from accounts.views import send_otp
 from chat.models import Notification
-from lab.models import Medias
+from lab.models import LabSchedule, Medias
 from django.views.generic.base import View
 # from requests.models import Response
 from hospital.models import DoctorSchedule, HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, ServiceAndCharges
 from patient import models
 import patient
-from patient.models import Booking, ForSome, OrderBooking, Orders, LabTest, PicturesForMedicine, Temp, Slot, patientFile, phoneOPTforoders
+from patient.models import Booking, ForSome, NewLabTest, OrderBooking, Orders, LabTest, PicturesForMedicine, Temp, Slot, patientFile, phoneOPTforoders
 from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
@@ -830,28 +830,32 @@ Checkout page
 """
 def CheckoutViews(request):
     if request.method == "POST":
-        doctorid = request.POST.get('doctor_id')
-        hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
+        doctorid = request.POST.get('doctor_id')       
         timeslot = request.POST.get('timeslot')
+        serviceid_list = request.POST.getlist('serviceid[]')
         someone = request.POST.get('someone')       
-        date = request.POST.get('date')
-        doctorschedule = get_object_or_404(DoctorSchedule,id=timeslot,doctor=hospitalstaffdoctor)
+        date = request.POST.get('date')       
         where = request.POST.get('orderwhere')
         booking_type = request.POST.get('booking_type')
         now = datetime.now()
         now5 = now + timedelta(minutes=5)
         
         with transaction.atomic():
-            booking = OrderBooking(patient = request.user,applied_date=date,applied_time=doctorschedule.timeslot.schedule,is_applied=True,is_active=True,status="BOOKED")
+            booking = OrderBooking(patient = request.user,applied_date=date,is_applied=True,is_active=True,status="BOOKED")
             booking.reject_within_5__lt = now            
         booking.reject_within_5 = now5
+        booking.payment_status="INPROCESS"
         if someone:
             forsome = get_object_or_404(ForSome,id=someone)
             booking.for_whom=forsome
         if where == "hospital":
+            hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
+            doctorschedule = get_object_or_404(DoctorSchedule,id=timeslot,doctor=hospitalstaffdoctor)
+            doctorschedule.is_booked =True
+            doctorschedule.save()
+            booking.applied_time=doctorschedule.timeslot.schedule
             booking.hospitalstaffdoctor=hospitalstaffdoctor
             booking.HLP=hospitalstaffdoctor.hospital.admin
-            booking.payment_status="INPROCESS"
             booking.booking_for="H"
             booking.booking_type=booking_type           
             if booking_type == "EMERGENCY":
@@ -862,9 +866,23 @@ def CheckoutViews(request):
                 booking.amount=hospitalstaffdoctor.online_charges
             if booking_type == "HOMEVISIT":
                 booking.amount=hospitalstaffdoctor.home_charges
+        if where == "lab":
+            booking.booking_for="L"
+            lab = get_object_or_404(Labs,id=doctorid)
+            labschedule = get_object_or_404(LabSchedule,id=timeslot,lab=lab)
+            labschedule.is_booked =True
+            labschedule.save()
+            booking.applied_time=labschedule.timeslot.schedule
+            booking.HLP=lab.admin
+            booking.booking_type="TEST"
+            total = 0
+            for service in serviceid_list:
+                ser = get_object_or_404(ServiceAndCharges,id=service)
+                labtest = NewLabTest(booking=booking,service=ser,is_active=True)
+                total += ser.service_charge
+            booking.amount = total
         booking.save()
-        doctorschedule.is_booked =True
-        doctorschedule.save()
+        
         print(booking.reject_within_5__lt)
         print(booking.reject_within_5)
  

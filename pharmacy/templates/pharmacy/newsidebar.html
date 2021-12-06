@@ -1,0 +1,72 @@
+{% load static %}
+    <div class="profile-sidebar">
+        <div class="widget-profile pro-widget-content">
+            <div class="profile-info-widget">
+                <a href="#" class="booking-doc-img">
+                    <img src="{{request.user.profile_pic}}" alt="User Image" id="currentPhoto1" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+                </a>
+                <div class="profile-det-info">
+                    <h3>{{request.user.hospital.hospital_name}}</h3>
+                    <div class="patient-details">
+                        <h5 class="mb-0">{{request.user.hospital.hospital_name}}</h5>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <div class="dashboard-widget">
+            <nav class="dashboard-menu">
+                <ul> 
+                    {% url 'pharmacy_home' as pharmacy_home %}
+                    <li {% if request.path == pharmacy_home %} class="active" {% endif %} >
+                        <a href="{% url 'pharmacy_home' %}">
+                            <i class="fas fa-columns"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    {% comment %} <li>
+                        <a href="{% url 'hospital_dashboard' %}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Appointments</span>
+                        </a>
+                    </li> {% endcomment %}
+                    {% comment %} <li>
+                        <a href="{% url 'hospital_dashboard' %}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Departments</span>
+                        </a>
+                    </li> {% endcomment %}
+                    
+                   
+                    {% url 'pharmacy_manage_gallery' as pharmacy_manage_gallery %}
+                    <li {% if request.path == pharmacy_manage_gallery %} class="active" {% endif %} >
+                        <a href="{% url 'pharmacy_manage_gallery' %}">
+                            <i class="far fa-images"></i>
+                            <span>Gallery</span>
+                        </a>
+                    </li>
+                   
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-file-invoice"></i>
+                            <span>Invoices</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-star"></i>
+                            <span>Reviews</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-comments"></i>
+                            <span>Message</span>
+                            <small class="unread-msg">23</small>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>

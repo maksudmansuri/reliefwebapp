@@ -1,4 +1,4 @@
-
+ 
 {% extends 'front/blank-page.html' %}
 {% load static %}
 {% block title %} Relief Pro - Hospital Profile | Hospital,Labs and Pharmacy Online Booking | Emergency
@@ -34,14 +34,14 @@ Booking {% endblock title %}
 						<div class="doctor-widget">
 							<div class="doc-info-left">
 								<div class="doctor-img">
-									<img src="{{hospital.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
+									<img src="{{lab.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
 										alt="User Image">
 								</div>
 								<div class="doc-info-cont">
-									<h4 class="doc-name">{{hospital.hopital_name}}</h4>
-									<p class="doc-speciality">{{hospital.specialist}}</p>
-									<p class="doc-department"><img src="{{hospital.specialist.hover_icon}}"
-											class="img-fluid" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Speciality">Dentist</p>
+									<h4 class="doc-name">{{lab.lab_name}}</h4>
+									{% comment %} <p class="doc-speciality">{{lab.specialist}}</p>
+									<p class="doc-department"><img src="{{lab.specialist.hover_icon}}" 
+											class="img-fluid" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Speciality">Dentist</p>{% endcomment %}
 									<div class="rating">
 										<i class="fas fa-star filled"></i>
 										<i class="fas fa-star filled"></i>
@@ -51,7 +51,7 @@ Booking {% endblock title %}
 										<span class="d-inline-block average-rating">(35)</span>
 									</div>
 									<div class="clinic-details">
-										<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{hospital.city}}, {{hospital.state}} - <a
+										<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{lab.city}},{{lab.state}} - <a
 												href="javascript:void(0);">Get Directions</a></p>
 										<ul class="clinic-gallery">
                                         {% for media in medias %}
@@ -65,18 +65,20 @@ Booking {% endblock title %}
 										{% endfor %}
 										</ul>
 									</div>
-									{% comment %} <div class="clinic-services">
-										<span>Dental Fillings</span>
-										<span>Teeth Whitneing</span>
-									</div> {% endcomment %}
+									<div class="clinic-services">
+                                        {% for service in services %}
+                                        <span>{{service}}</span>
+                                        {% endfor %}
+                                        
+                                    </div>
 								</div>
 							</div>
 							<div class="doc-info-right">
 								<div class="clini-infos">
 									<ul>
-										<li title="rooms"><i class="fas fa-person-booth"></i>{{T_rooms}} Room</li>
+										{% comment %} <li title="rooms"><i class="fas fa-person-booth"></i>{{T_rooms}} Room</li>
 										<li title="ambulances"><i class="fas fa-ambulance"></i>{{T_ambulances}} Ambulance</li>
-										<li><i class="fas fa-map-marker-alt"></i> {{hospital.city}},{{hospital.state}}</li>
+										<li><i class="fas fa-map-marker-alt"></i> {{hospital.city}},{{hospital.state}}</li> {% endcomment %}
 										
 									</ul>
 								</div>
@@ -96,9 +98,9 @@ Booking {% endblock title %}
 										<i class="fas fa-video"></i>
 									</a>
 								</div> {% endcomment %}
-								{% comment %} <div class="clinic-booking">
-									<a class="apt-btn" href="booking.html">Book Appointment</a>
-								</div> {% endcomment %}
+								 <div class="clinic-booking">
+									<a class="apt-btn" href="{% url 'lab_bookappoinment' lab.id %}">Book Appointment</a>
+								</div> 
 							</div>
 						</div>
 					</div>
@@ -111,10 +113,7 @@ Booking {% endblock title %}
 						<nav class="user-tabs mb-4">
 							<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
 								<li class="nav-item">
-									<a class="nav-link" href="#doc_overview" data-bs-toggle="tab">Overview</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link active" href="#doctor_list" data-bs-toggle="tab">Doctors</a>
+									<a class="nav-link active" href="#doc_overview" data-bs-toggle="tab">Overview</a>
 								</li>
 								<li class="nav-item">
 									<a class="nav-link" href="#doc_reviews" data-bs-toggle="tab">Reviews</a>
@@ -129,39 +128,42 @@ Booking {% endblock title %}
 
 						<div class="tab-content pt-0">
 
-							<div role="tabpanel" id="doc_overview" class="tab-pane fade ">
+							<div role="tabpanel" id="doc_overview" class="tab-pane fade show active ">
 								<div class="row">
 									<div class="col-md-12 col-lg-9">
 
 										<div class="widget about-widget">
 											<h4 class="widget-title">About Me</h4>
-											<p>{{hospital.about}}</p>
+											<p>{{lab.about}}</p>
+										</div>
+										<div class="widget about-widget">
+											<h4 class="widget-title">Address</h4>
+											<p>{{lab.address}}, {{lab.city}}, {{lab.state}}, {{lab.pin_code}}</p>
 										</div>
 
-
+                                   
 										<div class="widget education-widget">
-											<h4 class="widget-title">Rooms</h4>
+											<h4 class="widget-title">Available Lab Test</h4>
 											<div class="experience-box">
 												<ul class="experience-list">
+                                                    {% for service in services %}
 													<li>
 														<div class="experience-user">
 															<div class="before-circle"></div>
 														</div>
 														<div class="experience-content">
 															<div class="timeline-content">
-																<a class="name">Total Rooms</a>															
-																<span class="time">{{T_rooms}}</span>
-																<a class="name">Available Rooms</a>
-																<span class="time">{{A_rooms}}</span>
+																<a class="name">{{service.service_name}}</a>															
+																<span class="time">{{service.service_charge}}</span>
 															</div>
 														</div>
 													</li>
-													
+													{% endfor %}
 												</ul>
 											</div>
 										</div>
 
-
+ {% comment %} 
 										<div class="widget experience-widget">
 											<h4 class="widget-title">Ambulances</h4>
 											<div class="experience-box">
@@ -183,7 +185,7 @@ Booking {% endblock title %}
 											</div>
 										</div>
 
-{% comment %} 
+                                  
 										<div class="widget awards-widget">
 											<h4 class="widget-title">Awards</h4>
 											<div class="experience-box">
@@ -266,8 +268,8 @@ Booking {% endblock title %}
 							</div>
 
 
-							<div role="tabpanel" id="doctor_list" class="tab-pane fade show active">
-                            {% for doctor in doctors %}
+						{% comment %}	<div role="tabpanel" id="doctor_list" class="tab-pane fade show active">
+                            {% for Service in services %}
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="doctor-widget">
@@ -408,7 +410,7 @@ Booking {% endblock title %}
 									</div>
 								</div> {% endcomment %}
 
-{% comment %} 
+                                {% comment %} 
 								<div class="location-list">
 									<div class="row">
 
@@ -493,9 +495,9 @@ Booking {% endblock title %}
 											</div>
 										</div>
 									</div>
-								</div> {% endcomment %}
+								</div> 
 
-							</div>
+							</div>{% endcomment %}
 
  
 							<div role="tabpanel" id="doc_reviews" class="tab-pane fade">

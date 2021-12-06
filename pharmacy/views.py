@@ -1,14 +1,15 @@
 from django.contrib.auth.models import User
 from chat.models import Notification
+from lab.models import Medias
 from patient.models import Orders, PicturesForMedicine, phoneOPTforoders
 from django.core.files.storage import FileSystemStorage
 import pharmacy
 from django.http.response import HttpResponse, HttpResponseRedirect
-from accounts.models import OPDTime, Pharmacy
+from accounts.models import CustomUser, OPDTime, Pharmacy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404, render
 from django.views.generic.base import View
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse
 from django.contrib import messages
@@ -291,8 +292,46 @@ def UpdloadInvoicePharmacy(request,id):
         messages.add_message(request,messages.SUCCESS,e)
         return HttpResponseRedirect(reverse("view_pharmacy_appointment"))
 
-class ViewImageViews(ListView):
-    pass
+
+class ManageMainGalleryView(SuccessMessageMixin,CreateView):
+    def get(self, request, *args, **kwargs):
+        try:
+            user= get_object_or_404(CustomUser,id=request.user.id)
+            medias = Medias.objects.filter(user=user)
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"user not available")
+            return HttpResponseRedirect(reverse("manage_main_gallery"))        
+        param={'medias':medias}
+        return render(request,"pharmacy/manage_main_gallery.html",param)        
+
+    def post(self, request, *args, **kwargs):
+        media_type_list = request.POST.get('media_type')        
+        media_content_list = request.FILES.getlist('media_content[]')        
+        media_desc_list = request.POST.get('media_desc') 
+        user= get_object_or_404(CustomUser,id=request.user.id)
+        
+        i=0
+        for media_content in media_content_list:
+            fs=FileSystemStorage()
+            filename=fs.save(media_content.name,media_content)
+            media_url=fs.url(filename)
+            hospital_media = Medias(user=user,media_type=media_type_list,media_desc=media_desc_list,media_content=media_url)
+            hospital_media.is_active=True
+            hospital_media.save() 
+            i=i+1  
+            print("Meida saved")      
+        return HttpResponseRedirect(reverse("pharmacy_manage_gallery"))
+
+def deleteMainGallery(request):
+    if request.method == "POST":
+        checked_list = request.POST.getlist("id[]")
+        print(checked_list)
+        for deletecheck in checked_list:
+            hospital_media = Medias.objects.get(id=deletecheck)
+            hospital_media.delete()
+        messages.add_message(request,messages.SUCCESS,"Successfully gellery Deleted")
+        return HttpResponseRedirect(reverse("pharmacy_manage_gallery"))
+
 
 def deleteServicesViews(request,id):
     booking = get_object_or_404(PicturesForMedicine,id=id)

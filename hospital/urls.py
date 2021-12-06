@@ -50,7 +50,7 @@ urlpatterns = [
     #deaprtment manage add update delete 
     path('manage_room',views.manageRoomclassView.as_view(),name="manage_room"),
     path('update_room/<id>',views.updateRoom,name="update_room"),
-   
+    
     #Ambulance manage add update delete 
     path('manage_ambulance',views.manageAmbulanceclassView.as_view(),name="manage_ambulance"), 
     path('update_ambulance',views.updateAmbulance,name="update_ambulance"),
