@@ -34,7 +34,7 @@ class ForSome(models.Model):
     zip_Code            =models.CharField(max_length=250,blank=True,null=True,default="")
     age                 =models.IntegerField(blank=True,null=True)
     phone               =models.CharField(max_length=250,blank=True,null=True,default="")
-    ID_proof            =models.FileField(upload_to="someone/ID/images/%Y/%m/%d/",blank=True,null=True,default="")
+    ID_proof            =models.FileField(upload_to="someone/ID/images",blank=True,null=True,default="")
     gender              =models.CharField(max_length=255,null=True,default="")
     add_notes           =models.CharField(max_length=5000,null=True,default="")
     bloodgroup          =models.CharField(max_length=255,null=True,default="")
@@ -63,7 +63,7 @@ class MediacalRecords(models.Model):
          
 class OrderBooking(models.Model):
     id                      =           models.AutoField(primary_key=True)
-    order_id                =           models.UUIDField(default=uuid.uuid4, editable=False,null=True, blank=True) 
+    order_id                =           models.UUIDField(default=uuid.uuid4, unique=True, editable=False,null=True, blank=True) 
     parent                  =           models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
     patient                 =           models.ForeignKey(CustomUser,related_name="patient", on_delete=models.CASCADE)
     for_whom                =           models.ForeignKey(ForSome, on_delete=models.CASCADE,null=True,blank=True)
@@ -88,7 +88,7 @@ class OrderBooking(models.Model):
     is_cancelled            =           models.BooleanField(default=False)
  
     reject_within_5         =           models.DateTimeField(default=datetime.datetime(1970,1,1),blank=True, null=True)
-
+ 
     status                  =           models.CharField(default="",blank=True,null=True,max_length=64)#BOOKED,OTP_SEND,OTP_VERIFIIED,TAKEN,cancelled_by_system,REJECTED,cancelled_by_user,report_uploaded,BILL_UPLOADED,PH_AMOUNT_PAID
     add_note                =           models.CharField(max_length=5000,blank=True,null=True,default="")
     is_active               =           models.BooleanField(default=False)
@@ -97,9 +97,11 @@ class OrderBooking(models.Model):
     modified_date           =           models.DateField(blank=True,null=True)
 
     report                  =           models.FileField(max_length=100,blank=True,null=True,default="")#lab
+    
+    invoice                 =           models.FileField(upload_to="booking/invoices",max_length=100,blank=True,null=True,default="")#for all hos,lab,pha
 
-    prescription            =           models.FileField(upload_to=None, max_length=256,default="",blank=True,null=True)#pharma
-    store_invoice           =           models.FileField(upload_to=None, max_length=256,default="",blank=True,null=True)#pharma
+    prescription            =           models.FileField(upload_to="booking/prescription", max_length=256,default="",blank=True,null=True)#pharma
+    store_invoice           =           models.FileField(upload_to="booking/store_invoice", max_length=256,default="",blank=True,null=True)#pharma
 
     amount                  =           models.FloatField(default=0,blank=True,null=True)
     # STATUS_TYPE_CHOICE      =           (("INPROCESS","INPROCESS"),("SUCCESS","SUCCESS"),("FAILED","FAILED"),("CANCELLED","CANCELLED"),(REFUNDPROCESS),("REFUNDED","REFUNDED"))
@@ -467,7 +469,7 @@ class patientFile(models.Model):
     patient                 =           models.ForeignKey(Patients, on_delete=models.CASCADE,null=True) #delete after not in use
     hospitaldoctors         =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE,null=True) #delete after not in use
     amount_paid             =           models.FloatField(default=0) #delete after not in use
-    file                    =           models.FileField(upload_to="patients/documents/fiel/%Y/%m/%d/",blank=True,null=True,default="")
+    file                    =           models.FileField(upload_to="patients/documents/file",blank=True,null=True,default="")
     # file_date               =           models.DateField(blank=True,null=True)
     # file_time               =           models.TimeField(blank=True,null=True)
     file_purpose            =           models.CharField(default="",blank=True,null=True,max_length=500)#delete after not in use

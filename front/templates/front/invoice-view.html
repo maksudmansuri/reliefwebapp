@@ -1,0 +1,174 @@
+{% extends 'front/blank-page.html' %}
+{% load mathfilters %}
+{% load static %}
+{% load mathfilters %}
+{% block title %} Relief Pro - Invoice for APT00{{booking.id}} | Hospital,Labs and Pharmacy Online Booking | Emergency
+Booking {% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block content %}
+
+		<div class="breadcrumb-bar">
+			<div class="container-fluid">
+				<div class="row align-items-center">
+					<div class="col-md-12 col-12">
+						<nav aria-label="breadcrumb" class="page-breadcrumb">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="{% url 'front_home' %}">Home</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Invoice View</li>
+							</ol>
+						</nav>
+						<h2 class="breadcrumb-title">Invoice View</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="content">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-8 offset-lg-2">
+						<div class="invoice-content">
+							<div class="invoice-item">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="invoice-logo">
+											<img src="{% static 'newstatic/assets/img/logo.png' %} " onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="logo">
+										</div>
+									</div>
+									<div class="col-md-6">
+										<p class="invoice-details">
+											<strong>Order:</strong> #APT00{{booking.id}} <br>
+											<strong>Issued:</strong> {{booking.created_at|date:'d/m/Y'}}
+										</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="invoice-item">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="invoice-info">
+											<strong class="customer-text">Invoice From</strong>
+											<p class="invoice-details invoice-details-two">
+												{% if booking.booking_for == "H" %}{{booking.HLP.hospitals.hopital_name}} <br>
+												
+												{{booking.HLP.hospitals.address1}}, {{booking.HLP.hospitals.address2}},<br>
+												{{booking.HLP.hospitals.city}}-{{booking.HLP.hospitals.pin_code}}, {{booking.HLP.hospitals.state}},{{booking.HLP.hospitals.country}} <br>{% endif %}
+											</p>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="invoice-info invoice-info2">
+											<strong class="customer-text">Invoice To</strong>
+											<p class="invoice-details">
+												{{booking.patient.name_title}} {{booking.patient.patients.fisrt_name}} {{booking.patient.patients.last_name}} <br>
+												{{booking.patient.patients.address}}, {{booking.patient.patients.city}}, <br>
+												{{booking.patient.patients.state}}, {{booking.patient.patients.zip_Code}}, {{booking.patient.patients.country}} <br>
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="invoice-item">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="invoice-info">
+											<strong class="customer-text">Payment Method</strong>
+											<p class="invoice-details invoice-details-two">
+												Debit Card <br>
+												{% comment %} XXXXXXXXXXXX-2541 <br>
+												HDFC Bank<br> {% endcomment %}
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="invoice-item invoice-table-wrap">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="table-responsive">
+											<table class="invoice-table table table-bordered">
+												<thead>
+													<tr>
+														<th>Description</th>
+														<th class="text-center">Date</th>
+														
+														<th class="text-end">Total</th>
+													</tr>
+												</thead>
+												<tbody>
+													{% if booking.booking_for == "H" %}
+													<tr>
+														<td>{{booking.booking_type}} BOOKING<p>
+															[With Dr. {{booking.hospitalstaffdoctor.doctor.fisrt_name}} {{booking.hospitalstaffdoctor.doctor.last_name}}]
+														</td>
+														<td class="text-center">{{booking.applied_date}}- {{booking.applied_time}}</td>
+														
+														{% comment %} <td class="text-center">$0</td> {% endcomment %}
+														<td class="text-end">&#x20B9;{{booking.amount}}</td>
+													</tr>
+													{% endif %}
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="col-md-6 col-xl-4 ms-auto">
+										<div class="table-responsive">
+											<table class="invoice-table-two table">
+												<tbody>
+													<tr>
+														<th>Subtotal:</th>
+														<td><span>&#x20B9;{{booking.amount}}</span></td>
+													</tr>
+													<tr>
+														<th>Booking Fee:</th>
+														<td><span>&#x20B9;{{booking.amount |mul:10|div:100}}</span></td>
+													</tr>
+													<tr>
+														<th>Total Amount:</th>
+														<td><span>&#x20B9;{{booking.amount |mul:110|div:100}}</span></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="other-info">
+								<h4>Other information</h4>
+								<p class="text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+									Vivamus sed dictum ligula, cursus blandit risus. Maecenas eget metus non tellus
+									dignissim aliquam ut a ex. Maecenas sed vehicula dui, ac suscipit lacus. Sed finibus
+									leo vitae lorem interdum, eu scelerisque tellus fermentum. Curabitur sit amet
+									lacinia lorem. Nullam finibus pellentesque libero.</p>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		{% endblock content %}
+
+
+
+		{% block modal_fade %}
+		
+		{% endblock modal_fade %}
+		
+		{% block custom_js %}
+		
+		
+		{% endblock custom_js %}
+		

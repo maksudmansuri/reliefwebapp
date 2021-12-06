@@ -130,7 +130,7 @@ Booking {% endblock title %}
 									<p class="text-muted">{% now "D" %}</p>
 								{% endif %}
 							</div>
-							<div class="col-12 col-sm-8 col-md-6 text-sm-end mb-2">
+							<div class="col-12 col-sm-8 col-md-6 mb-2">
 								<form method="post" id="newdate">
 									{% csrf_token %}
 									<h4> Select Booking Date</h4>
@@ -168,7 +168,7 @@ Booking {% endblock title %}
 											
 												<div class="form-check-inline visits me-0">
 													<label class="visit-btns">
-														<input type="radio" class="form-check-input timeslot"  name="timeslot" value="{{doctorschedule.id}}" {% if doctorschedule.is_booked %}disabled{% endif %} id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')" required>
+														<input type="radio" class="form-check-input timeslot"  name="timeslot" value="{{doctorschedule.id}}" {% if doctorschedule.is_booked %}disabled{% endif %} required>
 														
 														
 														<span class="visit-rsn" data-bs-toggle="tooltip" title="{% if doctorschedule.is_booked %}Booked{% else %} {{doctorschedule}}{% endif %}">{{doctorschedule}}
@@ -182,6 +182,8 @@ Booking {% endblock title %}
 											
 										
 									</div>
+									
+									
 								</div>
 								
 							</div>
@@ -189,7 +191,7 @@ Booking {% endblock title %}
 						</div>
 						<div class="row">
 							
-							<div class="col-12 col-sm-8 col-md-6 text-sm-end">
+							<div class="col-6">
 								<label class="form-label">Booking Type</label>
 								<select class="form-select" aria-label="Default select example" id="booking_type" name="booking_type" required>
 									<option value="">Select</option>
@@ -200,9 +202,26 @@ Booking {% endblock title %}
 								</select>
 								<input type="hidden" value="{{date}}" name="date" id="date">
 								<input type="hidden" value="{{doctor.id}}" name="doctor_id">
-								<input type="hidden" value="hospital" name="where">
+								<input type="hidden" value="hospital" name="orderwhere">
 							</div>
+							<div class="col-6">
+								<div class="form-check">
+								<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')">
+								<label class="form-check-label" for="flexCheckDefault">
+									Is it for some else ? <a href="#large_someone" data-bs-toggle="modal" class="btn btn-primary btn-sm" tabindex="0">Add New.</span></a>
+								</label>
+							</div>
+								<div>
+								<select class="form-select mb-3" aria-label="Default select example" id ="someone" name="someone" disabled ="disabled">
+									{% for someone in someones %}
+									<option value="{{someone.id}}" selected>{{someone}}</option>
+									{% endfor %}
+								</select>
+								</div>
+							</div>
+							
 						</div>
+						
 					
 						<div class="submit-section proceed-btn text-end">
 							<a type="submit" onclick="myFunction()" class="btn btn-primary submit-btn"  value="check" id="acceptbtn">Proceed to Pay</a>
@@ -216,6 +235,175 @@ Booking {% endblock title %}
 
 
 {% block modal_fade %}
+<div class="modal fade bd-example-modal-xl" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-modal="true" role="dialog" id="large_someone">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="myLargeModalLabel">Add Your Dependent</h4>
+				<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close" data-original-title="" title=""></button>
+			</div>
+			<div class="modal-body">
+				<div class="row mb-3">
+					<div class="col-sm-12">
+						<div class="card mb-3">
+							<div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+								<h6 class="mb-0 fw-bold ">Patients Basic Inforamtion</h6>
+							</div>
+							<div class="card-body">
+								<form method="post" id="hpatientadd" enctype="multipart/form-data" action = "{% url 'add_someone_as_patient' %}">
+									{% csrf_token %}
+									<div class="row g-3 align-items-center">
+										<div class="col-12 col-md-6">
+											<div class="form-group">
+												<div class="change-avatar media_div_row profile-info-widget ">
+													<div class="profile-img booking-doc-img" >
+														<img src="#" alt="User Image" class="img_preview" class="img_preview" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+													</div>
+													<div class="upload-img ">
+														<div class="change-photo-btn">
+															<span><i class="fa fa-upload"></i> Upload Photo *</span>
+															<input type="file" class="upload select_media" name="profile_pic" required> 
+														</div>
+														<small class="form-text text-muted">Allowed JPG, GIF or PNG. Max
+															size of 2MB</small>
+													</div>
+												</div>
+											</div>
+										</div>			
+						
+										<div class="col-md-6">
+											<label class="form-label">Title *</label>
+											<select class="form-select" aria-label="Default select example"
+												name="name_title" required>
+												<option {% if request.user.name_title == "Mr." %}selected{% endif %}
+													value="Mr."> Mr.</option>
+												<option {% if request.user.name_title == "Mrs." %}selected{% endif %}
+													value="Mrs."> Mrs.</option>
+												<option {% if request.user.name_title == "Miss" %}selected{% endif %}
+													value="Miss"> Miss</option>
+												<option {% if request.user.name_title == "Ms." %}selected{% endif %}
+													value="Ms."> Ms.</option>
+												<option {% if request.user.name_title == "Dr." %}selected{% endif %}
+													value="Dr."> Dr.</option>
+											</select>
+										</div>
+										<div class="col-md-6">
+											<label for="firstname" class="form-label">First Name *</label>
+											<input type="text" class="form-control" id="firstname" name="fisrt_name" required>
+											<input type="hidden" class="form-control" id="where" name="where" value="add">
+											<input type="hidden" class="form-control" id="id" name="id" value="{{hospital.id}}">
+											<input type="hidden" class="form-control" id="did" name="did" value="{{doctor.id}}">
+											<input type="hidden" class="form-control" id="page_name" name="page_name" value="BOOKING">
+										</div>
+										<div class="col-md-6">
+											<label for="lastname" class="form-label">Last Name *</label>
+											<input type="text" class="form-control" id="lastname" name="last_name" required>
+										</div>
+										<div class="col-md-6">
+											<label for="address" class="form-label">Address </label>
+											<input type="text" class="form-control" id="address" name="address">
+										</div>
+										<div class="col-md-6">
+											<label for="zip_Code" class="form-label">zip_Code </label>
+											<input type="text" class="form-control" id="zip_Code" name="zip_Code">
+										</div>
+										<div class="col-md-6">
+											<label for="city" class="form-label">City </label>
+											<input type="text" class="form-control" id="city" name="city">
+										</div>
+										<div class="col-md-6">
+											<label for="age" class="form-label">Age *</label>
+											<input type="text" class="form-control" id="dob" name="age" required>
+										</div>
+										<div class="col-md-6">
+											<label for="phonenumber" class="form-label">Phone Number *</label>
+											<input type="text" class="form-control" id="phone" name="phone" required>
+										</div>
+										<div class="col-md-6">
+											<label for="emailaddress" class="form-label">Email Address</label>
+											<input type="email" class="form-control" id="emailaddress" name="email">
+										</div>
+										<div class="col-md-6">
+											<label for="formFileMultiple" class="form-label">ID Proof Upload </label>
+											<input class="form-control" type="file" id="formFileMultiple"
+												name="ID_proof">
+										</div>
+										<div class="col-md-6">
+											<label class="form-label">Gender </label>
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-check">
+														<input class="form-check-input" type="radio" name="gender"
+															id="gender" value="Male" checked>
+														<label class="form-check-label" for="exampleRadios11">
+															Male
+														</label>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-check">
+														<input class="form-check-input" type="radio" name="gender"
+															id="gender" value="Female"> <label class="form-check-label"
+															for="exampleRadios22">
+														Female
+														</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<label  class="form-label">Blood Group *</label>
+											<select class="form-select" aria-label="Default select example" name="bloodgroup" required>
+												<option selected disabled>Blood Group</option>
+												<option {% if patient.bloodgroup == "A+" %}selected{% endif %} value="A+">A+</option>
+												<option {% if patient.bloodgroup == "A-" %}selected{% endif %} value="A-">A-</option>
+												<option {% if patient.bloodgroup == "B+" %}selected{% endif %} value="B+">B+</option>
+												<option {% if patient.bloodgroup == "B-" %}selected{% endif %} value="B-">B-</option>
+												<option {% if patient.bloodgroup == "AB-" %}selected{% endif %} value="AB-">AB-</option>
+												<option {% if patient.bloodgroup == "AB+" %}selected{% endif %} value="AB+">AB+</option>
+												<option {% if patient.bloodgroup == "O-" %}selected{% endif %} value="O-">O-</option>
+												<option {% if patient.bloodgroup == "O+" %}selected{% endif %} value="O+">O+</option>
+												
+											</select>
+										</div>
+										<div class="col-md-6">
+											<label class="form-label">Relationship *</label>
+											<select class="form-select" aria-label="Default select example"
+												name="relationship" required>
+												<option value="Son"> Son</option>
+												<option value="Daughter"> Daughter</option>
+												<option value="Wife"> Wife</option>
+												<option  value="Husband"> Husband</option>
+												<option  value="Mother"> Mother</option>
+												<option  value="Father"> Father</option>
+												<option  value="Brother"> Brother</option>
+												<option  value="Sister"> Sister</option>
+												<option  value="Father in Law"> Father in Law</option>
+												<option  value="Mother in Law"> Mother in Law</option>
+												<option  value="Sister in Law"> Sister in Law</option>
+												<option  value="Brother in Law"> Brother in Law</option>
+												<option  value="Cousin"> Cousin</option>
+												<option  value="Friend"> Friend</option>
+												<option  value="Neighbour"> Neighbour</option>
+											</select>
+										</div>
+										<div class="col-md-12">
+											<label for="addnote" class="form-label">Add Note</label>
+											<textarea class="form-control" id="addnote" name="add_notes"
+												rows="3"></textarea>
+										</div>
+									</div>
+
+									<button type="submit" class="btn btn-primary mt-4 ">Submit</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock modal_fade %}
 
 {% block custom_js %}
@@ -225,26 +413,26 @@ Booking {% endblock title %}
 </script>
 
 <script>
-
 	$(document).ready(function() {
-		$('input.scheduleDate').change(function(){
-			document.getElementById("newdate").submit();		  
-		  
-			});
+	$('input.scheduleDate').change(function(){
+		document.getElementById("newdate").submit();		  
+		
 		});
-	</script>
+	});
+</script>
 <script>
-function myFunction() {
+	function myFunction() {
 	var date = document.getElementById("scheduleDate").value;
 	console.log(date)
 	if(date != null && date != "" && date != undefined){
 		var timeslot = $("input[type='radio'][name='timeslot']:checked").val();
 		console.log(timeslot)
 		var booking_type = document.getElementById("booking_type").value;
+		var someone = document.getElementById("someone").value;
 		console.log(booking_type)
-		if(timeslot != undefined && booking_type != undefined && timeslot != "" && booking_type != ""){
+		if(timeslot != undefined && booking_type != undefined && timeslot != "" && booking_type != "" && someone != undefined && someone != ""){
 			alert("Your slot booking is in proceed waitfor moment..");
-			return false;
+			document.getElementById("bookingform").submit();
 		}else{
 			alert("Missing booking type or booking timeslot...");
 			return false;
@@ -257,18 +445,69 @@ function myFunction() {
 	
 	
 	//window.location.replace("{% url 'checkout' %}");
-}
+	}
 </script>
-
 <script>
-    function IsEmpty() {
-
-      if (document.form.question.value == "") {
-        alert("empty");
-      }
-      return;
+    function checkedFunc(element1Id) {
+    
+        var myLayer = document.getElementById('someone');
+        var element1 = document.getElementById(element1Id);
+    if (element1.checked == true) {
+            myLayer.class = "submit";
+            myLayer.removeAttribute("disabled");
+    } else {
+            myLayer.class = "button:disabled";
+            myLayer.setAttribute("disabled","disabled");
+    };
     }
-  </script>
 
+</script>
+<script>
+	$(".submit_btn").click(function(){
+		   var form=new FormData($("#hpatientadd"));
+		  // form.append("long_desc",tinyMCE.activeEditor.getContent());
+		   console.log("hello")
+		   e.preventDefault();
+		   $.ajax({
+			   type: 'POST',
+			   url: "{% url 'add_someone_as_patient' %}",
+			   data:form,
+			   success: function (json) {
+				   console.log(json)
+			   },
+			   error: function (xhr, errmsg, err) {
+   
+			   }
+		   });
+		   //Ajax code
+   
+		   
+		  // setTimeout(location.reload.bind(location), 2000);
+   
+		   //update staff from edit page fade
+		  
+   
+	   })
+</script>
+<script>
+	$(document).on("change",".select_media",function(){
+        var img_preview=$(this).parents(".media_div_row").find(".img_preview");
+        showPreviewMedia(this,img_preview);
+
+    });
+
+    function showPreviewMedia(input,img_preview){
+        if(input.files && input.files[0]){
+            var reader=new FileReader();
+            reader.onload=function(e){
+            img_preview.attr("src",e.target.result);
+            img_preview.show();
+            img_preview.css({"border":"5px solid primary"});
+            img_preview.css({"border-radius":"2px"});
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 {% endblock custom_js %}
 
