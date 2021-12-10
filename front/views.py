@@ -34,10 +34,14 @@ class FrontView(View):
         labs=Labs.objects.filter(admin__is_active=True,is_verified = True)
         pharmacys=Pharmacy.objects.filter(admin__is_active=True,is_verified = True)
         specilist = Specailist.objects.all()
+        specilist_list = [] 
+        for spc in specilist:
+            cet_hospitals = Hospitals.objects.filter(admin__is_active=True,is_verified = True,is_deactive=False,specialist = spc).count()
+            specilist_list.append({'cet_hospitals':cet_hospitals,'specilist':spc})
         blogs = Blog.objects.filter(is_active=True)
         # departments = Departments.objects.filter(hospital=hospital)
         print(hospitals) 
-        param={'hospitals':hospitals,'labs':labs,'pharmacys':pharmacys,'specilist':specilist,'blogs':blogs}
+        param={'hospitals':hospitals,'labs':labs,'pharmacys':pharmacys,'specilist_list':specilist_list,'blogs':blogs}
         return render(request,"front/index.html",param)
 
 class BlogListView(ListView):
@@ -178,11 +182,6 @@ class SearchPharmacyView(ListView):
         context["all_table_fields"]=Pharmacy._meta.get_fields()
         return context
 
-
-class SearchBloodDonorView(ListView):
-    pass
-
-
 class SearchHospitalView(ListView):
     model = Hospitals
     template_name = "front/hospital-search.html"
@@ -213,6 +212,43 @@ class SearchHospitalView(ListView):
         context=super(SearchHospitalView,self).get_context_data(**kwargs)
         context["filter"]=self.request.GET.get("filter","")
         context["orderby"]=self.request.GET.get("orderby","id")
+        context["c_hospital"] = Hospitals.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True).count()
+        context["all_table_fields"]=Hospitals._meta.get_fields()
+        return context
+
+class SearcCathHospitalView(ListView):
+    model = Hospitals
+    template_name = "front/hospital-search.html"
+
+    def get_queryset(self,*args, **kwargs):
+        hid = self.kwargs['hid']
+        filter_val=self.request.GET.get("filter","")
+        order_by=self.request.GET.get("orderby","id")
+        if filter_val!="":
+            hospitals=Hospitals.objects.filter( Q(is_verified=True,is_deactive=False,admin__is_active=True,specialist=hid) and (Q(hopital_name__contains=filter_val) | Q(about__contains=filter_val) | Q(city__contains=filter_val) | Q(specialist__contains=filter_val))).order_by(order_by)
+        else:
+            hospitals=Hospitals.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True,specialist=hid).order_by(order_by)
+        
+        hospital_media_list = []
+        for hospital in hospitals:
+            print(hospital.admin)
+            amount = ServiceAndCharges.objects.filter(user=hospital.admin,service_name = "OPD")
+            print(amount)
+            medias = HospitalMedias.objects.filter(is_active=True,hospital=hospital)
+            rooms = HospitalRooms.objects.filter(hospital = hospital,is_active = True).count()
+            room_max_price = HospitalRooms.objects.filter(hospital = hospital,is_active = True).aggregate(Max('room__rooms_price'))
+            room_min_price = HospitalRooms.objects.filter(hospital = hospital,is_active = True).aggregate(Min('room__rooms_price'))
+            ambulances = AmbulanceDetails.objects.filter(hospital=hospital,is_active=True).count()    
+            hospital_media_list.append({'hospital':hospital,'medias':medias,'amount':amount,'rooms':rooms,'ambulances':ambulances,'room_max_price':room_max_price,'room_min_price':room_min_price})
+        print(hospital_media_list)        
+        return hospital_media_list
+    
+    def get_context_data(self,**kwargs):
+        context=super(SearcCathHospitalView,self).get_context_data(**kwargs)
+        hid = self.kwargs['hid']
+        context["filter"]=self.request.GET.get("filter","")
+        context["orderby"]=self.request.GET.get("orderby","id")
+        context["c_hospital"] = Hospitals.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True,specialist=hid).count()
         context["all_table_fields"]=Hospitals._meta.get_fields()
         return context
 

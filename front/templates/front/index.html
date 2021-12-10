@@ -28,152 +28,21 @@ Booking{% endblock title %}
 				<div class="row"> 
 					<div class="col-md-12">
 						<div class="clinic-slider slider">
-						{% for spes in specilist %}
+						{% for spes in specilist_list %}
 							<div class="profile-widget">
 								<div class="brower-box">
 									<a href="javascript:void(0);">
-										<img class="img-fluid" alt="User Image" src="{{spes.specialist_icon}}">
+										<img class="img-fluid" alt="User Image" src="{{spes.specilist.specialist_icon}}">
 										<img class="img-fluid hover" alt=""
-											src="{{spes.hover_icon}}" />
+											src="{{spes.specilist.hover_icon}}" />
 									</a>
-									<h4>{{spes.specialist_name}}</h4> 
-									<p>124 <span>Doctors</span></p>
-									<a href="#" class="arrow"><i class="fas fa-chevron-right"></i></a>
-								</div>
-							</div>  
+									<h4>{{spes.specilist.specialist_name}}</h4> 
+									<p>{{spes.cet_hospitals}} <span>Hospitals</span></p>
+									<a href="{% url 'specilist_hospitals' spes.specilist.id %}" class="arrow"><i class="fas fa-chevron-right"></i></a>
+								</div> 
+							</div>   
 						{% endfor %}
-							{% comment %} <div class="profile-widget">
-								<div class="brower-box">
-									<a href="javascript:void(0);">
-										<img class="img-fluid" alt="User Image" src="{% static 'newstatic/assets/img/icons/clinic-02.png'%}">
-										<img class="img-fluid hover" alt=""
-											src="{% static 'newstatic/assets/img/icons/clinic-hover-02.png'%}" />
-									</a>
-									<h4>Urology</h4>
-									<p>124 <span>Doctors</span></p>
-									<a href="doctor-profile.html" class="arrow"><i class="fas fa-chevron-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget">
-								<div class="brower-box">
-									<a href="javascript:void(0);">
-										<img class="img-fluid" alt="User Image" src="{% static 'newstatic/assets/img/icons/clinic-03.png'%}">
-										<img class="img-fluid hover" alt=""
-											src="{% static 'newstatic/assets/img/icons/clinic-hover-03.png'%}" />
-									</a>
-									<h4>Cardiologist</h4>
-									<p>124 <span>Doctors</span></p>
-									<a href="doctor-profile.html" class="arrow"><i class="fas fa-chevron-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget">
-								<div class="brower-box">
-									<a href="javascript:void(0);">
-										<img class="img-fluid" alt="User Image" src="{% static 'newstatic/assets/img/icons/clinic-04.png'%}">
-										<img class="img-fluid hover" alt=""
-											src="{% static 'newstatic/assets/img/icons/clinic-hover-04.png'%}" />
-									</a>
-									<h4>Neurology</h4>
-									<p>124 <span>Doctors</span></p>
-									<a href="doctor-profile.html" class="arrow"><i class="fas fa-chevron-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget">
-								<div class="brower-box">
-									<a href="javascript:void(0);">
-										<img class="img-fluid" alt="User Image" src="{% static 'newstatic/assets/img/icons/clinic-05.png'%}">
-										<img class="img-fluid hover" alt=""
-											src="{% static 'newstatic/assets/img/icons/clinic-hover-05.png'%}" />
-									</a>
-									<h4>Dentist</h4>
-									<p>124 <span>Doctors</span></p>
-									<a href="doctor-profile.html" class="arrow"><i class="fas fa-chevron-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget">
-								<div class="brower-box">
-									<a href="javascript:void(0);">
-										<img class="img-fluid" alt="User Image" src="{% static 'newstatic/assets/img/icons/clinic-06.png'%}">
-										<img class="img-fluid hover" alt=""
-											src="{% static 'newstatic/assets/img/icons/clinic-hover-06.png'%}" />
-									</a>
-									<h4>Laboratry</h4>
-									<p>124 <span>Doctors</span></p>
-									<a href="doctor-profile.html" class="arrow"><i class="fas fa-chevron-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget">
-								<div class="brower-box">
-									<a href="javascript:void(0);">
-										<img class="img-fluid" alt="User Image" src="{% static 'newstatic/assets/img/icons/clinic-07.png'%}">
-										<img class="img-fluid hover" alt=""
-											src="{% static 'newstatic/assets/img/icons/clinic-hover-07.png'%}" />
-									</a>
-									<h4>MRI Scans</h4>
-									<p>124 <span>Doctors</span></p>
-									<a href="doctor-profile.html" class="arrow"><i class="fas fa-chevron-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget">
-								<div class="brower-box">
-									<a href="javascript:void(0);">
-										<img class="img-fluid" alt="User Image" src="{% static 'newstatic/assets/img/icons/clinic-08.png'%}">
-										<img class="img-fluid hover" alt=""
-											src="{% static 'newstatic/assets/img/icons/clinic-hover-08.png'%}" />
-									</a>
-									<h4>Primary Checkup</h4>
-									<p>124 <span>Doctors</span></p>
-									<a href="doctor-profile.html" class="arrow"><i class="fas fa-chevron-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget">
-								<div class="brower-box">
-									<a href="javascript:void(0);">
-										<img class="img-fluid" alt="User Image" src="{% static 'newstatic/assets/img/icons/clinic-09.png'%}">
-										<img class="img-fluid hover" alt=""
-											src="{% static 'newstatic/assets/img/icons/clinic-hover-09.png'%}" />
-									</a>
-									<h4>Testing</h4>
-									<p>124 <span>Doctors</span></p>
-									<a href="doctor-profile.html" class="arrow"><i class="fas fa-chevron-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget">
-								<div class="brower-box">
-									<a href="javascript:void(0);">
-										<img class="img-fluid" alt="User Image" src="{% static 'newstatic/assets/img/icons/clinic-10.png'%}">
-										<img class="img-fluid hover" alt=""
-											src="{% static 'newstatic/assets/img/icons/clinic-hover-10.png'%}" />
-									</a>
-									<h4>Pediatrics</h4>
-									<p>124 <span>Doctors</span></p>
-									<a href="doctor-profile.html" class="arrow"><i class="fas fa-chevron-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget">
-								<div class="brower-box">
-									<a href="javascript:void(0);">
-										<img class="img-fluid" alt="User Image" src="{% static 'newstatic/assets/img/icons/clinic-01.png'%}">
-										<img class="img-fluid hover" alt=""
-											src="{% static 'newstatic/assets/img/icons/clinic-hover-01.png'%}" />
-									</a>
-									<h4>Orthopedic</h4>
-									<p>124 <span>Doctors</span></p>
-									<a href="doctor-profile.html" class="arrow"><i class="fas fa-chevron-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget">
-								<div class="brower-box">
-									<a href="javascript:void(0);">
-										<img class="img-fluid" alt="User Image" src="{% static 'newstatic/assets/img/icons/clinic-02.png'%}">
-										<img class="img-fluid hover" alt=""
-											src="{% static 'newstatic/assets/img/icons/clinic-hover-02.png'%}" />
-									</a>
-									<h4>Urology</h4>
-									<p>124 <span>Doctors</span></p>
-									<a href="doctor-profile.html" class="arrow"><i class="fas fa-chevron-right"></i></a>
-								</div>
-							</div> {% endcomment %}
+							
 						</div>
 					</div>
 				</div>
@@ -225,7 +94,7 @@ Booking{% endblock title %}
 													<i class="fas fa-map-marker-alt"></i>{{hospital.city}} , {{hospital.country}} 
 												</li>
 												<li>
-													<i class="far fa-clock"></i> 450 Consultations
+													{% comment %} <i class="far fa-clock"></i> 450 Consultations {% endcomment %}
 												</li>
 											</ul>
 											<div class="row row-sm">
@@ -249,7 +118,7 @@ Booking{% endblock title %}
 				</div>
 				<div class="row justify-content-center mt-4">
 					<div class="col-md-12 text-center">
-						<a href="doctor-profile.html" class="view-btn d-inline-block">View More</a>
+						<a href="{% url 'search_hospital' %}" class="view-btn d-inline-block">View More</a>
 					</div>
 				</div>
 			</div>
@@ -300,7 +169,7 @@ Booking{% endblock title %}
 													<i class="fas fa-map-marker-alt"></i> {{lab.city}} , {{lab.country}} 
 												</li>
 												<li>
-													<i class="far fa-clock"></i> 450 Consultations
+													{% comment %} <i class="far fa-clock"></i> 450 Consultations {% endcomment %}
 												</li>
 											</ul>
 											<div class="row row-sm">
@@ -324,7 +193,7 @@ Booking{% endblock title %}
 				</div>
 				<div class="row justify-content-center mt-4">
 					<div class="col-md-12 text-center">
-						<a href="doctor-profile.html" class="view-btn d-inline-block">View More</a>
+						<a href="{% url 'search_Labs' %}" class="view-btn d-inline-block">View More</a>
 					</div>
 				</div>
 			</div>
@@ -399,134 +268,13 @@ Booking{% endblock title %}
 				</div>
 				<div class="row justify-content-center mt-4">
 					<div class="col-md-12 text-center">
-						<a href="doctor-profile.html" class="view-btn d-inline-block">View More</a>
+						<a href="{% url 'search_pharmcy' %}" class="view-btn d-inline-block">View More</a>
 					</div>
 				</div>
 			</div>
 		</section>
 
-		{% comment %} <section class="browse-speciality">
-			<div class="container">
-				<div class="sec-header">
-					<h2>Browse by Specialities</h2>
-					<span class="bottom-border"></span>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<div class="browse-slider slider">
-							<div class="profile-widget browse-widget">
-								<img src="{% static 'newstatic/assets/img/icons/browse-01.jpg'%}" alt="" />
-								<div class="overlay">
-									<img src="{% static 'newstatic/assets/img/icons/clinic-02.png'%}" alt="" />
-									<h3>UROLOGY</h3>
-									<a href="doctor-profile.html" class="arrows"><i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget browse-widget">
-								<img src="{% static 'newstatic/assets/img/icons/browse-01.jpg'%}" alt="" />
-								<div class="overlay">
-									<img src="{% static 'newstatic/assets/img/icons/clinic-02.png'%}" alt="" />
-									<h3>UROLOGY</h3>
-									<a href="doctor-profile.html" class="arrows"><i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget browse-widget">
-								<img src="{% static 'newstatic/assets/img/icons/browse-02.jpg'%}" alt="" />
-								<div class="overlay">
-									<img src="{% static 'newstatic/assets/img/icons/clinic-11.png'%}" alt="" />
-									<h3>Orthopedic</h3>
-									<a href="doctor-profile.html" class="arrows"><i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget browse-widget">
-								<img src="{% static 'newstatic/assets/img/icons/browse-02.jpg'%}" alt="" />
-								<div class="overlay">
-									<img src="{% static 'newstatic/assets/img/icons/clinic-11.png'%}" alt="" />
-									<h3>Orthopedic</h3>
-									<a href="doctor-profile.html" class="arrows"><i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget browse-widget">
-								<img src="{% static 'newstatic/assets/img/icons/browse-03.jpg'%}" alt="" />
-								<div class="overlay">
-									<img src="{% static 'newstatic/assets/img/icons/clinic-03.png'%}" alt="" />
-									<h3>Cardiologist</h3>
-									<a href="doctor-profile.html" class="arrows"><i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget browse-widget">
-								<img src="{% static 'newstatic/assets/img/icons/browse-03.jpg'%}" alt="" />
-								<div class="overlay">
-									<img src="{% static 'newstatic/assets/img/icons/clinic-03.png'%}" alt="" />
-									<h3>Cardiologist</h3>
-									<a href="doctor-profile.html" class="arrows"><i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget browse-widget">
-								<img src="{% static 'newstatic/assets/img/icons/browse-04.jpg'%}" alt="" />
-								<div class="overlay">
-									<img src="{% static 'newstatic/assets/img/icons/clinic-12.png'%}" alt="" />
-									<h3>Dentist</h3>
-									<a href="doctor-profile.html" class="arrows"><i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget browse-widget">
-								<img src="{% static 'newstatic/assets/img/icons/browse-04.jpg'%}" alt="" />
-								<div class="overlay">
-									<img src="{% static 'newstatic/assets/img/icons/clinic-12.png'%}" alt="" />
-									<h3>Dentist</h3>
-									<a href="doctor-profile.html" class="arrows"><i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget browse-widget">
-								<img src="{% static 'newstatic/assets/img/icons/browse-05.jpg'%}" alt="" />
-								<div class="overlay">
-									<img src="{% static 'newstatic/assets/img/icons/clinic-13.png'%}" alt="" />
-									<h3>Neurology</h3>
-									<a href="doctor-profile.html" class="arrows"><i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget browse-widget">
-								<img src="{% static 'newstatic/assets/img/icons/browse-05.jpg'%}" alt="" />
-								<div class="overlay">
-									<img src="{% static 'newstatic/assets/img/icons/clinic-13.png'%}" alt="" />
-									<h3>Neurology</h3>
-									<a href="doctor-profile.html" class="arrows"><i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget browse-widget">
-								<img src="{% static 'newstatic/assets/img/icons/browse-01.jpg'%}" alt="" />
-								<div class="overlay">
-									<img src="{% static 'newstatic/assets/img/icons/clinic-03.png'%}" alt="" />
-									<h3>Cardiologist</h3>
-									<a href="doctor-profile.html" class="arrows"><i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-							<div class="profile-widget browse-widget">
-								<img src="{% static 'newstatic/assets/img/icons/browse-01.jpg'%}" alt="" />
-								<div class="overlay">
-									<img src="{% static 'newstatic/assets/img/icons/clinic-03.png'%}" alt="" />
-									<h3>Cardiologist</h3>
-									<a href="doctor-profile.html" class="arrows"><i
-											class="fas fa-long-arrow-alt-right"></i></a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section> {% endcomment %}
+		
 
 
 		<section class="patient-select">
@@ -608,171 +356,6 @@ Booking{% endblock title %}
 			</div>
 		</section>
 		 
-		{% comment %} <section class="aval-features">
-			<div class="custom-contain">
-				<div class="row">
-					<div class="col-lg-5 col-md-6 feature">
-						<div class="info-box">
-							<h2>Availabe Features in Our Clinic</h2>
-							<p>Meet our Experts & Book Online</p>
-							<a href="doctor-profile.html" class="view-btn">View More</a>
-						</div>
-					</div>
-					<div class="col-lg-7 col-md-6 ps-0">
-						<div class="aval-slider slider">
-							<div class="aval-widget">
-								<div class="features-img">
-									<img src="{% static 'newstatic/assets/img/clinic/spec-01.jpg'%}" alt="" />
-									<p>Operation</p>
-								</div>
-							</div>
-							<div class="aval-widget">
-								<div class="features-img">
-									<img src="{% static 'newstatic/assets/img/clinic/spec-02.jpg'%}" alt="" />
-									<p>Medical</p>
-								</div>
-							</div>
-							<div class="aval-widget">
-								<div class="features-img">
-									<img src="{% static 'newstatic/assets/img/clinic/spec-03.jpg'%}" alt="" />
-									<p>Patient Ward</p>
-								</div>
-							</div>
-							<div class="aval-widget">
-								<div class="features-img">
-									<img src="{% static 'newstatic/assets/img/clinic/spec-01.jpg'%}" alt="" />
-									<p>Operation</p>
-								</div>
-							</div>
-							<div class="aval-widget">
-								<div class="features-img">
-									<img src="{% static 'newstatic/assets/img/clinic/spec-02.jpg'%}" alt="" />
-									<p>Medical</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section> {% endcomment %}
- 
-		<section class="our-blog-section Team">
-			<div class="container">
-				<div class="sec-header">
-					<h2>Our Team</h2>
-					<span class="bottom-border"></span>
-				</div>
-				{% comment %} <div class="row">
-					<div class="col-md-6">
-						<div class="section-heading">
-							<h2>Our Team</h2>
-							<p>Read Professional Articles and Latest Articles</p>
-						</div>
-					</div>
-					<div class="col-md-6 text-end">
-						<div class="owl-nav slide-nav-4 text-end nav-control"></div>
-					</div>
-				</div> {% endcomment %}
-				<div class="owl-carousel blogs owl-theme">
-					<div class="item">
-						<div class="our-blogs">
-							<div class="blogs-img">
-								<a href="blog-details.html"><img src="{% static 'newstatic/assets/img/blog-1.jpg' %}" alt=""
-										class="img-fluid"></a>
-								<div class="blogs-overlay d-flex">
-									<img src="{% static 'newstatic/assets/img/doctors/doctor-thumb-01.jpg' %} " alt="" class="img-fluid">
-									<span class="blogs-writter">Dr. Ruby Perrin</span>
-								</div>
-							</div>
-							<div class="blogs-info">
-								<span>Director</span>
-								{% comment %} <a href="blog-details.html">
-									<h4>Doccure – Making your clinic painless visit?</h4>
-								</a>
-								<p>Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.
-								</p>
-								<span class="blogs-time"><i class="far fa-clock"></i> 3 Dec 2021</span> {% endcomment %}
-							</div>
-							{% comment %} <div class="blogs-nav">
-								<a href="blog-details.html" class="blogs-btn">Read More</a>
-							</div> {% endcomment %}
-						</div>
-					</div>
-					{% comment %} <div class="item">
-						<div class="our-blogs">
-							<div class="blogs-img">
-								<a href="blog-details.html"><img src="assets/img/blog-2.jpg" alt=""
-										class="img-fluid"></a>
-								<div class="blogs-overlay d-flex">
-									<img src="assets/img/doctors/doctor-thumb-01.jpg" alt="" class="img-fluid">
-									<span class="blogs-writter">Dr. Ruby Perrin</span>
-								</div>
-							</div>
-							<div class="blogs-info">
-								<span>Neurology</span>
-								<a href="blog-details.html">
-									<h4>What are the benefits of Online Doctor Booking?</h4>
-								</a>
-								<p>Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.
-								</p>
-								<span class="blogs-time"><i class="far fa-clock"></i> 3 Dec 2021</span>
-							</div>
-							<div class="blogs-nav">
-								<a href="blog-details.html" class="blogs-btn">Read More</a>
-							</div>
-						</div>
-					</div>
-					<div class="item">
-						<div class="our-blogs">
-							<div class="blogs-img">
-								<a href="blog-details.html"><img src="assets/img/blog-3.jpg" alt=""
-										class="img-fluid"></a>
-								<div class="blogs-overlay d-flex">
-									<img src="assets/img/doctors/doctor-thumb-01.jpg" alt="" class="img-fluid">
-									<span class="blogs-writter">Dr. Ruby Perrin</span>
-								</div>
-							</div>
-							<div class="blogs-info">
-								<span>Orthopedic</span>
-								<a href="blog-details.html">
-									<h4>Benefits of consulting with an Online Doctor</h4>
-								</a>
-								<p>Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.
-								</p>
-								<span class="blogs-time"><i class="far fa-clock"></i> 3 Dec 2021</span>
-							</div>
-							<div class="blogs-nav">
-								<a href="blog-details.html" class="blogs-btn">Read More</a>
-							</div>
-						</div>
-					</div>
-					<div class="item">
-						<div class="our-blogs">
-							<div class="blogs-img">
-								<a href="blog-details.html"><img src="assets/img/blog-4.jpg" alt=""
-										class="img-fluid"></a>
-								<div class="blogs-overlay d-flex">
-									<img src="assets/img/doctors/doctor-thumb-01.jpg" alt="" class="img-fluid">
-									<span class="blogs-writter">Dr. Ruby Perrin</span>
-								</div>
-							</div>
-							<div class="blogs-info">
-								<span>Cardiologist</span>
-								<a href="blog-details.html">
-									<h4>5 Great reasons to use an Online Doctor</h4>
-								</a>
-								<p>Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.
-								</p>
-								<span class="blogs-time"><i class="far fa-clock"></i> 3 Dec 2021</span>
-							</div>
-							<div class="blogs-nav">
-								<a href="blog-details.html" class="blogs-btn">Read More</a>
-							</div>
-						</div>
-					</div> {% endcomment %}
-				</div>
-			</div>
-		</section>
 
 		<section class="blogs-section">
 			<div class="container">
@@ -904,6 +487,43 @@ Booking{% endblock title %}
 			</div>
 		</section>
 
+		
+		<section class="our-blog-section Team">
+			<div class="container">
+				<div class="sec-header">
+					<h2>Our Team</h2>
+					<span class="bottom-border"></span>
+				</div>
+				
+				<div class="owl-carousel blogs owl-theme">
+					<div class="item">
+						<div class="our-blogs">
+							<div class="blogs-img">
+								<a href="blog-details.html"><img src="{% static 'newstatic/assets/img/blog-1.jpg' %}" alt=""
+										class="img-fluid"></a>
+								<div class="blogs-overlay d-flex">
+									<img src="{% static 'newstatic/assets/img/doctors/doctor-thumb-01.jpg' %} " alt="" class="img-fluid">
+									<span class="blogs-writter">Dr. Ruby Perrin</span>
+								</div>
+							</div>
+							<div class="blogs-info">
+								<span>Director</span>
+								{% comment %} <a href="blog-details.html">
+									<h4>Doccure – Making your clinic painless visit?</h4>
+								</a>
+								<p>Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.
+								</p>
+								<span class="blogs-time"><i class="far fa-clock"></i> 3 Dec 2021</span> {% endcomment %}
+							</div>
+							{% comment %} <div class="blogs-nav">
+								<a href="blog-details.html" class="blogs-btn">Read More</a>
+							</div> {% endcomment %}
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</section>
 
 {% endblock content %}
 

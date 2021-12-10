@@ -21,7 +21,7 @@ Booking{% endblock title %}
 								<li class="breadcrumb-item active" aria-current="page">Search</li>
 							</ol>
 						</nav>
-						<h2 class="breadcrumb-title">2245 matches found for : Dentist In Bangalore</h2>
+						<h2 class="breadcrumb-title">{{c_hospital}} matches found for : Dentist In Bangalore</h2>
 					</div>
 					<div class="col-md-4 col-12 d-md-block d-none">
 						<div class="sort-by">
@@ -132,7 +132,7 @@ Booking{% endblock title %}
 													</a>
 												</div>
 												<div class="doc-info-cont">
-													<h4 class="doc-name"><a href="{% url 'hospital_details' hospital.hospital.id %}">{{hospital.hospital.hopital_name}}</a></h4>
+													<h4 class="doc-name"><a href="{% url 'hospital_details' hospital.hospital.id %}">{{hospital.hospital.hopital_name|upper}}</a></h4>
 													{% comment %} <p class="doc-speciality">{{hospital.hospital.specialist}}
 													</p> {% endcomment %}
 													<h5 class="doc-department"><img
