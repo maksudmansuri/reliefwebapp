@@ -1,5 +1,5 @@
 
-{% extends 'patient/newbase.html' %}
+{% extends 'patient/newbase.html' %} 
 {% load static %}
 {% block title %} :: Relief Pro:: Dashboard {% endblock title %}
 
@@ -10,121 +10,7 @@
 	
 
 					<div class="col-md-7 col-lg-8 col-xl-9">
-						{% comment %} <div class="row">
-							<div class="col-12 col-md-6 col-lg-4 col-xl-3 patient-dashboard-top">
-								<div class="card">
-									<div class="card-body text-center">
-										<div class="mb-3">
-											<img src="{% static 'newstatic/assets/img/specialities/pt-dashboard-01.png' %} " alt="" width="55">
-										</div>
-										<h5>Heart Rate</h5>
-										<h6>12 <sub>bpm</sub></h6>
-									</div>
-								</div>
-							</div>
-							<div class="col-12 col-md-6 col-lg-4 col-xl-3 patient-dashboard-top">
-								<div class="card">
-									<div class="card-body text-center">
-										<div class="mb-3">
-											<img src="{% static 'newstatic/assets/img/specialities/pt-dashboard-02.png'%}" alt="" width="55">
-										</div>
-										<h5>Body Temperature</h5>
-										<h6>18 <sub>C</sub></h6>
-									</div>
-								</div>
-							</div>
-							<div class="col-12 col-md-6 col-lg-4 col-xl-3 patient-dashboard-top">
-								<div class="card">
-									<div class="card-body text-center">
-										<div class="mb-3">
-											<img src="{% static 'newstatic/assets/img/specialities/pt-dashboard-03.png'%}" alt="" width="55">
-										</div>
-										<h5>Glucose Level</h5>
-										<h6>70 - 90</h6>
-									</div>
-								</div>
-							</div>
-							<div class="col-12 col-md-6 col-lg-4 col-xl-3 patient-dashboard-top">
-								<div class="card">
-									<div class="card-body text-center">
-										<div class="mb-3">
-											<img src="{% static 'newstatic/assets/img/specialities/pt-dashboard-04.png'%}" alt="" width="55">
-										</div>
-										<h5>Blood Pressure</h5>
-										<h6>202/90 <sub>mg/dl</sub></h6>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="row patient-graph-col">
-							<div class="col-12">
-								<div class="card">
-									<div class="card-header">
-										<h4 class="card-title">Graph Status</h4>
-									</div>
-									<div class="card-body pt-2 pb-2 mt-1 mb-1">
-										<div class="row">
-											<div class="col-12 col-md-6 col-lg-4 col-xl-3 patient-graph-box">
-												<a href="#" class="graph-box" data-bs-toggle="modal"
-													data-bs-target="#graph1">
-													<div>
-														<h4>BMI Status</h4>
-													</div>
-													<div class="graph-img">
-														<img src="{% static 'newstatic/assets/img/shapes/graph-01.png'%}" alt="">
-													</div>
-													<div class="graph-status-result mt-3">
-														<span class="graph-update-date">Last Update 6d</span>
-													</div>
-												</a>
-											</div>
-											<div class="col-12 col-md-6 col-lg-4 col-xl-3 patient-graph-box">
-												<a href="#" class="graph-box pink-graph" data-bs-toggle="modal"
-													data-bs-target="#graph2">
-													<div>
-														<h4>Heart Rate Status</h4>
-													</div>
-													<div class="graph-img">
-														<img src="{% static 'newstatic/assets/img/shapes/graph-02.png'%}" alt="">
-													</div>
-													<div class="graph-status-result mt-3">
-														<span class="graph-update-date">Last Update 2d</span>
-													</div>
-												</a>
-											</div>
-											<div class="col-12 col-md-6 col-lg-4 col-xl-3 patient-graph-box">
-												<a href="#" class="graph-box sky-blue-graph" data-bs-toggle="modal"
-													data-bs-target="#graph3">
-													<div>
-														<h4>FBC Status</h4>
-													</div>
-													<div class="graph-img">
-														<img src="{% static 'newstatic/assets/img/shapes/graph-03.png'%}" alt="">
-													</div>
-													<div class="graph-status-result mt-3">
-														<span class="graph-update-date">Last Update 5d</span>
-													</div>
-												</a>
-											</div>
-											<div class="col-12 col-md-6 col-lg-4 col-xl-3 patient-graph-box">
-												<a href="#" class="graph-box orange-graph" data-bs-toggle="modal"
-													data-bs-target="#graph4">
-													<div>
-														<h4>Weight Status</h4>
-													</div>
-													<div class="graph-img">
-														<img src="{% static 'newstatic/assets/img/shapes/graph-04.png'%}" alt="">
-													</div>
-													<div class="graph-status-result mt-3">
-														<span class="graph-update-date">Last Update 3d</span>
-													</div>
-												</a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div> {% endcomment %}
+						
 						<div class="card">
 						<div class="card-header">
 										<h4 class="card-title">Appointments</h4>
@@ -158,21 +44,23 @@
 										<div class="card card-table mb-0">
 											<div class="card-body">
 												<div class="table-responsive">
-													<table class="table table-hover table-center mb-0">
+													<table  id="patient-table" class="table table-hover align-middle mb-0" style="width: 100%;">
 														<thead>
 															<tr>
-																<th>Doctor</th>
+																<th>APPT ID</th>
+																<th>Hospital</th>
 																<th>Appt Date</th>
 																<th>Booking Date</th>
 																<th>Amount</th>
-																<th>Follow Up</th>
+																
 																<th>Status</th>
 																<th></th>
 															</tr>
 														</thead>
 														<tbody>
-														{% for booking in bookings %}
+														{% for booking in booked %}
 															<tr>
+																<td>APT00{{booking.id}}</td>
 																<td>
 																	<h2 class="table-avatar">
 																		<a href="{% url 'hospital_details' booking.hospitalstaffdoctor.hospital.id %}"
@@ -181,25 +69,24 @@
 																				src="{{booking.hospitalstaffdoctor.hospital.profile_pic}}"
 																				alt="User Image">
 																		</a>
-																		<a href="doctor-profile.html">{{booking.hospital.hopital_name}}
+																		<a href="doctor-profile.html">{{booking.hospitalstaffdoctor.hospital.hopital_name}}
 																			<span>{{booking.hospital.specialist}}</span></a>
 																	</h2>
 																</td>
 																<td>{{booking.applied_date}} <span class="d-block text-info">{{booking.applied_time}}
 																		</span></td>
-																<td>{{booking.created_at}}</td>
+																<td>{{booking.created_at|date}}</td>
 																<td>{{booking.amount}}</td>
-																<td>{{booking.updated_at}}</td>
-																<td><span
-																		class="badge rounded-pill bg-success-light">{{booking.status}}</span>
+															
+																<td><span class="badge rounded-pill bg-{% if booking.is_rejected %}danger{% elif booking.is_cancelled %}danger{% else %}success{% endif %}-light">{{booking.status}}</span>
 																</td>
 																<td class="text-end">
 																	<div class="table-action">
-																		<a href="javascript:void(0);"
+																		<a href="{% url 'invoice' booking.id %}"
 																			class="btn btn-sm bg-primary-light">
 																			<i class="fas fa-print"></i> Print
 																		</a>
-																		<a href="{% url 'booking_confirmation' booking.id %}"
+																		<a href="#"
 																			class="btn btn-sm bg-info-light">
 																			<i class="far fa-eye"></i> View
 																		</a>
@@ -220,9 +107,10 @@
 										<div class="card card-table mb-0">
 											<div class="card-body">
 												<div class="table-responsive">
-													<table class="table table-hover table-center mb-0">
+													<table  id="patient-table1" class="table table-hover align-middle mb-0" style="width: 100%;">
 														<thead>
 															<tr>
+																<th>APPT ID</th>
 																<th>Labs</th>
 																<th>Appt Date</th>
 																<th>Booking Date</th>
@@ -231,36 +119,35 @@
 																<th></th>
 															</tr>
 														</thead>
-														<tbody>
+														<tbody> 
 														{% for labbooks in booking_labtest_list %}
-															<tr>
+															<tr><td>APT00{{labbooks.labbook.id}}</td>
 																<td> 
 																	<h2 class="table-avatar">
-																		<a href="{% url 'laboratory_details' labbooks.labbook.lab.id %}"
+																		<a href="#"
 																			class="avatar avatar-sm me-2">
 																			<img class="avatar-img rounded-circle"
-																				src="{{labbooks.labbook.lab.profile_pic}}"
+																				src="{{labbooks.labbook.HLP.profile_pic}}"
 																				alt="User Image">
 																		</a>
-																		<a href="doctor-profile.html">{{labbooks.labbook.lab}}
+																		<a href="doctor-profile.html">{{labbooks.labbook.HLP.labs.lab_name}}
 																			<span></span></a>
 																	</h2>
 																</td>
 																<td>{{labbooks.labbook.applied_date}}  <span class="d-block text-info">{{labbooks.labbook.applied_time}}
 																		</span></td>
-																<td>{{labbooks.labbook.created_at}}</td>
+																<td>{{labbooks.labbook.created_at|date:'M d Y'}}</td>
 																<td>{{labbooks.labbook.amount}}</td>
 																
-																<td><span
-																		class="badge rounded-pill bg-success-light">{{labbooks.labbook.status}}</span>
+																<td><span class="badge rounded-pill bg-{% if labbooks.labbook.is_rejected %}danger{% elif labbooks.labbook.is_cancelled %}danger{% else %}success{% endif %}-light">{{labbooks.labbook.status}}</span>
 																</td>
-																<td class="text-end">
+																<td class="text-end"> 
 																	<div class="table-action">
-																		<a href="javascript:void(0);"
+																		<a href="{% url 'invoice' labbooks.labbook.id %}"
 																			class="btn btn-sm bg-primary-light">
 																			<i class="fas fa-print"></i> Print
 																		</a>
-																		<a href="{% url 'lab_confirmation' labbooks.labbook.id %}"
+																		<a href="#"
 																			class="btn btn-sm bg-info-light">
 																			<i class="far fa-eye"></i> View
 																		</a>
@@ -276,16 +163,17 @@
 										</div>
 									</div>
 
-
+ 
 									<div id="pat_medical_records" class="tab-pane fade">
 										<div class="card card-table mb-0">
 											<div class="card-body">
 												<div class="table-responsive">
 													<table class="table table-hover table-center mb-0">
 														<thead>
-															<tr>
+														<tr>	<th>APPT ID</th>
 																<th>Pharmacy</th>
 																<th>Appt Date</th>
+																<th>Prescription<th>
 																<th>Booking Date</th>
 																<th>Amount</th>
 																
@@ -294,37 +182,59 @@
 															</tr>
 														</thead>
 														<tbody>
-														{% for pharmacy in pharmacys %}
-															<tr>
+														{% for pharmacy in phamacybooking %}
+															<tr><td>APT00{{pharmacy.id}}</td>
 																<td>
 																	<h2 class="table-avatar">
-																		<a href="{% url 'pharmacy_details' pharmacy.pharmacy.id %}"
+																		<a href="#"
 																			class="avatar avatar-sm me-2">
 																			<img class="avatar-img rounded-circle"
-																				src="{{pharmacy.pharmacy.profile_pic}}"
+																				src="{{pharmacy.HLP.profile_pic}}"
 																				alt="User Image">
 																		</a>
-																		<a href="{% url 'pharmacy_details' pharmacy.pharmacy.id %}">{{pharmacy.pharmacy.pharmacy_name}}
+																		<a href="#">{{pharmacy.HLP.pharmacy.pharmacy_name}}
 																			<span></span></a>
 																	</h2>
 																</td>
 																<td>{{pharmacy.applied_date}} <span class="d-block text-info">{{pharmacy.applied_time}}
 																		</span></td>
-																<td>{{pharmacy.created_at}}</td>
+																
+																<td>
+																	<h2 class="table-avatar clinic-gallery">
+																		<a href="{{pharmacy.prescription}}" class="avatar avatar-sm me-2"
+																					data-fancybox="gallery">
+																					<img src="{{pharmacy.prescription}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Feature">
+																				</a>
+																			</h2>
+																</td>
 																<td>{{pharmacy.amount}}</td>
 																
-																<td><span
-																		class="badge rounded-pill bg-success-light">{{pharmacy.status}}</span>
+																<td> 
+																	{% if pharmacy.store_invoice_uploaded %}
+																		<a href="{% url 'checkout' %}" class="btn btn-sm bg-primary-light" >Pay</a>
+																	{% else %}
+																		<span class="badge rounded-pill bg-{% if pharmacy.is_rejected %}danger{% elif pharmacy.is_cancelled %}danger{% else %}success{% endif %}-light">{{pharmacy.status}}</span>
+																	{% endif %} 
 																</td>
 																<td class="text-end">
 																	<div class="table-action">
-																		<a href="javascript:void(0);"
+																		{% if pharmacy.store_invoice_uploaded %}
+																			{% if pharmacy.store_invoice %} 
+																				<a type="button" class="btn btn-sm bg-primary-light" href="{{pharmacy.store_invoice}}" download data-bs-placement="top" title="Invoice From Store" ><i class="fas fa-download"></i></a>
+																			{% else %}
+																				Error	
+																			{% endif %}
+																		
+																		{% endif %}
+																		{% if is_amount_paid %}
+																		<a href="{% url 'invoice' pharmacy.id %}"
 																			class="btn btn-sm bg-primary-light">
-																			<i class="fas fa-print"></i> Print
+																			<i class="fas fa-print" title="Booking Information"></i> Print
 																		</a>
-																		<a href="{% url 'pharmacy_confirmation' pharmacy.id %}"
+																		{% endif %}
+																		<a href="#"
 																			class="btn btn-sm bg-info-light">
-																			<i class="far fa-eye"></i> View
+																			<i class="far fa-eye" title="View YOu booking Information"> </i> View
 																		</a>
 																	</div>
 																</td>
@@ -442,4 +352,27 @@
 	</div>
 
  {% endblock modal_fade %}
-{% block custom_js %}{% endblock custom_js %}
+{% block custom_js %}
+
+<script>
+    $(document).ready(function() {
+        $('#patient-table')
+        .addClass( 'nowrap' )
+        .dataTable( {
+            responsive: true,
+            columnDefs: [
+            { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+        $('#patient-table1')
+        .addClass( 'nowrap' )
+        .dataTable( {
+            responsive: true,
+            columnDefs: [
+            { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+    });
+    
+</script>
+{% endblock custom_js %}

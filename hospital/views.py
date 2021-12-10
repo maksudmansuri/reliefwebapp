@@ -677,7 +677,7 @@ def deletePrice(request,id):
 
 class manageDoctorView(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):
-        try:
+        try: 
             hospital=Hospitals.objects.get(admin=request.user)
             doctors = HospitalStaffDoctors.objects.filter(hospital=hospital)
             is_virtual_available_check = HospitalStaffDoctors.objects.filter(is_virtual_available=True,hospital=hospital,is_active=True).count()

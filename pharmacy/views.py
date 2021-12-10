@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from chat.models import Notification
 from lab.models import Medias
-from patient.models import Orders, PicturesForMedicine, phoneOPTforoders
+from patient.models import OrderBooking, Orders, PicturesForMedicine, phoneOPTforoders
 from django.core.files.storage import FileSystemStorage
 import pharmacy
 from django.http.response import HttpResponse, HttpResponseRedirect
@@ -21,15 +21,17 @@ IST = pytz.timezone('Asia/Kolkata')
 
 class LabDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
-      
-            # hospital = Hospitals.objects.get(admin=request.user.id)
-            # contacts = HospitalPhones.objects.filter(hospital=hospital)
-            # insurances = Insurances.objects.filter(hospital=hospital)
-
-            # if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.profile_pic and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile and contacts:
-                return render(request,"pharmacy/index.html")
+        # try: 
+            pharmacy = Pharmacy.objects.get(admin=request.user.id)
+            showtime = datetime.now(tz=IST).date()
+            print(showtime)
+            bookings = OrderBooking.objects.filter(HLP=pharmacy.admin,is_taken=False,is_active=True,is_cancelled = False,is_rejected = False) 
+            bookings_now = OrderBooking.objects.filter(HLP=pharmacy.admin,is_taken=False,is_active=True,is_cancelled = False,applied_date=showtime,is_rejected = False)
+            booking_now_list = []
+            param = {'bookings':bookings,'bookings_now':bookings_now}
+            return render(request,"pharmacy/index.html",param)
             
-            
+             
             # messages.add_message(request,messages.ERROR,"Some detail still Missing !")
             # param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
             # return render(request,"hospital/hospital_update.html",param)
@@ -37,6 +39,127 @@ class LabDashboardViews(SuccessMessageMixin,ListView):
     # def get(self,request):
     #     print("hello in m  in lab")
     #     return render(request,"lab/index.html")
+
+ 
+def AcceptAPT(request,id): 
+    try: 
+        apt = get_object_or_404(OrderBooking,id=id,is_cancelled=False,is_active=True)
+        is_applied = False        
+        is_accepted = True
+        status = "ACCEPTED"
+        
+        showtime = datetime.now(tz=IST)
+        apt.accepted_date = showtime
+        apt.status=status        
+        apt.is_accepted=is_accepted    
+        apt.is_applied=is_applied 
+        apt.save()  
+        notification =  Notification(notification_type="1",from_user= request.user,to_user=apt.patient,booking=apt)
+        notification.save()
+
+        messages.add_message(request,messages.SUCCESS,"Appointment is Accepted")
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,"Error in connection Try after sometimes")
+    return HttpResponseRedirect(reverse("lab_home"))
+
+def AcceptOTP(request,id):
+    apt = get_object_or_404(OrderBooking,id=id,is_cancelled=False,is_active=True)
+    phoneotp = get_object_or_404(phoneOPTforoders, order_id = apt)
+    user = phoneotp.user #mobile is a user     
+    key = phoneotp.otp  # Generating Key      
+    postotp=request.POST.get("otp")
+    # next_date=request.POST.get("next_date")
+    try:
+        is_accepted = False
+        is_otp_verified =True
+        status = "OTP Verified"
+         
+        showtime = datetime.now(tz=IST)
+        
+        if postotp == str(key):  # Verifying the OTP
+            apt.otp_verified_datetime = showtime
+            apt.taken_date = showtime
+            apt.status=status        
+            apt.is_accepted=is_accepted 
+            apt.store_invoice_uploaded = False
+            apt.is_amount_paid = False
+            apt.is_otp_verified=is_otp_verified
+            apt.is_taken=True
+            apt.save() 
+
+            phoneotp.validated = True          
+            phoneotp.save()    
+            
+
+            notification =  Notification(notification_type="1",from_user= request.user,to_user=apt.patient,booking=apt)
+            notification.save()
+            print(notification)
+            messages.add_message(request,messages.SUCCESS,"booking have been Verified Successfuly")
+        else:
+            messages.add_message(request,messages.ERROR,"OTP does not matched")
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,e)
+    return HttpResponseRedirect(reverse("lab_home"))
+
+def UploadReportViews(request,id):
+    report = request.FILES.get('report')        
+    desc = request.POST.get('desc')
+    # try:
+    print(report)
+    print(desc)
+    print("out side if")
+    booking = get_object_or_404(OrderBooking,id=id)
+    if report:
+        print("inside if")
+        fs=FileSystemStorage()
+        filename1=fs.save(report.name,report)
+        report_url=fs.url(filename1)
+        booking.report=report_url
+        status = "TAKEN"
+        booking.is_report_uploaded =True
+        booking.is_otp_verified = False
+        booking.desc = desc
+        booking.save()
+        messages.add_message(request,messages.SUCCESS,"Report Successfully Uploaded")
+    return HttpResponseRedirect(reverse("lab_home"))
+    # except Exception as e:
+    #     messages.add_message(request,messages.SUCCESS,e)
+    #     return HttpResponseRedirect(reverse("lab_home"))
+
+def dateleLabAppointment(request, id):
+    booking = get_object_or_404(OrderBooking,id=id)
+    booking.is_active = False
+    booking.save()
+    messages.add_message(request,messages.SUCCESS,"Appointment Successfully Deleted")
+    return HttpResponseRedirect(reverse("lab_home"))
+
+def RejectedAPT(request,id):
+    try:
+        apt = get_object_or_404(OrderBooking,id=id,is_cancelled=False,is_active=True)       
+        is_applied = False        
+        is_accepted = False
+        is_otp_verified =False
+        is_taken =False
+        is_rejected =True
+        status = "REJECTED"
+        
+        showtime = datetime.now(tz=IST)
+        apt.accepted_date = showtime
+        apt.status=status        
+        apt.is_accepted=is_accepted    
+        apt.is_applied=is_applied
+        apt.is_otp_verified=is_otp_verified
+        apt.is_taken=is_taken
+        apt.is_rejected=is_rejected
+        apt.save()  
+        notification =  Notification(notification_type="1",from_user= request.user,to_user=apt.patient,booking=apt)
+        notification.save()
+
+        messages.add_message(request,messages.SUCCESS,"Appointment is Rejected")
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,"Error in connection Try after sometimes")
+    return HttpResponseRedirect(reverse("lab_home"))
+
 
 class PharmacyUpdateViews(SuccessMessageMixin,UpdateView):
     def get(self, request, *args, **kwargs):
@@ -273,7 +396,7 @@ def UpdloadInvoicePharmacy(request,id):
     amount = request.POST.get('amount')   
     desc = request.POST.get('desc')
     try:
-        booking = get_object_or_404(PicturesForMedicine,id=id)
+        booking = get_object_or_404(OrderBooking,id=id)
         if store_invoice:
             print()
             fs=FileSystemStorage()
@@ -281,16 +404,22 @@ def UpdloadInvoicePharmacy(request,id):
             report_url=fs.url(filename1)
             booking.store_invoice=report_url
             booking.amount=amount
-            booking.status="Amount Uploded"
-            booking.desc = desc
+            booking.status="AMOUNT_UPLOADED"
+            booking.add_note = desc
+            booking.store_invoice_uploaded=True
+            showtime = datetime.now(tz=IST)
+            booking.store_invoice_datetime=showtime
+            print("here")
+            print(booking.store_invoice_uploaded)
+            booking.is_accepted =False
             booking.save()
-            notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.patient,picturesmedicine=booking)
+            notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.patient,booking=booking)
             notification.save()
-        messages.add_message(request,messages.SUCCESS,"invoice Successfully Uploaded")
-        return HttpResponseRedirect(reverse("view_pharmacy_appointment"))
+            messages.add_message(request,messages.SUCCESS,"invoice Successfully Uploaded")
+        return HttpResponseRedirect(reverse("pharmacy_home"))
     except Exception as e:
         messages.add_message(request,messages.SUCCESS,e)
-        return HttpResponseRedirect(reverse("view_pharmacy_appointment"))
+        return HttpResponseRedirect(reverse("pharmacy_home"))
 
 
 class ManageMainGalleryView(SuccessMessageMixin,CreateView):

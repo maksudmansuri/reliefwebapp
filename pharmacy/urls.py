@@ -1,7 +1,7 @@
 from django.urls import path
 from django.urls.conf import re_path
 from .import views
- 
+  
 urlpatterns = [  
     path('',views.LabDashboardViews.as_view(),name="pharmacy_home"), 
     path('pharmacy_update',views.PharmacyUpdateViews.as_view(),name="pharmacy_update"),
@@ -11,5 +11,10 @@ urlpatterns = [
     path('delete_pharma_gallery',views.deleteMainGallery,name="delete_pharma_gallery"),
     path('delete_pharmacy_appointment/<id>',views.deleteServicesViews,name="delete_pharmacy_appointment"),
     re_path('verifypharmacybooking',views.verifypharmacybooking,name="verifypharmacybooking"),
+
+     #previous Patients or Tests
+    path('ph_accept_apt/<id>',views.AcceptAPT,name="ph_accept_apt"),
+    path('ph_accept_otp/<id>',views.AcceptOTP,name="ph_accept_otp"),
+    path('ph_reject_apt/<id>',views.RejectedAPT,name="ph_reject_apt"),
   
 ]

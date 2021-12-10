@@ -18,6 +18,7 @@ import uuid
  
 # Create your models here.
 
+
 class ForSome(models.Model):
     id                  =models.AutoField(primary_key=True)
     profile_pic         =models.FileField(upload_to="user/profile_pic",max_length=500,null=True,default="")
@@ -49,18 +50,37 @@ class ForSome(models.Model):
         return self.fisrt_name +" "+ self.last_name
 
 class MediacalRecords(models.Model):
-    id                  =           models.AutoField(primary_key=True)
-    patient             =           models.ForeignKey(Patients,on_delete=models.CASCADE)
+    id                      =           models.AutoField(primary_key=True)
+    patient                 =           models.ForeignKey(Patients,on_delete=models.CASCADE)
     for_whom                =           models.ForeignKey(ForSome, on_delete=models.CASCADE,null=True,blank=True)
     hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE,null=True,blank=True)
     prescription            =           models.FileField(upload_to=None, max_length=256,default="",blank=True,null=True)
     symptoms                =           models.CharField(default="",blank=True,null=True,max_length=500)
     is_active               =           models.BooleanField(default=False)
-    AppoinmentDate         =           models.DateTimeField(default=datetime.datetime(1970,1,1))
+    AppoinmentDate          =           models.DateTimeField(default=datetime.datetime(1970,1,1))
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
-          
+
+class AmountCalculation(models.Model):
+    id                      =           models.AutoField(primary_key=True)
+    product_value           =           models.FloatField(null=True,blank=True,default=0)
+    tax_percentage           =           models.FloatField(null=True,blank=True,default=0)
+    tax_value           =           models.FloatField(null=True,blank=True,default=0)
+    commission_percentage           =           models.FloatField(null=True,blank=True,default=0)
+    commission_value           =           models.FloatField(null=True,blank=True,default=0)
+    discount_percentage           =           models.FloatField(null=True,blank=True,default=0)
+    discount_value           =           models.FloatField(null=True,blank=True,default=0)
+    homevisit_value           =           models.FloatField(null=True,blank=True,default=0)
+    extra_charges           =           models.FloatField(null=True,blank=True,default=0)
+    merchant_share          =           models.FloatField(null=True,blank=True,default=0)
+    admin_share          =           models.FloatField(null=True,blank=True,default=0)
+    payable_value           =           models.FloatField(null=True,blank=True,default=0)
+    is_active               =           models.BooleanField(default=False)
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
+    
 class OrderBooking(models.Model):
     id                      =           models.AutoField(primary_key=True)
     order_id                =           models.UUIDField(default=uuid.uuid4, unique=True, editable=False,null=True, blank=True) 
@@ -77,17 +97,20 @@ class OrderBooking(models.Model):
     applied_date            =           models.DateField(blank=True,null=True)
     accepted_date           =           models.DateTimeField(blank=True,null=True)
     otp_verified_datetime   =           models.DateTimeField(blank=True,null=True)
+    report_upload_datetime  =           models.DateTimeField(blank=True,null=True,default=datetime.datetime(2021,1,1),)
+    store_invoice_datetime  =           models.DateTimeField(blank=True,null=True,default=datetime.datetime(2021,1,1),)
     taken_date              =           models.DateTimeField(blank=True,null=True)
     rejected_date           =           models.DateTimeField(blank=True,null=True)
-
+  
     is_applied              =           models.BooleanField(default=False,blank=True,null=True)
     is_accepted             =           models.BooleanField(default=False,blank=True,null=True)
     is_otp_verified         =           models.BooleanField(default=False,blank=True,null=True)
+    is_report_uploaded         =           models.BooleanField(default=False,blank=True,null=True)
     is_taken                =           models.BooleanField(default=False,blank=True,null=True)
     is_rejected             =           models.BooleanField(default=False,blank=True,null=True)
     is_cancelled            =           models.BooleanField(default=False)
  
-    reject_within_5         =           models.DateTimeField(default=datetime.datetime(1970,1,1),blank=True, null=True)
+    reject_within_5         =           models.DateTimeField(default=datetime.datetime(2021,1,1),blank=True, null=True)
  
     status                  =           models.CharField(default="",blank=True,null=True,max_length=64)#BOOKED,OTP_SEND,OTP_VERIFIIED,TAKEN,cancelled_by_system,REJECTED,cancelled_by_user,report_uploaded,BILL_UPLOADED,PH_AMOUNT_PAID
     add_note                =           models.CharField(max_length=5000,blank=True,null=True,default="")
@@ -95,16 +118,18 @@ class OrderBooking(models.Model):
 
     modified_time           =           models.TimeField(blank=True,null=True)
     modified_date           =           models.DateField(blank=True,null=True)
-
+    homevisitcharges        =           models.CharField(max_length=50,blank=True,null=True,default="")
     report                  =           models.FileField(max_length=100,blank=True,null=True,default="")#lab
     services                =           models.ForeignKey(ServiceAndCharges, on_delete=models.CASCADE,null=True, blank=True)#lab
-    
+     
     invoice                 =           models.FileField(upload_to="booking/invoices",max_length=100,blank=True,null=True,default="")#for all hos,lab,pha
 
     prescription            =           models.FileField(upload_to="booking/prescription", max_length=256,default="",blank=True,null=True)#pharma
     store_invoice           =           models.FileField(upload_to="booking/store_invoice", max_length=256,default="",blank=True,null=True)#pharma
-
     amount                  =           models.FloatField(default=0,blank=True,null=True)
+    is_amount_paid          =           models.BooleanField(default=False)#pharmacy
+    store_invoice_uploaded     =           models.BooleanField(default=False)#pharmacy
+  
     # STATUS_TYPE_CHOICE      =           (("INPROCESS","INPROCESS"),("SUCCESS","SUCCESS"),("FAILED","FAILED"),("CANCELLED","CANCELLED"),(REFUNDPROCESS),("REFUNDED","REFUNDED"))
     payment_status          =           models.CharField(default="",blank=True,null=True,max_length=64)
 
@@ -112,13 +137,14 @@ class OrderBooking(models.Model):
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
 
-    class Meta:
+    class Meta: 
         ordering = ['-updated_at']
 
 class NewLabTest(models.Model):
     id                      =           models.AutoField(primary_key=True)
     service                 =           models.ForeignKey(ServiceAndCharges, on_delete=models.CASCADE,blank=True,null=True)
     booking                 =           models.ForeignKey(OrderBooking,on_delete=models.CASCADE)
+    is_active               =           models.BooleanField(default=False)
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
@@ -535,9 +561,9 @@ class PatientBottelAndInjections(models.Model):
     objects                 =           models.Manager()
 
 class Temp(models.Model):
-    id                      =          models.AutoField(primary_key=True)
-    user                    =          models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    order_id                =          models.IntegerField()
+    id                      =           models.AutoField(primary_key=True)
+    user                    =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    order_id                =           models.CharField(max_length=500,unique=True,null=True,blank=True)
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()

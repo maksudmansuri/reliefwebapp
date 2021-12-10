@@ -48,7 +48,7 @@
                                     <th>Actions</th>
                                    
                                 </tr>
-                            </thead> 
+                            </thead>  
                             <tbody id="tablecontent">
                             {% for book in picturesformedicine %}
                                 <tr>
@@ -193,7 +193,7 @@
     $('select.status').change(function(){   
         console.log("inside lab")   
         $.ajax({
-            type: 'POST',
+            type: 'POST', 
             url: "{% url 'view_pharmacy_appointment' %}",
             data:{
                 'a_id':$(this).data('index'),

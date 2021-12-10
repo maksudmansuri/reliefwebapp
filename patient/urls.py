@@ -14,7 +14,9 @@ urlpatterns = [
     path('cancellabbookedanappointment/<id>', views.CancelLabBookedAnAppointmentViews, name="cancellabbookedanappointment"),
     path('CancelPictureForMedicineViews/<id>', views.CancelPictureForMedicineViews, name="CancelPictureForMedicineViews"),
     
-    # Laboratory urls
+    path('records', views.RecordsViews.as_view(), name="records"),
+    # path('medical_records_form', views.MedicalFormRecordsViews.as_view(), name="medical_records_form"),
+    # Laboratory urls 
     path('laboratory_list', views.LabListViews.as_view(), name="laboratory_list"),
     path('laboratory_details/<id>', views.labDetailsViews.as_view(), name="laboratory_details"),
     path('send_to_doctor/<id>', views.ReportSendToDoctorViews, name="send_to_doctor"),
@@ -47,8 +49,10 @@ urlpatterns = [
     path('lab/<slot_id>',views.slotConfirmation,name="lab_confirmation"),
     path('pharmacy/<booking_id>',views.picturesformedicineConfirmation,name="pharmacy_confirmation"),
 
+    # path('add_file',views.MedicalFiles,name="add_file"),
+
     #Addmaedical old files
-    path('add_medical_files1', views.AddSomeoneAsPatient.as_view(), name="add_medical_files"),
+    # path('add_medical_files', views.AddMedicalFiles.as_view(), name="add_medical_files"),
     path('delete_medical_files/<id>', views.DeleteMedicalFiles, name="delete_medical_files"),
 
     path('hello',views.helllo, name='hello')   

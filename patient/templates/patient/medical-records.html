@@ -8,7 +8,7 @@
 	
 
 
-		
+		 
 
 <div class="col-md-7 col-lg-8 col-xl-9">
 	<div class="row">
@@ -22,10 +22,10 @@
 								<a class="nav-link active" href="#pat_medicalrecords"
 									data-bs-toggle="tab">Medical Records</a>
 							</li>
-							{% comment %} <li class="nav-item">
+							<li class="nav-item">
 								<a class="nav-link" href="#pat_prescription"
-									data-bs-toggle="tab">Prescription</a>
-							</li> {% endcomment %}
+									data-bs-toggle="tab">Hospital Uploaded</a>
+							</li> 
 						</ul>
 					</nav>
 
@@ -57,16 +57,16 @@
 											{% for file in files %}
 												<tr>
 													<td>{{forloop.counter}}</td>
-													{% if for_whom %}
-														<td>{{file.for_whom}}</td>
+													{% if file.for_whom %}
+														<td>{{file.for_whom.name_title}} {{file.for_whom.fisrt_name}} {{file.for_whom.last_name}}</td>
 													{% else %}
-														<td>{{file.patient}}</td>
+														<td>{{file.patient.admin.name_title}} {{file.patient.fisrt_name}} {{file.patient.last_name}}</td>
 													{% endif %}
 													
 													<td>{{file.AppoinmentDate|date:'d M Y'}} <span
-															class="d-block text-info">{{file.AppoinmentDate|time:'H:M'}}
-															AM</span></td>
-													<td>{{file.AppoinmentDate}}</td>
+															class="d-block text-info">{{file.AppoinmentDate|date:'h i a'}}
+															</span></td>
+													<td>{{file.symptoms}}</td>
 													<td>
 														<a href="{{file.prescription}}"
 															title="Download attachment"
@@ -95,39 +95,47 @@
 							</div>
 						</div>
 
-
-						{% comment %} <div class="tab-pane fade" id="pat_prescription">
+						<div class="tab-pane fade" id="pat_prescription">
 							<div class="card card-table mb-0">
 								<div class="card-body">
 									<div class="table-responsive">
 										<table class="table table-hover table-center mb-0">
 											<thead>
 												<tr>
-													<th>#</th>
+													<th>APPT ID</th>
 													<th>Date</th>
-													<th>Name</th>
+													<th>Hospital</th>
 													<th>Doctor</th>
+													<th>Attachment</th>
 													<th>Action</th>
 												</tr>
 											</thead>
 											<tbody>
+												{% for relief_file in relief_files %}
 												<tr>
-													<td>1</td>
-													<td>11 Nov 2019 <span
-															class="d-block text-info">10.00
-															AM</span></td>
-													<td>Prescription</td>
+													<td>{{relief_file.booking.id}}</td>
+													<td>{{relief_file.booking.applied_date}} <span
+															class="d-block text-info">{{relief_file.booking.applied_time}}</span></td>
+													<td>{{relief_file.hospitaldoctors.hospital.hopital_name}}</td>									
 													<td>
 														<h2 class="table-avatar">
 															<a href="doctor-profile.html"
 																class="avatar avatar-sm me-2">
 																<img class="avatar-img rounded-circle"
-																	src="assets/img/doctors/doctor-thumb-01.jpg"
+																	src="{{relief_file.hospitaldoctors.doctor.profile_pic}}"
+																	onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
 																	alt="User Image">
 															</a>
-															<a href="doctor-profile.html">Dr. Ruby
-																Perrin <span>Dental</span></a>
+															<a href="doctor-profile.html">Dr. {{relief_file.hospitaldoctors.doctor.fisrt_name}}
+																{{relief_file.hospitaldoctors.doctor.last_name}} <span>{{relief_file.hospitaldoctors.doctor.specialist}}</span></a>
 														</h2>
+													</td>
+													<td>
+														<a href="{{relief_file.file}}"
+															title="Download attachment"
+															class="btn btn-primary btn-sm"
+															target="_blank" > <i
+																class="fa fa-download" download></i></a>
 													</td>
 													<td>
 														<div class="table-action">
@@ -142,170 +150,14 @@
 														</div>
 													</td>
 												</tr>
-												<tr>
-													<td>2</td>
-													<td>3 Nov 2019 <span
-															class="d-block text-info">11.00
-															AM</span></td>
-													<td>Prescription</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="doctor-profile.html"
-																class="avatar avatar-sm me-2">
-																<img class="avatar-img rounded-circle"
-																	src="assets/img/doctors/doctor-thumb-02.jpg"
-																	alt="User Image">
-															</a>
-															<a href="doctor-profile.html">Dr. Darren
-																Elder <span>Dental</span></a>
-														</h2>
-													</td>
-													<td>
-														<div class="table-action">
-															<a href="javascript:void(0);"
-																class="btn btn-sm bg-info-light">
-																<i class="far fa-eye"></i> View
-															</a>
-															<a href="javascript:void(0);"
-																class="btn btn-sm bg-success-light">
-																<i class="fas fa-print"></i> Print
-															</a>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>3</td>
-													<td>1 Nov 2019 <span
-															class="d-block text-info">1.00 PM</span>
-													</td>
-													<td>Prescription</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="doctor-profile.html"
-																class="avatar avatar-sm me-2">
-																<img class="avatar-img rounded-circle"
-																	src="assets/img/doctors/doctor-thumb-03.jpg"
-																	alt="User Image">
-															</a>
-															<a href="doctor-profile.html">Dr.
-																Deborah Angel
-																<span>Cardiology</span></a>
-														</h2>
-													</td>
-													<td>
-														<div class="table-action">
-															<a href="javascript:void(0);"
-																class="btn btn-sm bg-info-light">
-																<i class="far fa-eye"></i> View
-															</a>
-															<a href="javascript:void(0);"
-																class="btn btn-sm bg-success-light">
-																<i class="fas fa-print"></i> Print
-															</a>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>4</td>
-													<td>30 Oct 2019 <span
-															class="d-block text-info">9.00 AM</span>
-													</td>
-													<td>Prescription</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="doctor-profile.html"
-																class="avatar avatar-sm me-2">
-																<img class="avatar-img rounded-circle"
-																	src="assets/img/doctors/doctor-thumb-04.jpg"
-																	alt="User Image">
-															</a>
-															<a href="doctor-profile.html">Dr. Sofia
-																Brient <span>Urology</span></a>
-														</h2>
-													</td>
-													<td>
-														<div class="table-action">
-															<a href="javascript:void(0);"
-																class="btn btn-sm bg-info-light">
-																<i class="far fa-eye"></i> View
-															</a>
-															<a href="javascript:void(0);"
-																class="btn btn-sm bg-success-light">
-																<i class="fas fa-print"></i> Print
-															</a>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>5</td>
-													<td>28 Oct 2019 <span
-															class="d-block text-info">6.00 PM</span>
-													</td>
-													<td>Prescription</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="doctor-profile.html"
-																class="avatar avatar-sm me-2">
-																<img class="avatar-img rounded-circle"
-																	src="assets/img/doctors/doctor-thumb-05.jpg"
-																	alt="User Image">
-															</a>
-															<a href="doctor-profile.html">Dr. Marvin
-																Campbell
-																<span>Ophthalmology</span></a>
-														</h2>
-													</td>
-													<td>
-														<div class="table-action">
-															<a href="javascript:void(0);"
-																class="btn btn-sm bg-info-light">
-																<i class="far fa-eye"></i> View
-															</a>
-															<a href="javascript:void(0);"
-																class="btn btn-sm bg-success-light">
-																<i class="fas fa-print"></i> Print
-															</a>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>6</td>
-													<td>27 Oct 2019 <span
-															class="d-block text-info">8.00 AM</span>
-													</td>
-													<td>Prescription</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="doctor-profile.html"
-																class="avatar avatar-sm me-2">
-																<img class="avatar-img rounded-circle"
-																	src="assets/img/doctors/doctor-thumb-06.jpg"
-																	alt="User Image">
-															</a>
-															<a href="doctor-profile.html">Dr.
-																Katharine Berthold
-																<span>Orthopaedics</span></a>
-														</h2>
-													</td>
-													<td>
-														<div class="table-action">
-															<a href="javascript:void(0);"
-																class="btn btn-sm bg-info-light">
-																<i class="far fa-eye"></i> View
-															</a>
-															<a href="javascript:void(0);"
-																class="btn btn-sm bg-success-light">
-																<i class="fas fa-print"></i> Print
-															</a>
-														</div>
-													</td>
-												</tr>
+												{% endfor %}
+												
 											</tbody>
 										</table>
 									</div>
 								</div>
 							</div>
-						</div> {% endcomment %}
+						</div> 
 
 					</div>
 
@@ -330,24 +182,33 @@
 						<span aria-hidden="true">×</span>
 					</button>
 				</div>
-				<form id="medical_records_form" enctype="multipart/form-data">
+				<form id="medical_records_form" enctype="multipart/form-data" method= "post">
 				{% csrf_token %}
 					<div class="modal-body">
 						<div class="row">
-							<div class="col-12 col-md-6">
+							<div class="col-12">
 								<div class="form-group">
-									<label>Title Name</label>
-									<input type="text" name="description" class="form-control"
-										placeholder="Enter Title Name">
+									<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')">
+									<label class="form-check-label" for="flexCheckDefault">
+                                        Is it for some else ?
+                                    </label>
+									<select class="form-select mb-3" aria-label="Default select example" id ="someone" name="someone" disabled ="disabled">
+                                        {% for someone in someones %}
+                                        <option value="{{someone.id}}" selected>{{someone}}</option>
+                                        {% endfor %}
+                                    </select>
 								</div>
 							</div>
-							<div class="col-12 col-md-6">
+							
+						</div>
+						<div class="row">
+							<div class="col-12">
 								<div class="form-group">
-									<label>Patient Name</label>
-									<select class="form-select">
-										<option>Myself</option>
-										{% for for_whom in for_whoms %}
-											<option>{{for_whom}}</option>
+									<label>Hospital Name</label>
+									<select class="form-select" name="hospital">
+										<option value="" disabled selected>Select Hospital</option>
+										{% for hospital in hospitals %}
+											<option value="{{hospital.id}}">{{hospital}}</option>
 										{% endfor %}
 										
 									</select>
@@ -357,21 +218,12 @@
 						<div class="row">
 							<div class="col-12">
 								<div class="form-group">
-									<label>Hospital Name</label>
-									<input type="text" name="hospital" class="form-control"
-										placeholder="Enter name here..">
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-12">
-								<div class="form-group">
 									<label>Upload</label>
 									<div class="upload-medical-records">
-										<input class="form-control" type="file" name="user_file" id="user_files_mr">
+										<input class="form-control" type="file" name="prescription" id="user_files_mr">
 										<div class="upload-content dropzone">
 											<div class="text-center">
-												<div class="upload-icon mb-2"><img src="assets/img/upload-icon.png"
+												<div class="upload-icon mb-2"><img src="{% static 'newstatic/assets/img/upload-icon.png' %} "
 														alt=""></div>
 												<h5>Drag &amp; Drop</h5>
 												<h6>or <span class="text-danger">Browse</span></h6>
@@ -386,7 +238,7 @@
 								<div class="form-group">
 									<label>Symptoms</label>
 									<input type="text" data-role="tagsinput" class="input-tags form-control"
-										value="Fever, Fatigue" name="services" id="services">
+										name="symptoms" id="services">
 								</div>
 							</div>
 						</div>
@@ -395,7 +247,7 @@
 								<div class="form-group">
 									<label>Date</label>
 									<div class="form-group">
-										<input type="date" class="form-control" name="tratment_date" id="tratment_date">
+										<input type="date" class="form-control" name="AppoinmentDate" id="AppoinmentDate">
 									</div>
 								</div>
 							</div>
@@ -414,4 +266,20 @@
 
 
  {% endblock modal_fade %}
-{% block custom_js %}{% endblock custom_js %}
+{% block custom_js %}
+<script>
+    function checkedFunc(element1Id) {
+    
+        var myLayer = document.getElementById('someone');
+        var element1 = document.getElementById(element1Id);
+    if (element1.checked == true) {
+            myLayer.class = "submit";
+            myLayer.removeAttribute("disabled");
+    } else {
+            myLayer.class = "button:disabled";
+            myLayer.setAttribute("disabled","disabled");
+    };
+    }
+
+</script>
+{% endblock custom_js %}

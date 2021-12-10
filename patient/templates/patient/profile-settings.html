@@ -117,8 +117,8 @@
 									<label>City *</label>
 									<input type="text" class="form-control" name="city" placeholder="City" value="{{patient.city}}" required>
 								</div>
-							</div> 
-							<div class="col-12 col-md-6">
+							</div>   
+							<div class="col-12 col-md-6"> 
 								<div class="form-group">
 									<label>State *</label>
 									<input type="text" class="form-control" name="state" placeholder="state"  value="Gujarat">
@@ -129,11 +129,38 @@
 									<label>Zip Code</label>
 									<input type="text" class="form-control" name="zip_Code" placeholder="Pin Code" value="{{patient.zip_Code}}" required>
 								</div>
-							</div>
+							</div>  
 							<div class="col-12 col-md-6">
 								<div class="form-group">
 									<label>Country</label>
 									<input type="text" class="form-control" name="country" placeholder="Country"  required value="India">
+								</div>
+							</div> 
+							<div class="col-12 col-md-6">
+								<div class="form-group">
+									<label>Blood Donation Date</label>
+									<input type="date" class="form-control" name="blood_docation_date" placeholder="Country" value="{{patient.blood_docation_date|date:'Y-m-d'}}" >
+								</div>
+							</div>
+						</div> 
+						<div class="col-12 col-md-6">
+							<label  class="form-label">Would You To Join Blood Bank(Needy will Contact you)?</label>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="blood_donation" id="exampleRadios1" value="1" {% if patient.blood_donation == 1%}checked{% endif %}>
+										<label class="form-check-label" for="exampleRadios1">
+										  Yes I am.
+										</label>
+									</div>
+								</div> 
+								<div class="col-md-6">
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="blood_donation" id="exampleRadios2" value="0" {% if patient.blood_donation == 0  %}checked{% endif %}>
+										<label class="form-check-label" for="exampleRadios2">
+											No I am not.
+										</label>
+									</div>
 								</div>
 							</div>
 						</div>

@@ -1,0 +1,208 @@
+{% extends './blank-page.html' %}
+{% load static %}
+{% block title %} Relief Pro - Search for Doctor Online Consulting | Emergency
+Booking{% endblock title %}
+
+{% block custom_css %} 	
+
+{% endblock custom_css %}
+
+ 
+{% block content %} 
+
+
+		<div class="breadcrumb-bar">
+			<div class="container-fluid">
+				<div class="row align-items-center">
+					<div class="col-md-8 col-12">
+						<nav aria-label="breadcrumb" class="page-breadcrumb">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="{% url 'front_home' %}">Home</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Search</li>
+							</ol>
+						</nav>
+						<h2 class="breadcrumb-title">{{doctors_number}} matches found</h2>
+					</div>
+					<div class="col-md-4 col-12 d-md-block d-none">
+						<div class="sort-by">
+							<span class="sort-title">Sort by</span>
+							<span class="sortby-fliter">
+								<select class="form-select">
+									<option>Select</option>
+									<option class="sorting">Rating</option>
+									<option class="sorting">Popular</option>
+									<option class="sorting">Latest</option>
+									<option class="sorting">Free</option>
+								</select>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="content">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 col-lg-4 col-xl-3 theiaStickySidebar">
+
+						<div class="card search-filter">
+							<div class="card-header">
+								<h4 class="card-title mb-0">Search Filter</h4>
+							</div>
+							<div class="card-body">
+								<div class="filter-widget">
+									<div class="cal-icon">
+										<input type="text" class="form-control datetimepicker"
+											placeholder="Select Date">
+									</div>
+								</div>
+								<div class="filter-widget">
+									<h4>Gender</h4>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="gender_type" checked>
+											<span class="checkmark"></span> Male Doctor
+										</label>
+									</div>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="gender_type">
+											<span class="checkmark"></span> Female Doctor
+										</label>
+									</div>
+								</div>
+								<div class="filter-widget">
+									<h4>Select Specialist</h4>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="select_specialist" checked>
+											<span class="checkmark"></span> Urology
+										</label>
+									</div>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="select_specialist" checked>
+											<span class="checkmark"></span> Neurology
+										</label>
+									</div>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="select_specialist">
+											<span class="checkmark"></span> Dentist
+										</label>
+									</div>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="select_specialist">
+											<span class="checkmark"></span> Orthopedic
+										</label>
+									</div>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="select_specialist">
+											<span class="checkmark"></span> Cardiologist
+										</label>
+									</div>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="select_specialist">
+											<span class="checkmark"></span> Cardiologist
+										</label>
+									</div>
+								</div>
+								<div class="btn-search">
+									<button type="button" class="btn w-100">Search</button>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="col-md-12 col-lg-8 col-xl-9">
+						{% for ambulacnce in patients %}
+								<div class="card product-box" >
+									<div class="card-body">
+										<div class="doctor-widget">
+											<div class="doc-info-left">
+												<div class="doctor-img">
+													<a href="#">
+														<img src="{{ambulacnce.profile_pic}}" class="img-fluid"
+															alt="User Image">
+													</a>
+												</div>
+												<div class="doc-info-cont">
+													<h4 class="doc-name">{{ambulacnce.admin.name_title|upper}} {{ambulacnce.fisrt_name|upper}} {{ambulacnce.last_name|upper}}</h4>
+                                                    
+                                                    <p class="doc-speciality">{{ambulacnce.age}}</p>
+                                                    <p class="doc-speciality">{{ambulacnce.address|title}}</p>
+                                                    <p class="doc-department">{{ambulacnce.city|upper}} {{ambulacnce.state|upper}}-{{ambulacnce.zip_Code}} {{ambulacnce.country|upper}} </p>
+													 
+													{% comment %} <p class="doc-speciality">{{hospital.hospital.specialist}}
+													</p> {% endcomment %}																								
+													
+													{% comment %} <div class="clinic-services">
+														<span>Dental Fillings</span>
+														<span> Whitneing</span>
+													</div> {% endcomment %}
+												</div>
+											</div>
+											<div class="doc-info-right" style="max-width:282px;">
+                                                <div class="clini-infos">
+                                                    <ul> 
+                                                        <li><i class="fas fa-first-aid" ></i><b>Blood Group : </b>{{ambulacnce.bloodgroup}} </li>
+                                                        <li><i class="fas fa-first-aid"></i><b>Last Donation : </b> {% if ambulacnce.blood_docation_date %}{{ambulacnce.blood_docation_date|date:'d-m-y'}}{% else %} NA {% endif %} </li>                                                              
+                                                                                                 
+                                                    </ul>
+                                                </div>
+                                                <div class="doctor-action">
+													{% if hospital.emergency_charges %} 
+                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+                                                        data-bs-target="#voice_call">
+														<i class="fas fa-first-aid"></i>
+                                                       
+                                                    </a>
+													{% endif %}
+													{% if hospital.home_charges %} 
+                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+                                                        data-bs-target="#voice_call">
+														<i class="fas fa-home"></i>
+                                                    </a>
+													{% endif %}
+													{% if hospital.is_virtual_available %}
+                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+                                                        data-bs-target="#video_call">
+                                                        <i class="fas fa-video"></i>
+                                                    </a>
+													{% endif %}
+
+												</div>
+                                                <div class="clinic-booking">
+                                                    <a class="apt-btn"><i class="fas fa-phone-alt" >  {{ambulacnce.drive_number}}</i> </a>
+                                                </div>
+                                            </div>
+										</div>
+									</div>
+								</div>
+						{% endfor %}
+
+
+						<div class="load-more text-center">
+							<button class="btn btn-primary btn-sm" id="loadMore" href="javascript:void(0);">Load More</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+
+</script>
+{% endblock custom_js %}

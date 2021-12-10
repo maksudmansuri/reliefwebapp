@@ -1,33 +1,35 @@
-{% extends 'patient/base1.html' %}
+{% extends 'patient/newbase.html' %}
 {% load static %}
-{% block title %} :: I-Health::  Pharmacy Appointment{% endblock title %}
+{% block title %} :: Relief Pro:: Dashboard {% endblock title %}
 
-{% block custom_css %}
-{% endblock custom_css %}
+{% block custom_css %}{% endblock custom_css %}
 
 {% block content %}
+
 {% comment %} {% if booking.status == "accepted" %}
-  <h6>Your booking is accepted </h6>
+<h6>Your booking is accepted </h6>
 {% endif %}
 {% if booking.status == "rejected" %}
-  <h6>Your booking is rejected </h6>
+<h6>Your booking is rejected </h6>
 {% endif %}
 {% if booking.status == "taken" %}
-  <h6>Your booking is competed </h6>
+<h6>Your booking is competed </h6>
 {% endif %}
 {% if booking.status == "" %}
 {% endif %} {% endcomment %}
-<div>
-<span id="status"></span>
+
+<div class="col-md-7 col-lg-8 col-xl-9">
+  <span id="status"></span>
   <h5><strong> Your Appointment has been booked </strong></h5><br>
   <h6>You are waiting for Hospital Approval </h6>
 
 </div>
-<h3>Status</h3>
-<span class="badge rounded-pill bg-secondary" id="status_html">Pending</span><br></br>
-<div class="progress">
-    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-</div>
+  <h3>Status</h3>
+  <span class="badge rounded-pill bg-secondary" id="status_html">Pending</span><br></br>
+  <div class="progress">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 00%"
+      aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
 {% endblock content %}
 
 
@@ -35,56 +37,57 @@
 {% endblock modal_fade %}
 
 {% block custom_js %}
-<script> 
-
+<script>
   var booking_id = '{{booking.id}}'
-  if(window.location.protocol == 'https'){
-        wsProtocol = 'wss://'
-    }else{ wsProtocol = 'ws://'}
-    let socket =  new WebSocket(wsProtocol + window.location.host + '/ws/patient/' + booking_id)
+  if (window.location.protocol == 'https') {
+    wsProtocol = 'wss://'
+  } else {
+    wsProtocol = 'ws://'
+  }
+  let socket = new WebSocket(wsProtocol + window.location.host + '/ws/patient/' + booking_id)
 
- 
 
-  socket.onopen = function(e){
+
+  socket.onopen = function (e) {
     console.log("connected")
   }
-  socket.onmessage = function(e){
+  socket.onmessage = function (e) {
     console.log(e.data)
     var data = JSON.parse(e.data)
     console.log(data.payload.status)
-    increaseProgress(data.payload.status,data.payload.progress)
-    }
-  socket.onclose = function(e){
+    increaseProgress(data.payload.status, data.payload.progress)
+  }
+  socket.onclose = function (e) {
 
   }
-  function increaseProgress(status,progress){
+
+  function increaseProgress(status, progress) {
     var status_js = document.querySelector('#status_html')
     var progress_js = document.querySelector('.progress-bar')
     progress_js.style.width = progress + "%"
-    
+
     progress_js.style.width = progress + "%"
-    if(status == ""){
+    if (status == "") {
       status_js.innerHTML = "Pending"
-    }
-    else{
+    } else {
       status_js.innerHTML = status
     }
-    if(status == "taken"){
+    if (status == "taken") {
       progress_js.classList.add('bg-success')
     }
-    if(status == "rejected"){
+    if (status == "rejected") {
       progress_js.classList.add('bg-danger')
     }
-   
+
   }
 
-// redirect to google after 5 seconds
-//window.setTimeout(function() {
+  // redirect to google after 5 seconds
+  //window.setTimeout(function() {
   //  window.location.href = 'http://www.google.com';
-//}, 5000);
+  //}, 5000);
 
-// Your delay in milliseconds
-//var delay = 5000;
-//setTimeout(function(){ window.location = "{% url 'patient_home' %}"; }, delay);
+  // Your delay in milliseconds
+  //var delay = 5000;
+  //setTimeout(function(){ window.location = "{% url 'patient_home' %}"; }, delay);
 </script>
 {% endblock custom_js %}

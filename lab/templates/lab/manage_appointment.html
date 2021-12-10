@@ -79,7 +79,7 @@
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{book.booking.id}}">Enter OTP</button>
                                         {% elif  book.booking.status == "taken" and book.booking.report == "" %}
                                             <button type="button" class="btn btn-secondary">Verified</button>
-                                        {% elif  book.booking.report %}
+                                        {% elif  book.booking.is_report_uploaded %}
                                             <button type="button" class="btn btn-dark">Uploaded</button>
                                         {% endif %}
                                     </td>

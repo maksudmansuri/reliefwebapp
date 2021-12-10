@@ -58,9 +58,9 @@
 							<small class="unread-msg">7</small>
 						</a>
 					</li> {% endcomment %}
-					{% url 'hello' as hello %}
-					<li {% if request.path == hello %}class="active"{% endif %}>
-						<a href="{% url 'hello' %}">
+					{% url 'records' as records %}
+					<li {% if request.path == records %}class="active"{% endif %}>
+						<a href="{% url 'records' %}">
 							<i class="fas fa-clipboard"></i>
 							<span>Add Medical Records</span>
 						</a>

@@ -1,0 +1,215 @@
+{% extends './blank-page.html' %}
+{% load static %}
+{% block title %} Relief Pro - Search for Pharmacy Online Booking | Emergency
+Booking{% endblock title %}
+
+{% block custom_css %} 	
+
+{% endblock custom_css %}
+
+ 
+{% block content %} 
+
+
+		<div class="breadcrumb-bar">
+			<div class="container-fluid">
+				<div class="row align-items-center">
+					<div class="col-md-8 col-12">
+						<nav aria-label="breadcrumb" class="page-breadcrumb">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="{% url 'front_home' %}">Home</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Search</li>
+							</ol>
+						</nav>
+						<h2 class="breadcrumb-title">{{pharma_number}} matches found</h2>
+					</div>
+					<div class="col-md-4 col-12 d-md-block d-none">
+						<div class="sort-by">
+							<span class="sort-title">Sort by</span>
+							<span class="sortby-fliter">
+								<select class="form-select">
+									<option>Select</option>
+									<option class="sorting">Rating</option>
+									<option class="sorting">Popular</option>
+									<option class="sorting">Latest</option>
+									<option class="sorting">Free</option>
+								</select>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="content">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 col-lg-4 col-xl-3 theiaStickySidebar">
+
+						<div class="card search-filter">
+							<div class="card-header">
+								<h4 class="card-title mb-0">Search Filter</h4>
+							</div>
+							<div class="card-body">
+								<div class="filter-widget">
+									<div class="cal-icon">
+										<input type="text" class="form-control datetimepicker"
+											placeholder="Select Date">
+									</div>
+								</div>
+								<div class="filter-widget">
+									<h4>Gender</h4>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="gender_type" checked>
+											<span class="checkmark"></span> Male Doctor
+										</label>
+									</div>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="gender_type">
+											<span class="checkmark"></span> Female Doctor
+										</label>
+									</div>
+								</div>
+								<div class="filter-widget">
+									<h4>Select Specialist</h4>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="select_specialist" checked>
+											<span class="checkmark"></span> Urology
+										</label>
+									</div>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="select_specialist" checked>
+											<span class="checkmark"></span> Neurology
+										</label>
+									</div>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="select_specialist">
+											<span class="checkmark"></span> Dentist
+										</label>
+									</div>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="select_specialist">
+											<span class="checkmark"></span> Orthopedic
+										</label>
+									</div>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="select_specialist">
+											<span class="checkmark"></span> Cardiologist
+										</label>
+									</div>
+									<div>
+										<label class="custom_check">
+											<input type="checkbox" name="select_specialist">
+											<span class="checkmark"></span> Cardiologist
+										</label>
+									</div>
+								</div>
+								<div class="btn-search">
+									<button type="button" class="btn w-100">Search</button>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="col-md-12 col-lg-8 col-xl-9">
+						{% for pharmacy in object_list %}
+								<div class="card product-box" >
+									<div class="card-body">
+										<div class="doctor-widget">
+											<div class="doc-info-left">
+												<div class="doctor-img">
+													<a href="#">
+														<img src="{{pharmacy.pharma.admin.profile_pic}}" class="img-fluid"
+															alt="User Image">
+													</a>
+												</div>
+												<div class="doc-info-cont">
+													<h4 class="doc-name"><a href="#">{{pharmacy.pharma.pharmacy_name}}</a></h4>
+													{% comment %} <p class="doc-speciality">{{hospital.hospital.specialist}}
+													</p> {% endcomment %}
+													
+													<div class="rating">
+														<i class="fas fa-star filled"></i>
+														<i class="fas fa-star filled"></i>
+														<i class="fas fa-star filled"></i>
+														<i class="fas fa-star filled"></i>
+														<i class="fas fa-star"></i>
+														<span class="d-inline-block average-rating">(17)</span>
+													</div>
+													<div class="clinic-details">
+														<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{pharmacy.pharma.city}},{{pharmacy.pharma.state}}</p>
+														<ul class="clinic-gallery">
+														{% for media in pharmacy.medias %}
+															{% if media.media_type == "1" %}
+															<li>
+																<a href="{{media.media_content}}"
+																	data-fancybox="gallery">
+																	<img src="{{media.media_content}}" alt="Feature">
+																</a>
+															</li>
+															{% comment %} {% elif media.media_type == "2" %}
+															<li>
+																<a href="{{media.media_content}}"
+																	data-fancybox="gallery">
+																	<video style="width:40px;height:30px;" controls src="{{media.media_content}}" alt="Feature">
+																</a>
+															</li>{% endcomment %}
+															{% endif %} 
+														{% endfor %}
+														</ul>
+													</div> 
+													{% comment %} <div class="clinic-services">
+														<span>Dental Fillings</span>
+														<span> Whitneing</span>
+													</div> {% endcomment %}
+												</div>
+											</div>
+											<div class="doc-info-right">
+												<div class="clini-infos">
+													<ul> 
+														{% comment %} <li title="rooms"><i class="fas fa-person-booth"></i>{{hospital.rooms}} Room</li>
+														<li title="ambulances"><i class="fas fa-ambulance"></i>{{hospital.ambulances}} Ambulance</li>
+														<li><i class="fas fa-map-marker-alt"></i> {{hospital.hospital.city}},{{hospital.hospital.state}}</li> {% endcomment %}
+														{% comment %} <li><i class="far fa-money-bill-alt"></i>{{hospital.room_min_price}} to {{hospital.room_max_price}}<i
+																class="fas fa-info-circle" data-bs-toggle="tooltip"
+																title="Lorem Ipsum"></i> </li> {% endcomment %}
+													</ul>
+												</div>   
+												<div class="clinic-booking">
+													<a class="view-pro-btn" href="{% url 'new_pharmacy_details' pharmacy.pharma.id %}">Order</a>
+													{% comment %} <a class="apt-btn" href="booking.html">Book Appointment</a> {% endcomment %}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+						{% endfor %}
+
+
+						<div class="load-more text-center">
+							<button class="btn btn-primary btn-sm" id="loadMore" href="javascript:void(0);">Load More</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+
+</script>
+{% endblock custom_js %}

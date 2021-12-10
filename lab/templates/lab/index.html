@@ -4,7 +4,7 @@
 
 {% block custom_css %}{% endblock custom_css %}
 
-{% block content %}
+{% block content %} 
 <div class="col-md-7 col-lg-8 col-xl-9">
     <div class="row">
         <div class="col-md-12">
@@ -86,7 +86,7 @@
                                             <tr>
                                                 <th>Appt ID</th>
                                                 <th>Patient Name</th>
-                                                <th>Doctor Name</th>
+                                                <th>Lab Test</th>
                                                 <th>Appt Date</th>
                                                 <th>Type</th>
                                                 <th class="text-center">Amount</th>
@@ -94,65 +94,69 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for booking in bookings %}
+                                            {% for booking in booking_list %}
                                             <tr>
                                                 <td>
-                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#appt_details{{booking.id}}" tooltip="true" title="view Appoinment">
-                                                        #APT00{{booking.id}}
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#appt_details{{booking.booking.id}}" tooltip="true" title="view Appoinment">
+                                                        #APT00{{booking.booking.id}}
                                                     </a>
                                                 </td>
                                                 <td>
                                                     <h2 class="table-avatar">
                                                         <a href="patient-profile.html"
-                                                            class="avatar avatar-sm me-2"><img
-                                                                class="avatar-img rounded-circle"
-                                                                src="{{booking.patient.profile_pic}}"
-                                                                onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
-                                                                alt="User Image"></a>
-                                                        <a href="patient-profile.html">{{booking.patient.name_title|title }}
-                                                            {{booking.patient.patients.fisrt_name|title }}
-                                                            {{booking.patient.patients.last_name|title }}
-                                                            <span>#PT00{{booking.patient.patients.id}}</span></a>
-                                                    </h2>
+                                                        class="avatar avatar-sm me-2"><img
+                                                        class="avatar-img rounded-circle"
+                                                        src="{{booking.booking.patient.profile_pic}}"
+                                                        onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+                                                        alt="User Image"></a>
+                                                        <a href="patient-profile.html">{{booking.booking.patient.name_title|title }}
+                                                            {{booking.booking.patient.patients.fisrt_name|title }}
+                                                            {{booking.booking.patient.patients.last_name|title }}
+                                                            <span>#PT00{{booking.booking.patient.patients.id}}</span></a>
+                                                        </h2>
                                                 </td>
-                                                <td>
-                                                    <h2 class="table-avatar">
-                                                        <a href="doctor-profile.html" class="avatar avatar-sm me-2"><img
-                                                                class="avatar-img rounded-circle"
-                                                                src="{{booking.hospitalstaffdoctor.doctor.profile_pic}}"
-                                                                onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
-                                                                alt="User Image"></a>
-                                                        <a href="patient-profile.html">{{booking.hospitalstaffdoctor.doctor.name_title|title }}
-                                                            {{booking.hospitalstaffdoctor.doctor.fisrt_name|title }}
-                                                            {{booking.hospitalstaffdoctor.doctor.last_name|title }}
-                                                            <span>#DT00{{booking.hospitalstaffdoctor.id}}</span></a>
-                                                    </h2>
+                                                <td><div class="clinic-services">
+                                                    {% for service in booking.labtest %}
+                                                        <span>{{service.service.service_name}}</span>
+                                                    {% endfor %}
+                                                </div> 
                                                 </td>
-                                                <td>{{booking.applied_date}} <span
-                                                        class="d-block text-info">{{booking.applied_time|time:"H i a"}}</span>
+                                                <td>{{booking.booking.applied_date}} <span
+                                                        class="d-block text-info">{{booking.booking.applied_time|time:"H i a"}}</span>
                                                 </td>
- 
-                                                <td>{{booking.booking_type}}</td>
-                                                <td class="text-center">&#x20B9; {{booking.amount}}</td>
+  
+                                                <td>{{booking.booking.booking_type}}</td>
+                                                <td class="text-center">&#x20B9; {{booking.booking.amount}}</td>
                                                 <td class="text-end">
                                                     <div class="table-action">
-                                                        {% if booking.is_accepted %}
-                                                            <a data-bs-toggle="modal" data-bs-target="#appt_otp{{booking.id}}" tooltip="true" title="Enter OTP"
+                                                        {% if booking.booking.is_accepted %}
+                                                            <a data-bs-toggle="modal" data-bs-target="#appt_otp{{booking.booking.id}}" tooltip="true" title="Enter OTP"
                                                             class="btn btn-sm bg-primary-light">
-                                                            <i class="fas fa-check"></i> Verify
+                                                            <i class="fas fa-check"></i> Verify {{booking.otp.otp}}
                                                             </a>
                                                         {% endif %}
-                                                        {% if booking.is_applied %}                            
-                                                            <a href="{% url 'accept_apt' booking.id %}"
+                                                        {% if booking.booking.is_applied %}                            
+                                                            <a href="{% url 'lab_accept_apt' booking.booking.id %}"
                                                                 class="btn btn-sm bg-success-light">
                                                                 <i class="fas fa-check"></i> Accept
-                                                            </a>
+                                                            </a> 
                                                         {% endif %}
-                                                        <a href="{% url 'reject_apt' booking.id %}"
+                                                        {% if  booking.booking.is_otp_verified %}
+                                                            <a type="button" class="btn btn-outline-secondary" id="uploadreport" data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{booking.booking.id}}"  data-bs-placement="top" title="Upload Report"  ><i class="fas fa-upload"></i><a>
+                                                        {% endif %}
+                                                        {% if booking.booking.is_report_uploaded %}
+                                                            <a type="button" class="btn btn-outline-secondary" id="uploadreport" data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{booking.booking.id}}"  data-bs-placement="top" title="Upload Report"  ><i class="fas fa-upload"></i><a>
+                                                            
+                                                            <a type="button" class="btn btn-outline-secondary" href="{{booking.booking.report}}" download data-bs-placement="top" title="Download Uploaded Report" ><i class="fas fa-download"></i></a>
+
+                                                            <a type="button" class="btn btn-outline-secondary" href="{% url 'delete_lab_appointment' booking.booking.id %}" title="Download Uploaded Report" ><i class="fas fa-trash"></i></a>
+                                                        
+                                                        {% else %}
+                                                        <a href="{% url 'lab_reject_apt' booking.booking.id %}"
                                                             class="btn btn-sm bg-danger-light">
                                                             <i class="fas fa-times"></i> Cancel
                                                         </a>
-                                                        
+                                                        {% endif %}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -169,12 +173,12 @@
                         <div class="card card-table mb-0">
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table id="patient-table1" class="table table-hover table-center mb-0" style="width: 100%;" >
+                                    <table id="patient-table1" class="table table-hover align-middle mb-0" style="width: 100%;" >
                                         <thead>
                                             <tr>
                                                 <th>Appt ID</th>
                                                 <th>Patient Name</th>
-                                                <th>Doctor Name</th>
+                                                <th>Lab Test</th>
                                                 <th>Appt Date</th>
                                                 <th>Type</th>
                                                 <th class="text-center">Amount</th>
@@ -182,11 +186,11 @@
                                             </tr>
                                         </thead> 
                                         <tbody>
-                                            {% for booking in bookings_now %} 
+                                            {% for booking in booking_now_list %} 
                                             <tr>
                                                 <td>
-                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#appt_details{{booking.id}}" tooltip="true" title="view Appoinment">
-                                                        #APT00{{booking.id}}
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#appt_details{{booking.booking.id}}" tooltip="true" title="view Appoinment">
+                                                        #APT00{{booking.booking.id}}
                                                     </a>
                                                 </td>
                                                 <td>
@@ -194,52 +198,59 @@
                                                         <a href="patient-profile.html"
                                                             class="avatar avatar-sm me-2"><img
                                                                 class="avatar-img rounded-circle"
-                                                                src="{{booking.patient.profile_pic}}"
+                                                                src="{{booking.booking.patient.profile_pic}}"
                                                                 onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                                                                 alt="User Image"></a>
-                                                        <a href="patient-profile.html">{{booking.patient.name_title|title }}
-                                                            {{booking.patient.patients.fisrt_name|title }}
-                                                            {{booking.patient.patients.last_name|title }}
-                                                            <span>#PT00{{booking.patient.patients.id}}</span></a>
+                                                        <a href="patient-profile.html">{{booking.booking.patient.name_title|title }}
+                                                            {{booking.booking.patient.patients.fisrt_name|title }}
+                                                            {{booking.booking.patient.patients.last_name|title }}
+                                                            <span>#PT00{{booking.booking.patient.patients.id}}</span></a>
                                                     </h2>
                                                 </td>
-                                                <td>
-                                                    <h2 class="table-avatar">
-                                                        <a href="doctor-profile.html" class="avatar avatar-sm me-2"><img
-                                                                class="avatar-img rounded-circle"
-                                                                src="{{booking.hospitalstaffdoctor.doctor.profile_pic}}"
-                                                                onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
-                                                                alt="User Image"></a>
-                                                        <a href="patient-profile.html">{{booking.hospitalstaffdoctor.doctor.name_title|title }}
-                                                            {{booking.hospitalstaffdoctor.doctor.fisrt_name|title }}
-                                                            {{booking.hospitalstaffdoctor.doctor.last_name|title }}
-                                                            <span>#DT00{{booking.hospitalstaffdoctor.id}}</span></a>
-                                                    </h2>
+                                                <td>  
+                                                    <div class="clinic-services">
+                                                        {% for service in booking.labtest %}
+                                                            <span>{{service.service.service_name}}</span>
+                                                        {% endfor %}
+                                                    </div>
                                                 </td>
-                                                <td>{{booking.applied_date}} <span
-                                                        class="d-block text-info">{{booking.applied_time|time:"H i" }}</span>
+                                                <td>{{booking.booking.applied_date}} <span
+                                                        class="d-block text-info">{{booking.booking.applied_time|time:"H i a"}}</span>
                                                 </td>
  
-                                                <td>{{booking.booking_type}}</td>
-                                                <td class="text-center">&#x20B9; {{booking.amount}}</td>
+                                                <td>{{booking.booking.booking_type}}</td>
+                                                <td class="text-center">&#x20B9; {{booking.booking.amount}}</td>
                                                 <td class="text-end">
                                                     <div class="table-action">
                                                         
-                                                        {% if booking.is_accepted %}
-                                                            <a data-bs-toggle="modal" data-bs-target="#appt_otp{{booking.id}}" tooltip="true" title="Enter OTP"
+                                                        {% if booking.booking.is_accepted %}
+                                                            <a data-bs-toggle="modal" data-bs-target="#appt_otp{{booking.booking.id}}" tooltip="true" title="Enter OTP"
                                                             class="btn btn-sm bg-primary-light">
-                                                            <i class="fas fa-check"></i> Verify
+                                                            <i class="fas fa-check"></i> Verify {{booking.otp.otp}}
                                                             </a>
                                                         {% endif %}
-                                                        {% if booking.is_applied %}                            
-                                                            <a href="{% url 'accept_apt' booking.id %}"
+                                                        {% if booking.booking.is_applied %}                            
+                                                            <a href="{% url 'lab_accept_apt' booking.booking.id %}"
                                                                 class="btn btn-sm bg-success-light">
                                                                 <i class="fas fa-check"></i> Accept
                                                             </a>
                                                         {% endif %}
-                                                        <a href="{% url 'reject_apt' booking.id %}"
+                                                        {% if  booking.booking.is_otp_verified %}
+                                                            <a type="button" class="btn btn-outline-secondary" id="uploadreport" data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{booking.booking.id}}"  data-bs-placement="top" title="Upload Report"  ><i class="fas fa-upload"></i><a>
+                                                        {% endif %}
+                                                        {% if booking.booking.is_report_uploaded %}
+                                                            <a type="button" class="btn btn-outline-secondary" id="uploadreport" data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{booking.booking.id}}"  data-bs-placement="top" title="Upload Report"  ><i class="fas fa-upload"></i><a>
+                                                            
+                                                            <a type="button" class="btn btn-outline-secondary" href="{{booking.booking.report}}" download data-bs-placement="top" title="Download Uploaded Report" ><i class="fas fa-download"></i></a>
+
+                                                            <a type="button" class="btn btn-outline-secondary" href="{% url 'delete_lab_appointment' booking.booking.id %}" download data-bs-placement="top" title="Download Uploaded Report" ><i class="fas fa-trash"></i></a>
+                                                        
+                                                        {% else %}
+                                                        <a href="{% url 'lab_reject_apt' booking.booking.id %}"
                                                             class="btn btn-sm bg-danger-light">
                                                             <i class="fas fa-times"></i> Cancel
+                                                        </a>
+                                                        {% endif %}
                                                         </a>
                                                         
                                                     </div>
@@ -258,12 +269,42 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock content %} 
 
 
 {% block modal_fade %}
-{% for booking in  bookings %}
-<div class="modal fade custom-modal" id="appt_details{{booking.id}}" style="display: none;" aria-hidden="true">
+{% for book in booking_list %}
+<!-- Modal Modal Center-->
+ <div class="modal fade" id="exampleModalCenter{{book.booking.id}}" tabindex="-1" aria-labelledby="exampleModalCenterTitle" style="display: none;" aria-hidden="true">
+     <div class="modal-dialog modal-dialog-centered">
+         <div class="modal-content">
+             <div class="modal-header">
+                 <h5 class="modal-title" id="exampleModalCenterTitle">Upload Report</h5>
+                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+             </div>
+             <div class="modal-body">
+             <form action="{% url 'updload_lab_report' book.booking.id %}" method ="post" enctype="multipart/form-data">
+             {% csrf_token %}
+                 <div class="col-md-12">
+                     <label class="form-label">Upload Report *</label>
+                     <input type="file" class="form-control" name="report" required >                          
+                 </div>
+                 <div class="col-md-12">
+                     <label class="form-label">About Report *</label>
+                     <textarea type="text" class="form-control" id="desc" name="desc" required></textarea>                        
+                 </div>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
+                     
+                 </div>
+             </form>
+         </div>
+     </div>
+ </div>
+{% endfor %}
+{% for booking in  booking_list %}
+<div class="modal fade custom-modal" id="appt_details{{booking.booking.id}}" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -278,13 +319,13 @@
                         <div class="details-header">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <span class="title">#APT00{{booking.id}}</span>
-                                    <span class="text">{{booking.applied_date}} {{booking.applied_time}}</span>
+                                    <span class="title">#APT00{{booking.booking.id}}</span>
+                                    <span class="text">{{booking.applied_date}} {{booking.booking.applied_time}}</span>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="text-end">
                                         <button type="button" class="btn bg-success-light btn-sm"
-                                            id="topup_status">{{booking.status}}</button>
+                                            id="topup_status">{{booking.booking.status}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -293,24 +334,24 @@
                     {% if booking.for_whom %}
                     <li>
                         <span class="title">For Someone:</span>
-                        <span class="text">{{booking.for_whom}}</span>
+                        <span class="text">{{booking.booking.for_whom}}</span>
                     </li>
                     {% endif %}
                     <li>
                         <span class="title">Type:</span>
-                        <span class="text">{{booking.booking_type}}</span>
+                        <span class="text">{{booking.booking.booking_type}}</span>
                     </li>
                     <li>
                         <span class="title">Status:</span>
-                        <span class="text">{{booking.status}}</span>
+                        <span class="text">{{booking.booking.status}}</span>
                     </li>
                     <li>
                         <span class="title">Confirm Date:</span>
-                        <span class="text">{{booking.applied_date}}</span>
+                        <span class="text">{{booking.booking.applied_date}}</span>
                     </li>
                     <li>
                         <span class="title">Paid Amount</span>
-                        <span class="text">&#x20B9;{{booking.amount}}</span>
+                        <span class="text">&#x20B9;{{booking.booking.amount}}</span>
                     </li>
                 </ul>
             </div>
@@ -318,8 +359,8 @@
     </div>
 </div>
 {% endfor %}
-{% for booking in  bookings %}
-<div class="modal fade custom-modal" id="appt_otp{{booking.id}}" style="display: none;" aria-hidden="true">
+{% for booking in  booking_list %}
+<div class="modal fade custom-modal" id="appt_otp{{booking.booking.id}}" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -334,13 +375,13 @@
                         <div class="details-header">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <span class="title">#APT00{{booking.id}}</span>
-                                    <span class="text">{{booking.applied_date}} {{booking.applied_time}}</span>
+                                    <span class="title">#APT00{{booking.booking.id}}</span>
+                                    <span class="text">{{booking.applied_date}} {{booking.booking.applied_time}}</span>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="text-end">
                                         <button type="button" class="btn bg-success-light btn-sm"
-                                            id="topup_status">{{booking.status}}</button>
+                                            id="topup_status">{{booking.booking.status}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -349,16 +390,16 @@
                     {% if booking.for_whom %}
                     <li>
                         <span class="title">For Someone:</span>
-                        <span class="text">{{booking.for_whom}}</span>
+                        <span class="text">{{booking.booking.for_whom}}</span>
                     </li>
                     {% endif %}
                     <li>
                         <span class="title">Paid Amount</span>
-                        <span class="text">&#x20B9;{{booking.amount}}</span>
+                        <span class="text">&#x20B9;{{booking.booking.amount}}</span>
                     </li>
                 </ul>
             </br>
-                <form action="{% url 'accept_otp' booking.id %}" method ="post">
+                <form action="{% url 'lab_accept_otp' booking.booking.id %}" method ="post">
                     {% csrf_token %}
                         <div class="col-md-12">
                             <label class="form-label">Enter 4 Digit OTP Number *</label>
@@ -366,7 +407,7 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Start Treatment</button>
+                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Start Test</button>
                             
                         </div>
                         
@@ -383,161 +424,12 @@
 
 <script>
 //for medias tab
-    $(".add_media").click(function(){
-        var media_row=$(".first_media").clone();
-        media_row.removeClass("first_media");  
-        media_row.replaceAll("src","")
-        media_row.find(".select_media").val("");
-        media_row.find(".img_preview").attr("src","").css({"border":"none"}).css({"border-radius":"0px"}).hide();
-        media_row.find(".video_preview").attr("src","").css({"border":"none"}).css({"border-radius":"0px"}).hide();
+   
 
-        $(".media_div").append(media_row);
-    });
-    $(".remove_media").click(function(){
-        if ($(".media_div").find(".media_div_row").length>1){
-            $(".media_div").children().last().remove();
-        }
-    });
-
-    $(document).on("change",".select_media",function(){
-        var media_type=$(this).parents(".media_div_row").find(".media_type").val();
-        var img_preview=$(this).parents(".media_div_row").find(".img_preview");
-        var vid_preview=$(this).parents(".media_div_row").find(".video_preview");
-        showPreviewMedia(this,media_type,img_preview,vid_preview);
-
-    });
-
-    function showPreviewMedia(input,media_type,img_preview,video_preview){
-        if(input.files && input.files[0]){
-            var reader=new FileReader();
-            reader.onload=function(e){
-                if(media_type=="1"){
-                    img_preview.attr("src",e.target.result);
-                    img_preview.show();
-                    img_preview.css({"border":"5px solid orange"});
-                    img_preview.css({"border-radius":"10px"});
-                }
-                if(media_type=="2"){
-                    video_preview.attr("src",e.target.result);
-                    video_preview.show();
-                    video_preview.css({"border":"5px solid orange"});
-                    video_preview.css({"border-radius":"10px"});
-                    video_preview.load();
-                    video_preview.play();
-                    
-                }                
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
- //For Treatment
-    $(".add_treatment").click(function(){
-        var about_row=$(".first_treatment").clone();
-        about_row.removeClass("first_treatment");  
-        about_row.find(".treatment").val("");
-        about_row.find(".treatment_rates").val("");
-        $(".treatment_div").append(about_row);
-    });
-    $(".remove_treatment").click(function(){
-        if ($(".treatment_div").find(".treatment_div_row").length>1){
-            $(".treatment_div").children().last().remove();
-        }
-    });
-// for Contact details tab
-    $(".add_contact").click(function(){
-        var about_row=$(".first_contact").clone();
-        about_row.removeClass("first_contact");  
-        about_row.find(".hospital_email").val("");
-        about_row.find(".hospital_mobile").val("");
-        $(".contact_div").append(about_row);
-    });
-    $(".remove_contact").click(function(){
-        if ($(".contact_div").find(".coontact_div_row").length>1){
-            $(".contact_div").children().last().remove();
-        }
-    });
-
-
-// for insurance details tab
-    $(".add_insurance").click(function(){
-        var about_row=$(".first_insurance").clone();
-        about_row.removeClass("first_insurance");  
-        about_row.find(".insurance_type").val("");
-        about_row.find(".insurance_name").val("");
-        $(".insurance_div").append(about_row);
-    });
-    $(".remove_insurance").click(function(){
-        if ($(".insurance_div").find(".insurance_div_row").length>1){
-            $(".insurance_div").children().last().remove();
-        }
-    });
-
-    // for Other Service details tab
-    $(".add_other").click(function(){
-        var about_row=$(".first_other").clone();
-        about_row.removeClass("first_other");  
-        about_row.find(".other_service").val("");
-        about_row.find(".other_rates").val("");
-        $(".other_div").append(about_row);
-    });
-    $(".remove_other").click(function(){
-        if ($(".other_div").find(".other_div_row").length>1){
-            $(".other_div").children().last().remove();
-        }
-    });
-
-    $(".submit_btn").click(function(){
-        var form=new FormData($("#myform")[0]);
-       // form.append("long_desc",tinyMCE.activeEditor.getContent());
-
-        //Ajax code
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange=function(){
-            if(xhr.status==200){
-                console.log(xhr.responseText);
-            }
-        }
-        xhr.open("POST","{% url 'lab_update' %}",true);
-        $("#progressbar").show();
-        
-        
-
-        //Updating Prograssbar
-        xhr.upload.addEventListener("progress",function(ev){
-            if(ev.lengthComputable){
-                var percentage=(ev.loaded/ev.total*100|0);
-                $("#progressbar").css({"width":""+percentage+"%"}).text("Uploading..."+percentage+"%");
-                console.log(percentage);
-                
-            }
-        });
-        xhr.send(form);
-        setTimeout(location.reload.bind(location), 2000);
-       // window.location.href = "{% url 'hospital_dashboard' %}";
-
-    })
-
+    
 </script>
 
 <script>
-$(document).on("change",".select_media",function(){
-        var img_preview=$(this).parents(".media_div_row").find(".img_preview");
-        showPreviewMedia(this,img_preview);
-
-    });
-
-    function showPreviewMedia(input,img_preview){
-        if(input.files && input.files[0]){
-            var reader=new FileReader();
-            reader.onload=function(e){
-            img_preview.attr("src",e.target.result);
-            img_preview.show();
-            img_preview.css({"border":"5px solid primary"});
-            img_preview.css({"border-radius":"2px"});
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
 </script>
 
 <script>

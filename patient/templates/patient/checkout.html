@@ -7,7 +7,7 @@ Booking {% endblock title %}
 
 {% block custom_css %}{% endblock custom_css %}
 
-{% block content %}
+{% block content %} 
 		<div class="breadcrumb-bar">
 			<div class="container-fluid">
 				<div class="row align-items-center">
@@ -32,39 +32,8 @@ Booking {% endblock title %}
 						<div class="card">
 							<div class="card-body">
  
-								<form action="booking-success.html">
+								<form action="booking-success.html">								
 									
-									{% comment %} <div class="info-widget">
-										<h4 class="card-title">Personal Information</h4>
-										<div class="row">
-											<div class="col-md-6 col-sm-12">
-												<div class="form-group card-label">
-													<label>First Name{{booking.order_id}}</label>
-													<input class="form-control" type="text">
-												</div>
-											</div>
-											<div class="col-md-6 col-sm-12">
-												<div class="form-group card-label">
-													<label>Last Name{{booking.id}}</label>
-													<input class="form-control" type="text">
-												</div>
-											</div>
-											<div class="col-md-6 col-sm-12">
-												<div class="form-group card-label">
-													<label>Email{{booking.status}}</label>
-													<input class="form-control" type="email">
-												</div>
-											</div>
-											<div class="col-md-6 col-sm-12">
-												<div class="form-group card-label">
-													<label>Phone</label>
-													<input class="form-control" type="text">
-												</div>
-											</div>
-										</div>
-										<div class="exist-customer">Existing Customer? <a href="#">Click here to
-												login</a></div>
-									</div> {% endcomment %}
 									
 									<div class="payment-widget">
 										<h4 class="card-title">Payment Method</h4>
@@ -147,99 +116,252 @@ Booking {% endblock title %}
 						<div class="card booking-card">
 							<div class="card-header">
 								<h4 class="card-title">Booking Summary</h4>
-							</div>
+							</div> 
 							{% if booking.booking_for == "H" %}
-							<div class="card-body">
-								<h4 class="card-title">Hospital Details</h4>
-								<div class="booking-doc-info">
-									<a href="doctor-profile.html" class="booking-doc-img">
-										<img src="{{booking.hospitalstaffdoctor.hospital.profile_pic}}" alt="User Image">
-									</a>
-									<div class="booking-info">
-										<h4><a href="doctor-profile.html">Dr. {{booking.hospitalstaffdoctor.hospital.hopital_name}}</a></h4>
-										{% comment %} <div class="rating">
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star"></i>
-											<span class="d-inline-block average-rating">35</span>
-										</div> {% endcomment %}
-										<div class="clinic-details">
-											<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{booking.hospitalstaffdoctor.hospital.city}} , {{booking.hospitalstaffdoctor.hospital.state}}
-											</p>
+								<div class="card-body">
+									<h4 class="card-title">Hospital Details</h4>
+									<div class="booking-doc-info">
+										<a href="doctor-profile.html" class="booking-doc-img">
+											<img src="{{booking.hospitalstaffdoctor.hospital.profile_pic}}" alt="User Image">
+										</a>
+										<div class="booking-info">
+											<h4><a href="doctor-profile.html">Dr. {{booking.hospitalstaffdoctor.hospital.hopital_name}}</a></h4>
+											{% comment %} <div class="rating">
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star"></i>
+												<span class="d-inline-block average-rating">35</span>
+											</div> {% endcomment %}
+											<div class="clinic-details">
+												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{booking.hospitalstaffdoctor.hospital.city}} , {{booking.hospitalstaffdoctor.hospital.state}}
+												</p>
+											</div>
 										</div>
 									</div>
-								</div>
-							</br>
-								<h5 class="card-title">Doctor Details</h5>
-								<div class="booking-doc-info">
-									<a href="doctor-profile.html" class="booking-doc-img">
-										<img src="{{booking.hospitalstaffdoctor.doctor.profile_pic}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
-									</a>
-									<div class="booking-info">
-										<h4><a href="doctor-profile.html">Dr. {{booking.hospitalstaffdoctor.doctor.fisrt_name}} {{booking.hospitalstaffdoctor.doctor.last_name}}</a></h4>
-										{% comment %} <div class="rating">
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star"></i>
-											<span class="d-inline-block average-rating">35</span>
-										</div> {% endcomment %}
-										<div class="clinic-details">
-											<p class="doc-location"><i class="fas fa-address-card"></i> {{booking.hospitalstaffdoctor.doctor.specialist}}
-											</p>
+								</br>
+									<h5 class="card-title">Doctor Details</h5>
+									<div class="booking-doc-info">
+										<a href="doctor-profile.html" class="booking-doc-img">
+											<img src="{{booking.hospitalstaffdoctor.doctor.profile_pic}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+										</a>
+										<div class="booking-info">
+											<h4><a href="doctor-profile.html">Dr. {{booking.hospitalstaffdoctor.doctor.fisrt_name}} {{booking.hospitalstaffdoctor.doctor.last_name}}</a></h4>
+											{% comment %} <div class="rating">
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star"></i>
+												<span class="d-inline-block average-rating">35</span>
+											</div> {% endcomment %}
+											<div class="clinic-details">
+												<p class="doc-location"><i class="fas fa-address-card"></i> {{booking.hospitalstaffdoctor.doctor.specialist}}
+												</p>
+											</div>
 										</div>
 									</div>
-								</div>
-							</br>
-								<h5 class="card-title">Patient Details</h5>
-								<div class="booking-doc-info">
-									{% if booking.for_whom %}
-									<a href="doctor-profile.html" class="booking-doc-img">
-										<img src="{{booking.for_whom.profile_pic}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
-									</a>
-									<div class="booking-info">
-										<h6><a href="doctor-profile.html">{{booking.for_whom.name_title}}. {{booking.for_whom.fisrt_name}} {{booking.for_whom.last_name}}</a></h6>
-										<div class="clinic-details">
-											<p class="doc-location"><i class="fas fa-heart"></i> {{booking.for_whom.relationship}}
-											</p>
-										</div>			
+								</br>
+									<h5 class="card-title">Patient Details</h5>
+									<div class="booking-doc-info">
+										{% if booking.for_whom %}
+										<a href="doctor-profile.html" class="booking-doc-img">
+											<img src="{{booking.for_whom.profile_pic}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+										</a>
+										<div class="booking-info">
+											<h6><a href="doctor-profile.html">{{booking.for_whom.name_title}}. {{booking.for_whom.fisrt_name}} {{booking.for_whom.last_name}}</a></h6>
+											<div class="clinic-details">
+												<p class="doc-location"><i class="fas fa-heart"></i> {{booking.for_whom.relationship}}
+												</p>
+											</div>			
+										</div>
+										{% else %}									
+										<a href="doctor-profile.html" class="booking-doc-img">
+											<img src="{{booking.patient.patients.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
+										</a>
+										<div class="booking-info">
+											<h6><a href="doctor-profile.html">{{booking.patient.name_title}} {{booking.patient.patients.fisrt_name}} {{booking.patient.patients.last_name}}</a></h6>
+															
+										</div>
+										{% endif %}
 									</div>
-									{% else %}									
-									<a href="doctor-profile.html" class="booking-doc-img">
-										<img src="{{booking.patient.patients.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
-									</a>
-									<div class="booking-info">
-										<h6><a href="doctor-profile.html">{{booking.patient.name_title}} {{booking.patient.patients.fisrt_name}} {{booking.patient.patients.last_name}}</a></h6>
-														
-									</div>
-									{% endif %}
-								</div>
-								
-								<div class="booking-summary">
-									<div class="booking-item-wrap">
-										<ul class="booking-date">
-											<li>Date <span>{{booking.applied_date}}</span></li>
-											<li>Time <span>{{booking.applied_time}}</span></li>
-											<li>Mode <span><strong>{{booking.booking_type}}</strong></span></li>
-										</ul>
-										<ul class="booking-fee">
-											<li>Consulting Fee <span>&#x20B9; {{booking.amount}}</span></li>
-											<li>Booking Fee <span>&#x20B9;{{booking.amount |mul:10|div:100}}</span></li>
-										</ul>
-										<div class="booking-total">
-											<ul class="booking-total-list">
-												<li>
-													<span>Total</span>
-													<span class="total-cost">&#x20B9;{{booking.amount |mul:110|div:100}}</span>
-												</li>
+									
+									<div class="booking-summary">
+										<div class="booking-item-wrap">
+											<ul class="booking-date">
+												<li>Date <span>{{booking.applied_date}}</span></li>
+												<li>Time <span>{{booking.applied_time}}</span></li>
+												<li>Mode <span><strong>{{booking.booking_type}}</strong></span></li>
 											</ul>
+											<ul class="booking-fee">
+												<li>Consulting Fee <span>&#x20B9; {{booking.amount}}</span></li>
+												<li>Booking Fee <span>&#x20B9;{{booking.amount |mul:10|div:100}}</span></li>
+											</ul>
+											<div class="booking-total">
+												<ul class="booking-total-list">
+													<li>
+														<span>Total</span>
+														<span class="total-cost">&#x20B9;{{booking.amount |mul:110|div:100}}</span>
+													</li>
+												</ul>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							{% elif booking.booking_for == "L" %}
+								<div class="card-body">
+									<h4 class="card-title">Lab Details</h4>
+									<div class="booking-doc-info">
+										<a class="booking-doc-img">
+											<img src="{{booking.HLP.profile_pic}}" alt="User Image">
+										</a>
+										<div class="booking-info">
+											<h4><a href="doctor-profile.html">{{booking.HLP.labs.lab_name}}</a></h4>
+											{% comment %} <div class="rating">
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star"></i>
+												<span class="d-inline-block average-rating">35</span>
+											</div> {% endcomment %}
+											<div class="clinic-details">
+												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{booking.HLP.labs.city}} , {{booking.HLP.labs.state}}
+												</p>
+											</div>
+										</div>
+									</div>									
+								</br>
+									<h5 class="card-title">Patient Details</h5>
+									<div class="booking-doc-info">
+										{% if booking.for_whom %}
+										<a href="doctor-profile.html" class="booking-doc-img">
+											<img src="{{booking.for_whom.profile_pic}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+										</a>
+										<div class="booking-info">
+											<h6><a href="doctor-profile.html">{{booking.for_whom.name_title}}. {{booking.for_whom.fisrt_name}} {{booking.for_whom.last_name}}</a></h6>
+											<div class="clinic-details">
+												<p class="doc-location"><i class="fas fa-heart"></i> {{booking.for_whom.relationship}}
+												</p>
+											</div>			
+										</div>
+										{% else %}									
+										<a href="doctor-profile.html" class="booking-doc-img">
+											<img src="{{booking.patient.patients.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
+										</a>
+										<div class="booking-info">
+											<h6><a href="doctor-profile.html">{{booking.patient.name_title}} {{booking.patient.patients.fisrt_name}} {{booking.patient.patients.last_name}}</a></h6>
+															
+										</div>
+										{% endif %}
+									</div>
+								</br>
+									<h5 class="card-title">Lab Test Details</h5>
+									<div class="booking-doc-info">										
+										<div class="booking-info">
+											<ul class="booking-date">
+												{% for test in services  %}
+												<li>{{test.service.service_name}}            <span>&#x20B9; {{test.service.service_charge}}</span></li>
+												{% endfor %}
+											</ul>															
+										</div>										
+									</div>
+									<div class="booking-summary">
+										<div class="booking-item-wrap">
+											<ul class="booking-date">
+												<li>Date <span>{{booking.applied_date}}</span></li>
+												<li>Time <span>{{booking.applied_time}}</span></li>
+												<li>Mode <span><strong>{{booking.booking_type}}</strong></span></li>
+											</ul>
+											<ul class="booking-fee">
+												<li>Lab Test Fee <span>&#x20B9; {{booking.amount}}</span></li>
+												{% if booking.homevisitcharges %}<li>Home visit (Included) <span>&#x20B9; {{booking.homevisitcharges}}</span></li>{% endif %}
+
+												<li>Discount<span>&#x20B9;{{booking.amount |mul:10|div:100}}</span></li>
+											</ul>
+											<div class="booking-total">
+												<ul class="booking-total-list">
+													<li>
+														<span>Total</span>
+														<span class="total-cost">&#x20B9;{{booking.amount |mul:90|div:100}}</span>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+							{% elif booking.booking_for == "P" %}
+								<div class="card-body">
+									<h4 class="card-title">Pharmacy Details</h4>
+									<div class="booking-doc-info">
+										<a href="doctor-profile.html" class="booking-doc-img">
+											<img src="{{booking.HLP.profile_pic}}" alt="User Image">
+										</a>
+										<div class="booking-info">
+											<h4><a href="doctor-profile.html">{{booking.HLP.pharmacy.pharmacy_name}}</a></h4>
+											{% comment %} <div class="rating">
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star filled"></i>
+												<i class="fas fa-star"></i>
+												<span class="d-inline-block average-rating">35</span>
+											</div> {% endcomment %}
+											<div class="clinic-details">
+												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{booking.HLP.pharmacy.city}} , {{booking.HLP.pharmacy.state}}
+												</p>
+											</div>
+										</div>
+									</div>
+								</br>									
+								</br>
+									<h5 class="card-title">Patient Details</h5>
+									<div class="booking-doc-info">
+										{% if booking.for_whom %}
+										<a href="doctor-profile.html" class="booking-doc-img">
+											<img src="{{booking.for_whom.profile_pic}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+										</a>
+										<div class="booking-info">
+											<h6><a href="doctor-profile.html">{{booking.for_whom.name_title}}. {{booking.for_whom.fisrt_name}} {{booking.for_whom.last_name}}</a></h6>
+											<div class="clinic-details">
+												<p class="doc-location"><i class="fas fa-heart"></i> {{booking.for_whom.relationship}}
+												</p>
+											</div>			
+										</div>
+										{% else %}									
+										<a href="doctor-profile.html" class="booking-doc-img">
+											<img src="{{booking.patient.patients.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
+										</a>
+										<div class="booking-info">
+											<h6><a href="doctor-profile.html">{{booking.patient.name_title}} {{booking.patient.patients.fisrt_name}} {{booking.patient.patients.last_name}}</a></h6>
+															
+										</div>
+										{% endif %}
+									</div>
+									
+									<div class="booking-summary">
+										<div class="booking-item-wrap">
+											<ul class="booking-date">
+												<li>Date <span>{{booking.applied_date}}</span></li>
+												<li>Time <span>{{booking.applied_time}}</span></li>
+												<li>Mode <span><strong>{{booking.booking_type}}</strong></span></li>
+											</ul>
+											<ul class="booking-fee">
+												<li>Consulting Fee <span>&#x20B9; {{booking.amount}}</span></li>
+												<li>Booking Fee <span>&#x20B9;{{booking.amount |mul:10|div:100}}</span></li>
+											</ul>
+											<div class="booking-total">
+												<ul class="booking-total-list">
+													<li>
+														<span>Total</span>
+														<span class="total-cost">&#x20B9;{{booking.amount |mul:110|div:100}}</span>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
 							{% endif %}
 						</div>
 

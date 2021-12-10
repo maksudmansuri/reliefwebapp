@@ -141,7 +141,7 @@ Booking {% endblock title %}
 							</div>
 						</div>
 
-						<form method="post" action="{% url 'checkout' %}" id="bookingform">
+						<form method="post" action="{% url 'bookappoinment_final' %}" id="bookingform">
 						<div class="card booking-schedule schedule-widget">
 							
 							{% csrf_token %}

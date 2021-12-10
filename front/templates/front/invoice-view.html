@@ -35,7 +35,7 @@ Booking {% endblock title %}
 								<div class="row">
 									<div class="col-md-6">
 										<div class="invoice-logo">
-											<img src="{% static 'newstatic/assets/img/logo.png' %} " onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="logo">
+											<img src="{{booking.HLP.profile_pic}} " onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="logo">
 										</div>
 									</div>
 									<div class="col-md-6">
@@ -53,10 +53,22 @@ Booking {% endblock title %}
 										<div class="invoice-info">
 											<strong class="customer-text">Invoice From</strong>
 											<p class="invoice-details invoice-details-two">
-												{% if booking.booking_for == "H" %}{{booking.HLP.hospitals.hopital_name}} <br>
-												
-												{{booking.HLP.hospitals.address1}}, {{booking.HLP.hospitals.address2}},<br>
-												{{booking.HLP.hospitals.city}}-{{booking.HLP.hospitals.pin_code}}, {{booking.HLP.hospitals.state}},{{booking.HLP.hospitals.country}} <br>{% endif %}
+												{% if booking.booking_for == "H" %}
+													{{booking.HLP.hospitals.hopital_name}} <br>
+													
+													{{booking.HLP.hospitals.address1}}, {{booking.HLP.hospitals.address2}},<br>
+													{{booking.HLP.hospitals.city}}-{{booking.HLP.hospitals.pin_code}}, {{booking.HLP.hospitals.state}},{{booking.HLP.hospitals.country}} <br>
+												{% elif booking.booking_for == "L" %}
+													{{booking.HLP.labs.lab_name}} <br>
+														
+													{{booking.HLP.labs.address}}, {{booking.HLP.labs.address2}},<br>
+													{{booking.HLP.labs.city}}-{{booking.HLP.labs.pin_code}}, {{booking.HLP.labs.state}},{{booking.HLP.labs.country}} <br>
+												{% elif booking.booking_for == "P" %}
+													{{booking.HLP.pharmacy.pharmacy_name}} <br>
+														
+													{{booking.HLP.pharmacy.address}},<br>
+													{{booking.HLP.pharmacy.city}}-{{booking.HLP.pharmacy.pin_code}}, {{booking.HLP.pharmacy.state}},{{booking.HLP.pharmacy.country}} <br>
+												{% endif %}
 											</p>
 										</div>
 									</div>
@@ -115,6 +127,30 @@ Booking {% endblock title %}
 														<td class="text-end">&#x20B9;{{booking.amount}}</td>
 													</tr>
 													{% endif %}
+													{% if booking.booking_for == "L" %}
+													{% for service in services %}
+													<tr>
+														<td>{{service.service.service_name}} - {{booking.booking_type}}<p>
+															
+														</td>
+														<td class="text-center">{{booking.applied_date}}- {{booking.applied_time}}</td>
+														
+														{% comment %} <td class="text-center">$0</td> {% endcomment %}
+														<td class="text-end">&#x20B9;{{service.service.service_charge}}</td>
+													</tr>
+													{% endfor %}
+													{% endif %}
+													{% if booking.booking_for == "P" %}
+													<tr>
+														<td>{{booking.booking_type}} BOOKING<p>
+															
+														</td>
+														<td class="text-center">{{booking.applied_date}}- {{booking.applied_time}}</td>
+														
+														{% comment %} <td class="text-center">$0</td> {% endcomment %}
+														<td class="text-end">&#x20B9;{{booking.amount}}</td>
+													</tr>
+													{% endif %}
 												</tbody>
 											</table>
 										</div>
@@ -123,17 +159,25 @@ Booking {% endblock title %}
 										<div class="table-responsive">
 											<table class="invoice-table-two table">
 												<tbody>
+													
+													{% if booking.homevisitcharges %}
+													<tr>
+														<th>Home Visit:</th>
+														<td><span>&#x20B9;{{booking.homevisitcharges}}</span></td>
+													</tr>
+													
+													{% endif %}
 													<tr>
 														<th>Subtotal:</th>
 														<td><span>&#x20B9;{{booking.amount}}</span></td>
 													</tr>
 													<tr>
-														<th>Booking Fee:</th>
+														<th>Discount:</th>
 														<td><span>&#x20B9;{{booking.amount |mul:10|div:100}}</span></td>
 													</tr>
 													<tr>
 														<th>Total Amount:</th>
-														<td><span>&#x20B9;{{booking.amount |mul:110|div:100}}</span></td>
+														<td><span>&#x20B9;{{booking.amount |mul:90|div:100}}</span></td>
 													</tr>
 												</tbody>
 											</table>

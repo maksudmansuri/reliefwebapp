@@ -2,6 +2,7 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import views
 from django.core import paginator
+from django.core.files.storage import FileSystemStorage
 from django.db.models.base import Model
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -12,16 +13,18 @@ from django.views.generic import View,ListView,DetailView
 from django.contrib import messages
 from django.db.models import Q
 from chat.models import Notification
-from accounts.models import AdminHOD, Hospitals, Labs, Pharmacy, Specailist
+from accounts.models import AdminHOD, Hospitals, Labs, Patients, Pharmacy, Specailist
 from accounts.views import send_otp
 from hospital.models import AmbulanceDetails, Blog, DoctorSchedule, HospitalMedias, HospitalRooms, HospitalStaffDoctors, ServiceAndCharges
 from django.http import JsonResponse
 from django.db import transaction
 from datetime import datetime,timedelta
 from django.db.models import Avg, Max, Min, Sum
-from lab.models import LabSchedule, Medias
+from lab.models import HomeVisitCharges, LabSchedule, Medias
+import patient
 
-from patient.models import ForSome, OrderBooking, phoneOPTforoders
+
+from patient.models import ForSome, NewLabTest, OrderBooking, Temp, phoneOPTforoders
 # Create your views here.
   
 class FrontView(View):
@@ -150,7 +153,31 @@ class SearchLabView(ListView):
         return context
 
 class SearchPharmacyView(ListView):
-    pass
+    model = Pharmacy
+    template_name = "front/pharmacy-search.html"
+
+    def get_queryset(self):
+        filter_val=self.request.GET.get("filter","")
+        order_by=self.request.GET.get("orderby","id")
+        if filter_val!="":
+            pharmacy=Pharmacy.objects.filter( Q(is_verified=True,is_deactive=False,admin__is_active=True) and (Q(pharmacy_name__contains=filter_val) | Q(about__contains=filter_val) | Q(city__contains=filter_val) | Q(address__contains=filter_val))).order_by(order_by)
+        else:
+            pharmacy=Pharmacy.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True).order_by(order_by)
+        
+        pharma_list = []
+        for pharma in pharmacy:
+            medias = Medias.objects.filter(is_active=True,user=pharma.admin)
+            pharma_list.append({'pharma':pharma,'medias':medias})       
+        return pharma_list
+     
+    def get_context_data(self,**kwargs):
+        context=super(SearchPharmacyView,self).get_context_data(**kwargs)
+        context["filter"]=self.request.GET.get("filter","")
+        context["orderby"]=self.request.GET.get("orderby","id")
+        context["pharma_number"]=Pharmacy.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True).count()
+        context["all_table_fields"]=Pharmacy._meta.get_fields()
+        return context
+
 
 class SearchBloodDonorView(ListView):
     pass
@@ -190,7 +217,7 @@ class SearchHospitalView(ListView):
         return context
 
 """Details View Hospital"""
-
+  
 class HospitalDetailsViews(DetailView):
     def get(self, request, *args, **kwargs):
         hosital_id=kwargs['id'] 
@@ -217,11 +244,15 @@ class DoctorsBookAppoinmentViews(View):
         hositaldcotorid_id=kwargs['did']
         hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
         doctor = get_object_or_404(HospitalStaffDoctors,is_active=True,id=hositaldcotorid_id)
-        doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,hospital=hospital)
-        forsome = ForSome.objects.filter(patient = request.user.patients) 
-        token =False
-        param = {'hospital':hospital,'doctor':doctor,'doctorschedules':doctorschedules,'token':token,'someones':forsome}  
-        return render(request,"front/booking.html",param)
+        if request.user.user_type == "4":
+            doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,hospital=hospital)
+            forsome = ForSome.objects.filter(patient = request.user.patients) 
+            token =False
+            param = {'hospital':hospital,'doctor':doctor,'doctorschedules':doctorschedules,'token':token,'someones':forsome}  
+            return render(request,"front/booking.html",param)
+        else:
+            messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
+            return HttpResponseRedirect(reverse("front_home"))  
      
     def post(self, request, *args, **kwargs):
         doc_id = request.POST.get('doc_id')        
@@ -230,12 +261,29 @@ class DoctorsBookAppoinmentViews(View):
             doc_id=kwargs['did'] 
         doctor = get_object_or_404(HospitalStaffDoctors,is_active=True,id=doc_id)
         doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,scheduleDate=date)
-        forsome = ForSome.objects.filter(patient = request.user.patients) 
-        print(date,doctor,doctorschedules)
-        token = True
-        param = {'hospital': doctor.hospital,'doctor':doctor,'doctorschedules':doctorschedules,'date':date,'token':token,'someones':forsome}  
-        return render(request,"front/booking.html",param)
+        if request.user.user_type == "4":
+            forsome = ForSome.objects.filter(patient = request.user.patients) 
+            print(date,doctor,doctorschedules)
+            token = True
+            param = {'hospital': doctor.hospital,'doctor':doctor,'doctorschedules':doctorschedules,'date':date,'token':token,'someones':forsome}  
+            return render(request,"front/booking.html",param)
+        else:
+            messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
+            return HttpResponseRedirect(reverse("front_home"))
 
+"""Pharmacy Details"""
+class PharmacyDetailsViews(DetailView):
+    def get(self, request, *args, **kwargs):
+        pharmacy_id=kwargs['id']
+        if request.user.user_type == "4": 
+            pharmacy = get_object_or_404(Pharmacy,is_verified=True,is_deactive=False,id=pharmacy_id)
+            medias = Medias.objects.filter(is_active=True,user=pharmacy.admin)  
+       
+            param = {'pharmacy':pharmacy,'medias':medias}  
+            return render(request,"front/pharmacy_details.html",param)
+        else:
+            messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
+            return HttpResponseRedirect(reverse("front_home"))   
 
 """Lab Details"""
 class LabDetailsViews(DetailView):
@@ -257,34 +305,181 @@ class LabAppoinmentViews(View):
         lab = get_object_or_404(Labs,is_verified=True,is_deactive=False,id=lab_id)
         medias = Medias.objects.filter(is_active=True,user=lab.admin)  
         services = ServiceAndCharges.objects.filter(user__labs = lab,is_active = True) 
-       
-        doctorschedules = LabSchedule.objects.filter(lab=lab)
-        forsome = ForSome.objects.filter(patient = request.user.patients) 
-        token =False 
-        param = {'lab':lab,'medias':medias,'services':services,'doctorschedules':doctorschedules,'token':token,'someones':forsome}  
-        return render(request,"front/Lab-booking.html",param)
-     
+        if request.user.user_type == "4":
+            doctorschedules = LabSchedule.objects.filter(lab=lab)
+            forsome = ForSome.objects.filter(patient = request.user.patients) 
+            token =False 
+            param = {'lab':lab,'medias':medias,'services':services,'doctorschedules':doctorschedules,'token':token,'someones':forsome}  
+            return render(request,"front/Lab-booking.html",param)
+        else:
+            messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
+            return HttpResponseRedirect(reverse("front_home"))
+
     def post(self, request, *args, **kwargs):
         doc_id = request.POST.get('doc_id')        
         date = request.POST.get('scheduleDate')
-        lab_id=kwargs['id'] 
-        lab = get_object_or_404(Labs,is_verified=True,is_deactive=False,id=lab_id)
-        medias = Medias.objects.filter(is_active=True,user=lab.admin)  
-        services = ServiceAndCharges.objects.filter(user__labs = lab,is_active = True) 
-        doctorschedules = LabSchedule.objects.filter(lab=lab,scheduleDate=date)
-        print(doctorschedules)       
-        # doctorschedules = LabSchedule.objects.filter(lab=lab)
-        forsome = ForSome.objects.filter(patient = request.user.patients) 
-        token =True 
-        param = {'lab':lab,'medias':medias,'services':services,'doctorschedules':doctorschedules,'date':date,'token':token,'someones':forsome}  
-        return render(request,"front/lab-booking.html",param)
+        lab_id=kwargs['id']
+        if request.user.user_type == "4":
+            lab = get_object_or_404(Labs,is_verified=True,is_deactive=False,id=lab_id)
+            medias = Medias.objects.filter(is_active=True,user=lab.admin)  
+            services = ServiceAndCharges.objects.filter(user__labs = lab,is_active = True) 
+            doctorschedules = LabSchedule.objects.filter(lab=lab,scheduleDate=date)
+            print(doctorschedules)       
+            # doctorschedules = LabSchedule.objects.filter(lab=lab)
+            forsome = ForSome.objects.filter(patient = request.user.patients) 
+            token =True 
+            param = {'lab':lab,'medias':medias,'services':services,'doctorschedules':doctorschedules,'date':date,'token':token,'someones':forsome}  
+            return render(request,"front/lab-booking.html",param)
+        else:
+            messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
+            return HttpResponseRedirect(reverse("front_home"))
 
+"""Appointment booking"""
+
+class BookAnAppointmentViews(views.SuccessMessageMixin,View):
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def post(self,request, *args, **kwargs):
+        # try:
+        if request.user.user_type == "4":
+            doctorid = request.POST.get('doctor_id')       
+            timeslot = request.POST.get('timeslot')
+            serviceid_list = request.POST.getlist('serviceid[]')
+            someone = request.POST.get('someone')       
+            date = request.POST.get('date')       
+            where = request.POST.get('orderwhere')
+            booking_type = request.POST.get('booking_type')
+            add_note = request.POST.get('add_note')
+            prescription = request.FILES.get('prescription')
+            now = datetime.now()
+            now5 = now + timedelta(minutes=5)
+            
+            with transaction.atomic():
+                booking = OrderBooking(patient = request.user,applied_date=date,is_applied=True,is_active=True,status="BOOKED")
+                booking.reject_within_5__lt = now            
+            booking.reject_within_5 = now5
+            booking.payment_status="INPROCESS"
+            if someone:
+                forsome = get_object_or_404(ForSome,id=someone)
+                booking.for_whom=forsome
+            if where == "hospital":
+                hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
+                doctorschedule = get_object_or_404(DoctorSchedule,id=timeslot,doctor=hospitalstaffdoctor)
+                doctorschedule.is_booked =True
+                doctorschedule.save()
+                booking.applied_time=doctorschedule.timeslot.schedule
+                booking.hospitalstaffdoctor=hospitalstaffdoctor
+                booking.HLP=hospitalstaffdoctor.hospital.admin
+                booking.booking_for="H"
+                booking.booking_type=booking_type           
+                if booking_type == "EMERGENCY": 
+                    booking.amount=hospitalstaffdoctor.emergency_charges
+                if booking_type == "OPD":
+                    booking.amount=hospitalstaffdoctor.opd_charges
+                if booking_type == "ONLINE":
+                    booking.amount=hospitalstaffdoctor.online_charges
+                if booking_type == "HOMEVISIT":
+                    booking.amount=hospitalstaffdoctor.home_charges           
+            
+            if where == "lab": 
+                booking.booking_for="L"
+                lab = get_object_or_404(Labs,id=doctorid)
+                labschedule = get_object_or_404(LabSchedule,id=timeslot,lab=lab)
+                labschedule.is_booked =True
+                labschedule.save()
+                booking.applied_time=labschedule.timeslot.schedule
+                booking.HLP=lab.admin
+                booking.booking_type=booking_type
+                total = 0
+                booking.save()
+                for service in serviceid_list:
+                    ser = get_object_or_404(ServiceAndCharges,id=service)
+                    labtest = NewLabTest(booking=booking,service=ser)
+                    labtest.save()       
+                    total = total + ser.service_charge
+                if booking_type == "AT-HOME":
+                    homevisticharge =get_object_or_404(HomeVisitCharges,lab = lab)
+                    booking.homevisitcharges = homevisticharge.charges
+                    total = total + homevisticharge.charges
+                booking.amount = total 
+
+            if where == "pharma":
+                if prescription:
+                    fs=FileSystemStorage()
+                    filename1=fs.save(prescription.name,prescription)
+                    prescription_url=fs.url(filename1)
+                    booking.prescription = prescription_url
+                pharmacy =get_object_or_404(Pharmacy,id=doctorid)
+                booking.HLP=pharmacy.admin
+                booking.booking_for="P"
+                booking.booking_type=booking_type
+                booking.applied_time=timeslot
+                booking.is_amount_paid = False
+                booking.add_note = add_note
+            booking.save()
+            tc = 0
+            try:
+                tc = Temp.objects.filter(user=request.user).count()
+            except:
+                tc = 0
+            print("tc check below")
+            print(tc)
+            if tc > 0:
+                temp = Temp.objects.get(user=request.user)
+                temp.delete()
+            temp =  Temp(user=request.user,order_id=booking.order_id)
+            temp.save() 
+            
+            print(booking.reject_within_5__lt)
+            print(booking.reject_within_5)
+    
+            print("booking saved")
+            mobile= request.user.phone
+            key = send_otp(mobile)
+            print(key)
+            if key: 
+                obj = phoneOPTforoders(order_id=booking,user=request.user,otp=key)
+                obj.save()
+                notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.HLP,booking=booking)
+                notification.save()
+                    # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
+                    # res = conn.getresponse()
+                    # data = res.read()
+                    # data=data.decode("utf-8")
+                    # data=ast.literal_eval(data)
+                    # print(data) 
+            if booking.booking_for == "P":
+                return render(request,"front/amount_confirmation.html")            
+            else:            
+                return HttpResponseRedirect(reverse("checkout"))  
+        else:
+            messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
+            return HttpResponseRedirect(reverse("front_home"))  
+        #     # return JsonResponse({'message' : 'success','status': True,'Booking_id':booking.id,"otp":key})
+        # else:
+        #     return JsonResponse({'message' : 'Error','status': False})
 
 class InvoiceViews(View):
     def get(self, request, *args, **kwargs):
-        id=kwargs['id']
-        booking = get_object_or_404(OrderBooking,id=id)
-        param ={'booking':booking}
+        id=kwargs['id'] 
+        booking = get_object_or_404(OrderBooking,id=id)          
+        book_for=booking.booking_for
+        if book_for == "H":
+            param ={'booking':booking} 
+        if book_for == "L":
+            services = NewLabTest.objects.filter(booking=booking)
+            param ={'booking':booking,'services':services}
+        if book_for == "P":
+            param ={'booking':booking}
         return render(request,"front/invoice-view.html",param)
- 
-    
+     
+
+class BLoodDonorList(View):
+    def get(self, request, *args, **kwargs):
+        last_three_month = datetime.today() - timedelta(days=90)
+        patients = Patients.objects.filter(admin__is_active=True,blood_donation =True,blood_docation_date__lte = last_three_month)
+        print(patients)
+        return render(request,"front/blood-donor-search.html",{'patients':patients})

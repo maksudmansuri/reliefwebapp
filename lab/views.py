@@ -1,6 +1,6 @@
 
 from chat.models import Notification
-from patient.models import LabTest, Orders, Slot, phoneOPTforoders
+from patient.models import LabTest, NewLabTest, OrderBooking, Orders, Slot, TreatmentReliefPetient, phoneOPTforoders
 from lab.models import HomeVisitCharges, LabSchedule, Medias
 from hospital.models import DoctorSchedule, ServiceAndCharges, TimeSlot
 from django.core.files.storage import FileSystemStorage
@@ -16,28 +16,170 @@ from django.contrib import messages
 from datetime import datetime
 import pytz
 IST = pytz.timezone('Asia/Kolkata')
-
+ 
 # Create your views here.
 
 class LabDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
-      
-            # hospital = Hospitals.objects.get(admin=request.user.id)
+        # try: 
+        lab = Labs.objects.get(admin=request.user.id)
+        showtime = datetime.now(tz=IST).date()
+        print(showtime)
+        bookings = OrderBooking.objects.filter(HLP=lab.admin,is_taken=False,is_active=True,is_cancelled = False,is_rejected = False)
+        booking_list = []
+        for booking in bookings:
+            newlabtest = NewLabTest.objects.filter(booking=booking)
+            booking_list.append({'booking':booking,'labtest':newlabtest})
+        bookings_now = OrderBooking.objects.filter(HLP=lab.admin,is_taken=False,is_active=True,is_cancelled = False,applied_date=showtime,is_rejected = False)
+        booking_now_list = []
+        for booking_now in bookings_now:
+            newlabtest1 = NewLabTest.objects.filter(booking=booking_now)
+            booking_now_list.append({'booking':booking_now,'labtest':newlabtest1})
+
+        # if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.profile_pic and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile and contacts:
             # contacts = HospitalPhones.objects.filter(hospital=hospital)
             # insurances = Insurances.objects.filter(hospital=hospital)
+        # rooms = HospitalRooms.objects.filter(is_active=True,hospital=request.user.hospitals)
+        param = {'booking_now_list':booking_now_list,'booking_list':booking_list}
+        
+      
+        # hospital = Hospitals.objects.get(admin=request.user.id)
+        # contacts = HospitalPhones.objects.filter(hospital=hospital)
+        # insurances = Insurances.objects.filter(hospital=hospital)
 
-            # if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.profile_pic and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile and contacts:
-                return render(request,"lab/index.html")
-            
-            
-            # messages.add_message(request,messages.ERROR,"Some detail still Missing !")
-            # param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
-            # return render(request,"hospital/hospital_update.html",param)
+        # if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.profile_pic and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile and contacts:
+        return render(request,"lab/index.html",param)
+        
+        
+        # messages.add_message(request,messages.ERROR,"Some detail still Missing !")
+        # param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
+        # return render(request,"hospital/hospital_update.html",param)
        
-    # def get(self,request):
-    #     print("hello in m  in lab")
-    #     return render(request,"lab/index.html")
-    
+        # def get(self,request):
+        #     print("hello in m  in lab")
+        #     return render(request,"lab/index.html")
+
+ 
+def AcceptAPT(request,id):
+    try:
+        apt = get_object_or_404(OrderBooking,id=id,is_cancelled=False,is_active=True)
+        is_applied = False        
+        is_accepted = True
+        status = "OTP_SEND"
+        
+        showtime = datetime.now(tz=IST)
+        apt.accepted_date = showtime
+        apt.status=status        
+        apt.is_accepted=is_accepted    
+        apt.is_applied=is_applied
+        apt.save()  
+        notification =  Notification(notification_type="1",from_user= request.user,to_user=apt.patient,booking=apt)
+        notification.save()
+
+        messages.add_message(request,messages.SUCCESS,"Appointment is Accepted")
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,"Error in connection Try after sometimes")
+    return HttpResponseRedirect(reverse("lab_home"))
+
+def AcceptOTP(request,id):
+    apt = get_object_or_404(OrderBooking,id=id,is_cancelled=False,is_active=True)
+    phoneotp = get_object_or_404(phoneOPTforoders, order_id = apt)
+    user = phoneotp.user #mobile is a user     
+    key = phoneotp.otp  # Generating Key      
+    postotp=request.POST.get("otp")
+    # next_date=request.POST.get("next_date")
+    try:
+        is_accepted = False
+        is_otp_verified =True
+        status = "OTP Verified"
+         
+        showtime = datetime.now(tz=IST)
+        
+        if postotp == str(key):  # Verifying the OTP
+            apt.otp_verified_datetime = showtime
+            apt.taken_date = showtime
+            apt.status=status        
+            apt.is_accepted=is_accepted    
+            apt.is_otp_verified=is_otp_verified
+            apt.save() 
+
+            phoneotp.validated = True          
+            phoneotp.save()    
+            
+
+            notification =  Notification(notification_type="1",from_user= request.user,to_user=apt.patient,booking=apt)
+            notification.save()
+            print(notification)
+            messages.add_message(request,messages.SUCCESS,"booking have been Verified Successfuly")
+        else:
+            messages.add_message(request,messages.ERROR,"OTP does not matched")
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,e)
+    return HttpResponseRedirect(reverse("lab_home"))
+
+def UploadReportViews(request,id):
+    report = request.FILES.get('report')        
+    desc = request.POST.get('desc')
+    # try:
+    print(report)
+    print(desc)
+    print("out side if")
+    booking = get_object_or_404(OrderBooking,id=id)
+    if report:
+        print("inside if")
+        fs=FileSystemStorage()
+        filename1=fs.save(report.name,report)
+        report_url=fs.url(filename1)
+        booking.report=report_url
+        status = "TAKEN"
+        booking.is_report_uploaded =True
+        booking.is_otp_verified = False
+        booking.desc = desc
+        booking.save()
+        messages.add_message(request,messages.SUCCESS,"Report Successfully Uploaded")
+    return HttpResponseRedirect(reverse("lab_home"))
+    # except Exception as e:
+    #     messages.add_message(request,messages.SUCCESS,e)
+    #     return HttpResponseRedirect(reverse("lab_home"))
+
+def dateleLabAppointment(request, id):
+    booking = get_object_or_404(OrderBooking,id=id)
+    labtests = NewLabTest.objects.filter(booking=booking)
+    for labtest in labtests:
+        labtest.is_active =False
+        labtest.save()
+    booking.is_active = False
+    booking.save()
+    messages.add_message(request,messages.SUCCESS,"Appointment Successfully Deleted")
+    return HttpResponseRedirect(reverse("lab_home"))
+
+def RejectedAPT(request,id):
+    try:
+        apt = get_object_or_404(OrderBooking,id=id,is_cancelled=False,is_active=True)       
+        is_applied = False        
+        is_accepted = False
+        is_otp_verified =False
+        is_taken =False
+        is_rejected =True
+        status = "REJECTED"
+        
+        showtime = datetime.now(tz=IST)
+        apt.accepted_date = showtime
+        apt.status=status        
+        apt.is_accepted=is_accepted    
+        apt.is_applied=is_applied
+        apt.is_otp_verified=is_otp_verified
+        apt.is_taken=is_taken
+        apt.is_rejected=is_rejected
+        apt.save()  
+        notification =  Notification(notification_type="1",from_user= request.user,to_user=apt.patient,booking=apt)
+        notification.save()
+
+        messages.add_message(request,messages.SUCCESS,"Appointment is Rejected")
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,"Error in connection Try after sometimes")
+    return HttpResponseRedirect(reverse("lab_home"))
+
 class LabUpdateViews(SuccessMessageMixin,UpdateView):
     def get(self, request, *args, **kwargs):
         # hospital = None
@@ -435,36 +577,6 @@ def verifylabtestbooking(request):
             messages.add_message(request,messages.ERROR,e)
             return HttpResponse(e)  # False Call    
         
-
-def dateleLabAppointment(request, id):
-    booking = get_object_or_404(Slot,id=id)
-    labtests = LabTest.objects.filter(slot=booking)
-    for labtest in labtests:
-        labtest.is_active =False
-        labtest.save()
-    booking.is_active = False
-    booking.save()
-    messages.add_message(request,messages.SUCCESS,"Appointment Successfully Deleted")
-    return HttpResponseRedirect(reverse("view_lab_appointment"))
-
-def UploadReportViews(request,id):
-    report = request.FILES.get('report')        
-    desc = request.POST.get('desc')
-    try:
-        booking = get_object_or_404(Slot,id=id)
-        if report:
-            print()
-            fs=FileSystemStorage()
-            filename1=fs.save(report.name,report)
-            report_url=fs.url(filename1)
-            booking.report=report_url
-            booking.desc = desc
-            booking.save()
-        messages.add_message(request,messages.SUCCESS,"Report Successfully Uploaded")
-        return HttpResponseRedirect(reverse("view_lab_appointment"))
-    except Exception as e:
-        messages.add_message(request,messages.SUCCESS,e)
-        return HttpResponseRedirect(reverse("view_lab_appointment"))
 
 
     

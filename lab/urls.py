@@ -29,6 +29,9 @@ urlpatterns = [
 
     re_path('verifylabtestbooking',views.verifylabtestbooking,name="verifylabtestbooking"),
     
-
+    #previous Patients or Tests
+    path('lab_accept_apt/<id>',views.AcceptAPT,name="lab_accept_apt"),
+    path('lab_accept_otp/<id>',views.AcceptOTP,name="lab_accept_otp"),
+    path('lab_reject_apt/<id>',views.RejectedAPT,name="lab_reject_apt"),
  
 ]

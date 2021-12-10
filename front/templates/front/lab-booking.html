@@ -130,7 +130,7 @@ Booking {% endblock title %}
 							</div>
 						</div>
 
-						<form method="post" action="{% url 'checkout' %}" id="bookingform">
+						<form method="post" action="{% url 'bookappoinment_final' %}" id="bookingform">
 						<div class="card booking-schedule schedule-widget">
 							
 							{% csrf_token %}
@@ -174,7 +174,7 @@ Booking {% endblock title %}
 									
 									
 								</div>
-								
+								 
 							</div>
 						
 						</div>
@@ -206,8 +206,18 @@ Booking {% endblock title %}
 						
 						<div class="row">
 							
-							<div class="col-6">
-								
+							
+								<div class="col-6">
+									<label class="form-label">Booking Type</label>
+									<select class="form-select" aria-label="Default select example" id="booking_type" name="booking_type" required>
+										<option value="">Select</option>
+										<option value="AT-HOME">AT-HOME</option>
+										<option value="AT-LAB">AT-LAB</option>
+										
+									</select>
+									
+								</div>
+								<input type="hidden" value="{{lab.id}}" name="doctor_id">
 								<input type="hidden" value="{{date}}" name="date" id="date">
 								<input type="hidden" value="lab" name="orderwhere">
 							</div>
@@ -406,7 +416,7 @@ Booking {% endblock title %}
 	var today = new Date().toISOString().split('T')[0];
 	document.getElementsByName("scheduleDate")[0].setAttribute('min', today);
 </script>
-
+ 
 <script>
 	$(document).ready(function() {
 	$('input.scheduleDate').change(function(){
@@ -415,7 +425,7 @@ Booking {% endblock title %}
 		});
 	});
 </script>
-<script>
+<script> 
 	function myFunction() {
 	var date = document.getElementById("scheduleDate").value;
 	console.log(date)
@@ -442,6 +452,8 @@ Booking {% endblock title %}
 	//window.location.replace("{% url 'checkout' %}");
 	}
 </script>
+<!--FOrm SUbmission-->
+
 <script>
     function checkedFunc(element1Id) {
     
