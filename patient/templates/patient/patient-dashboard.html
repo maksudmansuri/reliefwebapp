@@ -4,7 +4,7 @@
 {% block title %} :: Relief Pro:: Dashboard {% endblock title %}
 
 {% block custom_css %}{% endblock custom_css %}
-
+ 
 {% block content %}
 	
 	
@@ -12,8 +12,11 @@
 					<div class="col-md-7 col-lg-8 col-xl-9">
 						
 						<div class="card">
-						<div class="card-header">
+						<div class="card-header d-flex justify-content-between border-bottom flex-wrap">
 										<h4 class="card-title">Appointments</h4>
+										<div class="col-auto d-flex w-sm-100">
+											<button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;" onclick = "refesh()"><i class="fas fa-sync-alt"></i></button>
+										</div> 
 									</div>
 							<div class="card-body pt-0">
 
@@ -114,10 +117,11 @@
 																<th>Labs</th>
 																<th>Appt Date</th>
 																<th>Booking Date</th>
+																<th>Report</th>
 																<th>Amount</th>																
 																<th>Status</th>
 																<th></th>
-															</tr>
+															</tr> 
 														</thead>
 														<tbody> 
 														{% for labbooks in booking_labtest_list %}
@@ -134,9 +138,14 @@
 																			<span></span></a>
 																	</h2>
 																</td>
-																<td>{{labbooks.labbook.applied_date}}  <span class="d-block text-info">{{labbooks.labbook.applied_time}}
+																<td>	{{labbooks.labbook.applied_date}}  <span class="d-block text-info">
+																	{{labbooks.labbook.applied_time}}
 																		</span></td>
 																<td>{{labbooks.labbook.created_at|date:'M d Y'}}</td>
+																<td>{% if labbooks.labbook.report %}<a href="{{labbooks.labbook.report}}"
+																	title="Download attachment"
+																	class="btn btn-primary btn-sm"> <i
+																		class="fa fa-download" download></i></a>{% else %}NA{% endif %}</td>
 																<td>{{labbooks.labbook.amount}}</td>
 																
 																<td><span class="badge rounded-pill bg-{% if labbooks.labbook.is_rejected %}danger{% elif labbooks.labbook.is_cancelled %}danger{% else %}success{% endif %}-light">{{labbooks.labbook.status}}</span>
@@ -173,7 +182,8 @@
 														<tr>	<th>APPT ID</th>
 																<th>Pharmacy</th>
 																<th>Appt Date</th>
-																<th>Prescription<th>
+																<th>Prescription</th>
+																
 																<th>Booking Date</th>
 																<th>Amount</th>
 																
@@ -207,6 +217,8 @@
 																				</a>
 																			</h2>
 																</td>
+																<td>{{pharmacy.created_at|date:'M d Y'}}<span class="d-block text-info">{{pharmacy.created_at|date:"h i a"}}
+																</span></td>
 																<td>{{pharmacy.amount}}</td>
 																
 																<td> 
@@ -373,6 +385,10 @@
             ]
         });
     });
-    
+    function refesh(){
+		//  $("#mydiv").load(location.href + " #mydiv");
+		//  $( "#mydiv" ).load(window.location.href);
+		  location.reload();
+	  }
 </script>
 {% endblock custom_js %}

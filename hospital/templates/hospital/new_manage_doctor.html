@@ -2,7 +2,7 @@
  {% load static %}
  {% block title %} Doctor List {% endblock title %}
 
- {% block custom_css %}{% endblock custom_css %}
+ {% block custom_css %}<script src="{% static 'newstatic/assets/js/cities.js' %} "></script>{% endblock custom_css %}
 
  {% block content %}
  <div class="col-md-7 col-lg-8 col-xl-9">
@@ -164,12 +164,13 @@
                                                             <input type="text" class="form-control" id="address" name="address" value="{{doctor.doctor.address}}" >
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <label for="city" class="form-label">City</label>
-                                                            <input type="text" class="form-control" id="city" name="city" value="{{doctor.doctor.city}}" >
+                                                            <label for="city" class="form-label">State</label>
+                                                            <select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state" class="form-control" value="{{doctor.doctor.state}}"></select>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <label for="state" class="form-label">State</label>
-                                                            <input type="text" class="form-control" id="state" name="state" value="{{doctor.doctor.state}}" >
+                                                            <label for="state" class="form-label">City</label>
+                                                            <select id ="state" class="form-control" name="city" required value="{{doctor.doctor.city}}"></select>
+                                                            <script language="javascript">print_state("sts");</script>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="country" class="form-label">Country</label>
@@ -352,7 +353,7 @@
                                                      Number</label>
                                                  <input type="text" class="form-control" id="alternate_mobile"
                                                      name="alternate_mobile">
-                                             </div>
+                                             </div> 
                                              <div class="col-md-6">
                                                  <label for="ssn_id" class="form-label">SSN ID </label>
                                                  <input type="text" class="form-control" id="ssn_id" name="ssn_id">
@@ -362,13 +363,14 @@
                                                  <input type="text" class="form-control" id="address" name="address">
                                              </div>
                                              <div class="col-md-6">
-                                                 <label for="city" class="form-label">City</label>
-                                                 <input type="text" class="form-control" id="city" name="city">
-                                             </div>
-                                             <div class="col-md-6">
-                                                 <label for="state" class="form-label">State</label>
-                                                 <input type="text" class="form-control" id="state" name="state">
-                                             </div>
+                                                <label for="city" class="form-label">State</label>
+                                                <select onchange="print_city('state1', this.selectedIndex);" id="sts1" name ="state" class="form-control"></select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="state" class="form-label">City</label>
+                                                <select id ="state1" class="form-control" name="city" required ></select>
+                                                <script language="javascript">print_state("sts1");</script>
+                                            </div>
                                              <div class="col-md-6">
                                                  <label for="country" class="form-label">Country</label>
                                                  <input type="text" class="form-control" id="country" name="country">

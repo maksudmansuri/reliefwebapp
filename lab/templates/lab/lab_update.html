@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %} Relief Pro : Update {% endblock title %}
  
-{% block custom_css %}{% endblock custom_css %}
+{% block custom_css %}<script src="{% static 'newstatic/assets/js/cities.js' %} "></script>{% endblock custom_css %}
   
 {% block content %}
      <!-- Body: Body -->
@@ -77,17 +77,19 @@
                                         <input type="text" class="form-control" id="address1" name="address" placeholder="Lab Address " value="{{lab.address}}">
                                     </div>                                            
                                     <div class="col-md-6">
-                                        <label for="city" class="form-label">City *</label>
-                                        <input type="text" class="form-control" id="city" name="city" placeholder="City" value="{{lab.city}}">
+                                        <label for="city" class="form-label">State</label>
+                                        <select onchange="print_city('state1', this.selectedIndex);" id="sts1" name ="state" class="form-control"></select>
                                     </div>
+                                    <div class="col-md-6">
+                                        <label for="state" class="form-label">City</label>
+                                        <select id ="state1" class="form-control" name="city" required ></select>
+                                        <script language="javascript">print_state("sts1");</script>
+                                    </div>  
                                     <div class="col-md-6">
                                         <label for="pin_code" class="form-label">Pincode *</label>
                                         <input type="text" class="form-control" id="pin_code" name="pin_code" placeholder="Pin Code" value="{{lab.pin_code}}">
                                     </div>
-                                    <div class="col-md-6">
-                                        <label for="state" class="form-label">State *</label>
-                                        <input type="text" class="form-control" id="state" name="state" placeholder="state" value="Gujarat">
-                                    </div>
+                                    
                                     <div class="col-md-6">
                                         <label for="Country" class="form-label">Country *</label>
                                         <input type="text" class="form-control" id="country" name="country" placeholder="Country" disabled value="India">

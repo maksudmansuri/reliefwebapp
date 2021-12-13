@@ -26,21 +26,23 @@ class LabDashboardViews(SuccessMessageMixin,ListView):
         showtime = datetime.now(tz=IST).date()
         print(showtime)
         bookings = OrderBooking.objects.filter(HLP=lab.admin,is_taken=False,is_active=True,is_cancelled = False,is_rejected = False)
+        totalbookings = OrderBooking.objects.filter(HLP=lab.admin,is_taken=False,is_active=True,is_cancelled = False,is_rejected = False).count()
         booking_list = []
         for booking in bookings:
             newlabtest = NewLabTest.objects.filter(booking=booking)
             booking_list.append({'booking':booking,'labtest':newlabtest})
         bookings_now = OrderBooking.objects.filter(HLP=lab.admin,is_taken=False,is_active=True,is_cancelled = False,applied_date=showtime,is_rejected = False)
+        todaybookings = OrderBooking.objects.filter(HLP=lab.admin,is_taken=False,is_active=True,is_cancelled = False,applied_date=showtime,is_rejected = False).count()
         booking_now_list = []
         for booking_now in bookings_now:
             newlabtest1 = NewLabTest.objects.filter(booking=booking_now)
             booking_now_list.append({'booking':booking_now,'labtest':newlabtest1})
-
+        todaypayments = 1500
         # if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.profile_pic and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile and contacts:
             # contacts = HospitalPhones.objects.filter(hospital=hospital)
             # insurances = Insurances.objects.filter(hospital=hospital)
         # rooms = HospitalRooms.objects.filter(is_active=True,hospital=request.user.hospitals)
-        param = {'booking_now_list':booking_now_list,'booking_list':booking_list}
+        param = {'booking_now_list':booking_now_list,'booking_list':booking_list,'totalbookings':totalbookings,'todaybookings':todaybookings,'todaypayments':todaypayments}
         
       
         # hospital = Hospitals.objects.get(admin=request.user.id)
@@ -59,7 +61,6 @@ class LabDashboardViews(SuccessMessageMixin,ListView):
         #     print("hello in m  in lab")
         #     return render(request,"lab/index.html")
 
- 
 def AcceptAPT(request,id):
     try:
         apt = get_object_or_404(OrderBooking,id=id,is_cancelled=False,is_active=True)
@@ -102,11 +103,7 @@ def AcceptOTP(request,id):
             apt.is_accepted=is_accepted    
             apt.is_otp_verified=is_otp_verified
             apt.save() 
-
-            phoneotp.validated = True          
-            phoneotp.save()    
-            
-
+            phoneotp.delete()        
             notification =  Notification(notification_type="1",from_user= request.user,to_user=apt.patient,booking=apt)
             notification.save()
             print(notification)
@@ -361,8 +358,6 @@ def deleteTimeSlot(request,id):
     messages.add_message(request,messages.SUCCESS,"Sucessfully Deleted")
     return HttpResponseRedirect(reverse("manage_labschedule"))
 
-
-
 class ServicesViews(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):
         # try:
@@ -402,7 +397,6 @@ def HomeServicesViews(request):
         serviceandcharges.save()
         messages.add_message(request,messages.SUCCESS,"Successfully Added")
     return HttpResponseRedirect(reverse("add_lab_services"))
-
 
 def HomeServicesUpdateViews(request):
     if request.method == "POST":

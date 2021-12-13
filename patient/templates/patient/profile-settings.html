@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %} :: Relief Pro:: Profile-settings {% endblock title %}
 
-{% block custom_css %}{% endblock custom_css %}
+{% block custom_css %}<script src="{% static 'newstatic/assets/js/cities.js' %} "></script>{% endblock custom_css %}
  
 {% block content %}
 	 
@@ -111,17 +111,18 @@
 									<label>Address *</label>
 									<input type="text" class="form-control" name="address" placeholder="address" value="{{patient.address}}" required>
 								</div>
-							</div>
+							</div> 
 							<div class="col-12 col-md-6">
 								<div class="form-group">
-									<label>City *</label>
-									<input type="text" class="form-control" name="city" placeholder="City" value="{{patient.city}}" required>
+									<label for="city" class="form-label">State *</label>
+									<select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state" class="form-control" value="{{patient.state}}"></select>
 								</div>
 							</div>   
 							<div class="col-12 col-md-6"> 
 								<div class="form-group">
-									<label>State *</label>
-									<input type="text" class="form-control" name="state" placeholder="state"  value="Gujarat">
+									<label for="state" class="form-label">City</label>
+									<select id ="state" class="form-control" name="city" required value="{{patient.city}}"></select>
+                                            <script language="javascript">print_state("sts");</script>
 								</div>
 							</div>
 							<div class="col-12 col-md-6">

@@ -40,6 +40,7 @@ class FrontView(View):
             specilist_list.append({'cet_hospitals':cet_hospitals,'specilist':spc})
         blogs = Blog.objects.filter(is_active=True)
         # departments = Departments.objects.filter(hospital=hospital)
+        
         print(hospitals) 
         param={'hospitals':hospitals,'labs':labs,'pharmacys':pharmacys,'specilist_list':specilist_list,'blogs':blogs}
         return render(request,"front/index.html",param)

@@ -11,6 +11,9 @@
             <div class="border-0 mb-4">
                 <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
                     <h3 class="fw-bold mb-0">Relief Patient List</h3>
+                    <div class="col-auto d-flex w-sm-100">
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;" onclick = "refesh()"><i class="fas fa-sync-alt"></i></button>
+                    </div> 
                         {% comment %} <div class="col-auto d-flex w-sm-100">
                 <button type="button" class="btn btn-primary btn-set-task w-sm-100 " data-bs-toggle="modal" data-bs-target="#DoctorModalLg"><i class="icofont-plus-circle me-2 fs-6"></i>Add Patient</button>
                 
@@ -112,7 +115,7 @@
             }
         });
           $.ajax({
-                type: 'POST',
+                type: 'POST', 
                 url: 'Change-status.php',
                 data: {selectFieldValue: $('select.changeStatus').val(), projectId: $('input[name$="projectId"]').val()},
                 dataType: 'html'
@@ -128,6 +131,8 @@
             ]
         });
     });
-    
+    function refesh(){
+        location.reload();
+    }
 </script>
 {% endblock custom_js %}

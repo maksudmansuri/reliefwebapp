@@ -73,6 +73,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#today-appointments" data-bs-toggle="tab">Today</a>
                     </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" onclick = "refesh()"><i class="fas fa-sync-alt"></i></a>
+                    </li>
                 </ul>
 
                 <div class="tab-content">
@@ -501,7 +505,7 @@ $(document).on("change",".select_media",function(){
                     const file = Math.round((fsize / 1024));
                     // The size of the file.
                     if (file >= 10240) {
-                        alert(
+                        alert( 
                           "File too Big, please select a file less than 10mb");
                           document.getElementById('report').value = "" 
                     }else {
@@ -511,7 +515,9 @@ $(document).on("change",".select_media",function(){
                 }
             }
         }
-    
+        function refesh(){
+            location.reload();
+        }
 </script>
 
 {% endblock custom_js %}

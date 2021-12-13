@@ -4,6 +4,7 @@ from time import timezone
 from channels.layers import get_channel_layer
 from django.contrib import admin
 from django.db.models.fields import IntegerField
+from django.db.models.fields.related import ForeignKey
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.http import request
@@ -603,7 +604,6 @@ class Orders(models.Model):
     class Meta:
         ordering = ['-updated_at']
 
-
 class phoneOPTforoders(models.Model):
     id =  models.AutoField(primary_key=True)
     order_id =  models.ForeignKey(OrderBooking,  on_delete=models.CASCADE,null=True,blank=True)
@@ -615,4 +615,47 @@ class phoneOPTforoders(models.Model):
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
 
+class Discount(models.Model):
+    id =  models.AutoField(primary_key=True)
+    user    = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True,blank=True)
+    percentage = models.FloatField(null=True,blank=True,default=0)
+    discoutn_type = models.CharField(null=True,blank=True,default="", max_length=164)#Refereal code, hospital ,lab,phrma code
+    booking_type = models.CharField(null=True,blank=True,default="", max_length=164)#Emergency,opd,ambulance,labTest,take away
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+
+class BookingAmount(models.Model):
+    id =  models.AutoField(primary_key=True)
+    booking = models.ForeignKey(OrderBooking, on_delete=models.CASCADE,null=True,blank=True)
+    user    = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True,blank=True)#hospital ,lab, pharma
+    discount  = models.ForeignKey(Discount, on_delete=models.CASCADE,null=True,blank=True)
+    tax_value           =           models.FloatField(null=True,blank=True,default=0)
+    amountpaid = models.FloatField(null=True,blank=True,default=0)
+    homevisit_value           =           models.FloatField(null=True,blank=True,default=0)
+    extra_charges           =           models.FloatField(null=True,blank=True,default=0)
+    amountdicounted = models.FloatField(null=True,blank=True,default=0)
+    usercommission = models.FloatField(null=True,blank=True,default=0)
+    reliefcommission = models.FloatField(null=True,blank=True,default=0)
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+
+class Invoice(models.Model):
+    id =  models.AutoField(primary_key=True)
+    amount = models.ForeignKey(BookingAmount, on_delete=models.CASCADE,null=True,blank=True)
+    invoicepdf = models.FileField(null=True,blank=True,default="", max_length=164)
+    is_active               =           models.BooleanField(default=False)
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+
+class MerchantAccounts(models.Model):
+    id =  models.AutoField(primary_key=True)
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE,null=True,blank=True)
+    user    =models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True,blank=True)
+    commissionpercentage = models.FloatField(null=True,blank=True,default=0)
+    totalcollection = models.FloatField(null=True,blank=True,default=0)
+    totalpaid = models.FloatField(null=True,blank=True,default=0)
+    totalremaining = models.FloatField(null=True,blank=True,default=0)
+    totaldiscountprovided = models.FloatField(null=True,blank=True,default=0)
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
 

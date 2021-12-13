@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %} Profile Settings {% endblock title %}
 
-{% block custom_css %}{% endblock custom_css %}
+{% block custom_css %}<script src="{% static 'newstatic/assets/js/cities.js' %} "></script>{% endblock custom_css %}
 {% block breadcrumb1 %}Profile Settings{% endblock breadcrumb1 %}
 {% block pageheading %}Profile Settings{% endblock pageheading %}
 {% block content %}
@@ -201,18 +201,21 @@
 					</div>
 				</div>
 				<div class="col-md-6">
-					<div class="form-group">
-						<label class="control-label">City</label>
-						<input type="text" class="form-control" id="city" name="city" placeholder="City"
-							value="{{hospital.city}}" required>
+					<div class="form-group"> 
+						<label class="control-label">State / Province</label>
+						<select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state" class="form-control" value="{{hospital.state}}"></select>
+						
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-						<label class="control-label">State / Province</label>
-						<input type="text" class="form-control" id="state" name="state" placeholder="state" value="{{hospital.state}}" >
+						<label class="control-label">City</label>
+						<select id ="state" class="form-control" name="city" required value="{{hospital.city}}"></select>
+						
 					</div>
 				</div>
+			
+				<script language="javascript">print_state("sts");</script>
 				<div class="col-md-6">
 					<div class="form-group">
 						<label class="control-label">Country</label>

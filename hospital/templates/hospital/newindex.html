@@ -60,12 +60,12 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
     <div class="row">
         <div class="col-md-12">
             <h4 class="mb-4">Patient Appoinment</h4>
             <div class="appointment-tab">
-
+               
                 <ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded">
                     <li class="nav-item">
                         <a class="nav-link active" href="#upcoming-appointments" data-bs-toggle="tab">Upcoming</a>
@@ -73,7 +73,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#today-appointments" data-bs-toggle="tab">Today</a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" onclick = "refesh()"><i class="fas fa-sync-alt"></i></a>
+                    </li>
+                    
                 </ul>
+               
 
                 <div class="tab-content">
 
@@ -399,6 +405,9 @@
             ]
         });
     });
+    function refesh(){
+        location.reload();
+    }
     
 </script>
 {% endblock custom_js %}

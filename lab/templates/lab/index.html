@@ -14,14 +14,14 @@
                         <div class="col-md-12 col-lg-4">
                             <div class="dash-widget dct-border-rht">
                                 <div class="circle-bar circle-bar1">
-                                    <div class="circle-graph1" data-percent="75">
+                                    <div class="circle-graph1" data-percent="100">
                                         <img src="{% static 'newstatic/assets/img/icon-01.png' %}" class="img-fluid"
                                             alt="patient">
                                     </div>
                                 </div>
                                 <div class="dash-widget-info">
-                                    <h6>Total Patient</h6>
-                                    <h3>1500</h3>
+                                    <h6>Total Booking</h6>
+                                    <h3>{{totalbookings}}</h3>
                                     <p class="text-muted">Till Today</p>
                                 </div>
                             </div>
@@ -29,30 +29,30 @@
                         <div class="col-md-12 col-lg-4">
                             <div class="dash-widget dct-border-rht">
                                 <div class="circle-bar circle-bar2">
-                                    <div class="circle-graph2" data-percent="65">
+                                    <div class="circle-graph2" data-percent="100">
                                         <img src="{% static 'newstatic/assets/img/icon-02.png' %}" class="img-fluid"
                                             alt="Patient">
                                     </div>
                                 </div>
-                                <div class="dash-widget-info">
-                                    <h6>Today Patient</h6>
-                                    <h3>160</h3>
-                                    <p class="text-muted">06, Nov 2019</p>
+                                <div class="dash-widget-info"> 
+                                    <h6>Today Booking</h6>
+                                    <h3>{{todaybookings}}</h3>
+                                    <p class="text-muted">{% now "DATE_FORMAT" %}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-12 col-lg-4">
                             <div class="dash-widget">
                                 <div class="circle-bar circle-bar3">
-                                    <div class="circle-graph3" data-percent="50">
+                                    <div class="circle-graph3" data-percent="100">
                                         <img src="{% static 'newstatic/assets/img/icon-03.png' %}" class="img-fluid"
                                             alt="Patient">
                                     </div>
                                 </div>
                                 <div class="dash-widget-info">
-                                    <h6>Appoinments</h6>
-                                    <h3>85</h3>
-                                    <p class="text-muted">06, Apr 2019</p>
+                                    <h6>Total Payment</h6>
+                                    <h3>&#x20B9;{{todaypayments}}</h3>
+                                    <p class="text-muted">{% now "DATE_FORMAT" %}</p>
                                 </div>
                             </div>
                         </div>
@@ -72,6 +72,10 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#today-appointments" data-bs-toggle="tab">Today</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" onclick = "refesh()"><i class="fas fa-sync-alt"></i></a>
                     </li>
                 </ul>
 
@@ -452,6 +456,8 @@
             ]
         });
     });
-    
+    function refesh(){
+        location.reload();
+    }
 </script>
 {% endblock custom_js %}

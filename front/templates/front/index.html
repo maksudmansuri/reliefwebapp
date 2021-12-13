@@ -60,20 +60,20 @@ Booking{% endblock title %}
 						<div class="book-slider slider">
 						{% for hospital in hospitals %}
 							<div class="profile-widget">
-								<a href="doctor-profile.html">
+								<a href="{% url 'hospital_details' hospital.id %}">
 									<img src="{{hospital.profile_pic}}" alt="" />
 								</a>
 								<div class="pro-content">
 									<div class="row row-sm">
-										<div class="col-md-6">
+										{% comment %} <div class="col-md-6">
 											<span class="amt">$20 - $50</span>
-										</div>
+										</div> {% endcomment %}
 										<div class="col-md-6 text-end">
 											<a href="#" class="star"><i class="fas fa-star"></i></a>
 										</div>
 									</div>
 									<div class="provider-info">
-										<h3><a href="doctor-profile.html">{{hospital.hopital_name}}</a></h3>
+										<h3><a href="{% url 'hospital_details' hospital.id %}">{{hospital.hopital_name|upper}}</a></h3>
 										<div>
 											<h5>{{hospital.specialist}} </h5>
 											<div class="rating">
@@ -91,7 +91,7 @@ Booking{% endblock title %}
 										<div class="content-info">
 											<ul class="available-info">
 												<li>
-													<i class="fas fa-map-marker-alt"></i>{{hospital.city}} , {{hospital.country}} 
+													<i class="fas fa-map-marker-alt"></i>{{hospital.city|title}} , {{hospital.country|title}} 
 												</li>
 												<li>
 													{% comment %} <i class="far fa-clock"></i> 450 Consultations {% endcomment %}
@@ -135,7 +135,7 @@ Booking{% endblock title %}
 						<div class="book-slider slider">
 						{% for lab in labs %}
 							<div class="profile-widget">
-								<a href="doctor-profile.html">
+								<a href="{% url 'lab_details' lab.id %}">
 									<img src="{{lab.profile_pic}}" alt="" />
 								</a>
 								<div class="pro-content">
@@ -148,7 +148,7 @@ Booking{% endblock title %}
 										</div>
 									</div>
 									<div class="provider-info">
-										<h3><a href="doctor-profile.html">{{lab.lab_name}}</a></h3>
+										<h3><a href="{% url 'lab_details' lab.id %}">{{lab.lab_name|upper}}</a></h3>
 										<div>
 											<h5>{{lab.specialist}} </h5>
 											<div class="rating">
@@ -166,7 +166,7 @@ Booking{% endblock title %}
 										<div class="content-info">
 											<ul class="available-info">
 												<li>
-													<i class="fas fa-map-marker-alt"></i> {{lab.city}} , {{lab.country}} 
+													<i class="fas fa-map-marker-alt"></i> {{lab.city|title}} , {{lab.country|title}} 
 												</li>
 												<li>
 													{% comment %} <i class="far fa-clock"></i> 450 Consultations {% endcomment %}
@@ -210,7 +210,7 @@ Booking{% endblock title %}
 						<div class="book-slider slider">
 						{% for pharmacy in pharmacys %}
 							<div class="profile-widget">
-								<a href="doctor-profile.html">
+								<a href="{% url 'pharmacy_details' pharmacy.id %}">
 									<img src="{{pharmacy.profile_pic}}" alt="" />
 								</a>
 								<div class="pro-content">
@@ -223,7 +223,7 @@ Booking{% endblock title %}
 										</div>
 									</div>
 									<div class="provider-info">
-										<h3><a href="doctor-profile.html">{{pharmacy.pharmacy_name}}</a></h3>
+										<h3><a href="{% url 'pharmacy_details' pharmacy.id %}">{{pharmacy.pharmacy_name|upper}}</a></h3>
 										<div>
 											<h5>{{pharmacy.specialist}} </h5>
 											<div class="rating">
@@ -241,7 +241,7 @@ Booking{% endblock title %}
 										<div class="content-info">
 											<ul class="available-info">
 												<li>
-													<i class="fas fa-map-marker-alt"></i> {{pharmacy.city}} , {{pharmacy.country}} 
+													<i class="fas fa-map-marker-alt"></i> {{pharmacy.city|title}} , {{pharmacy.country|title}} 
 												</li>
 												<li>
 													<i class="far fa-clock"></i> 450 Consultations
@@ -377,7 +377,7 @@ Booking{% endblock title %}
 									{% comment %} <span class="sp-title">Urology</span> {% endcomment %}
 									<br>
 									<div class="post-author">
-										<a href="doctor-profile.html">
+										<a href="{% url 'blog_details' blog.id %}">
 											<img src="{{blog.doctor.doctor.profile_pic}} " alt="Post Author">
 											<span>{{blog.doctor.doctor.fisrt_name}} {{blog.doctor.doctor.last_name}}</span>
 										</a>
@@ -394,90 +394,7 @@ Booking{% endblock title %}
 						</div>
 					</div>
 				{% endfor %}
-					{% comment %} <div class="col-md-6 col-lg-3">
-						<div class="blog-wrapper">
-							<div class="wrap-image">
-								<a href="blog-details.html">
-									<img src="{% static 'newstatic/assets/img/blog/blog-wrap-02.jpg'%}" alt="" />
-								</a>
-							</div>
-							<div class="wrap-content">
-								<div class="d-flex">
-									<span class="sp-title">Urology</span>
-									<div class="post-author">
-										<a href="doctor-profile.html">
-											<img src="{% static 'newstatic/assets/img/doctors/doctor-thumb-01.jpg'%}" alt="Post Author">
-											<span>Ruby Perrin</span>
-										</a>
-									</div>
-									<p class="date-cart">25 <span>Jan 2021</span></p>
-								</div>
-								<div class="wrap-content-body">
-									<h3><a href="blog-details.html">Doccure – Making your clinic painless visit?</a>
-									</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod
-										tempor.</p>
-									<a href="blog-details.html" class="read-txt">Read More</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6 col-lg-3">
-						<div class="blog-wrapper">
-							<div class="wrap-image">
-								<a href="blog-details.html">
-									<img src="{% static 'newstatic/assets/img/blog/blog-wrap-03.jpg'%}" alt="" />
-								</a>
-							</div>
-							<div class="wrap-content">
-								<div class="d-flex">
-									<span class="sp-title">Urology</span>
-									<div class="post-author">
-										<a href="doctor-profile.html">
-											<img src="{% static 'newstatic/assets/img/doctors/doctor-thumb-01.jpg'%}" alt="Post Author">
-											<span>Ruby Perrin</span>
-										</a>
-									</div>
-									<p class="date-cart">25 <span>Jan 2021</span></p>
-								</div>
-								<div class="wrap-content-body">
-									<h3><a href="blog-details.html">Doccure – Making your clinic painless visit?</a>
-									</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod
-										tempor.</p>
-									<a href="blog-details.html" class="read-txt">Read More</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6 col-lg-3">
-						<div class="blog-wrapper">
-							<div class="wrap-image">
-								<a href="blog-details.html">
-									<img src="{% static 'newstatic/assets/img/blog/blog-wrap-04.jpg'%}" alt="" />
-								</a>
-							</div>
-							<div class="wrap-content">
-								<div class="d-flex">
-									<span class="sp-title">Urology</span>
-									<div class="post-author">
-										<a href="doctor-profile.html">
-											<img src="{% static 'newstatic/assets/img/doctors/doctor-thumb-01.jpg'%}" alt="Post Author">
-											<span>Ruby Perrin</span>
-										</a>
-									</div>
-									<p class="date-cart">25 <span>Jan 2021</span></p>
-								</div>
-								<div class="wrap-content-body">
-									<h3><a href="blog-details.html">Doccure – Making your clinic painless visit?</a>
-									</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod
-										tempor.</p>
-									<a href="blog-details.html" class="read-txt">Read More</a>
-								</div>
-							</div>
-						</div>
-					</div> {% endcomment %}
+				
 				</div>
 				<div class="row justify-content-center">
 					<div class="col-md-12 text-center">
@@ -499,7 +416,7 @@ Booking{% endblock title %}
 					<div class="item">
 						<div class="our-blogs">
 							<div class="blogs-img">
-								<a href="blog-details.html"><img src="{% static 'newstatic/assets/img/blog-1.jpg' %}" alt=""
+								<a href="#"><img src="{% static 'newstatic/assets/img/blog-1.jpg' %}" alt=""
 										class="img-fluid"></a>
 								<div class="blogs-overlay d-flex">
 									<img src="{% static 'newstatic/assets/img/doctors/doctor-thumb-01.jpg' %} " alt="" class="img-fluid">
@@ -508,15 +425,10 @@ Booking{% endblock title %}
 							</div>
 							<div class="blogs-info">
 								<span>Director</span>
-								{% comment %} <a href="blog-details.html">
-									<h4>Doccure – Making your clinic painless visit?</h4>
-								</a>
-								<p>Lorem ipsum dolor sit amet, consectetur em adipiscing elit, sed do eiusmod tempor.
-								</p>
-								<span class="blogs-time"><i class="far fa-clock"></i> 3 Dec 2021</span> {% endcomment %}
+								
 							</div>
 							{% comment %} <div class="blogs-nav">
-								<a href="blog-details.html" class="blogs-btn">Read More</a>
+								<a href="#" class="blogs-btn">Read More</a>
 							</div> {% endcomment %}
 						</div>
 					</div>

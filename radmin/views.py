@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
-from django.db.models import Q
+from django.db.models import Q 
 
 from radmin.models import City, Country, State
 # Create your views here.

@@ -1,6 +1,6 @@
 
 {% extends 'front/blank-page.html' %}
-{% load static %}
+{% load static %} 
 {% block title %} Relief Pro - Hospital Profile | Hospital,Labs and Pharmacy Online Booking | Emergency
 Booking {% endblock title %}
 
@@ -15,7 +15,7 @@ Booking {% endblock title %}
 					<div class="col-md-12 col-12">
 						<nav aria-label="breadcrumb" class="page-breadcrumb">
 							<ol class="breadcrumb">
-								<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+								<li class="breadcrumb-item"><a href="{% url 'front_home' %}">Home</a></li>
 								<li class="breadcrumb-item active" aria-current="page">Doctor Profile</li>
 							</ol>
 						</nav>
@@ -80,25 +80,7 @@ Booking {% endblock title %}
 										
 									</ul>
 								</div>
-								{% comment %} <div class="doctor-action">
-									<a href="javascript:void(0)" class="btn btn-white fav-btn">
-										<i class="far fa-bookmark"></i>
-									</a>
-									<a href="chat.html" class="btn btn-white msg-btn">
-										<i class="far fa-comment-alt"></i>
-									</a>
-									<a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
-										data-bs-target="#voice_call">
-										<i class="fas fa-phone"></i>
-									</a>
-									<a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
-										data-bs-target="#video_call">
-										<i class="fas fa-video"></i>
-									</a>
-								</div> {% endcomment %}
-								{% comment %} <div class="clinic-booking">
-									<a class="apt-btn" href="booking.html">Book Appointment</a>
-								</div> {% endcomment %}
+								
 							</div>
 						</div>
 					</div>
@@ -801,7 +783,7 @@ Booking {% endblock title %}
 								<div class="call-items">
 									<a href="javascript:void(0);" class="btn call-item call-end" data-bs-dismiss="modal"
 										aria-label="Close"><i class="material-icons">call_end</i></a>
-									<a href="voice-call.html" class="btn call-item call-start"><i
+									<a href="#" class="btn call-item call-start"><i
 											class="material-icons">call</i></a>
 								</div>
 							</div>
@@ -831,7 +813,7 @@ Booking {% endblock title %}
 								<div class="call-items">
 									<a href="javascript:void(0);" class="btn call-item call-end" data-bs-dismiss="modal"
 										aria-label="Close"><i class="material-icons">call_end</i></a>
-									<a href="video-call.html" class="btn call-item call-start"><i
+									<a href="#" class="btn call-item call-start"><i
 											class="material-icons">videocam</i></a>
 								</div>
 							</div>
