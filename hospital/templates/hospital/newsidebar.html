@@ -6,9 +6,9 @@
                     <img src="{{request.user.profile_pic}}" alt="User Image" id="currentPhoto1" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
                 </a>
                 <div class="profile-det-info">
-                    <h3>{{request.user.hospital.hospital_name}}</h3>
+                    <h3>{{request.user.hospitals.hopital_name|upper}}</h3>
                     <div class="patient-details">
-                        <h5 class="mb-0">{{request.user.hospital.hospital_name}}</h5>
+                        <h5 class="mb-0">{{request.user.hospitals.hopital_name|upper}}</h5>
                     </div>
                 </div>
             </div>

@@ -9,7 +9,6 @@ from django.shortcuts import get_object_or_404, render
 from django.urls.base import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import View,ListView,DetailView
-
 from django.contrib import messages
 from django.db.models import Q
 from chat.models import Notification
@@ -21,9 +20,6 @@ from django.db import transaction
 from datetime import datetime,timedelta
 from django.db.models import Avg, Max, Min, Sum
 from lab.models import HomeVisitCharges, LabSchedule, Medias
-import patient
-
-
 from patient.models import ForSome, NewLabTest, OrderBooking, Temp, phoneOPTforoders
 # Create your views here.
   

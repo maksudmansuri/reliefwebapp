@@ -5,8 +5,8 @@ from datetime import datetime
 def headernotifications(request):
     notifications = None
     notification_count = 0
-    try:
-        notifications = Notification.objects.filter(to_user = request.user,user_has_seen=False)
+    try: 
+        notifications = Notification.objects.filter(to_user = request.user,user_has_seen=False)[0:5]
         notification_count = Notification.objects.filter(to_user = request.user,user_has_seen=False).count()
         return {'notifications':notifications,'notification_count':notification_count}
     except:

@@ -1,10 +1,10 @@
 from django.contrib import messages
 from django.http import response
 from django.http.request import HttpRequest
-from patient.models import Booking, LabTest, Orders, PicturesForMedicine, Slot
+from patient.models import Booking, LabTest, OrderBooking, Orders, PicturesForMedicine, Slot
 from django.core.files.storage import FileSystemStorage
 from django.http.response import HttpResponse, HttpResponseBase, HttpResponseRedirect, JsonResponse
-from hospital.models import ContactPerson, HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, Insurances, ServiceAndCharges
+from hospital.models import ContactPerson, HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, Insurances, ServiceAndCharges, TimeSlot
 from accounts.models import CustomUser, HospitalPhones, Hospitals, Labs, Patients, Pharmacy, Specailist
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,UpdateView
@@ -15,9 +15,22 @@ from django.db.models import Q
 from radmin.models import City, Country, State
 # Create your views here.
    
-def indexView(request):
-       
-    return render(request,"radmin/index.html")
+class indexListView(ListView):
+    model = Hospitals
+    template_name = "radmin/newindex.html" 
+
+    def get_context_data(self, **kwargs): 
+        context = super().get_context_data(**kwargs)
+        context["labs_list"] = Labs.objects.all() 
+        context["pharmacy_list"] = Pharmacy.objects.all() 
+        patients = Patients.objects.all()
+        patients_list = []
+        for patient in patients:
+            total_apt =  OrderBooking.objects.filter(patient = patient.admin).count() 
+            patients_list.append({'total_apt':total_apt,'patient':patient})
+        context["patient_list"] = patients_list
+        return context
+    
 """
 Hospital Specialist Categories
 """
@@ -77,7 +90,7 @@ def deleteHospitalSpecialist(request,id):
     specailist.delete()
     messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
     return HttpResponseRedirect(reverse("specialist_hospital")) 
-
+ 
 """
 Hospitals All Views
 """
@@ -94,7 +107,7 @@ def HospitalActivate(request,id):
         hospital.is_deactive=False
         hospital.save()
     # hospitals_list=Hospitals.objects.filter((Q(is_appiled=True) | Q(is_verified=True))  & Q(admin__is_active=True) & Q(admin__user_type=3))
-    return HttpResponseRedirect(reverse("manage_hospital_admin"))
+    return HttpResponseRedirect(reverse("radmin_home"))
 
 def HospitalDeactivate(request,id):
     hospital=Hospitals.objects.get(id=id)
@@ -103,13 +116,13 @@ def HospitalDeactivate(request,id):
         hospital.is_appiled=False
         hospital.is_deactive=True
         hospital.save()
-    return HttpResponseRedirect(reverse("manage_hospital_admin"))
+    return HttpResponseRedirect(reverse("radmin_home"))
     # return render(request,'counsellor/manage_student.html',{'hospitals_list':hospitals_list})
 
 def HospitalDelete(request,id):
     hospital=Hospitals.objects.get(id=id)
     hospital.delete()
-    return HttpResponseRedirect(reverse("manage_hospital_admin"))
+    return HttpResponseRedirect(reverse("radmin_home"))
 
 
 """
@@ -128,7 +141,7 @@ def PatientActivate(request,id):
         hospital.is_deactive=False
         hospital.save()
     # hospitals_list=Hospitals.objects.filter((Q(is_appiled=True) | Q(is_verified=True))  & Q(admin__is_active=True) & Q(admin__user_type=3))
-    return HttpResponseRedirect(reverse("manage_patient_admin"))
+    return HttpResponseRedirect(reverse("radmin_home"))
 
 def PatientDeactivate(request,id):
     hospital=Patients.objects.get(id=id)
@@ -137,13 +150,13 @@ def PatientDeactivate(request,id):
         hospital.is_appiled=False
         hospital.is_deactive=True
         hospital.save()
-    return HttpResponseRedirect(reverse("manage_patient_admin"))
+    return HttpResponseRedirect(reverse("radmin_home"))
     # return render(request,'counsellor/manage_student.html',{'hospitals_list':hospitals_list})
 
 def PatientDelete(request,id):
     hospital=Patients.objects.get(id=id)
     hospital.delete()
-    return HttpResponseRedirect(reverse("manage_patient_admin"))
+    return HttpResponseRedirect(reverse("radmin_home"))
 
 
 """
@@ -162,7 +175,7 @@ def LabsActivate(request,id):
         hospital.is_deactive=False
         hospital.save()
     # hospitals_list=Hospitals.objects.filter((Q(is_appiled=True) | Q(is_verified=True))  & Q(admin__is_active=True) & Q(admin__user_type=3))
-    return HttpResponseRedirect(reverse("manage_labs_admin"))
+    return HttpResponseRedirect(reverse("radmin_home"))
 
 def LabsDeactivate(request,id):
     hospital=Labs.objects.get(id=id)
@@ -171,13 +184,13 @@ def LabsDeactivate(request,id):
         hospital.is_appiled=False
         hospital.is_deactive=True
         hospital.save()
-    return HttpResponseRedirect(reverse("manage_labs_admin"))
+    return HttpResponseRedirect(reverse("radmin_home"))
     # return render(request,'counsellor/manage_student.html',{'hospitals_list':hospitals_list})
 
 def LabsDelete(request,id):
     hospital=Labs.objects.get(id=id)
     hospital.delete()
-    return HttpResponseRedirect(reverse("manage_labs_admin"))
+    return HttpResponseRedirect(reverse("radmin_home"))
 
 """
 Pharmacy All Views
@@ -188,29 +201,29 @@ class PharmacyAllViews(ListView):
     template_name = "radmin/pharmacy_all.html" 
 
 def PharmacyActivate(request,id):
-    hospital=Hospitals.objects.get(id=id)
+    hospital=Pharmacy.objects.get(id=id)
     if hospital is not None and hospital.is_verified == False:
         hospital.is_verified=True
         hospital.is_appiled=False
         hospital.is_deactive=False
         hospital.save()
     # hospitals_list=Hospitals.objects.filter((Q(is_appiled=True) | Q(is_verified=True))  & Q(admin__is_active=True) & Q(admin__user_type=3))
-    return HttpResponseRedirect(reverse("manage_pharmacy_admin"))
+    return HttpResponseRedirect(reverse("radmin_home"))
 
 def PharmacyDeactivate(request,id):
-    hospital=Hospitals.objects.get(id=id)
+    hospital=Pharmacy.objects.get(id=id)
     if hospital is not None and hospital.is_verified == True:
         hospital.is_verified=False
         hospital.is_appiled=False
         hospital.is_deactive=True
         hospital.save()
-    return HttpResponseRedirect(reverse("manage_pharmacy_admin"))
+    return HttpResponseRedirect(reverse("radmin_home"))
     # return render(request,'counsellor/manage_student.html',{'hospitals_list':hospitals_list})
 
 def PharmacyDelete(request,id):
-    hospital=Hospitals.objects.get(id=id)
+    hospital=Pharmacy.objects.get(id=id)
     hospital.delete()
-    return HttpResponseRedirect(reverse("manage_pharmacy_admin"))
+    return HttpResponseRedirect(reverse("radmin_home"))
 
 
 """
@@ -256,6 +269,17 @@ def hospitalDeleteView(request):
 """
 Appointment all view
 """
+class AppointmentListView(ListView):
+    model = OrderBooking
+    template_name = "radmin/appoinment.html"
+
+    def get_context_data(self, **kwargs): 
+        context = super().get_context_data(**kwargs)
+        context["hos_apt"] = OrderBooking.objects.filter(booking_for = "H") 
+        context["labs_apt"] = OrderBooking.objects.filter(booking_for = "L") 
+        context["pharmacy_apt"] = OrderBooking.objects.filter(booking_for = "P") 
+        return context
+
 class HosAppointmentAllViews(ListView):
     model = Booking
     template_name = "radmin/appointment_hospital_all.html"
@@ -418,6 +442,35 @@ def deleteCity(request,id):
     city.delete()
     messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
     return HttpResponseRedirect(reverse("loaction_area")) 
+
+class TimeSlotView(SuccessMessageMixin,CreateView):
+    def get(self, request, *args, **kwargs):
+        time_slots = TimeSlot.objects.all().order_by('schedule')
+        timeslots_15s = TimeSlot.objects.filter(schedule_type="15")
+        timeslots_30s = TimeSlot.objects.filter(schedule_type="30")
+        timeslots_45s = TimeSlot.objects.filter(schedule_type="45")
+        timeslots_60s = TimeSlot.objects.filter(schedule_type="60")
+        param={'timeslots_15s':timeslots_15s,'timeslots_30s':timeslots_30s,'timeslots_45s':timeslots_45s,'timeslots_60s':timeslots_60s}
+        return render(request,"radmin/time-slot.html",param)
+ 
+    def post(self, request, *args, **kwargs):
+        session = request.POST.get("session")
+        schedule_type = request.POST.get("schedule_type")
+        schedule = request.POST.get("schedule")
+        schedule_check = TimeSlot.objects.filter(schedule=schedule,schedule_type=str(schedule_type)).count()
+        if schedule_check > 0:
+            messages.add_message(request,messages.ERROR,"Already Added Time..!")
+            return HttpResponseRedirect(reverse("time_slot")) 
+        time_slot = TimeSlot(session=str(session),schedule_type=schedule_type,schedule=schedule)
+        time_slot.save()
+        messages.add_message(request,messages.SUCCESS,"SuccessFully Added")
+        return HttpResponseRedirect(reverse('time_slot'))
+
+def deleteTimeSlot(request,id):
+    time_slot = get_object_or_404(TimeSlot,id=id)
+    time_slot.delete()
+    messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
+    return HttpResponseRedirect(reverse("time_slot")) 
 
 # def findState(request):
 #     country_id = request.POST.get("country_id")

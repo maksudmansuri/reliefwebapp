@@ -30,7 +30,7 @@
 										</div>
 									</div>
 								</div>
-							</div>				
+							</div>			 	
 							
 							<div class="col-12 col-md-6">
 								<div class="form-group">
@@ -115,13 +115,21 @@
 							<div class="col-12 col-md-6">
 								<div class="form-group">
 									<label for="city" class="form-label">State *</label>
-									<select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state" class="form-control" value="{{patient.state}}"></select>
+									<select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state" class="form-control" value="{{patient.state}}">
+										{% if patient.state %}
+										<option value="{{patient.state}}"selected>{{patient.state}}</option>
+										{% endif %} 
+									</select> 
 								</div>
 							</div>   
 							<div class="col-12 col-md-6"> 
 								<div class="form-group">
 									<label for="state" class="form-label">City</label>
-									<select id ="state" class="form-control" name="city" required value="{{patient.city}}"></select>
+									<select id ="state" class="form-control" name="city" required value="{{patient.city}}">
+										{% if patient.city %}
+										<option value="{{patient.city}}"selected>{{patient.city}}</option>
+										{% endif %}
+									</select>
                                             <script language="javascript">print_state("sts");</script>
 								</div>
 							</div>
@@ -256,4 +264,7 @@
         }
     }
 </script>
-{% endblock custom_js %}
+<script>
+	document.getElementById('sts').value="{{patient.state}}";
+</script>
+{% endblock custom_js %} 

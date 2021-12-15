@@ -9,7 +9,7 @@ from django.db import models
 
 from accounts.models import HospitalDoctors, Hospitals,CustomUser
 
-# Create your models here. 
+# Create your models here.  
 
 class TimeSlot(models.Model):
     id                  =models.AutoField(primary_key=True)

@@ -9,6 +9,12 @@ Booking{% endblock title %}
 	background-color: #2264c5;
 	border: none;
 }
+.background-info {
+   
+    background-position: center center, center center;
+    background-size: cover, cover;
+    background-repeat: repeat, repeat
+}
 </style>
 {% endblock custom_css %}
 
@@ -405,37 +411,31 @@ Booking{% endblock title %}
 		</section>
 
 		
-		<section class="our-blog-section Team">
+		<div class="py-5 text-center text-info background-info" style="">
 			<div class="container">
-				<div class="sec-header">
-					<h2>Our Team</h2>
-					<span class="bottom-border"></span>
-				</div>
-				
-				<div class="owl-carousel blogs owl-theme">
-					<div class="item">
-						<div class="our-blogs">
-							<div class="blogs-img">
-								<a href="#"><img src="{% static 'newstatic/assets/img/blog-1.jpg' %}" alt=""
-										class="img-fluid"></a>
-								<div class="blogs-overlay d-flex">
-									<img src="{% static 'newstatic/assets/img/doctors/doctor-thumb-01.jpg' %} " alt="" class="img-fluid">
-									<span class="blogs-writter">Dr. Ruby Perrin</span>
-								</div>
-							</div>
-							<div class="blogs-info">
-								<span>Director</span>
-								
-							</div>
-							{% comment %} <div class="blogs-nav">
-								<a href="#" class="blogs-btn">Read More</a>
-							</div> {% endcomment %}
-						</div>
+				<div class="row">
+					<div class="mx-auto col-md-12">
+						<h1 class="mb-3" contenteditable="true">Meet our team</h1>
 					</div>
-					
+				</div>
+				<div class="row">
+					<div class="col-lg-4 col-md-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" alt="Card image cap" width="200" height="200" src="{% static 'newstatic/assets/img/teams/founder.jpeg' %}">
+						<h4> <b>John kandy</b> </h4>
+						<p class="mb-0">CEO and founder</p>
+					</div>
+					<div class="col-lg-4 col-md-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="{% static 'newstatic/assets/img/teams/co-founder.jpeg'%}" alt="Card image cap" width="200" height="200">
+						<h4> <b>Sam ilana</b> </h4>
+						<p class="mb-0">Co-founder</p>
+					</div>
+					<div class="col-lg-4 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="{% static 'newstatic/assets/img/teams/bdm.jpeg'%}" width="200" height="200">
+						<h4> <b>Maria Samantha</b> </h4>
+						<p class="mb-0">BDM</p>
+					</div>
 				</div>
 			</div>
-		</section>
+		</div>
+
+	
 
 {% endblock content %}
 

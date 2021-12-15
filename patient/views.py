@@ -105,8 +105,7 @@ Personal Details of Patients
 """ 
 class patientdDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
-        try:  
-            patient = get_object_or_404(Patients, admin=request.user.id) 
+        try:
             booked = OrderBooking.objects.filter(patient = request.user,booking_for = "H")
             labbooks = OrderBooking.objects.filter(patient = request.user,booking_for = "L")
             booking_labtest_list =[]
@@ -138,7 +137,7 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
         profile_pic = request.FILES.get('profile_pic') 
         name_title = request.POST.get('name_title')
         fisrt_name = request.POST.get('fisrt_name')
-        last_title = request.POST.get('last_title')
+        last_name = request.POST.get('last_name')
         alternate_mobile = request.POST.get('alternate_mobile')
         address = request.POST.get('address')
         city = request.POST.get('city')
@@ -172,9 +171,9 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
         # user.patients.name_title=name_title
         user.name_title=name_title
         user.first_name = fisrt_name
-        user.last_title = last_title
+        user.last_name = last_name
         user.patients.fisrt_name=fisrt_name
-        user.patients.last_name=last_title
+        user.patients.last_name=last_name
         if profile_pic:
             fs=FileSystemStorage()
             filename1=fs.save(profile_pic.name,profile_pic)

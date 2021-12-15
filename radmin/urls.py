@@ -2,11 +2,14 @@ from django.urls import path
 from .import views
    
 urlpatterns = [  
+    #Time SLot Add delete
+     path('time_slot',views.TimeSlotView.as_view(),name="time_slot"),
+     path('delete_time_slot',views.deleteTimeSlot,name="delete_time_slot"),
 
     #locations country , state, city, area
 
     # path('find_state',views.findState,name="find_state"),
-
+ 
     path('loaction_area',views.AddCountriesView.as_view(),name="loaction_area"),
     path('delete_country/<id>',views.deleteCountry,name="delete_country"),
     path('delete_state/<id>',views.deleteState,name="delete_state"),
@@ -17,9 +20,10 @@ urlpatterns = [
     path('update_specialist_hospital/<id>',views.updateHospitalSpecialist,name="update_specialist_hospital"),
     path('delete_specialist_hospital/<id>',views.deleteHospitalSpecialist,name="delete_specialist_hospital"),
 
-  
+    
+    path('appointment',views.AppointmentListView.as_view(),name="appointment"),
 
-    path('',views.indexView,name="radmin_home"),
+    path('',views.indexListView.as_view(),name="radmin_home"),
     path('admin_hospital_all',views.HospitalallViews.as_view(),name="manage_hospital_admin"),
     path('hospital_delete_admin/<id>',views.HospitalDelete,name="hospital_delete_admin"),
     path('manage_patient_admin',views.PatientAllViews.as_view(),name="manage_patient_admin"),

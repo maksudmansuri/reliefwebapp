@@ -29,7 +29,7 @@ urlpatterns = [
     path('blog_list',views.BlogListView.as_view(),name="blog_list"),
     path('blog_details/<pk>',views.BlogDetailsView.as_view(),name="blog_details"),
    
-    path('bookappoinment/<id>/<did>', views.DoctorsBookAppoinmentViews.as_view(), name="bookappoinment"),
+    # path('bookappoinment/<id>/<did>', views.DoctorsBookAppoinmentViews.as_view(), name="bookappoinment"),
 
     #payment process
     path('invoice/<id>', views.InvoiceViews.as_view(), name="invoice"),

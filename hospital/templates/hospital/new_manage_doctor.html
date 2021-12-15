@@ -165,11 +165,22 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="city" class="form-label">State</label>
-                                                            <select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state" class="form-control" value="{{doctor.doctor.state}}"></select>
-                                                        </div>
+                                                            <select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state" class="form-control" value="{{doctor.doctor.state}}">
+                                                                {% if doctor.doctor.state %}
+                                                                    <option value="{{doctor.doctor.state}}"selected>{{doctor.doctor.state}}</option>
+                                                                    {% endif %} 
+                                                            </select>
+                                                        </div> 
                                                         <div class="col-md-6">
                                                             <label for="state" class="form-label">City</label>
-                                                            <select id ="state" class="form-control" name="city" required value="{{doctor.doctor.city}}"></select>
+                                                            <select id ="state" class="form-control" name="city" required value="{{doctor.doctor.city}}">
+                                                                {% if doctor.doctor.city %}
+                                                                    <option value="{{doctor.doctor.city}}"selected>{{doctor.doctor.city}}</option>
+                                                                    {% endif %}
+                                                            </select>
+                                                            <script>
+                                                                document.getElementById('sts').value="{{doctor.doctor.state}}";
+                                                            </script>
                                                             <script language="javascript">print_state("sts");</script>
                                                         </div>
                                                         <div class="col-md-6">
@@ -364,11 +375,15 @@
                                              </div>
                                              <div class="col-md-6">
                                                 <label for="city" class="form-label">State</label>
-                                                <select onchange="print_city('state1', this.selectedIndex);" id="sts1" name ="state" class="form-control"></select>
+                                                <select onchange="print_city('state1', this.selectedIndex);" id="sts1" name ="state" class="form-control">
+                                                   
+                                                </select>
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="state" class="form-label">City</label>
-                                                <select id ="state1" class="form-control" name="city" required ></select>
+                                                <select id ="state1" class="form-control" name="city" required >
+                                                    
+                                                </select>
                                                 <script language="javascript">print_state("sts1");</script>
                                             </div>
                                              <div class="col-md-6">
@@ -610,4 +625,6 @@ $(document).on("change",".select_media",function(){
         }
     }
 </script>
+
+
  {% endblock custom_js %}

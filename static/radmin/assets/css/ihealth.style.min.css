@@ -24,7 +24,7 @@
     --bs-cyan: #0dcaf0;
     --bs-white: #fff;
     --bs-gray: #6c757d;
-    --bs-gray-dark: #343a40;
+    --bs-gray-dark: #343a40; 
     --bs-primary: #0d6efd;
     --bs-secondary: #6c757d;
     --bs-success: #198754;
@@ -4858,7 +4858,7 @@ fieldset:disabled .btn {
     border-bottom-left-radius: calc(.25rem - 1px)
 }
 
-.card>.card-header+.list-group,
+
 .card>.list-group+.card-footer {
     border-top: 0
 }
@@ -4889,16 +4889,8 @@ fieldset:disabled .btn {
     margin-left: 1rem
 }
 
-.card-header {
-    padding: .5rem 1rem;
-    margin-bottom: 0;
-    background-color: rgba(0, 0, 0, 0.03);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125)
-}
 
-.card-header:first-child {
-    border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0
-}
+
 
 .card-footer {
     padding: .5rem 1rem;
@@ -4910,17 +4902,7 @@ fieldset:disabled .btn {
     border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px)
 }
 
-.card-header-tabs {
-    margin-right: -.5rem;
-    margin-bottom: -.5rem;
-    margin-left: -.5rem;
-    border-bottom: 0
-}
 
-.card-header-pills {
-    margin-right: -.5rem;
-    margin-left: -.5rem
-}
 
 .card-img-overlay {
     position: absolute;
@@ -4975,10 +4957,6 @@ fieldset:disabled .btn {
         border-bottom-right-radius: 0
     }
 
-    .card-group>.card:not(:last-child) .card-img-top,
-    .card-group>.card:not(:last-child) .card-header {
-        border-top-right-radius: 0
-    }
 
     .card-group>.card:not(:last-child) .card-img-bottom,
     .card-group>.card:not(:last-child) .card-footer {
@@ -4990,10 +4968,7 @@ fieldset:disabled .btn {
         border-bottom-left-radius: 0
     }
 
-    .card-group>.card:not(:first-child) .card-img-top,
-    .card-group>.card:not(:first-child) .card-header {
-        border-top-left-radius: 0
-    }
+
 
     .card-group>.card:not(:first-child) .card-img-bottom,
     .card-group>.card:not(:first-child) .card-footer {
@@ -8206,6 +8181,10 @@ fieldset:disabled .btn {
 
 .bg-success {
     background-color: #198754 !important
+}
+
+.bg-success1{
+    background-color: #20c0f3 !important
 }
 
 .bg-info {
@@ -20790,33 +20769,12 @@ a {
     color: var(--text-color) !important
 }
 
-.notifications .card .card-header {
-    background-color: var(--primary-color);
-    color: #fff
-}
 
-.notifications .card .card-header .nav-tabs .nav-link {
-    color: rgba(255, 255, 255, 0.2);
-    font-size: 1rem;
-    border: 0
-}
 
-.notifications .card .card-header .nav-tabs .nav-link.active,
-.notifications .card .card-header .nav-tabs .nav-link:hover {
-    color: var(--secondary-color);
-    background-color: transparent
-}
 
-.notifications .card .card-header .nav-tabs .nav-link.active::after,
-.notifications .card .card-header .nav-tabs .nav-link:hover::after {
-    content: '';
-    width: 7px;
-    height: 7px;
-    background-color: var(--secondary-color);
-    display: block;
-    border-radius: 50%;
-    margin: 5px auto 0
-}
+
+
+
 
 .notifications .card .list {
     overflow-y: auto;
@@ -24909,10 +24867,6 @@ body.rtl_mode .modal.right.fade.show .modal-dialog {
     border-left-color: var(--primary-color)
 }
 
-.card .card-header {
-    background-color: transparent;
-    border-bottom: none
-}
 
 .card .card-footer {
     border-color: var(--border-color)

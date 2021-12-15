@@ -199,18 +199,26 @@
 						<input type="text" class="form-control" id="address2" name="address2"
 							placeholder="Hospital Address " value="{{hospital.address2}}" required>
 					</div>
-				</div>
+				</div> 
 				<div class="col-md-6">
 					<div class="form-group"> 
 						<label class="control-label">State / Province</label>
-						<select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state" class="form-control" value="{{hospital.state}}"></select>
+						<select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state" class="form-control" value="{{hospital.state}}">
+							{% if hospital.state %}
+								<option value="{{hospital.state}}"selected>{{hospital.state}}</option>
+								{% endif %} 
+						</select>
 						
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
 						<label class="control-label">City</label>
-						<select id ="state" class="form-control" name="city" required value="{{hospital.city}}"></select>
+						<select id ="state" class="form-control" name="city" required value="{{hospital.city}}">
+							{% if hospital.city %}
+										<option value="{{hospital.city}}"selected>{{hospital.city}}</option>
+										{% endif %}
+						</select>
 						
 					</div>
 				</div>
@@ -697,5 +705,8 @@
 			reader.readAsDataURL(input.files[0]);
 		}
 	}
+</script>
+<script>
+	document.getElementById('sts').value="{{hospital.state}}";
 </script>
 {% endblock custom_js %}

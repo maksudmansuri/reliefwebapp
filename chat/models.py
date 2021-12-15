@@ -31,6 +31,8 @@ class Notification(models.Model):
     class Meta:
         ordering = ['-updated_at']
 
+    def last_10_messages():
+        return Notification.objects.order_by('created_at').all()[:10]
 
     def save(self,*args, **kwargs):
         # channels_layer = get_channel_layer()

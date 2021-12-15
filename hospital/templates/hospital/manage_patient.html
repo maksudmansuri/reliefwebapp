@@ -124,7 +124,7 @@
                                         <div class="col-md-6">
                                             <label for="city" class="form-label">State</label>
                                             <select onchange="print_city('state1', this.selectedIndex);" id="sts1" name ="state" class="form-control"></select>
-                                        </div>
+                                        </div> 
                                         <div class="col-md-6">
                                             <label for="state" class="form-label">City</label>
                                             <select id ="state1" class="form-control" name="city" required ></select>
@@ -258,11 +258,22 @@
                                         </div> 
                                         <div class="col-md-6">
                                             <label for="city" class="form-label">State</label>
-                                            <select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state" class="form-control" value="{{hos_patient.state}}"></select>
+                                            <select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state" class="form-control" value="{{hos_patient.state}}">
+                                                {% if hos_patient.state %}
+										<option value="{{hos_patient.state}}"selected>{{hos_patient.state}}</option>
+										{% endif %} 
+                                            </select>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="state" class="form-label">City</label>
-                                            <select id ="state" class="form-control" name="city" required value="{{hos_patient.city}}"></select>
+                                            <select id ="state" class="form-control" name="city" required value="{{hos_patient.city}}">
+                                                {% if hos_patient.city %}
+										<option value="{{hos_patient.city}}"selected>{{hos_patient.city}}</option>
+										{% endif %}
+                                            </select>
+                                            <script>
+                                                document.getElementById('sts').value="{{hos_patient.state}}";
+                                            </script>
                                             <script language="javascript">print_state("sts");</script>
                                         </div>
                                         <div class="col-md-6">

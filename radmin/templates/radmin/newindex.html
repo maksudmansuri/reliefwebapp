@@ -1,549 +1,561 @@
 {% extends 'radmin/blank-page.html' %}
 {% load static %}
 {% block title %} :: Relief Pro:: Admin Dashboard {% endblock title %}
- 
+  
 {% block custom_css %}{% endblock custom_css %}
 	
 	{% block content %}
+			
+	<div class="col-md-7 col-lg-8 col-xl-9">
+						
+		<div class="card">
+		<div class="card-header d-flex justify-content-between border-bottom flex-wrap">
+						<h4 class="card-title">Manage  <a type="button" class="btn btn-rounded btn-primary">{{badgetotal}}</a> </h4>
+						<div class="col-auto d-flex w-sm-100">
+							<button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;" onclick = "refesh()"><i class="fas fa-sync-alt"></i></button>
+						</div> 
+					</div>
+			<div class="card-body pt-0">
 
-		<div class="page-wrapper">
-			<div class="content container-fluid">
+				<nav class="user-tabs mb-4">
+					<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+						<li class="nav-item">
+							<a class="nav-link active" href="#pat_appointments"
+								data-bs-toggle="tab">Hospital {{chospital}}</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#pat_prescriptions"
+								data-bs-toggle="tab">Laboratory {{clab}}</a>
+						</li>
+						<li class="nav-item"> 
+							<a class="nav-link" href="#pat_medical_records" data-bs-toggle="tab">Pharmacy {{cpharmacy}}</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#patient" data-bs-toggle="tab">Patient {{chospital}}</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#accident" data-bs-toggle="tab">Accident {{chospital}}</a>
+						</li>
+					</ul>
+				</nav>
 
-				<div class="page-header">
-					<div class="row">
-						<div class="col-sm-12">
-							<h3 class="page-title">Welcome Admin!</h3>
-							<ul class="breadcrumb">
-								<li class="breadcrumb-item active">Dashboard</li>
-							</ul>
+ 
+				<div class="tab-content pt-0">
+
+					<div id="pat_appointments" class="tab-pane fade show active">
+						<div class="card mb-3">
+							<div class="card-body">
+								<table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
+									<thead>
+										<tr>
+											<th>Code</th>
+											<th>Hospital Name</th> 
+											<th>City</th> 
+											<th>Phone</th>   
+											<th>Verify</th>   
+											<th>Actions</th>  
+										</tr>
+									</thead> 
+									<tbody>
+									{% for hospital in hospitals_list %}
+										<tr>
+											<td>
+												<span class="fw-bold">HP00{{hospital.id}}</span>
+											</td>
+											<td>
+												<img class="avatar rounded-circle" src="{{hospital.profile_pic}}" alt="">
+												<span class="fw-bold ms-1">{{hospital.hopital_name|upper}}</span>
+											</td>
+											<td>
+												{{hospital.city}}
+											</td>
+											<td>
+												 {{hospital.landline}}
+											</td>
+										   
+											</td>
+											{% comment %} <td>
+												<div class="btn-group" role="group" aria-label="Basic outlined example">
+													<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}"><i class="icofont-edit text-success"></i></button>
+													<button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
+												</div>
+											</td> {% endcomment %}
+											{% if hospital.is_verified is not True %}
+												{% if hospital.is_appiled %}
+												<td>
+													<a href="{% url 'hospitalactivate' hospital.id %}" class="btn btn-primary">Appllied</a>
+												</td>
+											   {% elif hospital.is_deactive%}
+												<td>
+														<a href="{% url 'hospitalactivate' hospital.id %}"  class="btn btn-danger" disabled>Rejected</a>
+												</td>
+												{% else %}
+												<td>
+													<a class="btn btn-warning">Progess</a>
+												</td>
+												{% endif %}
+											
+											{% else %}
+												<td>
+													<a href="{% url 'hospitaldeactivate' hospital.id %}" class="btn btn-success">Activated</a>
+												</td>
+											{%endif%}
+												<td>
+												<div class="btn-group">
+													<button type="button" class="btn btn-primary">Action</button>
+													<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+														<span class="visually-hidden">Toggle Dropdown</span>
+													</button> 
+													<ul class="dropdown-menu border-0 shadow py-3 px-2">
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'hospital_profile_admin' hospital.id %}">View Profile</a></li
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'hospital_delete_admin' hospital.id %}">Delete</a></li>
+														<li><hr class="dropdown-divider"></li>
+														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
+													</ul>
+												</div></td><!-- /btn-group -->
+											
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="pat_prescriptions">
+						<div class="card mb-3">
+							<div class="card-body">
+								<table id="myProjectTable1" class="table table-hover align-middle mb-0" style="width:100%">
+									<thead>
+										<tr>
+											<th>Code</th>
+											<th>Lab Name</th> 
+											<th>City</th> 
+											<th>Phone</th>   
+											<th>Verify</th>   
+											<th>Actions</th>  
+										</tr>
+									</thead> 
+									<tbody> 
+									{% for hospital in labs_list %}
+										<tr>
+											<td> 
+												<span class="fw-bold">LB00{{hospital.id}}</span>
+											</td>
+											<td>
+												<img class="avatar rounded-circle" src="{{hospital.profile_pic}}" alt="">
+												<span class="fw-bold ms-1">{{hospital.lab_name|upper}}</span>
+											</td>
+											<td>
+												{{hospital.city}}
+											</td>
+											<td>
+												 {{hospital.landline}}
+											</td>
+										   
+											</td>
+											{% comment %} <td>
+												<div class="btn-group" role="group" aria-label="Basic outlined example">
+													<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}"><i class="icofont-edit text-success"></i></button>
+													<button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
+												</div>
+											</td> {% endcomment %}
+											{% if hospital.is_verified is not True %}
+												{% if hospital.is_appiled %}
+												<td>
+													<a href="{% url 'labsactivate' hospital.id %}" class="btn btn-primary">Appllied</a>
+												</td>
+											   {% elif hospital.is_deactive%}
+												<td>
+														<a href="{% url 'labsactivate' hospital.id %}"  class="btn btn-danger" disabled>Rejected</a>
+												</td>
+												{% else %}
+												<td>
+													<a class="btn btn-warning">Progess</a>
+												</td>
+												{% endif %}
+											
+											{% else %}
+												<td>
+													<a href="{% url 'labsdeactivate' hospital.id %}" class="btn btn-success">Activated</a>
+												</td>
+											{%endif%}
+												<td>
+												<div class="btn-group">
+													<button type="button" class="btn btn-primary">Action</button>
+													<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+														<span class="visually-hidden">Toggle Dropdown</span>
+													</button>
+													<ul class="dropdown-menu border-0 shadow py-3 px-2">
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'labs_profile_admin' hospital.id %}">View Profile</a></li
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'labs_delete_admin' hospital.id %}">Delete</a></li>
+														<li><hr class="dropdown-divider"></li>
+														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
+													</ul>
+												</div></td><!-- /btn-group -->
+											
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div id="pat_medical_records" class="tab-pane fade">
+						<div class="card mb-3">
+							<div class="card-body">
+								<table id="myProjectTable2" class="table table-hover align-middle mb-0" style="width:100%">
+									<thead>
+										<tr>
+											<th>Code</th>
+											<th>Pharmacy Name</th> 
+											<th>City</th> 
+											<th>Phone</th>   
+											<th>Verify</th>   
+											<th>Actions</th>  
+										</tr>
+									</thead> 
+									<tbody> 
+									{% for hospital in pharmacy_list %}
+										<tr>
+											<td>
+												<span class="fw-bold">PH00{{hospital.id}}</span>
+											</td>
+											<td>
+												<img class="avatar rounded-circle" src="{{hospital.profile_pic}}" alt="">
+												<span class="fw-bold ms-1">{{hospital.pharmacy_name}}</span>
+											</td>
+											<td>
+												{{hospital.city}}
+											</td>
+											<td>
+												 {{hospital.landline}}
+											</td>
+										   
+											</td>
+											{% comment %} <td>
+												<div class="btn-group" role="group" aria-label="Basic outlined example">
+													<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}"><i class="icofont-edit text-success"></i></button>
+													<button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
+												</div>
+											</td> {% endcomment %}
+											{% if hospital.is_verified is not True %}
+												{% if hospital.is_appiled %}
+												<td>
+													<a href="{% url 'pharmacyactivate' hospital.id %}" class="btn btn-primary">Appllied</a>
+												</td>
+											   {% elif hospital.is_deactive%}
+												<td>
+														<a href="{% url 'pharmacyactivate' hospital.id %}"  class="btn btn-danger" disabled>Rejected</a>
+												</td>
+												{% else %}
+												<td>
+													<a class="btn btn-warning">Progess</a>
+												</td>
+												{% endif %}
+											
+											{% else %}
+												<td>
+													<a href="{% url 'pharmacydeactivate' hospital.id %}" class="btn btn-success">Activated</a>
+												</td>
+											{%endif%}
+												<td>
+												<div class="btn-group">
+													<button type="button" class="btn btn-primary">Action</button>
+													<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+														<span class="visually-hidden">Toggle Dropdown</span>
+													</button>
+													<ul class="dropdown-menu border-0 shadow py-3 px-2">
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_profile_admin' hospital.id %}">View Profile</a></li
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_delete_admin' hospital.id %}">Delete</a></li>
+														<li><hr class="dropdown-divider"></li>
+														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
+													</ul>
+												</div></td><!-- /btn-group -->
+											
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div id="patient" class="tab-pane fade">
+						<div class="card mb-3">
+							<div class="card-body">
+								<table id="myProjectTable3" class="table table-hover align-middle mb-0" style="width:100%">
+									<thead>
+										<tr>
+											<th>Code</th>
+											<th>Patient Name</th> 
+											<th>City</th> 
+											<th>Phone</th>   
+											<th>Orders</th>   
+											<th>Actions</th>  
+										</tr>
+									</thead> 
+									<tbody> 
+									{% for hospital in patient_list %}
+										<tr>
+											<td>
+												<span class="fw-bold">PT00{{hospital.patient.id}}</span>
+											</td>
+											<td>
+												<img class="avatar rounded-circle" src="{{hospital.patient.profile_pic}}" alt="">
+												<span class="fw-bold ms-1">{{hospital.patient.admin.name_title}} {{hospital.patient.fisrt_name}} {{hospital.patient.last_name}}</span>
+											</td>
+											<td>
+												{{hospital.patient.city}}
+											</td>
+											<td>
+												 {{hospital.patient.admin.phone}}
+											</td>
+										   
+											</td>
+											{% comment %} <td>
+												<div class="btn-group" role="group" aria-label="Basic outlined example">
+													<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}"><i class="icofont-edit text-success"></i></button>
+													<button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
+												</div>
+											</td> {% endcomment %}
+											<td>  {{hospital.total_apt}} </td>
+											{% comment %} {% if hospital.is_verified is not True %}
+												{% if hospital.is_appiled %}
+												<td>
+													<a href="{% url 'pharmacyactivate' hospital.id %}" class="btn btn-primary">Appllied</a>
+												</td>
+											   {% elif hospital.is_deactive%}
+												<td>
+														<a href="{% url 'pharmacyactivate' hospital.id %}"  class="btn btn-danger" disabled>Rejected</a>
+												</td>
+												{% else %}
+												<td>
+													<a class="btn btn-warning">Progess</a>
+												</td>
+												{% endif %}
+											
+											{% else %}
+												<td>
+													<a href="{% url 'pharmacydeactivate' hospital.patient.id %}" class="btn btn-success">Activated</a>
+												</td>
+											{%endif%} {% endcomment %}
+												<td>
+												<div class="btn-group">
+													<button type="button" class="btn btn-primary">Action</button>
+													<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+														<span class="visually-hidden">Toggle Dropdown</span>
+													</button>
+													<ul class="dropdown-menu border-0 shadow py-3 px-2">
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_profile_admin' hospital.patient.id %}">View Profile</a></li
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_delete_admin' hospital.patient.id %}">Delete</a></li>
+														<li><hr class="dropdown-divider"></li>
+														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.patient.id}}">Contact Person</a></li>
+													</ul>
+												</div></td><!-- /btn-group -->
+											
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div id="accident" class="tab-pane fade">
+						<div class="card mb-3">
+							<div class="card-body">
+								<table id="myProjectTable2" class="table table-hover align-middle mb-0" style="width:100%">
+									<thead>
+										<tr>
+											<th>Code</th>
+											<th>Pharmacy Name</th> 
+											<th>City</th> 
+											<th>Phone</th>   
+											<th>Verify</th>   
+											<th>Actions</th>  
+										</tr>
+									</thead> 
+									<tbody> 
+									{% for hospital in pharmacy_list %}
+										<tr>
+											<td>
+												<span class="fw-bold">{{forloop.counter}}</span>
+											</td>
+											<td>
+												<img class="avatar rounded-circle" src="{{hospital.profile_pic}}" alt="">
+												<span class="fw-bold ms-1">{{hospital.pharmacy_name}}</span>
+											</td>
+											<td>
+												{{hospital.city}}
+											</td>
+											<td>
+												 {{hospital.landline}}
+											</td>
+										   
+											</td>
+											{% comment %} <td>
+												<div class="btn-group" role="group" aria-label="Basic outlined example">
+													<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}"><i class="icofont-edit text-success"></i></button>
+													<button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
+												</div>
+											</td> {% endcomment %}
+											{% if hospital.is_verified is not True %}
+												{% if hospital.is_appiled %}
+												<td>
+													<a href="{% url 'pharmacyactivate' hospital.id %}" class="btn btn-primary">Appllied</a>
+												</td>
+											   {% elif hospital.is_deactive%}
+												<td>
+														<a href="{% url 'pharmacyactivate' hospital.id %}"  class="btn btn-danger" disabled>Rejected</a>
+												</td>
+												{% else %}
+												<td>
+													<a class="btn btn-warning">Progess</a>
+												</td>
+												{% endif %}
+											
+											{% else %}
+												<td>
+													<a href="{% url 'pharmacydeactivate' hospital.id %}" class="btn btn-success">Activated</a>
+												</td>
+											{%endif%}
+												<td>
+												<div class="btn-group">
+													<button type="button" class="btn btn-primary">Action</button>
+													<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+														<span class="visually-hidden">Toggle Dropdown</span>
+													</button>
+													<ul class="dropdown-menu border-0 shadow py-3 px-2">
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_profile_admin' hospital.id %}">View Profile</a></li
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_delete_admin' hospital.id %}">Delete</a></li>
+														<li><hr class="dropdown-divider"></li>
+														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
+													</ul>
+												</div></td><!-- /btn-group -->
+											
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
 
-				<div class="row">
-					<div class="col-xl-3 col-sm-6 col-12">
-						<div class="card">
-							<div class="card-body">
-								<div class="dash-widget-header">
-									<span class="dash-widget-icon text-primary border-primary">
-										<i class="fe fe-users"></i>
-									</span>
-									<div class="dash-count">
-										<h3>168</h3>
-									</div>
-								</div>
-								<div class="dash-widget-info">
-									<h6 class="text-muted">Doctors</h6>
-									<div class="progress progress-sm">
-										<div class="progress-bar bg-primary w-50"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 col-sm-6 col-12">
-						<div class="card">
-							<div class="card-body">
-								<div class="dash-widget-header">
-									<span class="dash-widget-icon text-success">
-										<i class="fe fe-credit-card"></i>
-									</span>
-									<div class="dash-count">
-										<h3>487</h3>
-									</div>
-								</div>
-								<div class="dash-widget-info">
-									<h6 class="text-muted">Patients</h6>
-									<div class="progress progress-sm">
-										<div class="progress-bar bg-success w-50"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 col-sm-6 col-12">
-						<div class="card">
-							<div class="card-body">
-								<div class="dash-widget-header">
-									<span class="dash-widget-icon text-danger border-danger">
-										<i class="fe fe-money"></i>
-									</span>
-									<div class="dash-count">
-										<h3>485</h3>
-									</div>
-								</div>
-								<div class="dash-widget-info">
-									<h6 class="text-muted">Appointment</h6>
-									<div class="progress progress-sm">
-										<div class="progress-bar bg-danger w-50"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 col-sm-6 col-12">
-						<div class="card">
-							<div class="card-body">
-								<div class="dash-widget-header">
-									<span class="dash-widget-icon text-warning border-warning">
-										<i class="fe fe-folder"></i>
-									</span>
-									<div class="dash-count">
-										<h3>$62523</h3>
-									</div>
-								</div>
-								<div class="dash-widget-info">
-									<h6 class="text-muted">Revenue</h6>
-									<div class="progress progress-sm">
-										<div class="progress-bar bg-warning w-50"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12 col-lg-6">
-
-						<div class="card card-chart">
-							<div class="card-header">
-								<h4 class="card-title">Revenue</h4>
-							</div>
-							<div class="card-body">
-								<div id="morrisArea"></div>
-							</div>
-						</div>
-
-					</div>
-					<div class="col-md-12 col-lg-6">
-
-						<div class="card card-chart">
-							<div class="card-header">
-								<h4 class="card-title">Status</h4>
-							</div>
-							<div class="card-body">
-								<div id="morrisLine"></div>
-							</div>
-						</div>
-
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6 d-flex">
-
-						<div class="card card-table flex-fill">
-							<div class="card-header">
-								<h4 class="card-title">Doctors List</h4>
-							</div>
-							<div class="card-body">
-								<div class="table-responsive">
-									<table class="table table-hover table-center mb-0">
-										<thead>
-											<tr>
-												<th>Doctor Name</th>
-												<th>Speciality</th>
-												<th>Earned</th>
-												<th>Reviews</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/doctors/doctor-thumb-01.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Dr. Ruby Perrin</a>
-													</h2>
-												</td>
-												<td>Dental</td>
-												<td>$3200.00</td>
-												<td>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star-o text-secondary"></i>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/doctors/doctor-thumb-02.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Dr. Darren Elder</a>
-													</h2>
-												</td>
-												<td>Dental</td>
-												<td>$3100.00</td>
-												<td>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star-o text-secondary"></i>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/doctors/doctor-thumb-03.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Dr. Deborah Angel</a>
-													</h2>
-												</td>
-												<td>Cardiology</td>
-												<td>$4000.00</td>
-												<td>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star-o text-secondary"></i>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/doctors/doctor-thumb-04.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Dr. Sofia Brient</a>
-													</h2>
-												</td>
-												<td>Urology</td>
-												<td>$3200.00</td>
-												<td>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star-o text-secondary"></i>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/doctors/doctor-thumb-05.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Dr. Marvin Campbell</a>
-													</h2>
-												</td>
-												<td>Orthopaedics</td>
-												<td>$3500.00</td>
-												<td>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star text-warning"></i>
-													<i class="fe fe-star-o text-secondary"></i>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-
-					</div>
-					<div class="col-md-6 d-flex">
-
-						<div class="card  card-table flex-fill">
-							<div class="card-header">
-								<h4 class="card-title">Patients List</h4>
-							</div>
-							<div class="card-body">
-								<div class="table-responsive">
-									<table class="table table-hover table-center mb-0">
-										<thead>
-											<tr>
-												<th>Patient Name</th>
-												<th>Phone</th>
-												<th>Last Visit</th>
-												<th>Paid</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/patients/patient1.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Charlene Reed </a>
-													</h2>
-												</td>
-												<td>8286329170</td>
-												<td>20 Oct 2019</td>
-												<td class="text-end">$100.00</td>
-											</tr>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/patients/patient2.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Travis Trimble </a>
-													</h2>
-												</td>
-												<td>2077299974</td>
-												<td>22 Oct 2019</td>
-												<td class="text-end">$200.00</td>
-											</tr>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/patients/patient3.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Carl Kelly</a>
-													</h2>
-												</td>
-												<td>2607247769</td>
-												<td>21 Oct 2019</td>
-												<td class="text-end">$250.00</td>
-											</tr>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/patients/patient4.jpg"
-																alt="User Image"></a>
-														<a href="profile.html"> Michelle Fairfax</a>
-													</h2>
-												</td>
-												<td>5043686874</td>
-												<td>21 Sep 2019</td>
-												<td class="text-end">$150.00</td>
-											</tr>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/patients/patient5.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Gina Moore</a>
-													</h2>
-												</td>
-												<td>9548207887</td>
-												<td>18 Sep 2019</td>
-												<td class="text-end">$350.00</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-
-						<div class="card card-table">
-							<div class="card-header">
-								<h4 class="card-title">Appointment List</h4>
-							</div>
-							<div class="card-body">
-								<div class="table-responsive">
-									<table class="table table-hover table-center mb-0">
-										<thead>
-											<tr>
-												<th>Doctor Name</th>
-												<th>Speciality</th>
-												<th>Patient Name</th>
-												<th>Apointment Time</th>
-												<th>Status</th>
-												<th class="text-end">Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/doctors/doctor-thumb-01.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Dr. Ruby Perrin</a>
-													</h2>
-												</td>
-												<td>Dental</td>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/patients/patient1.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Charlene Reed </a>
-													</h2>
-												</td>
-												<td>9 Nov 2019 <span class="text-primary d-block">11.00 AM - 11.15
-														AM</span></td>
-												<td>
-													<div class="status-toggle">
-														<input type="checkbox" id="status_1" class="check" checked>
-														<label for="status_1" class="checktoggle">checkbox</label>
-													</div>
-												</td>
-												<td class="text-end">
-													$200.00
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/doctors/doctor-thumb-02.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Dr. Darren Elder</a>
-													</h2>
-												</td>
-												<td>Dental</td>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/patients/patient2.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Travis Trimble </a>
-													</h2>
-												</td>
-												<td>5 Nov 2019 <span class="text-primary d-block">11.00 AM - 11.35
-														AM</span></td>
-												<td>
-													<div class="status-toggle">
-														<input type="checkbox" id="status_2" class="check" checked>
-														<label for="status_2" class="checktoggle">checkbox</label>
-													</div>
-												</td>
-												<td class="text-end">
-													$300.00
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/doctors/doctor-thumb-03.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Dr. Deborah Angel</a>
-													</h2>
-												</td>
-												<td>Cardiology</td>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/patients/patient3.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Carl Kelly</a>
-													</h2>
-												</td>
-												<td>11 Nov 2019 <span class="text-primary d-block">12.00 PM - 12.15
-														PM</span></td>
-												<td>
-													<div class="status-toggle">
-														<input type="checkbox" id="status_3" class="check" checked>
-														<label for="status_3" class="checktoggle">checkbox</label>
-													</div>
-												</td>
-												<td class="text-end">
-													$150.00
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/doctors/doctor-thumb-04.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Dr. Sofia Brient</a>
-													</h2>
-												</td>
-												<td>Urology</td>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/patients/patient4.jpg"
-																alt="User Image"></a>
-														<a href="profile.html"> Michelle Fairfax</a>
-													</h2>
-												</td>
-												<td>7 Nov 2019<span class="text-primary d-block">1.00 PM - 1.20
-														PM</span></td>
-												<td>
-													<div class="status-toggle">
-														<input type="checkbox" id="status_4" class="check" checked>
-														<label for="status_4" class="checktoggle">checkbox</label>
-													</div>
-												</td>
-												<td class="text-end">
-													$150.00
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/doctors/doctor-thumb-05.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Dr. Marvin Campbell</a>
-													</h2>
-												</td>
-												<td>Orthopaedics</td>
-												<td>
-													<h2 class="table-avatar">
-														<a href="profile.html" class="avatar avatar-sm me-2"><img
-																class="avatar-img rounded-circle"
-																src="assets/img/patients/patient5.jpg"
-																alt="User Image"></a>
-														<a href="profile.html">Gina Moore</a>
-													</h2>
-												</td>
-												<td>15 Nov 2019 <span class="text-primary d-block">1.00 PM - 1.15
-														PM</span></td>
-												<td>
-													<div class="status-toggle">
-														<input type="checkbox" id="status_5" class="check" checked>
-														<label for="status_5" class="checktoggle">checkbox</label>
-													</div>
-												</td>
-												<td class="text-end">
-													$200.00
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-
-					</div>
-				</div>
 			</div>
 		</div>
+	</div>
+ 
+		
 
  	{% endblock content %}
 	
 {% block custom_modal %}{% endblock custom_modal %}
 
-{% block custom_js %}{% endblock custom_js %}
+{% block custom_js %}
+<script>
+    // project data table
+    $(document).ready(function() {
+        $('#myProjectTable')
+        .addClass( 'nowrap' )
+        .dataTable( {
+            responsive: true,
+            columnDefs: [
+                { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+        $('.deleterow').on('click',function(){
+        var tablename = $(this).closest('table').DataTable();  
+        tablename
+            .row( $(this)
+            .parents('tr') )
+            .remove()
+            .draw();
+
+        } );
+    });
+    $(document).ready(function() {
+        $('#myProjectTable1')
+        .addClass( 'nowrap' )
+        .dataTable( {
+            responsive: true,
+            columnDefs: [
+                { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+        $('.deleterow1').on('click',function(){
+        var tablename = $(this).closest('table').DataTable();  
+        tablename
+            .row( $(this)
+            .parents('tr') )
+            .remove()
+            .draw();
+
+        } );
+    });
+    $(document).ready(function() {
+        $('#myProjectTable2')
+        .addClass( 'nowrap' )
+        .dataTable( {
+            responsive: true,
+            columnDefs: [
+                { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+        $('.deleterow2').on('click',function(){
+        var tablename = $(this).closest('table').DataTable();  
+        tablename
+            .row( $(this)
+            .parents('tr') )
+            .remove()
+            .draw();
+
+        } );
+    });
+    $(document).ready(function() {
+        $('#myProjectTable3')
+        .addClass( 'nowrap' )
+        .dataTable( {
+            responsive: true,
+            columnDefs: [
+                { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+        $('.deleterow3').on('click',function(){
+        var tablename = $(this).closest('table').DataTable();  
+        tablename
+            .row( $(this)
+            .parents('tr') )
+            .remove()
+            .draw();
+
+        } );
+    });
+    $(document).ready(function() {
+        $('#myProjectTable4')
+        .addClass( 'nowrap' )
+        .dataTable( {
+            responsive: true,
+            columnDefs: [
+                { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+        $('.deleterow4').on('click',function(){
+        var tablename = $(this).closest('table').DataTable();  
+        tablename
+            .row( $(this)
+            .parents('tr') )
+            .remove()
+            .draw();
+
+        } );
+    });
+	function refesh(){
+		//  $("#mydiv").load(location.href + " #mydiv");
+		//  $( "#mydiv" ).load(window.location.href);
+		  location.reload();
+	  }
+</script>
+{% endblock custom_js %}

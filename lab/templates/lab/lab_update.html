@@ -78,11 +78,19 @@
                                     </div>                                            
                                     <div class="col-md-6">
                                         <label for="city" class="form-label">State</label>
-                                        <select onchange="print_city('state1', this.selectedIndex);" id="sts1" name ="state" class="form-control"></select>
-                                    </div>
+                                        <select onchange="print_city('state1', this.selectedIndex);" id="sts1" name ="state" class="form-control">
+                                            {% if lab.state %}
+										<option value="{{lab.state}}"selected>{{lab.state}}</option>
+										{% endif %} 
+                                        </select>
+                                    </div> 
                                     <div class="col-md-6">
                                         <label for="state" class="form-label">City</label>
-                                        <select id ="state1" class="form-control" name="city" required ></select>
+                                        <select id ="state1" class="form-control" name="city" required >
+                                            {% if lab.city %}
+										<option value="{{lab.city}}"selected>{{lab.city}}</option>
+										{% endif %}
+                                        </select>
                                         <script language="javascript">print_state("sts1");</script>
                                     </div>  
                                     <div class="col-md-6">
@@ -412,6 +420,8 @@ $(document).on("change",".select_media",function(){
     }
 </script>
 
-
+<script>
+	document.getElementById('sts').value="{{lab.state}}";
+</script>
 
 {% endblock custom_js %}
