@@ -72,8 +72,8 @@
 				<div class="header-bottm header-sticky">
 					<div class="container-fluid d-flex justify-content-between align-items-center">
 						<div class="logo">
-							<a class="logo-desktop" href="index.html"><img src="{% static 'front/img/logo/logo2.png'%}" alt=""></a>
-							<a class="logo-mobile"href="index.html"><img src="{% static 'front/img/logo/logo__mobile2.png'%}" alt=""></a>
+							<a class="logo-desktop" href="{% url 'front_home' %}"><img src="{% static 'front/img/logo/logo2.png'%}" alt=""></a>
+							<a class="logo-mobile"href="{% url 'front_home' %}"><img src="{% static 'front/img/logo/logo__mobile2.png'%}" alt=""></a>
 						</div>
 						<div class="min-menu h1-min-menu">
 							<nav id="mobile-menu">

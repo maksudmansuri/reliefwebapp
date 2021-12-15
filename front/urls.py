@@ -13,9 +13,11 @@ urlpatterns = [
     path('search_pharmcy',views.SearchPharmacyView.as_view(),name="search_pharmcy"),
     path('search_blood_donor',views.BLoodDonorList.as_view(),name="search_blood_donor"),
     path('specilist_hospitals/<hid>',views.SearcCathHospitalView.as_view(),name="specilist_hospitals"),
-     
+      
     #profiles Hospital
     path('hospital_details/<id>', views.HospitalDetailsViews.as_view(), name="hospital_details"),
+    path('ratingandcomment', views.HospitalComments, name="ratingandcomment"),
+
     path('bookappoinment/<id>/<did>', views.DoctorsBookAppoinmentViews.as_view(), name="bookappoinment"),
     #Profile Labs
     path('lab_details/<id>', views.LabDetailsViews.as_view(), name="lab_details"),

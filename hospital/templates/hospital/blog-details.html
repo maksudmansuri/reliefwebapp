@@ -31,10 +31,10 @@
 <div class="header">
 
 <div class="header-left">
-<a href="index.html" class="logo">
+<a href="{% url 'front_home' %}" class="logo">
 <img src="assets/img/logo.png" alt="Logo">
 </a>
-<a href="index.html" class="logo logo-small">
+<a href="{% url 'front_home' %}" class="logo logo-small">
 <img src="assets/img/logo-small.png" alt="Logo" width="30" height="30">
 </a>
 </div>
@@ -286,7 +286,7 @@
 <div class="col-sm-12">
 <h3 class="page-title">Blog Details</h3>
 <ul class="breadcrumb">
-<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+<li class="breadcrumb-item"><a href="{% url 'front_home' %}">Dashboard</a></li>
 <li class="breadcrumb-item"><a href="javascript:(0);">Pages</a></li>
 <li class="breadcrumb-item active">Blog Details</li>
 </ul>

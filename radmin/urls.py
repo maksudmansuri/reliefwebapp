@@ -1,6 +1,6 @@
 from django.urls import path
 from .import views
-   
+    
 urlpatterns = [  
     #Time SLot Add delete
      path('time_slot',views.TimeSlotView.as_view(),name="time_slot"),

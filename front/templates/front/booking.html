@@ -438,7 +438,7 @@ Booking {% endblock title %}
 		var booking_type = document.getElementById("booking_type").value;
 		var someone = document.getElementById("someone").value;
 		console.log(booking_type)
-		if(timeslot != undefined && booking_type != undefined && timeslot != "" && booking_type != "" && someone != undefined && someone != ""){
+		if(timeslot != undefined && booking_type != undefined && timeslot != "" && booking_type != "" ){
 			alert("Your slot booking is in proceed waitfor moment..");
 			document.getElementById("bookingform").submit();
 		}else{

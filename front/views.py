@@ -14,6 +14,7 @@ from django.db.models import Q
 from chat.models import Notification
 from accounts.models import AdminHOD, Hospitals, Labs, Patients, Pharmacy, Specailist
 from accounts.views import send_otp
+from front.models import RatingAndComments
 from hospital.models import AmbulanceDetails, Blog, DoctorSchedule, HospitalMedias, HospitalRooms, HospitalStaffDoctors, ServiceAndCharges
 from django.http import JsonResponse
 from django.db import transaction
@@ -250,7 +251,7 @@ class SearcCathHospitalView(ListView):
         return context
 
 """Details View Hospital"""
-  
+   
 class HospitalDetailsViews(DetailView):
     def get(self, request, *args, **kwargs):
         hosital_id=kwargs['id'] 
@@ -263,9 +264,23 @@ class HospitalDetailsViews(DetailView):
         # T_room = A
         A_ambulances = AmbulanceDetails.objects.filter(hospital=hospital,is_active=True,occupied=False).count()
         T_ambulances = AmbulanceDetails.objects.filter(hospital=hospital,is_active=True).count()
-       
-        param = {'hospital':hospital,'medias':medias,'doctors':doctors,'A_rooms':A_rooms,'T_rooms':T_rooms,'A_ambulances':A_ambulances,'T_ambulances':T_ambulances}  
+
+        cmns = RatingAndComments.objects.filter(HLP =hospital.admin)[0:5]
+        total_cmns = RatingAndComments.objects.filter(HLP =hospital.admin).count()
+
+        param = {'hospital':hospital,'medias':medias,'doctors':doctors,'A_rooms':A_rooms,'T_rooms':T_rooms,'A_ambulances':A_ambulances,'T_ambulances':T_ambulances,'cmns':cmns,'total_cmns':total_cmns}  
         return render(request,"front/new_hospital_details.html",param)
+
+def HospitalComments(request):
+    if request.method == "POST":
+        patient = request.user
+        HLP = request.POST.get('HLP')
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+
+        ratingandcommect = RatingAndComments(patient=patient,HLP=HLP,rating=rating,comment=comment)
+        ratingandcommect.save() 
+        return HttpResponse(ratingandcommect) 
 
 class DoctorsBookAppoinmentViews(View):
     
