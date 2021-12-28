@@ -1,11 +1,12 @@
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.http import response
 from django.http.request import HttpRequest
 from patient.models import Booking, LabTest, OrderBooking, Orders, PicturesForMedicine, Slot
 from django.core.files.storage import FileSystemStorage
 from django.http.response import HttpResponse, HttpResponseBase, HttpResponseRedirect, JsonResponse
 from hospital.models import ContactPerson, HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, Insurances, ServiceAndCharges, TimeSlot
-from accounts.models import CustomUser, HospitalPhones, Hospitals, Labs, Patients, Pharmacy, Specailist
+from accounts.models import CustomUser, HospitalPhones, Hospitals, Labs, OPDTime, Patients, Pharmacy, Specailist
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -123,6 +124,196 @@ def HospitalDelete(request,id):
     hospital=Hospitals.objects.get(id=id)
     hospital.delete()
     return HttpResponseRedirect(reverse("radmin_home"))
+
+class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
+    UserModel=get_user_model()
+    def get(self, request, *args, **kwargs):
+        # hospital = None
+        # contacts = None
+        # insurances = None
+        # try:
+        id= kwargs['id']
+        hospital = Hospitals.objects.get(id=id)
+        contacts = HospitalPhones.objects.filter(hospital=hospital)
+        insurances = Insurances.objects.filter(hospital=hospital)
+        # opdtime=OPDTime.objects.get(user=request.user)
+        specailists = Specailist.objects.all()
+        print("hello")
+        print(specailists)
+        # except Exception as e:
+            # return None
+        param={'hospital':hospital,'insurances':insurances,'contacts':contacts,'specailists':specailists}
+        return render(request,"radmin/doctor-profile-settings.html",param) 
+    
+    def post(self, request, *args, **kwargs):
+        hopital_name = request.POST.get("hopital_name")
+        specialist = request.POST.get("specialist")
+        profile_pic = request.FILES.get("profile_pic")
+
+        firm = request.POST.get("firm")
+        about = request.POST.get("about")
+        address1 = request.POST.get("address1")
+        address2 = request.POST.get("address2")
+        city = request.POST.get("city")
+        pin_code = request.POST.get("pin_code")
+        state = "Gujarat"
+        country = "India"
+        landline = request.POST.get("landline")
+        establishment_year = request.POST.get("establishment_year")
+        registration_number = request.POST.get("registration_number")
+        registration_proof = request.FILES.get("registration_proof")
+        facebook = request.POST.get("facebook")
+        instagram = request.POST.get("instagram")
+        linkedin = request.POST.get("linkedin")
+        twitter = request.POST.get("twitter")
+        website = request.POST.get("website")
+        #contact detail
+        hospital_mobile_list= request.POST.getlist("hospital_mobile[]")
+        hospital_email_list = request.POST.getlist("hospital_email[]")
+        #insuarance
+        insurance_type_list = request.POST.getlist("insurance_type[]")
+        insurance_name_list = request.POST.getlist("insurance_name[]")
+        #hidden Ids from for loop
+        insurances_id = request.POST.getlist("insurances_id[]")
+        contacts_id = request.POST.getlist("contacts_id[]")
+        # user creation Data
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        # mobile = request.POST.get("phone")
+        alternate_mobile = request.POST.get("alternate_mobile")
+        # email = request.POST.get("email")
+        name_title = request.POST.get("name_title")
+
+        # Sunday = request.POST.get("Sunday")
+        # Monday = request.POST.get("Monday")
+        # Tuesday = request.POST.get("Tuesday")
+        # Wednesday = request.POST.get("Wednesday")
+        # Thursday = request.POST.get("Thursday")
+        # Friday = request.POST.get("Friday")
+        # Saturday = request.POST.get("Saturday")
+        # Sunday = request.POST.get("Sunday")
+        # opening_time1 = request.POST.get("opening_time")
+        # opening_time = datetime.strptime(opening_time1,"%H:%M").time()
+        # close_time1 = request.POST.get("close_time")
+        # close_time = datetime.strptime(close_time1,"%H:%M").time()
+        # break_start_time1 = request.POST.get("break_start_time")
+        # break_start_time = datetime.strptime(break_start_time1,"%H:%M").time()
+        # break_end_time1 = request.POST.get("break_end_time")
+        # break_end_time = datetime.strptime(break_end_time1,"%H:%M").time()
+        # if Sunday is None and Monday is None and Tuesday is None and Wednesday is None and Thursday is None and Friday is None and Saturday is None:
+        #     messages.add_message(request,messages.ERROR,"At least select one day")
+        #     return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id}))
+        # if opening_time >= close_time or break_start_time >= close_time or break_end_time >= close_time or opening_time >= break_start_time  or opening_time >= break_end_time or break_start_time >= break_end_time:
+        #     messages.add_message(request,messages.ERROR,"Time does not match kindly set Proper time ")
+        #     print(messages.error)
+        #     return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id})) 
+
+        # print("we are indside a add hspitals")
+        try:
+            id=kwargs['id']
+            # opd = OPDTime.objects.get(user=request.user)
+            # opd.delete()
+            # opdtime= OPDTime(user=request.user,opening_time=opening_time,close_time=close_time,break_start_time=break_start_time,break_end_time=break_end_time,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,is_active=True)
+            # opdtime.save()
+            hospital = Hospitals.objects.get(id=id)
+            hospital.hopital_name=hopital_name
+            hospital.about=about
+            hospital.registration_number=registration_number
+            hospital.address1=address1
+            hospital.address2=address2
+            hospital.city=city
+            hospital.pin_code=pin_code
+            hospital.state=state
+            hospital.country=country
+            hospital.landline=landline
+            if specialist:
+                specialist1 = get_object_or_404(Specailist,id=specialist)
+                hospital.specialist=specialist1
+
+            if profile_pic:
+                fs=FileSystemStorage()
+                filename1=fs.save(profile_pic.name,profile_pic)
+                profile_pic_url=fs.url(filename1)
+                hospital.profile_pic=profile_pic_url
+                hospital.admin.profile_pic=profile_pic_url
+
+            print(registration_proof)
+            if registration_proof:
+                fs=FileSystemStorage()
+                filename=fs.save(registration_proof.name,registration_proof)
+                registration_proof_url=fs.url(filename)
+                hospital.registration_proof=registration_proof_url
+                
+            hospital.establishment_year=establishment_year
+            hospital.alternate_mobile=alternate_mobile
+            hospital.website=website
+            hospital.linkedin=linkedin
+            hospital.facebook=facebook
+            hospital.instagram=instagram
+            hospital.twitter=twitter
+            hospital.is_appiled=True
+            hospital.is_verified=False
+            hospital.firm=firm
+            hospital.save()
+            #edit customUSer
+            hospital.admin.first_name=first_name
+            hospital.admin.last_name=last_name
+            hospital.admin.name_title=name_title       
+            
+            hospital.admin.save()
+            
+            k=0
+            for insurance_name in insurance_name_list:
+                insurance_id = insurances_id[k]
+                if insurance_id == "blank" and insurance_name != "" : 
+                    insurance =Insurances(hospital=hospital,insurance_type=insurance_type_list[k],insurance_name=insurance_name)
+                    insurance.is_active =True
+                    insurance.save()
+                else:
+                    if insurance_name != "":
+                        insurance = Insurances.objects.get(id=insurance_id)
+                        insurance.insurance_type = insurance_type_list[k]
+                        insurance.insurance_name = insurance_name
+                        insurance.save()
+
+                k=k+1
+            print("insurance saved") 
+
+            j=0
+            hos_mobiles = HospitalPhones.objects.filter(is_active=True) 
+            for hospital_mobile in hospital_mobile_list:
+                print(hospital_mobile_list)
+                contact_id = contacts_id[j]
+                if contact_id == "blank" and (hospital_mobile != "" or hospital_email_list[j] != ""):
+                    if hos_mobiles:
+                        for hos_mobile in hos_mobiles:
+                            if hospital_mobile == hos_mobile.hospital_mobile or hospital_email_list[j] == hos_mobile.hospital_email :
+                                messages.add_message(request,messages.ERROR," Mobile number or email id is already exist")                    
+                    print("totol blank hai for hos_mobile is newly created !")
+                    hospitalphone =HospitalPhones(hospital=hospital,hospital_mobile=hospital_mobile,hospital_email=hospital_email_list[j])
+                    hospitalphone.is_active =True
+                    hospitalphone.save()
+                else:
+                    if hospital_mobile != "" or hospital_email_list[j] != "" :
+                        print("update phone number and wemail id !")
+                        hospitalphone = HospitalPhones.objects.get(id=contact_id)
+                        hospitalphone.hospital_mobile = hospital_mobile
+                        hospitalphone.hospital_email = hospital_email_list[j]
+                        hospitalphone.save()
+                j=j+1
+
+            print("phone saved")
+
+                
+            
+            print("All data saved")
+
+            messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
+            # except:
+            #     return render(request,"radmin/hospital_add.html") 
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,e)        
+        return HttpResponseRedirect(reverse("radmin_home"))
 
 
 """

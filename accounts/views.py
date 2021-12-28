@@ -128,7 +128,7 @@ def verifyOTP(request,phone):
             [user.email]
         )#compose email
         print(email_message)
-        email_message.send() #send Email
+        # email_message.send() #send Email
         messages.add_message(request,messages.SUCCESS,"Sucessfully Singup Please Verify Your Account Email")
         if user is not None:
             if user.is_active == True:
@@ -283,13 +283,14 @@ def dologin(request):
 class HospitalSingup(SuccessMessageMixin,CreateView):
     template_name="accounts/hospitalsingupnew.html"
     model=CustomUser 
-    fields=["email","phone","username","password"]
+    fields=["email","phone","password"]
     success_message = "Hospital User Created"  
     def form_valid(self,form):
         #Saving Custom User Object for Merchant User
         print('i m here at Hospital singup')
         user=form.save(commit=False)
         user.user_type=2
+        user.username=form.cleaned_data["email"]
         user.set_password(form.cleaned_data["password"])
         print('just one step ahead save?')   
         user.counter += 1  # Update Counter At every Call
@@ -340,13 +341,14 @@ class DoctorSingup(SuccessMessageMixin,CreateView):
 class PatientSingup(SuccessMessageMixin,CreateView):
     template_name="accounts/patientsingupnew.html"
     model=CustomUser
-    fields=["email","phone","username","password"]
+    fields=["email","phone","password"]
     success_message = "Patient Account Created" 
  
     def form_valid(self,form):
         #Saving Custom User Object for Merchant User
         user=form.save(commit=False)
         user.user_type=4
+        user.username=form.cleaned_data["email"]
         user.set_password(form.cleaned_data["password"])
         user.counter += 1  # Update Counter At every Call
         user.is_active= True
@@ -485,7 +487,7 @@ class PatientSingupStep3(UpdateView):
 class AuthorizedSingup(SuccessMessageMixin,CreateView):
     template_name="accounts/athorizationsnew.html"
     model=CustomUser
-    fields=["email","phone","username","password"]
+    fields=["email","phone","password"]
     success_message = "Admin User Created" 
 
     def form_valid(self,form):
@@ -494,6 +496,7 @@ class AuthorizedSingup(SuccessMessageMixin,CreateView):
         user=form.save(commit=False)
         user.user_type=1
         user.is_active=True
+        user.username=form.cleaned_data["email"]
         user.set_password(form.cleaned_data["password"])
         print('just one step ahead save?')   
         user.save() # Save the data
@@ -502,13 +505,14 @@ class AuthorizedSingup(SuccessMessageMixin,CreateView):
 class LabSingup(SuccessMessageMixin,CreateView):
     template_name="accounts/labsingupnew.html"
     model=CustomUser
-    fields=["email","phone","username","password"]
+    fields=["email","phone","password"]
     success_message = "LAB User Created"  
     def form_valid(self,form):
         #Saving Custom User Object for Merchant User
         print('I am here at LAB singup')
         user=form.save(commit=False)
         user.user_type=5
+        user.username=form.cleaned_data["email"]    
         user.set_password(form.cleaned_data["password"])
         print('just one step ahead save?')   
         user.counter += 1  # Update Counter At every Call
@@ -538,13 +542,14 @@ class LabSingup(SuccessMessageMixin,CreateView):
 class PharmacySingup(SuccessMessageMixin,CreateView):
     template_name="accounts/pharmacysingupnew.html"
     model=CustomUser
-    fields=["email","phone","username","password"]
+    fields=["email","phone","password"]
     success_message = "Hospital User Created"  
     def form_valid(self,form):
         #Saving Custom User Object for Merchant User
         print('i m here at Hospital singup')
         user=form.save(commit=False)
         user.user_type=6
+        user.username=form.cleaned_data["email"]
         user.set_password(form.cleaned_data["password"])
         print('just one step ahead save?')   
         user.counter += 1  # Update Counter At every Call

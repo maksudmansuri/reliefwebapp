@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 from .models import CustomUser
 class EmailBackEnd(ModelBackend):

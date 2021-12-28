@@ -2660,12 +2660,12 @@ button.bg-danger:hover {
 }
 
 .header-four .nav-item a.header-login {
-    border: 2px solid #fff;
+    border: 2px solid #2264c5;
     border-radius: 30px;
     padding: 10px 15px !important;
     text-align: center;
     font-size: 14px;
-    color: #fff;
+    color: #2264c5;
     text-transform: uppercase;
     font-weight: 500;
     line-height: 20px

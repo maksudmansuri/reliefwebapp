@@ -1,496 +1,375 @@
-
 {% extends 'front/blank-page.html' %}
-{% load static %} 
+{% load static %}  {% load humanize %}
 {% block title %} Relief Pro - Hospital Profile | Hospital,Labs and Pharmacy Online Booking | Emergency
 Booking {% endblock title %}
 
-{% block custom_css %}{% endblock custom_css %}
+{% block custom_css %}
+
+{% endblock custom_css %}
 
 {% block content %}
-		<div class="breadcrumb-bar">
-			<div class="container-fluid">
-				<div class="row align-items-center">
-					<div class="col-md-12 col-12">
-						<nav aria-label="breadcrumb" class="page-breadcrumb">
-							<ol class="breadcrumb">
-								<li class="breadcrumb-item"><a href="{% url 'front_home' %}">Home</a></li>
-								<li class="breadcrumb-item active" aria-current="page">Doctor Profile</li>
-							</ol>
-						</nav>
-						<h2 class="breadcrumb-title">Doctor Profile</h2>
+<div class="breadcrumb-bar">
+	<div class="container-fluid">
+		<div class="row align-items-center">
+			<div class="col-md-12 col-12">
+				<nav aria-label="breadcrumb" class="page-breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="{% url 'front_home' %}">Home</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Doctor Profile</li>
+					</ol>
+				</nav>
+				<h2 class="breadcrumb-title">Doctor Profile</h2>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="content">
+	<div class="container">
+
+		<div class="card">
+			<div class="card-body">
+				<div class="doctor-widget">
+					<div class="doc-info-left">
+						<div class="doctor-img">
+							<img src="{{hospital.profile_pic}}"
+								onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+								class="img-fluid" alt="User Image">
+						</div>
+						<div class="doc-info-cont">
+							<h4 class="doc-name">{{hospital.hopital_name|upper}}</h4>
+							<p class="doc-speciality">{{hospital.specialist}}</p>
+							<p class="doc-department"><img src="{{hospital.specialist.hover_icon}}" class="img-fluid"
+									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+									alt="Speciality">Dentist</p>
+							
+							<div class="rating">
+								{% if  rating <= 5 and rating > 4 %}
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i> 
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+								{% endif %}
+								{% if rating <= 4 and rating > 3 %}
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i> 
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star "></i>
+								{% endif %}
+								{% if rating <= 3 and rating > 2 %}
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i> 
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star "></i>
+									<i class="fas fa-star "></i>
+								{% endif %}
+								{% if rating <= 2 and rating > 1 %}
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i> 
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+								{% endif %}
+								{% if rating <= 1 and rating > 0 %}
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star"></i> 
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+								{% endif %}
+								{% if rating == 0 %}
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i> 
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+								{% endif %}
+								<span class="d-inline-block average-rating">({{total_cmns}})</span>
+							</div>
+							<div class="clinic-details">
+								<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{hospital.city}},
+									{{hospital.state}} - <a href="javascript:void(0);">Get Directions</a></p>
+								<ul class="clinic-gallery">
+									{% for media in medias %}
+									{% if media.media_type == "1" %}
+									<li>
+										<a href="{{media.media_content}}" data-fancybox="gallery">
+											<img src="{{media.media_content}}" alt="Feature">
+										</a>
+									</li>
+									{% endif %}
+									{% endfor %}
+								</ul>
+							</div>
+							{% comment %} <div class="clinic-services">
+								<span>Dental Fillings</span>
+								<span>Teeth Whitneing</span>
+							</div> {% endcomment %}
+						</div>
+					</div>
+					<div class="doc-info-right">
+						<div class="clini-infos">
+							<ul>
+								<li title="rooms"><i class="fas fa-person-booth"></i>{{T_rooms}} Room</li>
+								<li title="ambulances"><i class="fas fa-ambulance"></i>{{T_ambulances}} Ambulance</li>
+								<li><i class="fas fa-map-marker-alt"></i> {{hospital.city}},{{hospital.state}}</li>
+
+							</ul>
+						</div>
+
 					</div>
 				</div>
 			</div>
 		</div>
 
 
-		<div class="content">
-			<div class="container">
+		<div class="card">
+			<div class="card-body pt-0">
 
-				<div class="card">
-					<div class="card-body">
-						<div class="doctor-widget">
-							<div class="doc-info-left">
-								<div class="doctor-img">
-									<img src="{{hospital.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
-										alt="User Image">
+				<nav class="user-tabs mb-4">
+					<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+						<li class="nav-item">
+							<a class="nav-link" href="#doc_overview" data-bs-toggle="tab">Overview</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" href="#doctor_list" data-bs-toggle="tab">Doctors</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#doc_reviews" data-bs-toggle="tab">Reviews</a>
+						</li>
+						{% comment %} <li class="nav-item">
+							<a class="nav-link" href="#doc_business_hours" data-bs-toggle="tab">Business
+								Hours</a>
+						</li> {% endcomment %}
+					</ul>
+				</nav>
+
+
+				<div class="tab-content pt-0">
+
+					<div role="tabpanel" id="doc_overview" class="tab-pane fade ">
+						<div class="row">
+							<div class="col-md-12 col-lg-9">
+
+								<div class="widget about-widget">
+									<h4 class="widget-title">About Me</h4>
+									<p>{{hospital.about}}</p>
 								</div>
-								<div class="doc-info-cont">
-									<h4 class="doc-name">{{hospital.hopital_name}}</h4>
-									<p class="doc-speciality">{{hospital.specialist}}</p>
-									<p class="doc-department"><img src="{{hospital.specialist.hover_icon}}"
-											class="img-fluid" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Speciality">Dentist</p>
-									<div class="rating">
-										<i class="fas fa-star filled"></i>
-										<i class="fas fa-star filled"></i>
-										<i class="fas fa-star filled"></i>
-										<i class="fas fa-star filled"></i>
-										<i class="fas fa-star"></i>
-										<span class="d-inline-block average-rating">(35)</span>
-									</div>
-									<div class="clinic-details">
-										<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{hospital.city}}, {{hospital.state}} - <a
-												href="javascript:void(0);">Get Directions</a></p>
-										<ul class="clinic-gallery">
-                                        {% for media in medias %}
-                                        {% if media.media_type == "1" %}
+
+
+								<div class="widget education-widget">
+									<h4 class="widget-title">Rooms</h4>
+									<div class="experience-box">
+										<ul class="experience-list">
 											<li>
-												<a href="{{media.media_content}}" data-fancybox="gallery">
-													<img src="{{media.media_content}}" alt="Feature">
-												</a>
+												<div class="experience-user">
+													<div class="before-circle"></div>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<a class="name">Total Rooms</a>
+														<span class="time">{{T_rooms}}</span>
+														<a class="name">Available Rooms</a>
+														<span class="time">{{A_rooms}}</span>
+													</div>
+												</div>
 											</li>
-                                        {% endif %}
-										{% endfor %}
+
 										</ul>
 									</div>
-									{% comment %} <div class="clinic-services">
-										<span>Dental Fillings</span>
-										<span>Teeth Whitneing</span>
-									</div> {% endcomment %}
 								</div>
-							</div>
-							<div class="doc-info-right">
-								<div class="clini-infos">
-									<ul>
-										<li title="rooms"><i class="fas fa-person-booth"></i>{{T_rooms}} Room</li>
-										<li title="ambulances"><i class="fas fa-ambulance"></i>{{T_ambulances}} Ambulance</li>
-										<li><i class="fas fa-map-marker-alt"></i> {{hospital.city}},{{hospital.state}}</li>
-										
-									</ul>
+
+
+								<div class="widget experience-widget">
+									<h4 class="widget-title">Ambulances</h4>
+									<div class="experience-box">
+										<ul class="experience-list">
+											<li>
+												<div class="experience-user">
+													<div class="before-circle"></div>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<a class="name">Total Ambulance</a>
+														<span class="time">{{T_ambulances}}</span>
+														<a class="name">Available Ambulance</a>
+														<span class="time">{{A_ambulances}}</span>
+													</div>
+												</div>
+											</li>
+										</ul>
+									</div>
 								</div>
-								
+
+
 							</div>
 						</div>
 					</div>
-				</div>
 
 
-				<div class="card">
-					<div class="card-body pt-0">
-
-						<nav class="user-tabs mb-4">
-							<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
-								<li class="nav-item">
-									<a class="nav-link" href="#doc_overview" data-bs-toggle="tab">Overview</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link active" href="#doctor_list" data-bs-toggle="tab">Doctors</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" href="#doc_reviews" data-bs-toggle="tab">Reviews</a>
-								</li>
-								{% comment %} <li class="nav-item">
-									<a class="nav-link" href="#doc_business_hours" data-bs-toggle="tab">Business
-										Hours</a>
-								</li> {% endcomment %}
-							</ul>
-						</nav>
-
-
-						<div class="tab-content pt-0">
-
-							<div role="tabpanel" id="doc_overview" class="tab-pane fade ">
-								<div class="row">
-									<div class="col-md-12 col-lg-9">
-
-										<div class="widget about-widget">
-											<h4 class="widget-title">About Me</h4>
-											<p>{{hospital.about}}</p>
+					<div role="tabpanel" id="doctor_list" class="tab-pane fade show active">
+						{% for doctor in doctors %}
+						<div class="card">
+							<div class="card-body">
+								<div class="doctor-widget">
+									<div class="doc-info-left">
+										<div class="doctor-img">
+											<img src="{{doctor.doctor.profile_pic}}"
+												onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+												class="img-fluid" alt="User Image">
 										</div>
-
-
-										<div class="widget education-widget">
-											<h4 class="widget-title">Rooms</h4>
-											<div class="experience-box">
-												<ul class="experience-list">
-													<li>
-														<div class="experience-user">
-															<div class="before-circle"></div>
-														</div>
-														<div class="experience-content">
-															<div class="timeline-content">
-																<a class="name">Total Rooms</a>															
-																<span class="time">{{T_rooms}}</span>
-																<a class="name">Available Rooms</a>
-																<span class="time">{{A_rooms}}</span>
-															</div>
-														</div>
-													</li>
-													
-												</ul>
-											</div>
+										<div class="doc-info-cont">
+											<h4 class="doc-name">Dr. {{doctor.doctor.fisrt_name}}
+												{{doctor.doctor.last_name}}</h4>
+											<p class="doc-speciality">{{doctor.doctor.specialist}}</p>
+											<p class="doc-department"><img src="{{doctor.doctor.profile_pic}}"
+													onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+													class="img-fluid" alt="Speciality">{{doctor.doctor.specialist}}</p>
 										</div>
-
-
-										<div class="widget experience-widget">
-											<h4 class="widget-title">Ambulances</h4>
-											<div class="experience-box">
-												<ul class="experience-list">
-													<li>
-														<div class="experience-user">
-															<div class="before-circle"></div>
-														</div>
-														<div class="experience-content">
-															<div class="timeline-content">
-																<a class="name">Total Ambulance</a>															
-																<span class="time">{{T_ambulances}}</span>
-																<a class="name">Available Ambulance</a>
-																<span class="time">{{A_ambulances}}</span>
-															</div>
-														</div>
-													</li>
-												</ul>
-											</div>
-										</div>
-
-{% comment %} 
-										<div class="widget awards-widget">
-											<h4 class="widget-title">Awards</h4>
-											<div class="experience-box">
-												<ul class="experience-list">
-													<li>
-														<div class="experience-user">
-															<div class="before-circle"></div>
-														</div>
-														<div class="experience-content">
-															<div class="timeline-content">
-																<p class="exp-year">July 2019</p>
-																<h4 class="exp-title">Humanitarian Award</h4>
-																<p>Lorem ipsum dolor sit amet, consectetur adipiscing
-																	elit. Proin a ipsum tellus. Interdum et malesuada
-																	fames ac ante ipsum primis in faucibus.</p>
-															</div>
-														</div>
-													</li>
-													<li>
-														<div class="experience-user">
-															<div class="before-circle"></div>
-														</div>
-														<div class="experience-content">
-															<div class="timeline-content">
-																<p class="exp-year">March 2011</p>
-																<h4 class="exp-title">Certificate for International
-																	Volunteer Service</h4>
-																<p>Lorem ipsum dolor sit amet, consectetur adipiscing
-																	elit. Proin a ipsum tellus. Interdum et malesuada
-																	fames ac ante ipsum primis in faucibus.</p>
-															</div>
-														</div>
-													</li>
-													<li>
-														<div class="experience-user">
-															<div class="before-circle"></div>
-														</div>
-														<div class="experience-content">
-															<div class="timeline-content">
-																<p class="exp-year">May 2008</p>
-																<h4 class="exp-title">The Dental Professional of The
-																	Year Award</h4>
-																<p>Lorem ipsum dolor sit amet, consectetur adipiscing
-																	elit. Proin a ipsum tellus. Interdum et malesuada
-																	fames ac ante ipsum primis in faucibus.</p>
-															</div>
-														</div>
-													</li>
-												</ul>
-											</div>
-										</div> {% endcomment %}
-
-
-										{% comment %} <div class="service-list">
-											<h4>Services</h4>
-											<ul class="clearfix">
-												<li>Tooth cleaning </li>
-												<li>Root Canal Therapy</li>
-												<li>Implants</li>
-												<li>Composite Bonding</li>
-												<li>Fissure Sealants</li>
-												<li>Surgical Extractions</li>
+									</div>
+									<div class="doc-info-right">
+										<div class="clini-infos">
+											<ul>
+												<li><i class="fas fa-first-aid"></i>OPD &#8377;{{doctor.opd_charges}}
+												</li>
+												<li><i class="fas fa-first-aid"></i>Emergency
+													{% if doctor.emergency_charges %}&#8377;{{doctor.emergency_charges}}{% else %}
+													NA {% endif %} </li>
+												<li><i class="fas fa-home"></i>Home Visit {% if doctor.home_charges %}
+													&#8377;{{doctor.home_charges}}{% else %} NA {% endif %} </li>
+												<li><i class="fas fa-video"></i>Online {% if doctor.online_charges %}
+													&#8377;{{doctor.online_charges}}{% else %} NA {% endif %}</li>
 											</ul>
 										</div>
+										<div class="doctor-action">
+											{% if doctor.emergency_charges %}
+											<a href="javascript:void(0)" class="btn btn-white call-btn"
+												data-bs-toggle="modal" data-bs-target="#voice_call">
+												<i class="fas fa-first-aid"></i>
 
+											</a>
+											{% endif %}
+											{% if doctor.home_charges %}
+											<a href="javascript:void(0)" class="btn btn-white call-btn"
+												data-bs-toggle="modal" data-bs-target="#voice_call">
+												<i class="fas fa-home"></i>
+											</a>
+											{% endif %}
+											{% if doctor.is_virtual_available %}
+											<a href="javascript:void(0)" class="btn btn-white call-btn"
+												data-bs-toggle="modal" data-bs-target="#video_call">
+												<i class="fas fa-video"></i>
+											</a>
+											{% endif %}
 
-										<div class="service-list">
-											<h4>Specializations</h4>
-											<ul class="clearfix">
-												<li>Children Care</li>
-												<li>Dental Care</li>
-												<li>Oral and Maxillofacial Surgery </li>
-												<li>Orthodontist</li>
-												<li>Periodontist</li>
-												<li>Prosthodontics</li>
-											</ul>
-										</div>  {% endcomment %}
+										</div>
+										<div class="clinic-booking">
+											<a class="apt-btn"
+												href="{% url 'bookappoinment' doctor.hospital.id doctor.id %}">Book
+												Appointment</a>
+										</div>
 									</div>
 								</div>
 							</div>
+						</div>
+						{% endfor %}
 
 
-							<div role="tabpanel" id="doctor_list" class="tab-pane fade show active">
-                            {% for doctor in doctors %}
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="doctor-widget">
-                                            <div class="doc-info-left">
-                                                <div class="doctor-img">
-                                                    <img src="{{doctor.doctor.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
-                                                        alt="User Image">
-                                                </div>
-                                                <div class="doc-info-cont">
-                                                    <h4 class="doc-name">Dr. {{doctor.doctor.fisrt_name}} {{doctor.doctor.last_name}}</h4>
-                                                    <p class="doc-speciality">{{doctor.doctor.specialist}}</p>
-                                                    <p class="doc-department"><img src="{{doctor.doctor.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+					</div>
 
-                                                            class="img-fluid" alt="Speciality">{{doctor.doctor.specialist}}</p>
-                                                </div> 
-                                            </div>
-                                            <div class="doc-info-right">
-                                                <div class="clini-infos">
-                                                    <ul> 
-                                                        <li><i class="fas fa-first-aid"></i>OPD &#8377;{{doctor.opd_charges}} </li>
-                                                        <li><i class="fas fa-first-aid"></i>Emergency {% if doctor.emergency_charges %}&#8377;{{doctor.emergency_charges}}{% else %} NA {% endif %} </li>
-                                                        <li><i class="fas fa-home"></i>Home Visit  {% if doctor.home_charges %} &#8377;{{doctor.home_charges}}{% else %} NA {% endif %}  </li>
-                                                        <li><i class="fas fa-video"></i>Online {% if doctor.online_charges %} &#8377;{{doctor.online_charges}}{% else %} NA {% endif %}</li>                                                        
-                                                    </ul>
-                                                </div>
-                                                <div class="doctor-action">
-													{% if doctor.emergency_charges %} 
-                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
-                                                        data-bs-target="#voice_call">
-														<i class="fas fa-first-aid"></i>
-                                                       
-                                                    </a>
+
+					<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
+
+						<div class="widget review-listing">
+							<ul class="comments-list">
+								{% for cmn in cmns %}
+								<li>
+									<div class="comment">
+										<img class="avatar avatar-sm rounded-circle" alt="User Image"
+											src="{{cmn.patient.patients.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+										<div class="comment-body">
+											<div class="meta-data"> 
+												<span class="comment-author">{{cmn.patient.name_title}} {{cmn.patient.patients.fisrt_name}} {{cmn.patient.patients.last_name}}</span>
+												<span class="comment-date">Reviewed {{cmn.created_date|naturaltime}}</span>
+												<div class="review-count rating">
+													{% if cmn.rating == 5 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
 													{% endif %}
-													{% if doctor.home_charges %} 
-                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
-                                                        data-bs-target="#voice_call">
-														<i class="fas fa-home"></i>
-                                                    </a>
+													{% if cmn.rating == 4 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star "></i>
 													{% endif %}
-													{% if doctor.is_virtual_available %}
-                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
-                                                        data-bs-target="#video_call">
-                                                        <i class="fas fa-video"></i>
-                                                    </a>
+													{% if cmn.rating == 3 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star "></i>
+													<i class="fas fa-star "></i>
 													{% endif %}
-
-												</div>
-                                                <div class="clinic-booking">
-                                                    <a class="apt-btn" href="{% url 'bookappoinment' doctor.hospital.id doctor.id %}">Book Appointment</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-								{% comment %} <div class="location-list">
-									<div class="row">
-
-										<div class="col-md-6">
-											<div class="clinic-content">
-												<h4 class="clinic-name"><a href="#">{{hospital.hopital_name}}</a>
-												</h4>
-												<p class="doc-speciality">{{hospital.specialist}}</p>
-												<div class="rating">
+													{% if cmn.rating == 2 %}
 													<i class="fas fa-star filled"></i>
-													<i class="fas fa-star filled"></i>
-													<i class="fas fa-star filled"></i>
-													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
 													<i class="fas fa-star"></i>
-													<span class="d-inline-block average-rating">(4)</span>
-												</div>
-												<div class="clinic-details mb-0">
-													<h5 class="clinic-direction"> <i class="fas fa-map-marker-alt"></i>
-														2286 Sundown Lane, Austin, Texas 78749, USA <br><a
-															href="javascript:void(0);">Get Directions</a></h5>
-													<ul>
-														<li>
-															<a href="assets/img/features/feature-01.jpg"
-																data-fancybox="gallery2">
-																<img src="assets/img/features/feature-01.jpg"
-																	alt="Feature Image">
-															</a>
-														</li>
-														<li>
-															<a href="assets/img/features/feature-02.jpg"
-																data-fancybox="gallery2">
-																<img src="assets/img/features/feature-02.jpg"
-																	alt="Feature Image">
-															</a>
-														</li>
-														<li>
-															<a href="assets/img/features/feature-03.jpg"
-																data-fancybox="gallery2">
-																<img src="assets/img/features/feature-03.jpg"
-																	alt="Feature Image">
-															</a>
-														</li>
-														<li>
-															<a href="assets/img/features/feature-04.jpg"
-																data-fancybox="gallery2">
-																<img src="assets/img/features/feature-04.jpg"
-																	alt="Feature Image">
-															</a>
-														</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-
-
-										<div class="col-md-4">
-											<div class="clinic-timing">
-												<div>
-													<p class="timings-days">
-														<span> Mon - Sat </span>
-													</p>
-													<p class="timings-times">
-														<span>10:00 AM - 2:00 PM</span>
-														<span>4:00 PM - 9:00 PM</span>
-													</p>
-												</div>
-												<div>
-													<p class="timings-days">
-														<span>Sun</span>
-													</p>
-													<p class="timings-times">
-														<span>10:00 AM - 2:00 PM</span>
-													</p>
-												</div>
-											</div>
-										</div>
-
-										<div class="col-md-2">
-											<div class="consult-price">
-												$250
-											</div>
-										</div>
-									</div>
-								</div> {% endcomment %}
-
-{% comment %} 
-								<div class="location-list">
-									<div class="row">
-
-										<div class="col-md-6">
-											<div class="clinic-content">
-												<h4 class="clinic-name"><a href="#">The Family Dentistry Clinic</a></h4>
-												<p class="doc-speciality">MDS - Periodontology and Oral Implantology,
-													BDS</p>
-												<div class="rating">
-													<i class="fas fa-star filled"></i>
-													<i class="fas fa-star filled"></i>
-													<i class="fas fa-star filled"></i>
-													<i class="fas fa-star filled"></i>
 													<i class="fas fa-star"></i>
-													<span class="d-inline-block average-rating">(4)</span>
-												</div>
-												<div class="clinic-details mb-0">
-													<p class="clinic-direction"> <i class="fas fa-map-marker-alt"></i>
-														2883 University Street, Seattle, Texas Washington, 98155 <br><a
-															href="javascript:void(0);">Get Directions</a></p>
-													<ul>
-														<li>
-															<a href="assets/img/features/feature-01.jpg"
-																data-fancybox="gallery2">
-																<img src="assets/img/features/feature-01.jpg"
-																	alt="Feature Image">
-															</a>
-														</li>
-														<li>
-															<a href="assets/img/features/feature-02.jpg"
-																data-fancybox="gallery2">
-																<img src="assets/img/features/feature-02.jpg"
-																	alt="Feature Image">
-															</a>
-														</li>
-														<li>
-															<a href="assets/img/features/feature-03.jpg"
-																data-fancybox="gallery2">
-																<img src="assets/img/features/feature-03.jpg"
-																	alt="Feature Image">
-															</a>
-														</li>
-														<li>
-															<a href="assets/img/features/feature-04.jpg"
-																data-fancybox="gallery2">
-																<img src="assets/img/features/feature-04.jpg"
-																	alt="Feature Image">
-															</a>
-														</li>
-													</ul>
+													<i class="fas fa-star"></i>
+													{% endif %}
+													{% if cmn.rating == 1 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													{% endif %}
+													{% if cmn.rating == 0 %}
+														<i class="fas fa-star"></i>
+														<i class="fas fa-star"></i> 
+														<i class="fas fa-star"></i>
+														<i class="fas fa-star"></i>
+														<i class="fas fa-star"></i>
+													{% endif %}
 												</div>
 											</div>
-										</div>
-
-
-										<div class="col-md-4">
-											<div class="clinic-timing">
-												<div>
-													<p class="timings-days">
-														<span> Tue - Fri </span>
-													</p>
-													<p class="timings-times">
-														<span>11:00 AM - 1:00 PM</span>
-														<span>6:00 PM - 11:00 PM</span>
-													</p>
-												</div>
-												<div>
-													<p class="timings-days">
-														<span>Sat - Sun</span>
-													</p>
-													<p class="timings-times">
-														<span>8:00 AM - 10:00 AM</span>
-														<span>3:00 PM - 7:00 PM</span>
-													</p>
-												</div>
-											</div>
-										</div>
-
-										<div class="col-md-2">
-											<div class="consult-price">
-												$350
-											</div>
-										</div>
+											{% comment %} <p class="recommended"><i class="far fa-thumbs-up"></i> I recommend
+												the doctor</p> {% endcomment %}
+											<p class="comment-content">
+												{{cmn.comment}}
+											</p>
+										{% comment %} <div class="comment-reply">
+												<a class="comment-btn" href="#">
+													<i class="fas fa-reply"></i> Reply
+												</a>
+												<p class="recommend-btn">
+													<span>Recommend?</span>
+													<a href="#" class="like-btn">
+														<i class="far fa-thumbs-up"></i> Yes
+													</a>
+													<a href="#" class="dislike-btn">
+														<i class="far fa-thumbs-down"></i> No
+													</a>
+												</p>
+											</div> 
+										</div> {% endcomment %}
 									</div>
-								</div> {% endcomment %}
 
-							</div>
-
- 
-							<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
-
-								<div class="widget review-listing">
-									<ul class="comments-list">
-									{% for cmn in cmns %}
+									{% comment %} <ul class="comments-reply">
 										<li>
 											<div class="comment">
 												<img class="avatar avatar-sm rounded-circle" alt="User Image"
-													src="assets/img/patients/patient.jpg">
+													src="assets/img/patients/patient1.jpg">
 												<div class="comment-body">
 													<div class="meta-data">
-														<span class="comment-author">Richard Wilson</span>
-														<span class="comment-date">Reviewed 2 Days ago</span>
+														<span class="comment-author">Charlene Reed</span>
+														<span class="comment-date">Reviewed 3 Days ago</span>
 														<div class="review-count rating">
 															<i class="fas fa-star filled"></i>
 															<i class="fas fa-star filled"></i>
@@ -499,13 +378,12 @@ Booking {% endblock title %}
 															<i class="fas fa-star"></i>
 														</div>
 													</div>
-													<p class="recommended"><i class="far fa-thumbs-up"></i> I recommend
-														the doctor</p>
 													<p class="comment-content">
-														Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-														sed do eiusmod tempor incididunt ut labore et dolore magna
-														aliqua.
-														Ut enim ad minim veniam, quis nostrud exercitation.
+														Lorem ipsum dolor sit amet, consectetur adipisicing
+														elit,
+														sed do eiusmod tempor incididunt ut labore et dolore
+														magna aliqua.
+														Ut enim ad minim veniam.
 														Curabitur non nulla sit amet nisl tempus
 													</p>
 													<div class="comment-reply">
@@ -524,268 +402,230 @@ Booking {% endblock title %}
 													</div>
 												</div>
 											</div>
-
-											<ul class="comments-reply">
-												<li>
-													<div class="comment">
-														<img class="avatar avatar-sm rounded-circle" alt="User Image"
-															src="assets/img/patients/patient1.jpg">
-														<div class="comment-body">
-															<div class="meta-data">
-																<span class="comment-author">Charlene Reed</span>
-																<span class="comment-date">Reviewed 3 Days ago</span>
-																<div class="review-count rating">
-																	<i class="fas fa-star filled"></i>
-																	<i class="fas fa-star filled"></i>
-																	<i class="fas fa-star filled"></i>
-																	<i class="fas fa-star filled"></i>
-																	<i class="fas fa-star"></i>
-																</div>
-															</div>
-															<p class="comment-content">
-																Lorem ipsum dolor sit amet, consectetur adipisicing
-																elit,
-																sed do eiusmod tempor incididunt ut labore et dolore
-																magna aliqua.
-																Ut enim ad minim veniam.
-																Curabitur non nulla sit amet nisl tempus
-															</p>
-															<div class="comment-reply">
-																<a class="comment-btn" href="#">
-																	<i class="fas fa-reply"></i> Reply
-																</a>
-																<p class="recommend-btn">
-																	<span>Recommend?</span>
-																	<a href="#" class="like-btn">
-																		<i class="far fa-thumbs-up"></i> Yes
-																	</a>
-																	<a href="#" class="dislike-btn">
-																		<i class="far fa-thumbs-down"></i> No
-																	</a>
-																</p>
-															</div>
-														</div>
-													</div>
-												</li>
-											</ul>
-
 										</li>
-									{% endfor %}
+									</ul> {% endcomment %}
 
-									
-
-									</ul>
- 
-									<div class="all-feedback text-center">
-										<a href="#" class="btn btn-primary btn-sm">
-											Show all feedback <strong>("{{total_cmns}}")</strong>
-										</a>
-									</div>
-
-								</div>
+								</li>
+								{% endfor %}
 
 
-								<div class="write-review">
-									<h4>Write a review for <strong>Dr. Darren Elder</strong></h4>
 
-									<form method="post" id="commentFrom">
-										<div class="form-group">
-											<label>Review</label>
-											<div class="star-rating">
-												<input id="star-5" type="radio" name="rating" value="5">
-												<label for="star-5" title="5 stars">
-													<i class="active fa fa-star"></i>
-												</label>
-												<input id="star-4" type="radio" name="rating" value="4">
-												<label for="star-4" title="4 stars">
-													<i class="active fa fa-star"></i>
-												</label>
-												<input id="star-3" type="radio" name="rating" value="3">
-												<label for="star-3" title="3 stars">
-													<i class="active fa fa-star"></i>
-												</label>
-												<input id="star-2" type="radio" name="rating" value="2">
-												<label for="star-2" title="2 stars">
-													<i class="active fa fa-star"></i>
-												</label>
-												<input id="star-1" type="radio" name="rating" value="1">
-												<label for="star-1" title="1 star">
-													<i class="active fa fa-star"></i>
-												</label>
-											</div>
-										</div>
-										<div class="form-group">
-											<label>Your review</label>
-											<textarea id="review_desc" maxlength="100" class="form-control" name="comment"></textarea>
-											<div class="d-flex justify-content-between mt-3"><small
-													class="text-muted"><span id="chars">100</span> characters
-													remaining</small></div>
-										</div>
-										<hr>
-										<div class="submit-section">
-											<button type="submit" class="btn btn-primary submit-btn">Add Review</button>
-										</div>
-									</form>
+							</ul>
 
-								</div>
-
-							</div>
-
-
-							<div role="tabpanel" id="doc_business_hours" class="tab-pane fade">
-								<div class="row">
-									<div class="col-md-6 offset-md-3">
-
-										<div class="widget business-widget">
-											<div class="widget-content">
-												<div class="listing-hours">
-													<div class="listing-day current">
-														<div class="day">Today <span>5 Nov 2019</span></div>
-														<div class="time-items">
-															<span class="open-status"><span
-																	class="badge bg-success-light">Open
-																	Now</span></span>
-															<span class="time">07:00 AM - 09:00 PM</span>
-														</div>
-													</div>
-													<div class="listing-day">
-														<div class="day">Monday</div>
-														<div class="time-items">
-															<span class="time">07:00 AM - 09:00 PM</span>
-														</div>
-													</div>
-													<div class="listing-day">
-														<div class="day">Tuesday</div>
-														<div class="time-items">
-															<span class="time">07:00 AM - 09:00 PM</span>
-														</div>
-													</div>
-													<div class="listing-day">
-														<div class="day">Wednesday</div>
-														<div class="time-items">
-															<span class="time">07:00 AM - 09:00 PM</span>
-														</div>
-													</div>
-													<div class="listing-day">
-														<div class="day">Thursday</div>
-														<div class="time-items">
-															<span class="time">07:00 AM - 09:00 PM</span>
-														</div>
-													</div>
-													<div class="listing-day">
-														<div class="day">Friday</div>
-														<div class="time-items">
-															<span class="time">07:00 AM - 09:00 PM</span>
-														</div>
-													</div>
-													<div class="listing-day">
-														<div class="day">Saturday</div>
-														<div class="time-items">
-															<span class="time">07:00 AM - 09:00 PM</span>
-														</div>
-													</div>
-													<div class="listing-day closed">
-														<div class="day">Sunday</div>
-														<div class="time-items">
-															<span class="time"><span
-																	class="badge bg-danger-light">Closed</span></span>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-
-									</div>
-								</div>
+							<div class="all-feedback text-center">
+								<a href="#" class="btn btn-primary btn-sm">
+									Show all feedback <strong>({{total_cmns}})</strong>
+								</a>
 							</div>
 
 						</div>
-					</div>
-				</div>
 
+
+						<div class="write-review">
+							<h4>Write a review for <strong>{{hospital.hopital_name|upper}}</strong></h4>
+
+							{% if user.is_authenticated %}
+							<form method="post" id="commentFrom" action="{% url 'ratingandcomment' %}">
+								{% csrf_token %}
+								<div class="form-group"> 
+									<label>Review</label>
+									<div class="star-rating">
+										<input id="star-5" type="radio" name="rating" value="5">
+										<label for="star-5" title="5 stars">
+											<i class="active fa fa-star"></i>
+										</label>
+										<input id="star-4" type="radio" name="rating" value="4">
+										<label for="star-4" title="4 stars">
+											<i class="active fa fa-star"></i>
+										</label>
+										<input id="star-3" type="radio" name="rating" value="3">
+										<label for="star-3" title="3 stars">
+											<i class="active fa fa-star"></i>
+										</label>
+										<input id="star-2" type="radio" name="rating" value="2">
+										<label for="star-2" title="2 stars">
+											<i class="active fa fa-star"></i>
+										</label>
+										<input id="star-1" type="radio" name="rating" value="1">
+										<label for="star-1" title="1 star">
+											<i class="active fa fa-star"></i>
+										</label>
+									</div>
+								</div>
+								<div class="form-group">
+									<label>Your review</label>
+									<textarea id="review_desc" maxlength="100" class="form-control"
+										name="comment"></textarea>
+										<input type="hidden" value="{{hospital.admin.id}}" name="HLP">
+										<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span
+												id="chars">100</span> characters
+											remaining</small></div>
+								</div>
+								<hr>
+								<div class="submit-section">
+									<button type="submit" class="btn btn-primary submit-btn">Add Review</button>
+								</div>
+							</form>
+							{% else %}
+							
+							<a class="btn btn-rounded btn-primary" href="{% url 'dologin' %}"><i class="fas fa-user-circle"></i> login /
+								Signup </a>
+							{% endif %}
+						</div>
+
+					</div>
+
+
+					<div role="tabpanel" id="doc_business_hours" class="tab-pane fade">
+						<div class="row">
+							<div class="col-md-6 offset-md-3">
+
+								<div class="widget business-widget">
+									<div class="widget-content">
+										<div class="listing-hours">
+											<div class="listing-day current">
+												<div class="day">Today <span>5 Nov 2019</span></div>
+												<div class="time-items">
+													<span class="open-status"><span class="badge bg-success-light">Open
+															Now</span></span>
+													<span class="time">07:00 AM - 09:00 PM</span>
+												</div>
+											</div>
+											<div class="listing-day">
+												<div class="day">Monday</div>
+												<div class="time-items">
+													<span class="time">07:00 AM - 09:00 PM</span>
+												</div>
+											</div>
+											<div class="listing-day">
+												<div class="day">Tuesday</div>
+												<div class="time-items">
+													<span class="time">07:00 AM - 09:00 PM</span>
+												</div>
+											</div>
+											<div class="listing-day">
+												<div class="day">Wednesday</div>
+												<div class="time-items">
+													<span class="time">07:00 AM - 09:00 PM</span>
+												</div>
+											</div>
+											<div class="listing-day">
+												<div class="day">Thursday</div>
+												<div class="time-items">
+													<span class="time">07:00 AM - 09:00 PM</span>
+												</div>
+											</div>
+											<div class="listing-day">
+												<div class="day">Friday</div>
+												<div class="time-items">
+													<span class="time">07:00 AM - 09:00 PM</span>
+												</div>
+											</div>
+											<div class="listing-day">
+												<div class="day">Saturday</div>
+												<div class="time-items">
+													<span class="time">07:00 AM - 09:00 PM</span>
+												</div>
+											</div>
+											<div class="listing-day closed">
+												<div class="day">Sunday</div>
+												<div class="time-items">
+													<span class="time"><span
+															class="badge bg-danger-light">Closed</span></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+				</div>
 			</div>
 		</div>
-		
+
+	</div>
+</div>
+
 {% endblock content %}
 
 
 {% block modal_fade %}
 
-	<div class="modal fade call-modal" id="voice_call">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-body">
+<div class="modal fade call-modal" id="voice_call">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
 
-					<div class="call-box incoming-box">
-						<div class="call-wrapper">
-							<div class="call-inner">
-								<div class="call-user">
-									<img alt="User Image" src="assets/img/doctors/doctor-thumb-02.jpg"
-										class="call-avatar">
-									<h4>Dr. Darren Elder</h4>
-									<span>Connecting...</span>
-								</div>
-								<div class="call-items">
-									<a href="javascript:void(0);" class="btn call-item call-end" data-bs-dismiss="modal"
-										aria-label="Close"><i class="material-icons">call_end</i></a>
-									<a href="#" class="btn call-item call-start"><i
-											class="material-icons">call</i></a>
-								</div>
+				<div class="call-box incoming-box">
+					<div class="call-wrapper">
+						<div class="call-inner">
+							<div class="call-user">
+								<img alt="User Image" src="assets/img/doctors/doctor-thumb-02.jpg" class="call-avatar">
+								<h4>Dr. Darren Elder</h4>
+								<span>Connecting...</span>
+							</div>
+							<div class="call-items">
+								<a href="javascript:void(0);" class="btn call-item call-end" data-bs-dismiss="modal"
+									aria-label="Close"><i class="material-icons">call_end</i></a>
+								<a href="#" class="btn call-item call-start"><i class="material-icons">call</i></a>
 							</div>
 						</div>
 					</div>
-
 				</div>
+
 			</div>
 		</div>
 	</div>
+</div>
 
 
-	<div class="modal fade call-modal" id="video_call">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-body">
+<div class="modal fade call-modal" id="video_call">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
 
-					<div class="call-box incoming-box">
-						<div class="call-wrapper">
-							<div class="call-inner">
-								<div class="call-user">
-									<img class="call-avatar" src="assets/img/doctors/doctor-thumb-02.jpg"
-										alt="User Image">
-									<h4>Dr. Darren Elder</h4>
-									<span>Calling ...</span>
-								</div>
-								<div class="call-items">
-									<a href="javascript:void(0);" class="btn call-item call-end" data-bs-dismiss="modal"
-										aria-label="Close"><i class="material-icons">call_end</i></a>
-									<a href="#" class="btn call-item call-start"><i
-											class="material-icons">videocam</i></a>
-								</div>
+				<div class="call-box incoming-box">
+					<div class="call-wrapper">
+						<div class="call-inner">
+							<div class="call-user">
+								<img class="call-avatar" src="assets/img/doctors/doctor-thumb-02.jpg" alt="User Image">
+								<h4>Dr. Darren Elder</h4>
+								<span>Calling ...</span>
+							</div>
+							<div class="call-items">
+								<a href="javascript:void(0);" class="btn call-item call-end" data-bs-dismiss="modal"
+									aria-label="Close"><i class="material-icons">call_end</i></a>
+								<a href="#" class="btn call-item call-start"><i class="material-icons">videocam</i></a>
 							</div>
 						</div>
 					</div>
-
 				</div>
+
 			</div>
 		</div>
 	</div>
+</div>
 
 {% endblock modal_fade %}
 
 {% block custom_js %}
 
 <script>
-	$(".submit-btn").on('click', function(e){
-		var form=new FormData($("#hpatientadd"));
+	$(".submitbtn").on('click', function (e) {
+		var form = new FormData($("#commentFrom"));
+		console.log(form)
 		e.preventDefault();
-	   $.ajax({
+		$.ajax({
 			type: 'POST',
 			url: "{% url 'ratingandcomment' %}",
 			data: form,
-		  	success: function (d){
+			success: function (d) {
 				console.log(d)
-		  }
-	   })
+			}
+		})
 	});
 </script>
 {% endblock custom_js %}

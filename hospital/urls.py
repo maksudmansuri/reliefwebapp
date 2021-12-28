@@ -16,7 +16,8 @@ urlpatterns = [
     path('accept_otp/<id>',views.AcceptOTP,name="accept_otp"),
     path('reject_apt/<id>',views.RejectedAPT,name="reject_apt"),
 
-
+    #review list
+    path('reviews',views.ReviewsList.as_view(),name="reviews"),
     
     
     # for treatment tab menu Treatment includes Diseas , Medicine(with time) , Reports , Follow ups dates , Exercise 

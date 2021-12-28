@@ -2,9 +2,11 @@ from io import StringIO
 from re import escape
 from typing import List
 from django.contrib.auth.models import User
+from django.http import request
 from django.http.request import HttpRequest
 from accounts import models
 from chat.models import Notification
+from front.models import RatingAndComments
 import hospital
 from patient.models import Booking, LabTest, OrderBooking, Orders, Slot, TreatmentReliefPetient, patientFile, phoneOPTforoders
 from django.db.models.query_utils import Q
@@ -1663,3 +1665,21 @@ def inactiveBlog(request,id):
 class blogListView(ListView):
     model = Blog
     template_name = "hospital/blog.html"
+
+class ReviewsList(ListView):
+    model = RatingAndComments 
+    template_name = "hospital/reviews.html" 
+
+    def get_context_data(self, **kwargs): 
+        context = super().get_context_data(**kwargs)
+        context["reviews"] = RatingAndComments.objects.filter(HLP = self.request.user) 
+        total_cmns = RatingAndComments.objects.filter(HLP = self.request.user).count()
+        cmnss = RatingAndComments.objects.filter(HLP = self.request.user)
+        rating = 0 
+        for cmn in cmnss:
+            rating = rating + cmn.rating
+        if total_cmns > 0: 
+            rating = rating / total_cmns
+        context["total_reviews"] = total_cmns
+        return context
+

@@ -31,17 +31,17 @@
 							<a class="nav-link" href="#pat_medical_records" data-bs-toggle="tab">Pharmacy {{cpharmacy}}</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="#patient" data-bs-toggle="tab">Patient {{chospital}}</a>
+							<a class="nav-link" href="#patient" data-bs-toggle="tab">Patient {{cpatient}}</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="#accident" data-bs-toggle="tab">Accident {{chospital}}</a>
+							<a class="nav-link" href="#accident" data-bs-toggle="tab">Accident {{caccidents}}</a>
 						</li>
 					</ul>
 				</nav>
 
  
 				<div class="tab-content pt-0">
-
+ 
 					<div id="pat_appointments" class="tab-pane fade show active">
 						<div class="card mb-3">
 							<div class="card-body">
@@ -107,7 +107,8 @@
 														<span class="visually-hidden">Toggle Dropdown</span>
 													</button> 
 													<ul class="dropdown-menu border-0 shadow py-3 px-2">
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'hospital_profile_admin' hospital.id %}">View Profile</a></li
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'hospital_profile_admin' hospital.id %}">View Profile</a></li>
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'radmin_hospital_update' hospital.id %}">Edit</a></li>
 														<li><a class="dropdown-item py-2 rounded" href="{% url 'hospital_delete_admin' hospital.id %}">Delete</a></li>
 														<li><hr class="dropdown-divider"></li>
 														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>

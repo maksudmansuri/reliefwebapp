@@ -3,13 +3,15 @@ from .import views
     
 urlpatterns = [  
     #Time SLot Add delete
-     path('time_slot',views.TimeSlotView.as_view(),name="time_slot"),
-     path('delete_time_slot',views.deleteTimeSlot,name="delete_time_slot"),
+    path('time_slot',views.TimeSlotView.as_view(),name="time_slot"),
+    path('delete_time_slot',views.deleteTimeSlot,name="delete_time_slot"),
 
     #locations country , state, city, area
 
     # path('find_state',views.findState,name="find_state"),
- 
+    #Edit from admin hospital lab pharmacy
+    path('radmin_hospital_update/<id>',views.hospitalUpdateViews.as_view(),name="radmin_hospital_update"),
+
     path('loaction_area',views.AddCountriesView.as_view(),name="loaction_area"),
     path('delete_country/<id>',views.deleteCountry,name="delete_country"),
     path('delete_state/<id>',views.deleteState,name="delete_state"),

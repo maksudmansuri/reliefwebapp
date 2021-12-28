@@ -12,7 +12,7 @@ from django.views.generic import View,ListView,DetailView
 from django.contrib import messages
 from django.db.models import Q
 from chat.models import Notification
-from accounts.models import AdminHOD, Hospitals, Labs, Patients, Pharmacy, Specailist
+from accounts.models import AdminHOD, CustomUser, Hospitals, Labs, Patients, Pharmacy, Specailist
 from accounts.views import send_otp
 from front.models import RatingAndComments
 from hospital.models import AmbulanceDetails, Blog, DoctorSchedule, HospitalMedias, HospitalRooms, HospitalStaffDoctors, ServiceAndCharges
@@ -25,8 +25,7 @@ from patient.models import ForSome, NewLabTest, OrderBooking, Temp, phoneOPTforo
 # Create your views here.
   
 class FrontView(View):
-    def get(self, request, *args, **kwargs):
-        
+    def get(self, request, *args, **kwargs):        
         hospitals=Hospitals.objects.filter(admin__is_active=True,is_verified = True,is_deactive=False)
         labs=Labs.objects.filter(admin__is_active=True,is_verified = True)
         pharmacys=Pharmacy.objects.filter(admin__is_active=True,is_verified = True)
@@ -265,22 +264,37 @@ class HospitalDetailsViews(DetailView):
         A_ambulances = AmbulanceDetails.objects.filter(hospital=hospital,is_active=True,occupied=False).count()
         T_ambulances = AmbulanceDetails.objects.filter(hospital=hospital,is_active=True).count()
 
-        cmns = RatingAndComments.objects.filter(HLP =hospital.admin)[0:5]
+        cmns = RatingAndComments.objects.filter(HLP =hospital.admin)[0:3]
+        
         total_cmns = RatingAndComments.objects.filter(HLP =hospital.admin).count()
-
-        param = {'hospital':hospital,'medias':medias,'doctors':doctors,'A_rooms':A_rooms,'T_rooms':T_rooms,'A_ambulances':A_ambulances,'T_ambulances':T_ambulances,'cmns':cmns,'total_cmns':total_cmns}  
+        cmnss = RatingAndComments.objects.filter(HLP =hospital.admin)
+        rating = 0 
+        for cmn in cmnss:
+            rating = rating + cmn.rating
+       
+        if total_cmns > 0: 
+            rating = rating / total_cmns
+       
+        param = {'hospital':hospital,'medias':medias,'doctors':doctors,'A_rooms':A_rooms,'T_rooms':T_rooms,'A_ambulances':A_ambulances,'T_ambulances':T_ambulances,'cmns':cmns,'total_cmns':total_cmns,'rating':rating}  
         return render(request,"front/new_hospital_details.html",param)
 
-def HospitalComments(request):
+def HospitalComments(request): 
     if request.method == "POST":
         patient = request.user
         HLP = request.POST.get('HLP')
         rating = request.POST.get('rating')
         comment = request.POST.get('comment')
-
-        ratingandcommect = RatingAndComments(patient=patient,HLP=HLP,rating=rating,comment=comment)
+        hlp = get_object_or_404(CustomUser,id=HLP)
+        print(patient,HLP,rating)
+        ratingandcommect = RatingAndComments(patient=patient,HLP=hlp,rating=rating,comment=comment)
         ratingandcommect.save() 
-        return HttpResponse(ratingandcommect) 
+        # messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!"
+        if hlp.hospitals:
+            return HttpResponseRedirect(reverse("hospital_details",kwargs={'id':hlp.hospitals.id}))
+        if hlp.labs:
+            return HttpResponseRedirect(reverse("labs_details",kwargs={'id':hlp.labs.id}))
+        if hlp.pharmacy:
+            return HttpResponseRedirect(reverse("pharmacy_details",kwargs={'id':hlp.pharmacy.id}))
 
 class DoctorsBookAppoinmentViews(View):
     

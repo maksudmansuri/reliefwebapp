@@ -208,7 +208,7 @@
 									<select class="form-select" name="hospital">
 										<option value="" disabled selected>Select Hospital</option>
 										{% for hospital in hospitals %}
-											<option value="{{hospital.id}}">{{hospital}}</option>
+											<option value="{{hospital.id}}">{{hospital.hopital_name|upper}}</option>
 										{% endfor %}
 										
 									</select>

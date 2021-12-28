@@ -94,8 +94,9 @@
                         </a>
                     </li>
                     
-                    <li>
-                        <a href="#">
+                    {% url 'reviews' as reviews %}
+                    <li {% if request.path == reviews %} class="active" {% endif %} >
+                        <a href="{% url 'reviews' %}">
                             <i class="fas fa-star"></i>
                             <span>Reviews</span>
                         </a>
