@@ -62,34 +62,34 @@
 						<p class="account-subtitle">Access to our dashboard</p>
 
 						<form method="post" class="row g-1 p-3 p-md-4" action="{% url 'OTP_Gen' user.phone %}" method="post">
-                            {% csrf_token %}
-                                <div class="col">
-                                    <div class="mb-2">
-                                        <input class="form-control form-control-lg text-center"  id="codeBox1" type="tel" maxlength="1" onkeyup="onKeyUpEvent(1, event)" onfocus="onFocusEvent(1)" name="first" required>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-2">
-                                        <input class="form-control form-control-lg text-center" id="codeBox2" type="tel" maxlength="1" onkeyup="onKeyUpEvent(2, event)" onfocus="onFocusEvent(2)" name="second" required>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-2">
-                                        <input class="form-control form-control-lg text-center" id="codeBox3" type="tel" maxlength="1" onkeyup="onKeyUpEvent(3, event)" onfocus="onFocusEvent(3)" name="third" required>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-2">
-                                        <input class="form-control form-control-lg text-center" id="codeBox4" type="tel" maxlength="1" onkeyup="onKeyUpEvent(4, event)" onfocus="onFocusEvent(4)" name="forth" required>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-12 text-center mt-4">
-                                    <button title="submit"class="btn btn-primary w-100 text-uppercase">Verify {{user.otp}}</button>
-                                </div>
-                                <div class="col-12 text-center mt-4">
-                                    <span >Haven't received it? <a href="{% url 'resendOTP' user.phone %}">Resend a new code.</a></span>
-                                </div>
+            {% csrf_token %}
+                <div class="col">
+                    <div class="mb-2">
+                        <input class="form-control form-control-lg text-center"  id="codeBox1" type="tel" maxlength="1" onkeyup="onKeyUpEvent(1, event)" onfocus="onFocusEvent(1)" name="first" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-2">
+                        <input class="form-control form-control-lg text-center" id="codeBox2" type="tel" maxlength="1" onkeyup="onKeyUpEvent(2, event)" onfocus="onFocusEvent(2)" name="second" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-2">
+                        <input class="form-control form-control-lg text-center" id="codeBox3" type="tel" maxlength="1" onkeyup="onKeyUpEvent(3, event)" onfocus="onFocusEvent(3)" name="third" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-2">
+                        <input class="form-control form-control-lg text-center" id="codeBox4" type="tel" maxlength="1" onkeyup="onKeyUpEvent(4, event)" onfocus="onFocusEvent(4)" name="forth" required>
+                    </div>
+                </div>
+                
+                <div class="col-12 text-center mt-4">
+                    <button title="submit"class="btn btn-primary w-100 text-uppercase">Verify {{user.otp}}</button>
+                </div>
+                <div class="col-12 text-center mt-4">
+                    <span >Haven't received it? <a href="{% url 'resendOTP' user.phone %}">Resend a new code.</a></span>
+                </div>
 						</form>
 
 						

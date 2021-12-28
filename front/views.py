@@ -200,8 +200,14 @@ class SearchHospitalView(ListView):
             rooms = HospitalRooms.objects.filter(hospital = hospital,is_active = True).count()
             room_max_price = HospitalRooms.objects.filter(hospital = hospital,is_active = True).aggregate(Max('room__rooms_price'))
             room_min_price = HospitalRooms.objects.filter(hospital = hospital,is_active = True).aggregate(Min('room__rooms_price'))
-            ambulances = AmbulanceDetails.objects.filter(hospital=hospital,is_active=True).count()    
-            hospital_media_list.append({'hospital':hospital,'medias':medias,'amount':amount,'rooms':rooms,'ambulances':ambulances,'room_max_price':room_max_price,'room_min_price':room_min_price})
+            ambulances = AmbulanceDetails.objects.filter(hospital=hospital,is_active=True).count()
+            total_cmns = RatingAndComments.objects.filter(HLP =hospital.admin).count()
+            cmnss = RatingAndComments.objects.filter(HLP =hospital.admin)
+            rating = 0 
+            for cmn in cmnss: 
+                rating = rating + cmn.rating
+            rating = rating / total_cmns
+            hospital_media_list.append({'hospital':hospital,'medias':medias,'amount':amount,'rooms':rooms,'ambulances':ambulances,'room_max_price':room_max_price,'room_min_price':room_min_price,'rating':rating,'total_cmns':total_cmns})
         print(hospital_media_list)        
         return hospital_media_list
     
@@ -264,22 +270,58 @@ class HospitalDetailsViews(DetailView):
         A_ambulances = AmbulanceDetails.objects.filter(hospital=hospital,is_active=True,occupied=False).count()
         T_ambulances = AmbulanceDetails.objects.filter(hospital=hospital,is_active=True).count()
 
+<<<<<<< HEAD
         cmns = RatingAndComments.objects.filter(HLP =hospital.admin)[0:3]
+=======
+        cmns = RatingAndComments.objects.filter(HLP =hospital.admin)[0:5]
+>>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
         
         total_cmns = RatingAndComments.objects.filter(HLP =hospital.admin).count()
         cmnss = RatingAndComments.objects.filter(HLP =hospital.admin)
         rating = 0 
         for cmn in cmnss:
             rating = rating + cmn.rating
+<<<<<<< HEAD
        
         if total_cmns > 0: 
             rating = rating / total_cmns
        
         param = {'hospital':hospital,'medias':medias,'doctors':doctors,'A_rooms':A_rooms,'T_rooms':T_rooms,'A_ambulances':A_ambulances,'T_ambulances':T_ambulances,'cmns':cmns,'total_cmns':total_cmns,'rating':rating}  
-        return render(request,"front/new_hospital_details.html",param)
+=======
+        rating = rating / total_cmns
+        #rating for bar 
+        cmn_5 = RatingAndComments.objects.filter(HLP =hospital.admin,rating=5).count()
+        cmn_5_per = cmn_5 * 100 / total_cmns
+        print(cmn_5_per)
+        cmn_4 = RatingAndComments.objects.filter(HLP =hospital.admin,rating=4).count()
+        cmn_4_per = cmn_4 * 100 / total_cmns
+        print(cmn_4_per)
+        cmn_3 = RatingAndComments.objects.filter(HLP =hospital.admin,rating=3).count()
+        cmn_3_per = cmn_3 * 100 / total_cmns
+        print(cmn_3_per)
+        cmn_2 = RatingAndComments.objects.filter(HLP =hospital.admin,rating=2).count()
+        cmn_2_per = cmn_2 * 100 / total_cmns
+        print(cmn_2_per)
+        cmn_1 = RatingAndComments.objects.filter(HLP =hospital.admin,rating=1).count()
+        cmn_1_per = cmn_1 * 100 / total_cmns
+        print(cmn_1_per)
 
+        param = {'hospital':hospital,'medias':medias,'doctors':doctors,'A_rooms':A_rooms,'T_rooms':T_rooms,'A_ambulances':A_ambulances,'T_ambulances':T_ambulances,'cmns':cmns,'total_cmns':total_cmns,'rating':rating,'cmn_5':cmn_5,'cmn_1':cmn_1,'cmn_2':cmn_2,'cmn_3':cmn_3,'cmn_4':cmn_4,'cmn_1_per':cmn_1_per,'cmn_2_per':cmn_2_per,'cmn_3_per':cmn_3_per,'cmn_4_per':cmn_4_per,'cmn_5_per':cmn_5_per,}  
+>>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
+        return render(request,"front/new_hospital_details.html",param)
+ 
+
+<<<<<<< HEAD
 def HospitalComments(request): 
     if request.method == "POST":
+=======
+class HospitalComments(views.SuccessMessageMixin,View): 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def post(self,request, *args, **kwargs):    
+>>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
         patient = request.user
         HLP = request.POST.get('HLP')
         rating = request.POST.get('rating')
@@ -295,6 +337,27 @@ def HospitalComments(request):
             return HttpResponseRedirect(reverse("labs_details",kwargs={'id':hlp.labs.id}))
         if hlp.pharmacy:
             return HttpResponseRedirect(reverse("pharmacy_details",kwargs={'id':hlp.pharmacy.id}))
+<<<<<<< HEAD
+=======
+
+class CommentView(View):
+    model = RatingAndComments
+    template_name = "front/reviews.html"
+
+    def get_queryset(self):
+        filter_val=self.request.GET.get("filter","")
+        order_by=self.request.GET.get("orderby","id")
+        if filter_val!="":
+            pharmacy=RatingAndComments.objects.filter( Q(is_verified=True,is_deactive=False,admin__is_active=True) and (Q(pharmacy_name__contains=filter_val) | Q(about__contains=filter_val) | Q(city__contains=filter_val) | Q(address__contains=filter_val))).order_by(order_by)
+        else:
+            pharmacy=RatingAndComments.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True).order_by(order_by)
+        
+        pharma_list = []
+        for pharma in pharmacy:
+            medias = Medias.objects.filter(user=pharma.admin)
+            pharma_list.append({'pharma':pharma,'medias':medias})       
+        return pharma_list
+>>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 
 class DoctorsBookAppoinmentViews(View):
     
