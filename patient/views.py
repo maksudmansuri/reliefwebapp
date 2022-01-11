@@ -192,7 +192,8 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
         user.patients.age=age1
         user.patients.blood_docation_date=blood_docation_date
         user.patients.blood_donation=blood_donation
-        user.patients.save()           
+        user.patients.is_verified = True         
+        user.patients.save()
         user.save()
         messages.add_message(request,messages.SUCCESS,"User Detail updates Successfully !")
         return HttpResponseRedirect(reverse("patient_home"))

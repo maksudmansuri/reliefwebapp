@@ -1,10 +1,13 @@
  
 {% extends 'front/blank-page.html' %}
 {% load static %}
+{% load humanize %}
 {% block title %} Relief Pro - Hospital Profile | Hospital,Labs and Pharmacy Online Booking | Emergency
 Booking {% endblock title %}
 
-{% block custom_css %}{% endblock custom_css %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'newstatic/assets/css/rating.css'%}">
+{% endblock custom_css %}
 
 {% block content %}
  
@@ -43,12 +46,49 @@ Booking {% endblock title %}
 									<p class="doc-department"><img src="{{lab.specialist.hover_icon}}" 
 											class="img-fluid" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Speciality">Dentist</p>{% endcomment %}
 									<div class="rating">
-										<i class="fas fa-star filled"></i>
-										<i class="fas fa-star filled"></i>
-										<i class="fas fa-star filled"></i>
-										<i class="fas fa-star filled"></i>
-										<i class="fas fa-star"></i>
-										<span class="d-inline-block average-rating">(35)</span>
+										{% if  rating <= 5 and rating > 4 %}
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i> 
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+										{% endif %}
+										{% if rating <= 4 and rating > 3 %}
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i> 
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star "></i>
+										{% endif %}
+										{% if rating <= 3 and rating > 2 %}
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i> 
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star "></i>
+											<i class="fas fa-star "></i>
+										{% endif %}
+										{% if rating <= 2 and rating > 1 %}
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i> 
+											<i class="fas fa-star"></i>
+											<i class="fas fa-star"></i>
+											<i class="fas fa-star"></i>
+										{% endif %}
+										{% if rating <= 1 and rating > 0 %}
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star"></i> 
+											<i class="fas fa-star"></i>
+											<i class="fas fa-star"></i>
+											<i class="fas fa-star"></i>
+										{% endif %}
+										{% if rating == 0 or rating is null%}
+											<i class="fas fa-star"></i>
+											<i class="fas fa-star"></i> 
+											<i class="fas fa-star"></i>
+											<i class="fas fa-star"></i>
+											<i class="fas fa-star"></i>
+										{% endif %}
+										<span class="d-inline-block average-rating">({{total_cmns}})</span>
 									</div>
 									<div class="clinic-details">
 										<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{pharmacy.city}},{{pharmacy.state}} - <a
@@ -82,22 +122,7 @@ Booking {% endblock title %}
 										
 									</ul>
 								</div>
-								{% comment %} <div class="doctor-action">
-									<a href="javascript:void(0)" class="btn btn-white fav-btn">
-										<i class="far fa-bookmark"></i>
-									</a>
-									<a href="chat.html" class="btn btn-white msg-btn">
-										<i class="far fa-comment-alt"></i>
-									</a>
-									<a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
-										data-bs-target="#voice_call">
-										<i class="fas fa-phone"></i>
-									</a>
-									<a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
-										data-bs-target="#video_call">
-										<i class="fas fa-video"></i>
-									</a>
-								</div> {% endcomment %}
+								
 								 <div class="clinic-booking">
 									<a class="apt-btn" data-bs-toggle="modal"
 									data-bs-target="#upload-prescription" >Upload Prescription</a>
@@ -119,10 +144,7 @@ Booking {% endblock title %}
 								<li class="nav-item">
 									<a class="nav-link" href="#doc_reviews" data-bs-toggle="tab">Reviews</a>
 								</li>
-								{% comment %} <li class="nav-item">
-									<a class="nav-link" href="#doc_business_hours" data-bs-toggle="tab">Business
-										Hours</a>
-								</li> {% endcomment %}
+								
 							</ul>
 						</nav>
 
@@ -171,36 +193,181 @@ Booking {% endblock title %}
 
  
 							<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
-
+								<!-- Add icon library -->
+								<link rel="stylesheet"
+									href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		
+								<span class="heading">User Rating</span>
+									{% if  rating <= 5 and rating > 4 %}
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star checked"></i>
+									{% endif %}
+									{% if rating <= 4 and rating > 3 %}
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star "></i>
+									{% endif %}
+									{% if rating <= 3 and rating > 2 %}
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star "></i>
+									<i class="fas fa-star "></i>
+									{% endif %}
+									{% if rating <= 2 and rating > 1 %}
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									{% endif %}
+									{% if rating <= 1 and rating > 0 %}
+									<i class="fas fa-star checked"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									{% endif %}
+									{% if rating == 0 %}
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									{% endif %}
+								
+								<p>{{rating}} average based on {{total_cmns}} reviews.</p>
+								<hr style="border:3px solid #f1f1f1">
+		
+								<div class="row">
+									<div class="side">
+										<div>5 star</div>
+									</div>
+									<div class="middle">
+										<div class="bar-container">
+											<div style="width: {{cmn_5_per}}%; height: 18px; background-color: #04AA6D;"></div>
+										</div>
+									</div>
+									<div class="side right">
+										<div>{{cmn_5}}</div>
+									</div>
+									<div class="side">
+										<div>4 star</div>
+									</div>
+									<div class="middle">
+										<div class="bar-container">
+											<div style="width: {{cmn_4_per}}%; height: 18px; background-color: #2196F3;"></div>
+										</div>
+									</div>
+									<div class="side right">
+										<div>{{cmn_4}}</div>
+									</div>
+									<div class="side">
+										<div>3 star</div>
+									</div>
+									<div class="middle">
+										<div class="bar-container">
+											<div style="width: {{cmn_3_per}}%; height: 18px; background-color: #00bcd4;"></div>
+										</div>
+									</div>
+									<div class="side right">
+										<div>{{cmn_3}}</div>
+									</div>
+									<div class="side">
+										<div>2 star</div>
+									</div>
+									<div class="middle">
+										<div class="bar-container">
+											<div style="width: {{cmn_2_per}}%; height: 18px; background-color: #ff9800;"></div>
+										</div>
+									</div>
+									<div class="side right">
+										<div>{{cmn_2}}</div>
+									</div>
+									<div class="side">
+										<div>1 star</div>
+									</div>
+									<div class="middle">
+										<div class="bar-container">
+											<div style="width: {{cmn_1_per}}%; height: 18px; background-color: #f44336;"></div>
+										</div>
+									</div>
+									<div class="side right">
+										<div>{{cmn_1}}</div>
+									</div>
+								</div>
+								<hr style="border:3px solid #f1f1f1">
 								<div class="widget review-listing">
 									<ul class="comments-list">
-
+										{% for cmn in cmns %}
 										<li>
 											<div class="comment">
 												<img class="avatar avatar-sm rounded-circle" alt="User Image"
-													src="assets/img/patients/patient.jpg">
+													src="{{cmn.patient.patients.profile_pic}}"
+													onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 												<div class="comment-body">
 													<div class="meta-data">
-														<span class="comment-author">Richard Wilson</span>
-														<span class="comment-date">Reviewed 2 Days ago</span>
+														<span class="comment-author">{{cmn.patient.name_title}}
+															{{cmn.patient.patients.fisrt_name}}
+															{{cmn.patient.patients.last_name}}</span>
+														<span class="comment-date">Reviewed
+															{{cmn.created_date|naturaltime}}</span>
 														<div class="review-count rating">
+															{% if cmn.rating == 5 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i> 
 															<i class="fas fa-star filled"></i>
 															<i class="fas fa-star filled"></i>
 															<i class="fas fa-star filled"></i>
+															{% endif %}
+															{% if cmn.rating == 4 %}
 															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i> 
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star "></i>
+															{% endif %}
+															{% if cmn.rating == 3 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i> 
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star "></i>
+															<i class="fas fa-star "></i>
+															{% endif %}
+															{% if cmn.rating == 2 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i> 
 															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															{% endif %}
+															{% if cmn.rating == 1 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star"></i> 
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															{% endif %}
+															{% if cmn.rating == 0 %}
+																<i class="fas fa-star"></i>
+																<i class="fas fa-star"></i> 
+																<i class="fas fa-star"></i>
+																<i class="fas fa-star"></i>
+																<i class="fas fa-star"></i>
+															{% endif %}
 														</div>
 													</div>
-													<p class="recommended"><i class="far fa-thumbs-up"></i> I recommend
-														the doctor</p>
+													{% comment %} <p class="recommended"><i class="far fa-thumbs-up"></i> I recommend
+														the doctor</p> {% endcomment %}
 													<p class="comment-content">
-														Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-														sed do eiusmod tempor incididunt ut labore et dolore magna
-														aliqua.
-														Ut enim ad minim veniam, quis nostrud exercitation.
-														Curabitur non nulla sit amet nisl tempus
+														{{cmn.comment}}
 													</p>
-													<div class="comment-reply">
+												{% comment %} <div class="comment-reply">
 														<a class="comment-btn" href="#">
 															<i class="fas fa-reply"></i> Reply
 														</a>
@@ -213,11 +380,11 @@ Booking {% endblock title %}
 																<i class="far fa-thumbs-down"></i> No
 															</a>
 														</p>
-													</div>
-												</div>
+													</div> 
+												</div> {% endcomment %}
 											</div>
-
-											<ul class="comments-reply">
+		
+											{% comment %} <ul class="comments-reply">
 												<li>
 													<div class="comment">
 														<img class="avatar avatar-sm rounded-circle" alt="User Image"
@@ -259,122 +426,82 @@ Booking {% endblock title %}
 														</div>
 													</div>
 												</li>
-											</ul>
-
+											</ul> {% endcomment %}
+		
 										</li>
-
-
-										<li>
-											<div class="comment">
-												<img class="avatar avatar-sm rounded-circle" alt="User Image"
-													src="assets/img/patients/patient2.jpg">
-												<div class="comment-body">
-													<div class="meta-data">
-														<span class="comment-author">Travis Trimble</span>
-														<span class="comment-date">Reviewed 4 Days ago</span>
-														<div class="review-count rating">
-															<i class="fas fa-star filled"></i>
-															<i class="fas fa-star filled"></i>
-															<i class="fas fa-star filled"></i>
-															<i class="fas fa-star filled"></i>
-															<i class="fas fa-star"></i>
-														</div>
-													</div>
-													<p class="comment-content">
-														Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-														sed do eiusmod tempor incididunt ut labore et dolore magna
-														aliqua.
-														Ut enim ad minim veniam, quis nostrud exercitation.
-														Curabitur non nulla sit amet nisl tempus
-													</p>
-													<div class="comment-reply">
-														<a class="comment-btn" href="#">
-															<i class="fas fa-reply"></i> Reply
-														</a>
-														<p class="recommend-btn">
-															<span>Recommend?</span>
-															<a href="#" class="like-btn">
-																<i class="far fa-thumbs-up"></i> Yes
-															</a>
-															<a href="#" class="dislike-btn">
-																<i class="far fa-thumbs-down"></i> No
-															</a>
-														</p>
-													</div>
-												</div>
-											</div>
-										</li>
-
+										{% endfor %}
+		
+		
+		
 									</ul>
-
+		
 									<div class="all-feedback text-center">
 										<a href="#" class="btn btn-primary btn-sm">
-											Show all feedback <strong>(167)</strong>
+											Show all feedback <strong>({{total_cmns}})</strong>
 										</a>
 									</div>
-
+		
 								</div>
-
-
+		
+		
 								<div class="write-review">
-									<h4>Write a review for <strong>Dr. Darren Elder</strong></h4>
-
-									<form>
-										<div class="form-group">
+									<h4>Write a review for <strong>{{pharmacy.pharmacy_name|upper}}</strong></h4>
+									
+									{% if user.is_authenticated %}
+									{% if user.user_type == '4' %}
+									<form method="post" id="commentFrom" action="{% url 'ratingandcomment' %}">
+										{% csrf_token %}
+										<div class="form-group"> 
 											<label>Review</label>
 											<div class="star-rating">
-												<input id="star-5" type="radio" name="rating" value="star-5">
+												<input id="star-5" type="radio" name="rating" value="5">
 												<label for="star-5" title="5 stars">
 													<i class="active fa fa-star"></i>
 												</label>
-												<input id="star-4" type="radio" name="rating" value="star-4">
+												<input id="star-4" type="radio" name="rating" value="4">
 												<label for="star-4" title="4 stars">
 													<i class="active fa fa-star"></i>
 												</label>
-												<input id="star-3" type="radio" name="rating" value="star-3">
+												<input id="star-3" type="radio" name="rating" value="3">
 												<label for="star-3" title="3 stars">
 													<i class="active fa fa-star"></i>
 												</label>
-												<input id="star-2" type="radio" name="rating" value="star-2">
+												<input id="star-2" type="radio" name="rating" value="2">
 												<label for="star-2" title="2 stars">
 													<i class="active fa fa-star"></i>
 												</label>
-												<input id="star-1" type="radio" name="rating" value="star-1">
+												<input id="star-1" type="radio" name="rating" value="1">
 												<label for="star-1" title="1 star">
 													<i class="active fa fa-star"></i>
 												</label>
 											</div>
 										</div>
 										<div class="form-group">
-											<label>Title of your review</label>
-											<input class="form-control" type="text"
-												placeholder="If you could say it in one sentence, what would you say?">
-										</div>
-										<div class="form-group">
 											<label>Your review</label>
-											<textarea id="review_desc" maxlength="100" class="form-control"></textarea>
-											<div class="d-flex justify-content-between mt-3"><small
-													class="text-muted"><span id="chars">100</span> characters
+											<textarea id="review_desc" maxlength="100" class="form-control"
+												name="comment"></textarea>
+												<input type="hidden" value="{{pharmacy.admin.id}}" name="HLP">
+												<input type="hidden" value="pharmacy" name="pagename">
+												<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span
+														id="chars">100</span> characters
 													remaining</small></div>
 										</div>
 										<hr>
-										<div class="form-group">
-											<div class="terms-accept">
-												<div class="custom-checkbox">
-													<input type="checkbox" id="terms_accept">
-													<label for="terms_accept">I have read and accept <a href="#">Terms
-															&amp; Conditions</a></label>
-												</div>
-											</div>
-										</div>
 										<div class="submit-section">
 											<button type="submit" class="btn btn-primary submit-btn">Add Review</button>
 										</div>
 									</form>
-
+									{% endif %}
+									{% else %}
+		
+									<a class="btn btn-rounded btn-primary"
+										href="{% url 'dologin' %}?next={{ request.path|urlencode }}"><i
+											class="fas fa-user-circle"></i> login /
+										Signup </a>
+									{% endif %}
 								</div>
-
-							</div>
+		
+							</div>	
 
 
 							<div role="tabpanel" id="doc_business_hours" class="tab-pane fade">

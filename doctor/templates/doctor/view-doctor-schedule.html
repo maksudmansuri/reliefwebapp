@@ -1,0 +1,651 @@
+{% extends 'hospital/blank-page.html' %}
+{% load static %}
+{% block title %} Doctor View {% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block content %}
+<div class="col-md-7 col-lg-8 col-xl-9">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="booking-doc-info">
+                        <a href="doctor-profile.html" class="booking-doc-img">
+                            <img src="{{doctor.doctor.profile_pic}}"
+                                onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+                                alt="User Image"> 
+                        </a>
+                        <div class="booking-info">
+                            <h4><a >Dr.{{doctor.doctor.fisrt_name|title}}
+                                    {{doctor.doctor.last_name|title}}</a></h4>
+                            {% comment %} <div class="rating">
+                                <i class="fas fa-star filled"></i>
+                                <i class="fas fa-star filled"></i>
+                                <i class="fas fa-star filled"></i>
+                                <i class="fas fa-star filled"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="d-inline-block average-rating">35</span>
+                            </div> {% endcomment %}
+                            <p class="text-muted mb-0"><i class="far fa-id-card"></i> {{doctor.ssn_id}}</p>
+                            <p class="text-muted mb-0"><i class="fas fa-user-tag"></i> {{doctor.doctor.specialist}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="mb-4">Doctor Schedules</h4>
+            <div class="appointment-tab">
+
+                <ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded">
+                    <li class="nav-item">
+
+                        <a class="nav-link active" data-bs-toggle="modal" data-bs-target="#AddSchedule"
+                            data-original-title="" title=""><i class="fas fa-plus me-1"></i> Add Schedule</a>
+                    </li>
+
+                </ul>
+
+
+                <div class="tab-content">
+
+                    <div class="tab-pane show active" id="upcoming-appointments">
+                        <div class="card card-table mb-0">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-center mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for schedule_date in schedule_dates_list %}
+                                            <tr>
+                                                <td>{{schedule_date.sch_Dat}}
+                                                </td>
+                                                <td class="text-end">
+                                                    <div class="table-action">
+
+                                                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#EditSchedule{{schedule_date.sch_Dat|date:'dmy'}}"
+                                                            class="btn btn-sm bg-success-light">
+                                                            <i class="fas fa-edit"></i> View
+                                                        </a>
+                                                        <a href="{% url 'delete_doctorschedule' schedule_date.scd_type.id doctor.id %}"
+                                                            class="btn btn-sm bg-danger-light">
+                                                            <i class="fas fa-times"></i> Delete
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block modal_fade %}
+{% for schedule_date in schedule_dates_list %}
+<div class="modal fade bd-example-modal-lg" id="EditSchedule{{schedule_date.sch_Dat|date:'dmy'}}" tabindex="-1" aria-labelledby="myLargeModalLabel" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">View Time Slot</h4>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+                    data-original-title="" title=""></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                        
+                            <div class="card-body">
+                                <h4 class="card-title">Schedule Timings</h4>
+                               
+                                <div class="profile-box">
+                                    
+                                    <div class="row">
+                                        <div class="col-sm-4 col-12 avail-time">
+                                            <div class="mb-3">
+                                                <div class="schedule-calendar-col justify-content-start">
+                                                    
+            
+                                                        <span>Date:</span>
+            
+                                                        <div class="me-3">
+                                                            <input type="date" class="form-control" name="scheduleDate1" id="schedule_date" value={{schedule_date.sch_Dat|date:'Y-m-d'}} min="{{schedule_date.sch_Dat|date:'Y-m-d'}}" max="{{schedule_date.sch_Dat|date:'Y-m-d'}}" disabled>
+                                                            <input type="hidden" name="doctor_id" value="{{doctor.id}}">
+                                                        </div>
+                                                        {% comment %} <div class="search-time-mobile">
+                                                            <input type="submit" name="submit" value="Search"
+                                                                class="btn btn-primary h-100">
+                                                        </div> {% endcomment %}
+            
+                                                    
+                                                </div>
+            
+                                            </div>
+                                        </div>
+            
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <div class="form-group">    
+                                                <label>Timing Slot Duration</label>
+                                                <select class="select form-control select2-hidden-accessible" id="dropBox1" disabled>
+                                                    <option>-</option>
+                                                    <option value="1" {% if schedule_date.scd_type.timeslot.schedule_type == "15" %}selected{% endif %} >15 mins</option>
+                                                    <option value="2" {% if schedule_date.scd_type.timeslot.schedule_type == "30" %}selected{% endif %}>30 mins</option>
+                                                    <option value="3" {% if schedule_date.scd_type.timeslot.schedule_type == "45" %}selected{% endif %}>45 mins</option>
+                                                    <option value="4" {% if schedule_date.scd_type.timeslot.schedule_type == "60" %}selected{% endif %}>1 Hour</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="divText1">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                                    1<sup>st</sup> Session </h3>
+                                                <div class="text-center mt-3">
+                                                    {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                                    <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                                </div>
+                                                <div class="token-slot mt-2">
+                                                    {% for scd in schedule_date.scd_type_all %}
+                                                    {% if scd.timeslot.session == "1" %}
+                                                        <div class="form-check-inline visits me-0">
+                                                            <label class="visit-btns">
+                                                                <input type="checkbox" checked class="form-check-input" name="timeslot[]" value="{{scd.id}}">
+                                                                <span class="visit-rsn" data-bs-toggle="tooltip" title="{{scd}}">{{scd}}
+                                                                    </span>
+                                                            </label>
+                                                        </div>
+                                                    {% endif %}											
+                                                    {% endfor %}	
+                                                    </div>
+                                                    
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                                    2<sup>nd</sup> Session </h3>
+                                                <div class="text-center mt-3">
+                                                    {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                                    <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                                </div>
+                                                    <div class="token-slot mt-2">
+                                                        {% for scd in schedule_date.scd_type_all %}
+                                                        {% if scd.timeslot.session == "2" %}
+                                                        <div class="form-check-inline visits me-0">
+                                                            <label class="visit-btns">
+                                                                <input type="checkbox" checked class="form-check-input" name="timeslot[]" value="{{scd.id}}">
+                                                                <span class="visit-rsn" data-bs-toggle="tooltip" title="02:40 PM">{{scd}}</span>
+                                                            </label>
+                                                        </div>
+                                                        {% endif %}	
+                                                        {% endfor %}
+                                                    </div>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                                    3<sup>rd</sup> Session </h3>
+                                                <div class="text-center mt-3">
+                                                    {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                                    <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                                </div>
+                                                
+                                                    <div class="token-slot mt-2">
+                                                    {% for scd in schedule_date.scd_type_all %}
+                                                    {% if scd.timeslot.session == "3" %}
+                                                        <div class="form-check-inline visits me-0">
+                                                            <label class="visit-btns">
+                                                                <input type="checkbox" checked class="form-check-input" name="timeslot[]" value="{{scd.id}}">
+                                                                <span class="visit-rsn" data-bs-toggle="tooltip" title="02:40 PM">{{scd}}</span>
+                                                            </label>
+                                                        </div>	
+                                                        {% endif %}											
+                                                    {% endfor %}
+                                                    </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<div class="modal fade bd-example-modal-lg" id="AddSchedule" tabindex="-1" aria-labelledby="myLargeModalLabel" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Add Time Slot</h4>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+                    data-original-title="" title=""></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                        
+                            <div class="card-body">
+                                <h4 class="card-title">Schedule Timings</h4>
+                                <form method="post" >
+                                    {% csrf_token %}
+                                <div class="profile-box">
+                                    
+                                    <div class="row">
+                                        <div class="col-sm-4 col-12 avail-time">
+                                            <div class="mb-3">
+                                                <div class="schedule-calendar-col justify-content-start">
+                                                    
+            
+                                                        <span>Date:</span>
+            
+                                                        <div class="me-3">
+                                                            <input type="date" class="form-control" name="scheduleDate" id="schedule_date" value={% now "DATE_FORMAT" %} min="{{erliestDate|date}}">
+                                                            <input type="hidden" name="doctor_id"  value="{{doctor.id}}">
+                                                        </div>
+                                                        {% comment %} <div class="search-time-mobile">
+                                                            <input type="submit" name="submit" value="Search"
+                                                                class="btn btn-primary h-100">
+                                                        </div> {% endcomment %}
+            
+                                                    
+                                                </div>
+            
+                                            </div>
+                                        </div>
+            
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label>Timing Slot Duration</label>
+                                                <select class="select form-control select2-hidden-accessible" id="dropBox">
+                                                    <option>-</option>
+                                                    <option value="1" >15 mins</option>
+                                                    <option value="2">30 mins</option>
+                                                    <option value="3">45 mins</option>
+                                                    <option value="4">1 Hour</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="divText">
+                                        
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                                </form>
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock modal_fade %}
+
+{% block custom_js %}
+<script>
+	{% comment %} var today = new Date().toISOString().split('T')[0]; {% endcomment %}
+	var today = new Date().toISOString().split('T')[0];
+	document.getElementsByName("scheduleDate")[0].setAttribute('min', today);
+
+</script>
+<script>   
+	
+    $(function () {
+        $("#dropBox").on("change", function () {
+            this.disabled = true;
+            switch ($(this).val()) {
+                case "1":
+                    $("#divText").html(`<div class="row">
+                                <div class="col-lg-12">
+                                    <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                        1<sup>st</sup> Session </h3>
+                                    <div class="text-center mt-3">
+                                        {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                        <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                    </div>
+                                    <div class="token-slot mt-2">
+                                        {% for timeslots_15 in timeslots_15s %}
+                                        {% if timeslots_15.session == "1" %}
+                                            <div class="form-check-inline visits me-0">
+                                                <label class="visit-btns">
+                                                    <input type="checkbox" class="form-check-input" name="timeslot[]" value="{{timeslots_15.id}}">
+                                                    <span class="visit-rsn" data-bs-toggle="tooltip" title={{timeslots_15}}">{{timeslots_15}}
+                                                        </span>
+                                                </label>
+                                            </div>
+                                        {% endif %}                                         
+                                        {% endfor %}    
+                                        </div>
+                                        
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                        2<sup>nd</sup> Session </h3>
+                                    <div class="text-center mt-3">
+                                        {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                        <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                    </div>
+                                        <div class="token-slot mt-2">
+                                            {% for timeslots_15 in timeslots_15s %}
+                                            {% if timeslots_15.session == "2" %}
+                                            <div class="form-check-inline visits me-0">
+                                                <label class="visit-btns">
+                                                    <input type="checkbox" class="form-check-input" name="timeslot[]" value="{{timeslots_15.id}}">
+                                                    <span class="visit-rsn" data-bs-toggle="tooltip" title="{{timeslots_15}}">{{timeslots_15}}</span>
+                                                </label>
+                                            </div>
+                                            {% endif %} 
+                                            {% endfor %}
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                        3<sup>rd</sup> Session </h3>
+                                    <div class="text-center mt-3">
+                                        {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                        <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                    </div>
+                                    
+                                        <div class="token-slot mt-2">
+                                        {% for timeslots_15 in timeslots_15s %}
+                                        {% if timeslots_15.session == "3" %}
+                                            <div class="form-check-inline visits me-0">
+                                                <label class="visit-btns">
+                                                    <input type="checkbox" class="form-check-input" name="timeslot[]" value="{{timeslots_15.id}}">
+                                                    <span class="visit-rsn" data-bs-toggle="tooltip" title="{{timeslots_15}}">{{timeslots_15}}</span>
+                                                </label>
+                                            </div>  
+                                            {% endif %}                                         
+                                        {% endfor %}
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                                    
+                            `);
+                    
+                    break;
+                case "2":
+                    $("#divText").html(`<div class="row">
+                                <div class="col-lg-12">
+                                    <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                        1<sup>st</sup> Session </h3>
+                                    <div class="text-center mt-3">
+                                        {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                        <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                    </div>
+                                    <div class="token-slot mt-2">
+                                        {% for timeslots_15 in timeslots_30s %}
+                                        {% if timeslots_15.session == "1" %}
+                                            <div class="form-check-inline visits me-0">
+                                                <label class="visit-btns">
+                                                    <input type="checkbox" class="form-check-input" name="timeslot[]" value="{{timeslots_15.id}}">
+                                                    <span class="visit-rsn" data-bs-toggle="tooltip" title="{{timeslots_15}}">{{timeslots_15}}
+                                                        </span>
+                                                </label>
+                                            </div>
+                                        {% endif %}                                         
+                                        {% endfor %}    
+                                        </div>
+                                        
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                        2<sup>nd</sup> Session </h3>
+                                    <div class="text-center mt-3">
+                                        {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                        <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                    </div>
+                                        <div class="token-slot mt-2">
+                                            {% for timeslots_15 in timeslots_30s %}
+                                            {% if timeslots_15.session == "2" %}
+                                            <div class="form-check-inline visits me-0">
+                                                <label class="visit-btns">
+                                                    <input type="checkbox" class="form-check-input" name="timeslot[]" value="{{timeslots_15.id}}">
+                                                    <span class="visit-rsn" data-bs-toggle="tooltip" title="{{timeslots_15}}">{{timeslots_15}}</span>
+                                                </label>
+                                            </div>
+                                            {% endif %} 
+                                            {% endfor %}
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                        3<sup>rd</sup> Session </h3>
+                                    <div class="text-center mt-3">
+                                        {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                        <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                    </div>
+                                    
+                                        <div class="token-slot mt-2">
+                                        {% for timeslots_15 in timeslots_30s %}
+                                        {% if timeslots_15.session == "3" %}
+                                            <div class="form-check-inline visits me-0">
+                                                <label class="visit-btns">
+                                                    <input type="checkbox" class="form-check-input" name="timeslot[]" value="{{timeslots_15.id}}">
+                                                    <span class="visit-rsn" data-bs-toggle="tooltip" title="{{timeslots_15}}">{{timeslots_15}}</span>
+                                                </label>
+                                            </div>  
+                                            {% endif %}                                         
+                                        {% endfor %}
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                                    
+                            `);
+                    
+                    break;
+                case "3":
+                    $("#divText").html(`<div class="row">
+                                <div class="col-lg-12">
+                                    <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                        1<sup>st</sup> Session </h3>
+                                    <div class="text-center mt-3">
+                                        {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                        <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                    </div>
+                                    <div class="token-slot mt-2">
+                                        {% for timeslots_15 in timeslots_45s %}
+                                        {% if timeslots_15.session == "1" %}
+                                            <div class="form-check-inline visits me-0">
+                                                <label class="visit-btns">
+                                                    <input type="checkbox" class="form-check-input" name="timeslot[]" value="{{timeslots_15.id}}">
+                                                    <span class="visit-rsn" data-bs-toggle="tooltip" title="{{timeslots_15}}">{{timeslots_15}}
+                                                        </span>
+                                                </label>
+                                            </div>
+                                        {% endif %}                                         
+                                        {% endfor %}    
+                                        </div>
+                                        
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                        2<sup>nd</sup> Session </h3>
+                                    <div class="text-center mt-3">
+                                        {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                        <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                    </div>
+                                        <div class="token-slot mt-2">
+                                            {% for timeslots_15 in timeslots_45s %}
+                                            {% if timeslots_15.session == "2" %}
+                                            <div class="form-check-inline visits me-0">
+                                                <label class="visit-btns">
+                                                    <input type="checkbox" class="form-check-input" name="timeslot[]" value="{{timeslots_15.id}}">
+                                                    <span class="visit-rsn" data-bs-toggle="tooltip" title="{{timeslots_15}}">{{timeslots_15}}</span>
+                                                </label>
+                                            </div>
+                                            {% endif %} 
+                                            {% endfor %}
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                        3<sup>rd</sup> Session </h3>
+                                    <div class="text-center mt-3">
+                                        {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                        <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                    </div>
+                                    
+                                        <div class="token-slot mt-2">
+                                        {% for timeslots_15 in timeslots_45s %}
+                                        {% if timeslots_15.session == "3" %}
+                                            <div class="form-check-inline visits me-0">
+                                                <label class="visit-btns">
+                                                    <input type="checkbox" class="form-check-input" name="timeslot[]" value="{{timeslots_15.id}}">
+                                                    <span class="visit-rsn" data-bs-toggle="tooltip" title="{{timeslots_15}}">{{timeslots_15}}</span>
+                                                </label>
+                                            </div>  
+                                            {% endif %}                                         
+                                        {% endfor %}
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                                    
+                            `);
+                    break;
+                case "4":
+                    $("#divText").html(`<div class="row">
+                                <div class="col-lg-12">
+                                    <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                        1<sup>st</sup> Session </h3>
+                                    <div class="text-center mt-3">
+                                        {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                        <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                    </div>
+                                    <div class="token-slot mt-2">
+                                        {% for timeslots_15 in timeslots_60s %}
+                                        {% if timeslots_15.session == "1" %}
+                                            <div class="form-check-inline visits me-0">
+                                                <label class="visit-btns">
+                                                    <input type="checkbox" class="form-check-input" name="timeslot[]" value="{{timeslots_15.id}}">
+                                                    <span class="visit-rsn" data-bs-toggle="tooltip" title="{{timeslots_15}}">{{timeslots_15}}
+                                                        </span>
+                                                </label>
+                                            </div>
+                                        {% endif %}                                         
+                                        {% endfor %}    
+                                        </div>
+                                        
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                        2<sup>nd</sup> Session </h3>
+                                    <div class="text-center mt-3">
+                                        {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                        <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                    </div>
+                                        <div class="token-slot mt-2">
+                                            {% for timeslots_15 in timeslots_60s %}
+                                            {% if timeslots_15.session == "2" %}
+                                            <div class="form-check-inline visits me-0">
+                                                <label class="visit-btns">
+                                                    <input type="checkbox" class="form-check-input" name="timeslot[]" value="{{timeslots_15.id}}">
+                                                    <span class="visit-rsn" data-bs-toggle="tooltip" title="{{timeslots_15}}">{{timeslots_15}}</span>
+                                                </label>
+                                            </div>
+                                            {% endif %} 
+                                            {% endfor %}
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h3 class="h3 text-center book-btn2 mt-3 px-5 py-1 mx-3 rounded">
+                                        3<sup>rd</sup> Session </h3>
+                                    <div class="text-center mt-3">
+                                        {% comment %}<h4 class="h4 mb-2">Start Time </h4>
+                                        <span class="h4 btn btn-outline-primary"><b> 09:00 AM</b></span>{% endcomment %}
+                                    </div>
+                                    
+                                        <div class="token-slot mt-2">
+                                        {% for timeslots_15 in timeslots_60s %}
+                                        {% if timeslots_15.session == "3" %}
+                                            <div class="form-check-inline visits me-0">
+                                                <label class="visit-btns">
+                                                    <input type="checkbox" class="form-check-input" name="timeslot[]" value="{{timeslots_15.id}}">
+                                                    <span class="visit-rsn" data-bs-toggle="tooltip" title="{{timeslots_15}}">{{timeslots_15}}</span>
+                                                </label>
+                                            </div>  
+                                            {% endif %}                                         
+                                        {% endfor %}
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                                    
+                            `);
+                    break;
+            }
+        });
+    });
+
+</script>
+{% endblock custom_js %}

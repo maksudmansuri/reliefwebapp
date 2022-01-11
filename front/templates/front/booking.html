@@ -1,9 +1,12 @@
 {% extends 'front/blank-page.html' %}
 {% load static %}
+{% load humanize %}
 {% block title %} Relief Pro - Doctor SChedules | Hospital,Labs and Pharmacy Online Booking | Emergency
 Booking {% endblock title %}
 
-{% block custom_css %}{% endblock custom_css %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'newstatic/assets/css/rating.css'%}">
+{% endblock custom_css %}
 
 {% block content %}
 
@@ -103,8 +106,8 @@ Booking {% endblock title %}
 							</div>
 						</div>
 						<div class="card">
-							<div class="card-body">
-								
+							<div class="card-body">						
+
 								<div class="booking-doc-info">
 									<a href="#" class="booking-doc-img">
 										<img src="{{doctor.doctor.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
@@ -118,123 +121,394 @@ Booking {% endblock title %}
 									</div>
 									
 								</div>
+
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-12 col-sm-4 col-md-6">
-								<span></span>
-								{% if date %}
-								<h4 class="mb-1">Selected Date :- {{date}}</h4>
-								{% else %}
-									<h4 class="mb-1">Today's Date :- {% now "d M Y" %} </h4>
-									<p class="text-muted">{% now "D" %}</p>
-								{% endif %}
-							</div>
-							<div class="col-12 col-sm-8 col-md-6 mb-2">
-								<form method="post" id="newdate">
-									{% csrf_token %}
-									<h4> Select Booking Date</h4>
-									<input type="date" class="form-control scheduleDate" name="scheduleDate" id="scheduleDate" value={{date}} min="2021-05-21" required >
-									<input type="hidden" value="{{doctor.id}}" name="doc_id">
-								
-								</form>
-							</div>
-						</div>
+						<div class="card">
+							<div class="card-body pt-0">	
 
-						<form method="post" action="{% url 'bookappoinment_final' %}" id="bookingform">
-						<div class="card booking-schedule schedule-widget">
-							
-							{% csrf_token %}
-							<div class="schedule-header">
-								<div class="row">
-									<div class="col-md-12">
-
-										<div class="day-slot-header">
-											<h4>Slots</h4>
-										</div>
-
-									</div>
-								</div>
-							</div>
-
-						
-							<div class="schedule-cont">
-								<div class="row">
-									<div class="col-lg-12">
+								<nav class="user-tabs mb-4">
+									<ul class="nav nav-tabs nav-tabs-bottom nav-justified">				
+										<li class="nav-item">
+											<a class="nav-link active" href="#booking" data-bs-toggle="tab">Book An Appointment</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" href="#doc_reviews" data-bs-toggle="tab">Doctor's Reviews</a>
+										</li>
 										
-										<div class="token-slot mt-2">
-											{% for doctorschedule in doctorschedules %}
-												{% if token %}
+									</ul>
+								</nav>
+								
+								<div class="tab-content pt-0">
+									<div role="tabpanel" id="booking" class="tab-pane fade show active">
+										<div class="row">
+											<div class="col-12 col-sm-4 col-md-6">
+												<span></span>
+												{% if date %}
+												<h4 class="mb-1">Selected Date :- {{date}}</h4>
+												{% else %}
+													<h4 class="mb-1">Today's Date :- {% now "d M Y" %} </h4>
+													<p class="text-muted">{% now "D" %}</p>
+												{% endif %}
+											</div>
+											<div class="col-12 col-sm-8 col-md-6 mb-2">
+												<form method="post" id="newdate">
+													{% csrf_token %}
+													<h4> Select Booking Date</h4>
+													<input type="date" class="form-control scheduleDate" name="scheduleDate" id="scheduleDate" value={{date}} min="2021-05-21" required >
+													<input type="hidden" value="{{doctor.id}}" name="doc_id">
+												
+												</form>
+											</div>
+										</div>
+	
+										<form method="post" action="{% url 'bookappoinment_final' %}" id="bookingform">
+										<div class="card booking-schedule schedule-widget">
 											
-												<div class="form-check-inline visits me-0">
-													<label class="visit-btns">
-														<input type="radio" class="form-check-input timeslot"  name="timeslot" value="{{doctorschedule.id}}" {% if doctorschedule.is_booked %}disabled{% endif %} required>
-														
-														
-														<span class="visit-rsn" data-bs-toggle="tooltip" title="{% if doctorschedule.is_booked %}Booked{% else %} {{doctorschedule}}{% endif %}">{{doctorschedule}}
-															</span>
-													</label>
+											{% csrf_token %}
+											<div class="schedule-header">
+												<div class="row">
+													<div class="col-md-12">
+	
+														<div class="day-slot-header">
+															<h4>Slots</h4>
+														</div>
+	
+													</div>
 												</div>
-											                                    
-												{% endif %}  
-											{% endfor %}  
+											</div>
+	
+										
+											<div class="schedule-cont">
+												<div class="row">
+													<div class="col-lg-12">
+														
+														<div class="token-slot mt-2">
+															{% for doctorschedule in doctorschedules %}
+																{% if token %}
+															
+																<div class="form-check-inline visits me-0">
+																	<label class="visit-btns">
+																		<input type="radio" class="form-check-input timeslot"  name="timeslot" value="{{doctorschedule.id}}" {% if doctorschedule.is_booked %}disabled{% endif %} required>
+																		
+																		
+																		<span class="visit-rsn" data-bs-toggle="tooltip" title="{% if doctorschedule.is_booked %}Booked{% else %} {{doctorschedule}}{% endif %}">{{doctorschedule}}
+																			</span>
+																	</label>
+																</div>
+																								
+																{% endif %}  
+															{% endfor %}  
+															</div>
+															
+														
+													</div>
+													
+													
+												</div>
+												
+											</div>
+										
+										</div>
+										<div class="row">
+											
+											<div class="col-6">
+												<label class="form-label">Booking Type</label>
+												<select class="form-select" aria-label="Default select example" id="booking_type" name="booking_type" required>
+													<option value="">Select</option>
+													{% if doctor.emergency_charges %}
+													<option value="EMERGENCY">EMERGENCY</option>
+													{% endif %}
+													{% if doctor.opd_charges %}
+													<option value="OPD">OPD</option>
+													{% endif %}
+													{% if doctor.is_virtual_available %}
+													<option value="ONLINE">ONLINE</option>
+													{% endif %}
+													{% if doctor.home_charges %}
+													<option value="HOMEVISIT">HOME VISIT</option>
+													{% endif %}
+												</select>
+												<input type="hidden" value="{{date}}" name="date" id="date">
+												<input type="hidden" value="{{doctor.id}}" name="doctor_id">
+												<input type="hidden" value="hospital" name="orderwhere">
+											</div>
+											<div class="col-6">
+												<div class="form-check">
+												<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')">
+												<label class="form-check-label" for="flexCheckDefault">
+													Is it for some else ? <a href="#large_someone" data-bs-toggle="modal" class="btn btn-primary btn-sm" tabindex="0">Add New.</span></a>
+												</label>
+											</div>
+												<div>
+												<select class="form-select mb-3" aria-label="Default select example" id ="someone" name="someone" disabled ="disabled">
+													{% for someone in someones %}
+													<option value="{{someone.id}}" selected>{{someone}}</option>
+													{% endfor %}
+												</select>
+												</div>
 											</div>
 											
+										</div>
 										
+									
+										<div class="submit-section proceed-btn text-end">
+											<a type="submit" onclick="myFunction()" class="btn btn-primary submit-btn"  value="check" id="acceptbtn">Proceed to Pay</a>
+										</div>
+										</form>
 									</div>
-									
-									
+									<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
+										<!-- Add icon library -->
+										<link rel="stylesheet"
+											href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+				
+										<span class="heading">User Rating</span>
+											{% if  drating <= 5 and drating > 4 %}
+												<i class="fas fa-star checked"></i>
+												<i class="fas fa-star checked"></i>
+												<i class="fas fa-star checked"></i>
+												<i class="fas fa-star checked"></i>
+												<i class="fas fa-star checked"></i>
+												{% endif %}
+												{% if drating <= 4 and drating > 3 %}
+												<i class="fas fa-star checked"></i>
+												<i class="fas fa-star checked"></i>
+												<i class="fas fa-star checked"></i>
+												<i class="fas fa-star checked"></i>
+												<i class="fas fa-star "></i>
+												{% endif %}
+												{% if drating <= 3 and drating > 2 %}
+												<i class="fas fa-star checked"></i>
+												<i class="fas fa-star checked"></i>
+												<i class="fas fa-star checked"></i>
+												<i class="fas fa-star "></i>
+												<i class="fas fa-star "></i>
+												{% endif %}
+												{% if drating <= 2 and drating > 1 %}
+												<i class="fas fa-star checked"></i>
+												<i class="fas fa-star checked"></i>
+												<i class="fas fa-star"></i>
+												<i class="fas fa-star"></i>
+												<i class="fas fa-star"></i>
+												{% endif %}
+												{% if drating <= 1 and drating > 0 %}
+												<i class="fas fa-star checked"></i>
+												<i class="fas fa-star"></i>
+												<i class="fas fa-star"></i>
+												<i class="fas fa-star"></i>
+												<i class="fas fa-star"></i>
+												{% endif %}
+												{% if drating == 0%}
+												<i class="fas fa-star"></i>
+												<i class="fas fa-star"></i>
+												<i class="fas fa-star"></i>
+												<i class="fas fa-star"></i>
+												<i class="fas fa-star"></i>
+												{% endif %}
+										<p>{{drating}} average based on {{total_dcmns}} reviews.</p>
+										<hr style="border:3px solid #f1f1f1">
+				
+										<div class="row">
+											<div class="side">
+												<div>5 star</div>
+											</div>
+											<div class="middle">
+												<div class="bar-container">
+													<div style="width: {{cmn_5_per}}%; height: 18px; background-color: #04AA6D;"></div>
+												</div>
+											</div>
+											<div class="side right">
+												<div>{{cmn_5}}</div>
+											</div>
+											<div class="side">
+												<div>4 star</div>
+											</div>
+											<div class="middle">
+												<div class="bar-container">
+													<div style="width: {{cmn_4_per}}%; height: 18px; background-color: #2196F3;"></div>
+												</div>
+											</div>
+											<div class="side right">
+												<div>{{cmn_4}}</div>
+											</div>
+											<div class="side">
+												<div>3 star</div>
+											</div>
+											<div class="middle">
+												<div class="bar-container">
+													<div style="width: {{cmn_3_per}}%; height: 18px; background-color: #00bcd4;"></div>
+												</div>
+											</div>
+											<div class="side right">
+												<div>{{cmn_3}}</div>
+											</div>
+											<div class="side">
+												<div>2 star</div>
+											</div>
+											<div class="middle">
+												<div class="bar-container">
+													<div style="width: {{cmn_2_per}}%; height: 18px; background-color: #ff9800;"></div>
+												</div>
+											</div>
+											<div class="side right">
+												<div>{{cmn_2}}</div>
+											</div>
+											<div class="side">
+												<div>1 star</div>
+											</div>
+											<div class="middle">
+												<div class="bar-container">
+													<div style="width: {{cmn_1_per}}%; height: 18px; background-color: #f44336;"></div>
+												</div>
+											</div>
+											<div class="side right">
+												<div>{{cmn_1}}</div>
+											</div>
+										</div>
+										<hr style="border:3px solid #f1f1f1">
+										<div class="widget review-listing">
+											<ul class="comments-list">
+												{% for cmn in cmns %}
+												<li>
+													<div class="comment">
+														<img class="avatar avatar-sm rounded-circle" alt="User Image"
+															src="{{cmn.patient.patients.profile_pic}}"
+															onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+														<div class="comment-body">
+															<div class="meta-data">
+																<span class="comment-author">{{cmn.patient.name_title}}
+																	{{cmn.patient.patients.fisrt_name}}
+																	{{cmn.patient.patients.last_name}}</span>
+																<span class="comment-date">Reviewed
+																	{{cmn.created_date|naturaltime}}</span>
+																<div class="review-count rating">
+																	{% if cmn.rating == 5 %}
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star filled"></i> 
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star filled"></i>
+																	{% endif %}
+																	{% if cmn.rating == 4 %}
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star filled"></i> 
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star "></i>
+																	{% endif %}
+																	{% if cmn.rating == 3 %}
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star filled"></i> 
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star "></i>
+																	<i class="fas fa-star "></i>
+																	{% endif %}
+																	{% if cmn.rating == 2 %}
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star filled"></i> 
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	{% endif %}
+																	{% if cmn.rating == 1 %}
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star"></i> 
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	{% endif %}
+																	{% if cmn.rating == 0 %}
+																		<i class="fas fa-star"></i>
+																		<i class="fas fa-star"></i> 
+																		<i class="fas fa-star"></i>
+																		<i class="fas fa-star"></i>
+																		<i class="fas fa-star"></i>
+																	{% endif %}
+																</div>
+															</div>
+															{% comment %} <p class="recommended"><i class="far fa-thumbs-up"></i> I recommend
+																the doctor</p> {% endcomment %}
+															<p class="comment-content">
+																{{cmn.comment}}
+															</p>
+
+														</div>
+													</div>							
+				
+												</li>
+												{% endfor %}				
+											</ul>
+				
+											<div class="all-feedback text-center">
+												<a href="#" class="btn btn-primary btn-sm">
+													Show all feedback <strong>({{total_dcmns}})</strong>
+												</a>
+											</div>
+				
+										</div>
+				
+				
+										<div class="write-review">
+											<h4>Write a review for <strong>Dr. {{doctor.doctor.fisrt_name|upper}} {{doctor.doctor.last_name|upper}}</strong></h4>
+											
+											{% if user.is_authenticated %}
+											{% if user.user_type == '4' %}
+											<form method="post" id="commentFrom" action="{% url 'ratingandcomment' %}">
+												{% csrf_token %}
+												<div class="form-group"> 
+													<label>Review</label>
+													<div class="star-rating">
+														<input id="star-5" type="radio" name="rating" value="5">
+														<label for="star-5" title="5 stars">
+															<i class="active fa fa-star"></i>
+														</label>
+														<input id="star-4" type="radio" name="rating" value="4">
+														<label for="star-4" title="4 stars">
+															<i class="active fa fa-star"></i>
+														</label>
+														<input id="star-3" type="radio" name="rating" value="3">
+														<label for="star-3" title="3 stars">
+															<i class="active fa fa-star"></i>
+														</label>
+														<input id="star-2" type="radio" name="rating" value="2">
+														<label for="star-2" title="2 stars">
+															<i class="active fa fa-star"></i>
+														</label>
+														<input id="star-1" type="radio" name="rating" value="1">
+														<label for="star-1" title="1 star">
+															<i class="active fa fa-star"></i>
+														</label>
+													</div>
+												</div>
+												<div class="form-group">
+													<label>Your review</label>
+													<textarea id="review_desc" maxlength="100" class="form-control"
+														name="comment"></textarea>
+														<input type="hidden" value="{{hospital.admin.id}}" name="HLP">
+														<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span
+																id="chars">100</span> characters
+															remaining</small></div>
+												</div>
+												<hr>
+												<div class="submit-section">
+													<button type="submit" class="btn btn-primary submit-btn">Add Review</button>
+												</div>
+											</form>
+											{% endif %}
+											{% else %}
+				
+											<a class="btn btn-rounded btn-primary"
+												href="{% url 'dologin' %}?next={{ request.path|urlencode }}"><i
+													class="fas fa-user-circle"></i> login /
+												Signup </a>
+											{% endif %}
+										</div>
+				
+									</div>
 								</div>
 								
 							</div>
-						
 						</div>
-						<div class="row">
-							
-							<div class="col-6">
-								<label class="form-label">Booking Type</label>
-								<select class="form-select" aria-label="Default select example" id="booking_type" name="booking_type" required>
-									<option value="">Select</option>
-									{% if doctor.emergency_charges %}
-									<option value="EMERGENCY">EMERGENCY</option>
-									{% endif %}
-									{% if doctor.opd_charges %}
-									<option value="OPD">OPD</option>
-									{% endif %}
-									{% if doctor.is_virtual_available %}
-									<option value="ONLINE">ONLINE</option>
-									{% endif %}
-									{% if doctor.home_charges %}
-									<option value="HOMEVISIT">HOME VISIT</option>
-									{% endif %}
-								</select>
-								<input type="hidden" value="{{date}}" name="date" id="date">
-								<input type="hidden" value="{{doctor.id}}" name="doctor_id">
-								<input type="hidden" value="hospital" name="orderwhere">
-							</div>
-							<div class="col-6">
-								<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')">
-								<label class="form-check-label" for="flexCheckDefault">
-									Is it for some else ? <a href="#large_someone" data-bs-toggle="modal" class="btn btn-primary btn-sm" tabindex="0">Add New.</span></a>
-								</label>
-							</div>
-								<div>
-								<select class="form-select mb-3" aria-label="Default select example" id ="someone" name="someone" disabled ="disabled">
-									{% for someone in someones %}
-									<option value="{{someone.id}}" selected>{{someone}}</option>
-									{% endfor %}
-								</select>
-								</div>
-							</div>
-							
-						</div>
-						
-					
-						<div class="submit-section proceed-btn text-end">
-							<a type="submit" onclick="myFunction()" class="btn btn-primary submit-btn"  value="check" id="acceptbtn">Proceed to Pay</a>
-						</div>
-					</form>
 					</div>
 				</div>
 			</div>

@@ -1,18 +1,11 @@
 {% extends 'front/blank-page.html' %}
-<<<<<<< HEAD
-{% load static %}  {% load humanize %}
-=======
-{% load static %} {% load humanize %}
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
+{% load static %} 
+{% load humanize %}
 {% block title %} Relief Pro - Hospital Profile | Hospital,Labs and Pharmacy Online Booking | Emergency
 Booking {% endblock title %}
 
 {% block custom_css %}
-<<<<<<< HEAD
-
-=======
 <link rel="stylesheet" href="{% static 'newstatic/assets/css/rating.css'%}">
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 {% endblock custom_css %}
 
 {% block content %}
@@ -51,7 +44,6 @@ Booking {% endblock title %}
 							<p class="doc-department"><img src="{{hospital.specialist.hover_icon}}" class="img-fluid"
 									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
 									alt="Speciality">Dentist</p>
-<<<<<<< HEAD
 							
 							<div class="rating">
 								{% if  rating <= 5 and rating > 4 %}
@@ -95,44 +87,6 @@ Booking {% endblock title %}
 									<i class="fas fa-star"></i>
 									<i class="fas fa-star"></i>
 									<i class="fas fa-star"></i>
-=======
-
-							<div class="rating">
-								{% if  rating <= 5 and rating > 4 %}
-								<i class="fas fa-star filled"></i>
-								<i class="fas fa-star filled"></i>
-								<i class="fas fa-star filled"></i>
-								<i class="fas fa-star filled"></i>
-								<i class="fas fa-star filled"></i>
-								{% endif %}
-								{% if rating <= 4 and rating > 3 %}
-								<i class="fas fa-star filled"></i>
-								<i class="fas fa-star filled"></i>
-								<i class="fas fa-star filled"></i>
-								<i class="fas fa-star filled"></i>
-								<i class="fas fa-star "></i>
-								{% endif %}
-								{% if rating <= 3 and rating > 2 %}
-								<i class="fas fa-star filled"></i>
-								<i class="fas fa-star filled"></i>
-								<i class="fas fa-star filled"></i>
-								<i class="fas fa-star "></i>
-								<i class="fas fa-star "></i>
-								{% endif %}
-								{% if rating <= 2 and rating > 1 %}
-								<i class="fas fa-star filled"></i>
-								<i class="fas fa-star filled"></i>
-								<i class="fas fa-star"></i>
-								<i class="fas fa-star"></i>
-								<i class="fas fa-star"></i>
-								{% endif %}
-								{% if rating <= 1 and rating > 0 %}
-								<i class="fas fa-star filled"></i>
-								<i class="fas fa-star"></i>
-								<i class="fas fa-star"></i>
-								<i class="fas fa-star"></i>
-								<i class="fas fa-star"></i>
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 								{% endif %}
 								<span class="d-inline-block average-rating">({{total_cmns}})</span>
 							</div>
@@ -251,22 +205,11 @@ Booking {% endblock title %}
 									</div>
 								</div>
 
-<<<<<<< HEAD
-=======
-
-							</div>
-						</div>
-					</div>
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 
 							</div>
 						</div>
 					</div>
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 					<div role="tabpanel" id="doctor_list" class="tab-pane fade show active">
 						{% for doctor in doctors %}
 						<div class="card">
@@ -285,7 +228,54 @@ Booking {% endblock title %}
 											<p class="doc-department"><img src="{{doctor.doctor.profile_pic}}"
 													onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
 													class="img-fluid" alt="Speciality">{{doctor.doctor.specialist}}</p>
+													<div class="rating">
+														{% if  drating <= 5 and drating > 4 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i> 
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+														{% endif %}
+														{% if drating <= 4 and drating > 3 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i> 
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star "></i>
+														{% endif %}
+														{% if drating <= 3 and drating > 2 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i> 
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star "></i>
+															<i class="fas fa-star "></i>
+														{% endif %}
+														{% if rating <= 2 and rating > 1 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i> 
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+														{% endif %}
+														{% if drating <= 1 and drating > 0 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star"></i> 
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+														{% endif %}
+														{% if drating == 0 %}
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i> 
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+														{% endif %}
+														{% if total_dcmns %}
+														<span class="d-inline-block average-rating">({{total_dcmns}})</span>{% endif %}
+													</div>
 										</div>
+										
 									</div>
 									<div class="doc-info-right">
 										<div class="clini-infos">
@@ -339,9 +329,6 @@ Booking {% endblock title %}
 
 
 					<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
-<<<<<<< HEAD
-
-=======
 						<!-- Add icon library -->
 						<link rel="stylesheet"
 							href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -443,20 +430,12 @@ Booking {% endblock title %}
 							</div>
 						</div>
 						<hr style="border:3px solid #f1f1f1">
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 						<div class="widget review-listing">
 							<ul class="comments-list">
 								{% for cmn in cmns %}
 								<li>
 									<div class="comment">
 										<img class="avatar avatar-sm rounded-circle" alt="User Image"
-<<<<<<< HEAD
-											src="{{cmn.patient.patients.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
-										<div class="comment-body">
-											<div class="meta-data"> 
-												<span class="comment-author">{{cmn.patient.name_title}} {{cmn.patient.patients.fisrt_name}} {{cmn.patient.patients.last_name}}</span>
-												<span class="comment-date">Reviewed {{cmn.created_date|naturaltime}}</span>
-=======
 											src="{{cmn.patient.patients.profile_pic}}"
 											onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 										<div class="comment-body">
@@ -466,7 +445,6 @@ Booking {% endblock title %}
 													{{cmn.patient.patients.last_name}}</span>
 												<span class="comment-date">Reviewed
 													{{cmn.created_date|naturaltime}}</span>
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 												<div class="review-count rating">
 													{% if cmn.rating == 5 %}
 													<i class="fas fa-star filled"></i>
@@ -474,10 +452,6 @@ Booking {% endblock title %}
 													<i class="fas fa-star filled"></i>
 													<i class="fas fa-star filled"></i>
 													<i class="fas fa-star filled"></i>
-<<<<<<< HEAD
-=======
-													<i class="fas fa-star filled"></i>
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 													{% endif %}
 													{% if cmn.rating == 4 %}
 													<i class="fas fa-star filled"></i>
@@ -491,31 +465,17 @@ Booking {% endblock title %}
 													<i class="fas fa-star filled"></i> 
 													<i class="fas fa-star filled"></i>
 													<i class="fas fa-star "></i>
-<<<<<<< HEAD
-=======
-													{% endif %}
-													{% if cmn.rating == 3 %}
-													<i class="fas fa-star filled"></i>
-													<i class="fas fa-star filled"></i>
-													<i class="fas fa-star filled"></i>
-													<i class="fas fa-star "></i>
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 													<i class="fas fa-star "></i>
 													{% endif %}
 													{% if cmn.rating == 2 %}
 													<i class="fas fa-star filled"></i>
-<<<<<<< HEAD
 													<i class="fas fa-star filled"></i> 
-=======
-													<i class="fas fa-star filled"></i>
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 													<i class="fas fa-star"></i>
 													<i class="fas fa-star"></i>
 													<i class="fas fa-star"></i>
 													{% endif %}
 													{% if cmn.rating == 1 %}
 													<i class="fas fa-star filled"></i>
-<<<<<<< HEAD
 													<i class="fas fa-star"></i> 
 													<i class="fas fa-star"></i>
 													<i class="fas fa-star"></i>
@@ -531,26 +491,11 @@ Booking {% endblock title %}
 												</div>
 											</div>
 											{% comment %} <p class="recommended"><i class="far fa-thumbs-up"></i> I recommend
-=======
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													{% endif %}
-												</div>
-											</div>
-											{% comment %} <p class="recommended"><i class="far fa-thumbs-up"></i> I
-												recommend
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 												the doctor</p> {% endcomment %}
 											<p class="comment-content">
 												{{cmn.comment}}
 											</p>
-<<<<<<< HEAD
 										{% comment %} <div class="comment-reply">
-=======
-											{% comment %} <div class="comment-reply">
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 												<a class="comment-btn" href="#">
 													<i class="fas fa-reply"></i> Reply
 												</a>
@@ -563,11 +508,7 @@ Booking {% endblock title %}
 														<i class="far fa-thumbs-down"></i> No
 													</a>
 												</p>
-<<<<<<< HEAD
 											</div> 
-=======
-											</div>
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 										</div> {% endcomment %}
 									</div>
 
@@ -633,15 +574,12 @@ Booking {% endblock title %}
 
 						<div class="write-review">
 							<h4>Write a review for <strong>{{hospital.hopital_name|upper}}</strong></h4>
-
+							
 							{% if user.is_authenticated %}
+							{% if user.user_type == '4' %}
 							<form method="post" id="commentFrom" action="{% url 'ratingandcomment' %}">
 								{% csrf_token %}
-<<<<<<< HEAD
 								<div class="form-group"> 
-=======
-								<div class="form-group">
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 									<label>Review</label>
 									<div class="star-rating">
 										<input id="star-5" type="radio" name="rating" value="5">
@@ -670,13 +608,9 @@ Booking {% endblock title %}
 									<label>Your review</label>
 									<textarea id="review_desc" maxlength="100" class="form-control"
 										name="comment"></textarea>
-<<<<<<< HEAD
 										<input type="hidden" value="{{hospital.admin.id}}" name="HLP">
+										<input type="hidden" value="hospital" name="pagename">
 										<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span
-=======
-									<input type="hidden" value="{{hospital.admin.id}}" name="HLP">
-									<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 												id="chars">100</span> characters
 											remaining</small></div>
 								</div>
@@ -685,16 +619,12 @@ Booking {% endblock title %}
 									<button type="submit" class="btn btn-primary submit-btn">Add Review</button>
 								</div>
 							</form>
+							{% endif %}
 							{% else %}
-<<<<<<< HEAD
-							
-							<a class="btn btn-rounded btn-primary" href="{% url 'dologin' %}"><i class="fas fa-user-circle"></i> login /
-=======
 
 							<a class="btn btn-rounded btn-primary"
 								href="{% url 'dologin' %}?next={{ request.path|urlencode }}"><i
 									class="fas fa-user-circle"></i> login /
->>>>>>> 62de15690890808c1065f2ff44ff894ba39752a4
 								Signup </a>
 							{% endif %}
 						</div>

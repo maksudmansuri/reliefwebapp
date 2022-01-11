@@ -1,62 +1,37 @@
-
-{% extends './accountsBase.html' %} 
+{% extends './blank-page.html' %}
 {% load static %}
-{% block custom_css %}
+{% block custom_css %} 
 {% endblock custom_css %}
-    
+{% block title %}Doctor Signup{% endblock title %}
 {% block content %}
-                    <div class="col-lg-6 d-flex justify-content-center align-items-center border-0 rounded-lg auth-h100">
-                        <div class="w-100 p-3 p-md-5 card border-0 bg-dark text-light" style="max-width: 32rem;">
-                            <!-- Form -->
-                            <form class="row g-1 p-3 p-md-0" method="post" action="{% url 'doctorsingup' %}">
+
+	<div class="main-wrapper login-body">
+		<div class="login-wrapper">
+			<div class="container">
+				<div class="loginbox">
+					<div class="login-left">
+						<img class="img-fluid" src="{% static 'newstatic/admin/assets/img/logo-white.png' %} " alt="Logo">
+					</div>
+					<div class="login-right">
+						<div class="login-right-wrap">
+							<h1>Doctor Register</h1>
+							<p class="account-subtitle">Access to our dashboard</p>
+
+							<form method="post" action="{% url 'doctorsingup' %}">
                             {% csrf_token %}
-                                <div class="col-12 text-center mb-0">
-                                    <h2>Create your account</h2>
-                                    <span>Free access to our dashboard.</span>
-                                </div>
-                                <div class="col-6">
-                                    <div class="mb-1">
-                                        <label class="form-label">First name</label>
-                                        <input type="text" class="form-control" placeholder="John" name="first_name" id="first_name">
-                                    </div>
-                                </div>                               
-                                <div class="col-6">
-                                    <div class="mb-1">
-                                        <label class="form-label">Last name</label>
-                                        <input type="text" class="form-control" placeholder="Parker" name="last_name" id="last_name">
-                                    </div>
-                                </div>
-                                 <div class="col-12">
-                                    <div class="mb-1">
-                                        <label class="form-label">Username</label>
-                                        <input type="text" class="form-control" placeholder="John" name="username" id="username">
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="mb-1">
-                                        <label class="form-label">Email address</label>
-                                        <input type="email" class="form-control " placeholder="name@example.com" name="email" id="email">
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="mb-1">
-                                        <label class="form-label">Mobile</label>
-                                        <input type="tel" class="form-control " placeholder="name@example.com" name="phone" id="phone">
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="mb-1">
-                                        <label class="form-label">Password</label>
-                                        <input type="password" class="form-control " placeholder="8+ characters required" name="password" id="password1">
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="mb-1">
-                                        <label class="form-label">Confirm password</label>
-                                        <input type="password" class="form-control " placeholder="8+ characters required" name="password2" id="password2">
-                                    </div>
-                                </div>
-                                <div class="col-12">
+								<div class="form-group">
+									<input class="form-control" type="email" placeholder="name@example.com" name="email" id="email">
+								</div>
+								<div class="form-group">
+									<input class="form-control" type="tel"  placeholder="9898******" name="phone" id="phone">
+								</div>
+								<div class="form-group">
+									<input class="form-control" type="password" placeholder="Password" name="password" id="password1">
+								</div>
+								<div class="form-group">
+									<input class="form-control" type="password" placeholder="Confirm Password" name="password2" id="password2">
+								</div>
+								<div class="col-12">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')">
                                         <label class="form-check-label" for="flexCheckDefault">
@@ -64,18 +39,30 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-12 text-center mt-3">
-                                    <button type="submit" class="btn btn-lg btn-block btn-light lift text-uppercase" disabled="disabled" value="check" id="acceptbtn" alt="SIGNUP">SIGN UP</button>
-                                </div>
-                                <div class="col-12 text-center mt-4">
-                                    <span>Already have an account? <a href="{% url 'dologin' %}" title="Sign in" >Sign in here</a></span>
-                                </div>
-                            </form>
-                            <!-- End Form -->
-                            
-                        </div>
-                    </div>               
-    
+								<div class="form-group mb-0">
+									<button class="btn btn-primary w-100" disabled="disabled" value="check" id="acceptbtn" type="submit">Register</button>
+								</div>
+							</form>
+
+							<div class="login-or">
+								<span class="or-line"></span>
+								<span class="span-or">or</span>
+							</div>
+
+							<div class="social-login">
+								<span>Register with</span>
+								<a href="#" class="facebook"><i class="fa fa-facebook"></i></a><a href="#" class="google"><i
+										class="fa fa-google"></i></a>
+							</div>
+
+							<div class="text-center dont-have">Already have an account? <a href="{% url 'dologin' %}">Login</a></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+  
 {% endblock content %}
 
 {% block custom_js %}

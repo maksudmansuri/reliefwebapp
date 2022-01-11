@@ -686,10 +686,11 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
             paginator = Paginator(doctors, 6) # Show 25 contacts per page.
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
+            specailists = Specailist.objects.all() 
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")
             return HttpResponseRedirect(reverse("manage_doctor"))        
-        param={'hospital':hospital,'doctors':doctors,'is_virtual_available_check':is_virtual_available_check,'page_obj':page_obj}
+        param={'hospital':hospital,'doctors':doctors,'is_virtual_available_check':is_virtual_available_check,'page_obj':page_obj,'specailists':specailists}
         return render(request,"hospital/new_manage_doctor.html",param)        
 
     def post(self, request, *args, **kwargs):
@@ -697,10 +698,18 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
         first_name = request.POST.get("fisrt_name")
         last_name = request.POST.get("last_name")
         name_title = request.POST.get("name_title")
-        username = first_name + last_name
         user_type = 3
-        email = request.POST.get("email")
-        phone = request.POST.get("phone")
+        email = request.POST.get('email')
+        e=CustomUser.objects.filter(email=email)
+        if e.count(): 
+            messages.add_message(request,messages.ERROR,"Email Already Exits")     
+            return HttpResponseRedirect(reverse("manage_doctor"))
+            
+        phone = request.POST.get('phone')
+        p=CustomUser.objects.filter(phone=phone)
+        if p.count():
+            messages.add_message(request,messages.ERROR,"Phone Already Exits")
+            return HttpResponseRedirect(reverse("manage_doctor"))
         profile_pic = request.FILES.get("profile_pic")
         # for HospitalDoctor user Creation
         address = request.POST.get("address")
@@ -710,7 +719,7 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
         country = request.POST.get("country")
         zip_Code = request.POST.get("zip_Code")
         degree = request.POST.get("degree")
-        specialist = request.POST.get("specialist")
+        specialist_id = request.POST.get("specialist")
         dob = request.POST.get("dob")
         alternate_mobile = request.POST.get("alternate_mobile")
         gender = request.POST.get("gender")
@@ -721,32 +730,75 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
         online_charges = request.POST.get("online_charges")
         emergency_charges = request.POST.get("emergency_charges")
         is_active = request.POST.get("is_active")
+        
         is_virtual = request.POST.get("is_virtual_available")
-        print(is_virtual)
         is_virtual_available = False
         if is_virtual == "Yes":
             is_virtual_available = True
+        is_homevisit = request.POST.get("is_homevisit_available")
+        is_homevisit_available = False
+        if is_homevisit == "Yes":
+            is_homevisit_available = True
         facebook = request.POST.get("facebook")
         instagram = request.POST.get("instagram")
         linkedin = request.POST.get("linkedin")
+        about = request.POST.get("about")
         active = False
         if is_active == "on":
             active= True
-        
-        print(profile_pic)
-        profile_pic_url = ""
-        if profile_pic:
-            fs=FileSystemStorage()
-            filename=fs.save(profile_pic.name,profile_pic)
-            media_url=fs.url(filename)
-            profile_pic_url = media_url
-        print(profile_pic_url)
         hospital=Hospitals.objects.get(admin=request.user)
 
-        doctor = HospitalDoctors(fisrt_name=first_name,last_name=last_name,address=address,city=city,state=state,country=country,zip_Code=zip_Code,phone=phone,degree=degree,dob=dob,alternate_mobile=alternate_mobile,profile_pic=profile_pic_url,gender=gender,facebook=facebook,instagram=instagram,linkedin=linkedin,specialist=specialist)
-        doctor.save()
+        account = CustomUser.objects.create_user(username=phone,password=email,email=email)
+        account.user_type=3
+        account.phone=phone
+        patient = HospitalDoctors()
+        patient.admin = account
+        patient.save()
+        account.is_active = True
+        account.save()
+        if profile_pic:
+            fs=FileSystemStorage()
+            filename1=fs.save(profile_pic.name,profile_pic)
+            profile_pic_url=fs.url(filename1)
+            account.profile_pic=profile_pic_url
+            account.hospitaldoctors.profile_pic=profile_pic_url    
+        account.hospitaldoctors.fisrt_name=first_name
+        account.hospitaldoctors.name_title=name_title
+        account.hospitaldoctors.last_name=last_name
+        account.hospitaldoctors.address=address
+        account.hospitaldoctors.city=city
+        account.hospitaldoctors.state=state
+        account.hospitaldoctors.country=country
+        account.hospitaldoctors.zip_Code=zip_Code
+        account.hospitaldoctors.phone=phone
+        account.hospitaldoctors.degree=degree
+        account.hospitaldoctors.dob=dob
+        account.hospitaldoctors.alternate_mobile=alternate_mobile
+        account.hospitaldoctors.profile_pic=profile_pic_url
+        account.hospitaldoctors.gender=gender
+        account.hospitaldoctors.facebook=facebook
+        account.hospitaldoctors.instagram=instagram
+        account.hospitaldoctors.linkedin=linkedin
+        account.hospitaldoctors.about=about
+        hospital.is_appiled=True
+        hospital.is_active=active
+        hospital.is_virtual_available=is_virtual_available
+        hospital.is_homevisit_available=is_homevisit_available
+        hospital.is_verified=False
+        hospital.gender=gender
+        hospital.opd_charges=opd_charges
+        hospital.online_charges=online_charges
+        hospital.emergency_charges=emergency_charges
+        hospital.home_charges=home_charges
+        hospital.is_hospital_added=True
+        specialist = Specailist.objects.get(id=specialist_id)
+        account.hospitaldoctors.specialist=specialist
+        account.first_name = first_name
+        account.last_name = last_name
+        account.name_title = name_title
+        account.hospitaldoctors.save()
        
-        staffdoctor= HospitalStaffDoctors(doctor=doctor,hospital=hospital,joindate=joindate,is_active=active,ssn_id=ssn_id,is_virtual_available=is_virtual_available,email=email,emergency_charges=emergency_charges,home_charges=home_charges,online_charges=online_charges,opd_charges=opd_charges)
+        staffdoctor= HospitalStaffDoctors(doctor=account.hospitaldoctors,hospital=hospital,joindate=joindate,is_active=active,ssn_id=ssn_id,is_virtual_available=is_virtual_available,email=email,emergency_charges=emergency_charges,home_charges=home_charges,online_charges=online_charges,opd_charges=opd_charges)
         staffdoctor.is_active=True
         staffdoctor.save()
        
@@ -763,10 +815,10 @@ def updateDoctor(request):
         first_name = request.POST.get("fisrt_name")
         last_name = request.POST.get("last_name")
         name_title = request.POST.get("name_title")
-        username = first_name + last_name
-        user_type = 3
         email = request.POST.get("email")
         phone = request.POST.get("phone")
+        specialist_id = request.POST.get("specialist")
+        degree = request.POST.get("degree")
         profile_pic = request.FILES.get("profile_pic")
         # for HospitalDoctor user Creation
         address = request.POST.get("address")
@@ -781,24 +833,34 @@ def updateDoctor(request):
         # for Hospital staff user creation
         joindate = request.POST.get("joindate")
         is_active = request.POST.get("is_active")
-        opd_charges = request.POST.get("opd_charges")
+        opd_charges = request.POST.get("opd_charges")       
         home_charges = request.POST.get("home_charges")
         online_charges = request.POST.get("online_charges")
         emergency_charges = request.POST.get("emergency_charges")
+        about = request.POST.get("about")
+        if opd_charges == "":
+            opd_charges = 0
+        if emergency_charges == "":
+            emergency_charges = 0
+        if home_charges == "":
+            home_charges = 0
+        if online_charges == "":
+            online_charges = 0
         active = False
         if is_active == "on":
             active= True
         is_virtual = request.POST.get("is_virtual_available")
-        print("hello virtual")
-        print(is_virtual)
         is_virtual_available = False
         if is_virtual == "Yes":
             is_virtual_available = True
+        is_homevisit = request.POST.get("is_homevisit_available")
+        is_homevisit_available = False
+        if is_homevisit == "Yes":
+            is_homevisit_available = True
+        print(is_virtual,is_homevisit)
         facebook = request.POST.get("facebook")
         instagram = request.POST.get("instagram")
         linkedin = request.POST.get("linkedin")
-        
-        
 
         hospital=Hospitals.objects.get(admin=request.user)
         doctor=HospitalDoctors.objects.get(id=doctorid)
@@ -811,32 +873,46 @@ def updateDoctor(request):
         staffdoctor.emergency_charges=emergency_charges
         staffdoctor.home_charges=home_charges
         staffdoctor.is_active=active
-        staffdoctor.ssn_id=ssn_id
-        staffdoctor.email=email
+        staffdoctor.ssn_id=ssn_id       
         staffdoctor.doctor=doctor
         staffdoctor.is_virtual_available=is_virtual_available
+        staffdoctor.is_homevisit_available=is_homevisit_available
         staffdoctor.save()
         staffdoctor.doctor.fisrt_name=first_name
         staffdoctor.doctor.last_name=last_name
+        staffdoctor.doctor.name_title=name_title
         staffdoctor.doctor.address=address
         staffdoctor.doctor.city=city
         staffdoctor.doctor.state=state
         staffdoctor.doctor.country=country
-        staffdoctor.doctor.zip_Code=zip_Code
-        staffdoctor.doctor.phone=phone        
+        staffdoctor.doctor.zip_Code=zip_Code       
+        staffdoctor.doctor.degree=degree 
+        staffdoctor.doctor.is_appiled=True 
+        specialist = Specailist.objects.get(id=specialist_id) 
+        staffdoctor.doctor.specialist=specialist        
+        staffdoctor.doctor.about=about        
         staffdoctor.doctor.facebook=facebook
         staffdoctor.doctor.instagram=instagram
         staffdoctor.doctor.linkedin=linkedin
+        staffdoctor.doctor.is_virtual_available=is_virtual_available
+        staffdoctor.doctor.is_homevisit_available=is_homevisit_available
         staffdoctor.doctor.dob=dob
         staffdoctor.doctor.alternate_mobile=alternate_mobile
+        staffdoctor.doctor.is_verified=True
         profile_pic_url = staffdoctor.doctor.profile_pic
         if profile_pic:
             fs=FileSystemStorage()
             filename=fs.save(profile_pic.name,profile_pic)
             media_url=fs.url(filename)
             profile_pic_url = media_url
-        staffdoctor.doctor.profile_pic=profile_pic_url
+            staffdoctor.doctor.profile_pic=profile_pic_url
+            staffdoctor.doctor.admin.profile_pic=profile_pic_url
         staffdoctor.doctor.gender=gender
+        staffdoctor.doctor.opd_charges=opd_charges
+        staffdoctor.doctor.home_charges=home_charges
+        staffdoctor.doctor.emergency_charges=emergency_charges
+        staffdoctor.doctor.online_charges=online_charges
+        staffdoctor.doctor.is_hospital_added=True
         staffdoctor.doctor.save()
         return HttpResponseRedirect(reverse("manage_doctor"))
 
@@ -1450,7 +1526,6 @@ def ReliefPatientViewsFiles(request,id):
             messages.add_message(request,messages.ERROR,"user not available")
             return HttpResponseRedirect(reverse("relief_patient_profile",kwargs={'id':treatmentreliefpetient.id}))
     
-
 class manageReliefPatientViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
         try:

@@ -103,11 +103,11 @@ urlpatterns = [
     re_path('verifybooking',views.verifybooking,name="verifybooking"),
     
     #Blog Urls
-    path('add_blog',views.addBlogView.as_view(),name="add_blog"),
-    path('list_blog',views.blogListView.as_view(),name="list_blog"),
-    path('edit_blog/<id>',views.EditBlogUpdateView.as_view(),name="edit_blog"),
-    path('active_blog/<id>',views.activeBlog,name="active_blog"),
-    path('inactive_blog/<id>',views.inactiveBlog,name="inactive_blog"),
+    # path('add_blog',views.addBlogView.as_view(),name="add_blog"),
+    # path('list_blog',views.blogListView.as_view(),name="list_blog"),
+    # path('edit_blog/<id>',views.EditBlogUpdateView.as_view(),name="edit_blog"),
+    # path('active_blog/<id>',views.activeBlog,name="active_blog"),
+    # path('inactive_blog/<id>',views.inactiveBlog,name="inactive_blog"),
 
 
 ]  

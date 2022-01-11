@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"> 
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+	<title>Relief  - {% block title %}Blank Page {% endblock title %} </title>
+
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'newstatic/assets/img/favicon.png'%}">
+
+
+	<link rel="stylesheet" href="{% static 'newstatic/assets/css/bootstrap.min.css' %} ">
+
+	<link rel="stylesheet" href="{% static 'newstatic/assets/plugins/fontawesome/css/fontawesome.min.css'%}">
+	<link rel="stylesheet" href="{% static 'newstatic/assets/plugins/fontawesome/css/all.min.css'%}">
+
+
+	<link rel="stylesheet" href="{% static 'newstatic/assets/css/font-awesome.min.css'%}">
+	<link rel="stylesheet" href="{% static 'newstatic/assets/plugins/select2/css/select2.min.css'%}">
+
+	<link rel="stylesheet" href="{% static 'newstatic/assets/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css'%}">
+	<link rel="stylesheet" href="{% static 'newstatic/assets/plugins/dropzone/dropzone.min.css'%}">
+
+	<link rel="stylesheet" href="{% static 'newstatic/assets/css/feathericon.min.css'%}">
+	<link rel="stylesheet" href="{% static '/radmin/assets/plugin/datatables/responsive.dataTables.min.css' %}
+    ">
+	<link rel="stylesheet" href="{% static '/radmin/assets/plugin/datatables/dataTables.bootstrap5.min.css'  %}">
+	<link rel="stylesheet" href="{% static 'newstatic/assets/css/style.css'%}">
+	<!--[if lt IE 9]>
+			<script src="assets/js/html5shiv.min.js"></script>
+			<script src="assets/js/respond.min.js"></script>
+		<![endif]-->
+	{% block custom_css %}{% endblock custom_css %}
+</head>
+
+<body>
+
+	<div class="main-wrapper">
+		
+	 
+		{% include './newnavbar.html' %}
+		{% include './newbreadcrumb.html' %}
+		
+   	<div class="content">
+			<div class="container-fluid">
+				<div>
+					{% if messages %}  
+						{% for message in messages  %}
+							{% if message.tags == "error" %}
+								<div class="alert alert-danger alert-dismissible fade show" role="alert">
+									<strong> {{message}}</strong>
+									<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+								</div>               
+							{% endif %}
+							{% if message.tags == "success" %}
+									<div class="alert alert-primary alert-dismissible fade show" role="alert">
+										<strong>{{message}}</strong> 
+										<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+									</div>
+							
+							{% endif %}
+					{% endfor %}
+				{% endif %}
+				</div>
+				<div class="row">
+					<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+
+					{% include './newsidebar.html' %}
+                    </div>
+				
+            {% block content %}
+			
+        	{% endblock content %}
+            </div>
+        </div>
+    </div>
+
+						 
+					
+	</div>
+	{% include 'hospital/newfooter.html' %}
+ 
+	{% block modal_fade %}
+	{% endblock modal_fade %}
+
+	<script data-cfasync="false" src="{% static 'newstatic/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js'%}"></script>
+	<script src="{% static 'newstatic/assets/js/jquery-3.6.0.min.js'%}"></script>
+
+	<script src="{% static 'newstatic/assets/js/bootstrap.bundle.min.js'%}"></script>
+
+	<script src="{% static 'newstatic/assets/plugins/theia-sticky-sidebar/ResizeSensor.js'%}"></script>
+	<script src="{% static 'newstatic/assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js'%}"></script>
+
+	<script src="{% static 'newstatic/assets/js/circle-progress.min.js'%}"></script>
+	<script src="{% static 'newstatic/assets/plugins/select2/js/select2.min.js'%}"></script>
+
+	<script src="{% static 'newstatic/assets/plugins/dropzone/dropzone.min.js'%}"></script>
+
+	<script src="{% static 'newstatic/assets/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.js'%}"></script>
+
+	<script src="{% static 'newstatic/assets/js/profile-settings.js'%}"></script>
+	<script src="{% static '/radmin/assets/bundles/dataTables.bundle.js'%}"></script>  
+
+	<script src="{% static 'newstatic/assets/js/script.js'%}"></script>
+	
+<script>
+    var user = '{{request.user.id}}'
+    console.log(user)
+    if(window.location.protocol == 'https'){
+        wsProtocol = 'wss://'
+    }else{ wsProtocol = 'ws://'}
+    let socket =  new WebSocket(wsProtocol + window.location.host +'/ws/notification/' + user)
+
+    socket.onopen = function(e){
+        console.log("connected with notifications")
+    }
+    
+    socket.onmessage = function(e){
+        console.log(e.data)
+        var data = JSON.parse(e.data)
+        var time = jQuery.timeago(data.payload.created_at);
+        var count1 = data.count
+        document.getElementById('notification_count').innerHTML = count1
+        document.getElementById('notification_count1').innerHTML = count1
+        if(data){
+            var mystr = `<li class="py-2 mb-1 border-bottom">
+                            <a href="javascript:void(0);" class="d-flex">
+                                <img class="avatar rounded-circle" src="${data.payload.from_user_profile_pic}" alt="">
+                                <div class="flex-fill ms-2">
+                                    <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">${data.payload.name}</span> <small>${time}</small></p>
+                                    <span class="">Appointment For ${data.payload.booking} <span class="badge bg-success">Booked</span></span>
+                                </div>
+                            </a>
+                        </li>`
+            $('#linotification').prepend(mystr);
+        }
+       // increaseProgress(data.from_user,data.notification_type,data.user_has_seen,data.booking)
+    }
+    socket.onclose = function(e){
+        console.log("disconnected with notifications")
+    }
+    function increaseProgress(from_user,notification_type,user_has_seen,booking){
+        var status_js = document.querySelector('#status')
+        status_js.innerHTML = status
+    }
+	
+</script>
+
+{% block custom_js %}{% endblock custom_js %}
+</body>
+
+
+</html>

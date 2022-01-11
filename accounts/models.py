@@ -72,6 +72,7 @@ class CustomUser(AbstractBaseUser):
     otp_session_id  = models.CharField(max_length=120, null=True, default = "")
     otp              = models.CharField(max_length=120, null=True, default = "")
     profile_pic         =models.FileField(upload_to="user/profile_pic",max_length=500,null=True,default="")
+    # force_to_psswd_chngd = models.BooleanField(blank=False, default=True) 
     USERNAME_FIELD = 'email' 
 
     REQUIRED_FIELDS = ['username',]
@@ -208,6 +209,7 @@ class Patients(models.Model):
     is_donated           =models.BooleanField(blank=True,null=True,default=False)
     blood_donation           =models.BooleanField(blank=True,null=True,default=False)
     is_active           =models.BooleanField(blank=True,null=True,default=False)
+    is_verified         =models.BooleanField(blank=True,null=True,default=False)
     created_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
     updated_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
     objects             =models.Manager()
@@ -218,7 +220,7 @@ class Patients(models.Model):
         
 class HospitalDoctors(models.Model):
     id                  =models.AutoField(primary_key=True)
-    # admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
     name_title          =models.CharField(max_length=256,blank=True,null=True,default="")
     fisrt_name          =models.CharField(max_length=250,blank=True,null=True,default="")
     last_name           =models.CharField(max_length=250,blank=True,null=True,default="")
@@ -229,9 +231,9 @@ class HospitalDoctors(models.Model):
     zip_Code            =models.CharField(max_length=250,blank=True,null=True,default="")
     phone               =models.CharField(max_length=50,default="",blank=True,null=True)
     degree              =models.CharField(max_length=50,default="",blank=True,null=True)
-    specialist          =models.CharField(max_length=50,default="",blank=True,null=True)
+    specialist          =models.ForeignKey(Specailist,on_delete=models.CASCADE,blank=True,null=True,default="")
     about               =models.CharField(max_length=500,default="",blank=True,null=True)
-    dob                 =models.DateField(blank=True,null=True,default="")
+    dob                 =models.DateField(blank=True,null=True)
     alternate_mobile    =models.CharField(max_length=250,blank=True,null=True,default="")
     profile_pic         =models.FileField(upload_to="Doctor/profile/images",blank=True,null=True)
     gender              =models.CharField(max_length=255,null=True,default="")
@@ -240,7 +242,17 @@ class HospitalDoctors(models.Model):
     instagram           =models.URLField(max_length=256,blank=True,null=True,default="")
     is_appiled          =models.BooleanField(blank=True,null=True,default=False)
     is_verified         =models.BooleanField(blank=True,null=True,default=False)
-    created_at          =models.DateTimeField(auto_now=True,blank=True,null=True)
+    opd_charges         =models.FloatField(default=0,blank=True,null=True)
+    home_charges        =models.FloatField(default=0,blank=True,null=True)
+    emergency_charges    =models.FloatField(default=0,blank=True,null=True)
+    online_charges    =models.FloatField(default=0,blank=True,null=True)
+    is_virtual_available=models.BooleanField(blank=True,null=True,default=False)   
+    is_homevisit_available=models.BooleanField(blank=True,null=True,default=False)   
+    is_online           =models.BooleanField(blank=True,null=True,default=False)   
+    is_hospital_added   =models.BooleanField(blank=True,null=True,default=True) 
+    is_deactive         =models.BooleanField(blank=True,null=True,default=False) 
+    is_active           =models.BooleanField(blank=True,null=True,default=False) 
+    created_at          =models.DateTimeField(auto_now_add=True,blank=True,null=True)
     updated_at          =models.DateTimeField(auto_now_add=True,blank=True,null=True)
     objects             =models.Manager()
     

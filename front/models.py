@@ -12,6 +12,7 @@ class RatingAndComments(models.Model):
     rating = models.IntegerField(null=True,blank=True)
     comment = models.TextField(null=True,blank=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE,null=True)
+    is_active = models.BooleanField(default=True,null=True,blank=True)
     created_date = models.DateTimeField(auto_now_add=True,blank=True,null=True)
     objects = models.Manager()
 

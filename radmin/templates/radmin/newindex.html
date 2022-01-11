@@ -24,6 +24,10 @@
 								data-bs-toggle="tab">Hospital {{chospital}}</a>
 						</li>
 						<li class="nav-item">
+							<a class="nav-link" href="#doctor"
+								data-bs-toggle="tab">Doctors {{cdoctor}}</a>
+						</li>
+						<li class="nav-item">
 							<a class="nav-link" href="#pat_prescriptions"
 								data-bs-toggle="tab">Laboratory {{clab}}</a>
 						</li>
@@ -123,6 +127,82 @@
 						</div>
 					</div>
 
+					<div id="doctor" class="tab-pane fade">
+						<div class="card mb-3">
+							<div class="card-body">
+								<table id="myProjectTable3" class="table table-hover align-middle mb-0" style="width:100%">
+									<thead>
+										<tr>
+											<th>Code</th>
+											<th>Doctor Name</th> 
+											<th>City</th> 
+											<th>Phone</th>   
+											<th>Orders</th>   
+											<th>Actions</th>  
+										</tr>
+									</thead> 
+									<tbody> 
+									{% for doctor in hospitaldoctors_list %}
+										<tr>
+											<td>
+												<span class="fw-bold">DT00{{doctor.id}}</span>
+											</td> 
+											<td>
+												<img class="avatar rounded-circle" src="{{doctor.profile_pic}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+												<span class="fw-bold ms-1">{{doctor.admin.name_title}} {{doctor.fisrt_name}} {{doctor.last_name}}</span>
+											</td>
+											<td>
+												{{doctor.city}}
+											</td>
+											<td>
+												 {{doctor.admin.phone}}
+											</td>
+										   
+											</td>
+											{% if doctor.is_verified is not True %}
+												{% if doctor.is_appiled %}
+												<td>
+													<a href="{% url 'doctorsactivate' doctor.id %}" class="btn btn-primary">Appllied</a>
+												</td>
+											   {% elif doctor.is_deactive%}
+												<td>
+														<a href="{% url 'doctorsactivate' doctor.id %}"  class="btn btn-danger" disabled>Rejected</a>
+												</td>
+												{% else %}
+												<td>
+													<a class="btn btn-warning">Progess</a>
+												</td>
+												{% endif %}
+											
+											{% else %}
+												<td>
+													<a href="{% url 'doctorsdeactivate' doctor.id %}" class="btn btn-success">Activated</a>
+												</td>
+											{%endif%}
+											<!-- /btn-group -->
+												<td>
+												<div class="btn-group">
+													<button type="button" class="btn btn-primary">Action</button>
+													<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+														<span class="visually-hidden">Toggle Dropdown</span>
+													</button>
+													<ul class="dropdown-menu border-0 shadow py-3 px-2">
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'doctor_profile_admin' doctor.id %}">View Profile</a></li>
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'radmin_doctor_update' doctor.id %}">Edit</a></li>
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'doctor_delete_admin' doctor.id %}">Delete</a></li>
+														<li><hr class="dropdown-divider"></li>
+														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.patient.id}}">Contact Person</a></li>
+													</ul>
+												</div></td><!-- /btn-group -->
+											
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
 					<div class="tab-pane fade" id="pat_prescriptions">
 						<div class="card mb-3">
 							<div class="card-body">
@@ -188,7 +268,8 @@
 														<span class="visually-hidden">Toggle Dropdown</span>
 													</button>
 													<ul class="dropdown-menu border-0 shadow py-3 px-2">
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'labs_profile_admin' hospital.id %}">View Profile</a></li
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'labs_profile_admin' hospital.id %}">View Profile</a></li>
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'radmin_lab_update' hospital.id %}">Edit</a></li>
 														<li><a class="dropdown-item py-2 rounded" href="{% url 'labs_delete_admin' hospital.id %}">Delete</a></li>
 														<li><hr class="dropdown-divider"></li>
 														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
@@ -268,7 +349,8 @@
 														<span class="visually-hidden">Toggle Dropdown</span>
 													</button>
 													<ul class="dropdown-menu border-0 shadow py-3 px-2">
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_profile_admin' hospital.id %}">View Profile</a></li
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_profile_admin' hospital.id %}">View Profile</a></li>
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'radmin_pharmacy_update' hospital.id %}">Edit</a></li>
 														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_delete_admin' hospital.id %}">Delete</a></li>
 														<li><hr class="dropdown-divider"></li>
 														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
@@ -304,7 +386,7 @@
 												<span class="fw-bold">PT00{{hospital.patient.id}}</span>
 											</td>
 											<td>
-												<img class="avatar rounded-circle" src="{{hospital.patient.profile_pic}}" alt="">
+												<img class="avatar rounded-circle" src="{{hospital.patient.profile_pic}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 												<span class="fw-bold ms-1">{{hospital.patient.admin.name_title}} {{hospital.patient.fisrt_name}} {{hospital.patient.last_name}}</span>
 											</td>
 											<td>
@@ -349,7 +431,8 @@
 														<span class="visually-hidden">Toggle Dropdown</span>
 													</button>
 													<ul class="dropdown-menu border-0 shadow py-3 px-2">
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_profile_admin' hospital.patient.id %}">View Profile</a></li
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_profile_admin' hospital.patient.id %}">View Profile</a></li>
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'radmin_patients_update' hospital.patient.id %}">Edit</a></li>
 														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_delete_admin' hospital.patient.id %}">Delete</a></li>
 														<li><hr class="dropdown-divider"></li>
 														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.patient.id}}">Contact Person</a></li>
@@ -363,6 +446,7 @@
 							</div>
 						</div>
 					</div>
+					
 
 					<div id="accident" class="tab-pane fade">
 						<div class="card mb-3">
@@ -429,7 +513,8 @@
 														<span class="visually-hidden">Toggle Dropdown</span>
 													</button>
 													<ul class="dropdown-menu border-0 shadow py-3 px-2">
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_profile_admin' hospital.id %}">View Profile</a></li
+														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_profile_admin' hospital.id %}">View Profile</a></li>
+														
 														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_delete_admin' hospital.id %}">Delete</a></li>
 														<li><hr class="dropdown-divider"></li>
 														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>

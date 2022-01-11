@@ -128,7 +128,7 @@ def verifyOTP(request,phone):
             [user.email]
         )#compose email
         print(email_message)
-        # email_message.send() #send Email
+        email_message.send() #send Email
         messages.add_message(request,messages.SUCCESS,"Sucessfully Singup Please Verify Your Account Email")
         if user is not None:
             if user.is_active == True:
@@ -142,7 +142,7 @@ def verifyOTP(request,phone):
                     else:
                         return HttpResponseRedirect(reverse('radmin_home'))
                         # return HttpResponseRedirect(reverse('admin:index'))
-                if user.user_type=="2":
+                elif user.user_type=="2":
                     if 'next' in request.POST:
                         return redirect(request.POST.get('next'))
                     # elif user.profile_pic:
@@ -155,7 +155,7 @@ def verifyOTP(request,phone):
                     # elif user.profile_pic:
                     #     return HttpResponseRedirect(reverse('profile_picUpload'))
                     else:
-                        return HttpResponseRedirect(reverse('admin_home'))
+                        return HttpResponseRedirect(reverse('doctor_dashboard'))
                 elif user.user_type=="4":
                     if 'next' in request.POST:
                         return redirect(request.POST.get('next'))
@@ -222,7 +222,7 @@ def dologin(request):
                     else:
                         return HttpResponseRedirect(reverse('radmin_home'))
                         # return HttpResponseRedirect(reverse('admin:index'))
-                if user.user_type=="2":
+                elif user.user_type=="2":
                     if next:
                         return redirect(next)
                     # elif user.profile_pic:
@@ -235,7 +235,7 @@ def dologin(request):
                     # elif user.profile_pic:
                     #     return HttpResponseRedirect(reverse('profile_picUpload'))
                     else:
-                        return HttpResponseRedirect(reverse('admin_home'))
+                        return HttpResponseRedirect(reverse('doctor_dashboard'))
                 elif user.user_type=="4":
                     print(next)
                     if next:
@@ -325,7 +325,7 @@ class HospitalSingup(SuccessMessageMixin,CreateView):
 class DoctorSingup(SuccessMessageMixin,CreateView):
     template_name="accounts/doctorsingup.html"
     model=CustomUser
-    fields=["first_name","last_name","email","phone","username","password"]
+    fields=["email","phone","password"]
     success_message = "Hospital User Created"  
     def form_valid(self,form):
         #Saving Custom User Object for Doctor User
@@ -333,10 +333,18 @@ class DoctorSingup(SuccessMessageMixin,CreateView):
         user=form.save(commit=False)
         user.is_active=True
         user.user_type=3
+        user.username=form.cleaned_data["email"]
         user.set_password(form.cleaned_data["password"])
         print('just one step ahead save?')
+        user.counter += 1  # Update Counter At every Call
+        user.save() # Save the data
+        mobile= user.phone
+        key = send_otp(mobile)
+        user.otp = str(key)
+        user.hospitaldoctors.is_hospital_added = False 
         user.save()
-        return HttpResponseRedirect(reverse("dologin"))
+        messages.add_message(self.request,messages.SUCCESS,"OTP has been sent successfully") 
+        return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
 
 class PatientSingup(SuccessMessageMixin,CreateView):
     template_name="accounts/patientsingupnew.html"

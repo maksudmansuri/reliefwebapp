@@ -25,28 +25,24 @@ from patient import PatientPassword as patientAuth
 urlpatterns = [
 
     # path('404',accViews.FourZeroFour , name='404'),
-    path('admin/', admin.site.urls),
-    
+    path('admin/', admin.site.urls),    
     path('radmin/', include("radmin.urls")),
     path('', include("front.urls")),
     path('accounts/', include("accounts.urls")),
-    path('hospital/', include("hospital.urls")),
-    
-    path('patient/', include("patient.urls")),   
-
+    path('hospital/', include("hospital.urls")),    
+    path('doctor/', include("doctor.urls")),    
+    path('patient/', include("patient.urls")),  
     path('lab/', include("lab.urls")),
     path('pharmacy/', include("pharmacy.urls")),
-
     #Api urls
     path('api/accounts/',include("accounts.api.urls")),
-    path('api/patient/',include("patient.api.urls")),
-    
+    path('api/patient/',include("patient.api.urls")),    
     # path('hospital_profile',profileview.hospitalProfileViews.as_view(),name="hospital_profile"),
 
     #password reset and change
     path('password_change/done',auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'),name='password_change_done'),
 
-    path('password_change/',auth_views.PasswordChangeView.as_view(template_name='password_change.html'),name='password_change'),
+    path('password_change/',auth_views.PasswordChangeView.as_view(template_name='password_change.html'),name='password_change',),
 
     path('password_change_patient/done',patientAuth.PasswordChangeDonePatientView.as_view(template_name='password_change_done_patient.html'),name='password_change_done_patient'),
 

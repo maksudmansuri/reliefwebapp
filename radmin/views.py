@@ -1,12 +1,17 @@
+from datetime import datetime
+import pytz
+
+from front.models import RatingAndComments
+IST = pytz.timezone('Asia/Kolkata')
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.http import response
-from django.http.request import HttpRequest
+from django.http.request import HttpRequest 
 from patient.models import Booking, LabTest, OrderBooking, Orders, PicturesForMedicine, Slot
 from django.core.files.storage import FileSystemStorage
 from django.http.response import HttpResponse, HttpResponseBase, HttpResponseRedirect, JsonResponse
 from hospital.models import ContactPerson, HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, Insurances, ServiceAndCharges, TimeSlot
-from accounts.models import CustomUser, HospitalPhones, Hospitals, Labs, OPDTime, Patients, Pharmacy, Specailist
+from accounts.models import CustomUser, HospitalDoctors, HospitalPhones, Hospitals, Labs, OPDTime, Patients, Pharmacy, Specailist
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -30,6 +35,11 @@ class indexListView(ListView):
             total_apt =  OrderBooking.objects.filter(patient = patient.admin).count() 
             patients_list.append({'total_apt':total_apt,'patient':patient})
         context["patient_list"] = patients_list
+        doctors = HospitalDoctors.objects.filter(is_hospital_added = False)
+        # for doctor in doctors:
+        #     total_apt =  OrderBooking.objects.filter(patient = patient.admin).count() 
+        #     patients_list.append({'total_apt':total_apt,'patient':patient})
+        context["hospitaldoctors_list"] = doctors
         return context
     
 """
@@ -184,37 +194,10 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
         # email = request.POST.get("email")
         name_title = request.POST.get("name_title")
 
-        # Sunday = request.POST.get("Sunday")
-        # Monday = request.POST.get("Monday")
-        # Tuesday = request.POST.get("Tuesday")
-        # Wednesday = request.POST.get("Wednesday")
-        # Thursday = request.POST.get("Thursday")
-        # Friday = request.POST.get("Friday")
-        # Saturday = request.POST.get("Saturday")
-        # Sunday = request.POST.get("Sunday")
-        # opening_time1 = request.POST.get("opening_time")
-        # opening_time = datetime.strptime(opening_time1,"%H:%M").time()
-        # close_time1 = request.POST.get("close_time")
-        # close_time = datetime.strptime(close_time1,"%H:%M").time()
-        # break_start_time1 = request.POST.get("break_start_time")
-        # break_start_time = datetime.strptime(break_start_time1,"%H:%M").time()
-        # break_end_time1 = request.POST.get("break_end_time")
-        # break_end_time = datetime.strptime(break_end_time1,"%H:%M").time()
-        # if Sunday is None and Monday is None and Tuesday is None and Wednesday is None and Thursday is None and Friday is None and Saturday is None:
-        #     messages.add_message(request,messages.ERROR,"At least select one day")
-        #     return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id}))
-        # if opening_time >= close_time or break_start_time >= close_time or break_end_time >= close_time or opening_time >= break_start_time  or opening_time >= break_end_time or break_start_time >= break_end_time:
-        #     messages.add_message(request,messages.ERROR,"Time does not match kindly set Proper time ")
-        #     print(messages.error)
-        #     return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id})) 
-
-        # print("we are indside a add hspitals")
+       
         try:
             id=kwargs['id']
-            # opd = OPDTime.objects.get(user=request.user)
-            # opd.delete()
-            # opdtime= OPDTime(user=request.user,opening_time=opening_time,close_time=close_time,break_start_time=break_start_time,break_end_time=break_end_time,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,is_active=True)
-            # opdtime.save()
+           
             hospital = Hospitals.objects.get(id=id)
             hospital.hopital_name=hopital_name
             hospital.about=about
@@ -349,6 +332,11 @@ def PatientDelete(request,id):
     hospital.delete()
     return HttpResponseRedirect(reverse("radmin_home"))
 
+def DoctorDelete(request,id):
+    hospital=HospitalDoctors.objects.get(id=id)
+    hospital.delete()
+    return HttpResponseRedirect(reverse("radmin_home"))
+
 
 """
 Labs All Views
@@ -378,10 +366,244 @@ def LabsDeactivate(request,id):
     return HttpResponseRedirect(reverse("radmin_home"))
     # return render(request,'counsellor/manage_student.html',{'hospitals_list':hospitals_list})
 
+def DoctorsActivate(request,id):
+    hospital=HospitalDoctors.objects.get(id=id)
+    if hospital is not None and hospital.is_verified == False:
+        hospital.is_verified=True
+        hospital.is_appiled=False
+        hospital.is_deactive=False
+        hospital.save()
+    # hospitals_list=Hospitals.objects.filter((Q(is_appiled=True) | Q(is_verified=True))  & Q(admin__is_active=True) & Q(admin__user_type=3))
+    return HttpResponseRedirect(reverse("radmin_home"))
+
+def DoctorsDeactivate(request,id):
+    hospital=HospitalDoctors.objects.get(id=id)
+    if hospital is not None and hospital.is_verified == True:
+        hospital.is_verified=False
+        hospital.is_appiled=False
+        hospital.is_deactive=True
+        hospital.save()
+    return HttpResponseRedirect(reverse("radmin_home"))
+    # return render(request,'counsellor/manage_student.html',{'hospitals_list':hospitals_list})
+
 def LabsDelete(request,id):
     hospital=Labs.objects.get(id=id)
     hospital.delete()
     return HttpResponseRedirect(reverse("radmin_home"))
+
+class LabUpdateViews(SuccessMessageMixin,View):
+    def get(self, request, *args, **kwargs):
+        # hospital = None
+        # # contacts = None
+        # # insurances = None 
+        id=kwargs['id']
+        try:
+            lab = Labs.objects.get(id=id)
+        except Exception as e:
+            return HttpResponse(e)  
+        param={'lab':lab}
+        return render(request,"radmin/lab_update.html",param) 
+    
+    def post(self, request, *args, **kwargs):
+        lab_name = request.POST.get("lab_name")
+        specialist = request.POST.get("specialist")
+        profile_pic = request.FILES.get("profile_pic")
+
+        about = request.POST.get("about")
+        address = request.POST.get("address")
+        city = request.POST.get("city")
+        pin_code = request.POST.get("pin_code")
+        state = "Gujarat"
+        country = "India"
+        landline = request.POST.get("landline")
+        establishment_year = request.POST.get("establishment_year")
+        registration_number = request.POST.get("registration_number")
+        registration_proof = request.FILES.get("registration_proof")
+        facebook = request.POST.get("facebook")
+        instagram = request.POST.get("instagram")
+        linkedin = request.POST.get("linkedin")
+        twitter = request.POST.get("twitter")
+        website = request.POST.get("website")
+        # user creation Data
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        # mobile = request.POST.get("phone")
+        alternate_mobile = request.POST.get("alternate_mobile")
+        # email = request.POST.get("email")
+        name_title = request.POST.get("name_title")       
+
+        print("we are indside a add hspitals")
+        try:
+            id=kwargs['id']
+            lab = Labs.objects.get(id=id)
+            lab.lab_name=lab_name
+            lab.about=about
+            lab.registration_number=registration_number
+            lab.address=address
+            lab.city=city
+            lab.pin_code=pin_code
+            lab.state=state
+            lab.country=country
+            lab.landline=landline
+
+            if profile_pic:
+                fs=FileSystemStorage()
+                filename1=fs.save(profile_pic.name,profile_pic)
+                profile_pic_url=fs.url(filename1)
+                lab.profile_pic=profile_pic_url
+                lab.admin.profile_pic=profile_pic_url
+
+            print(registration_proof)
+            if registration_proof:
+                fs=FileSystemStorage()
+                filename=fs.save(registration_proof.name,registration_proof)
+                registration_proof_url=fs.url(filename)
+                lab.registration_proof=registration_proof_url
+            lab.establishment_year=establishment_year
+            lab.alternate_mobile=alternate_mobile
+            lab.website=website
+            lab.linkedin=linkedin
+            lab.facebook=facebook
+            lab.instagram=instagram
+            lab.twitter=twitter
+            lab.is_appiled=True
+            lab.is_verified=False
+            lab.save()
+            #edit customUSer
+            lab.admin.first_name=first_name
+            lab.admin.last_name=last_name
+            lab.admin.name_title=name_title       
+            lab.admin.save()           
+                    
+            
+            print("All data saved")
+
+            messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
+            
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,e)
+            
+        return HttpResponseRedirect(reverse("radmin_home"))
+
+"""Doctor Admin View"""
+class DoctorUpdateViews(SuccessMessageMixin,View):
+    def get(self, request, *args, **kwargs):
+        # hospital = None
+        # # contacts = None
+        # # insurances = None 
+        id=kwargs['id']
+        try:
+            lab = HospitalDoctors.objects.get(id=id)
+            specailists = Specailist.objects.all()      
+        except Exception as e:
+            return HttpResponse(e)  
+        param={'hospital':lab,'specailists':specailists}
+        return render(request,"radmin/doctor_update.html",param) 
+    
+    def post(self, request, *args, **kwargs):
+        first_name = request.POST.get("fisrt_name")
+        last_name = request.POST.get("last_name")
+        name_title = request.POST.get("name_title")
+        user_type = 3
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        profile_pic = request.FILES.get("profile_pic")
+        # for HospitalDoctor user Creation
+        address = request.POST.get("address")
+        city = request.POST.get("city")
+        state = request.POST.get("state")
+        ssn_id = request.POST.get("ssn_id")
+        country = request.POST.get("country")
+        zip_Code = request.POST.get("zip_Code")
+        dob = request.POST.get("dob")
+        alternate_mobile = request.POST.get("alternate_mobile")
+        gender = request.POST.get("gender")
+        # for Hospital staff user creation
+        joindate = request.POST.get("joindate")
+        is_active = request.POST.get("is_active")
+        opd_charges = request.POST.get("opd_charges")
+        home_charges = request.POST.get("home_charges")
+        is_homevisit_available = request.POST.get("is_homevisit_available")
+        online_charges = request.POST.get("online_charges")
+        emergency_charges = request.POST.get("emergency_charges")
+        active = False
+        if is_active == "Yes":
+            active= True
+
+        is_homevisi = request.POST.get("is_homevisit_available")
+        is_homevisit_available = False
+        if is_homevisi == "Yes":
+            is_homevisit_available= True
+    
+        is_virtual = request.POST.get("is_virtual_available")
+        is_virtual_available = False
+        if is_virtual == "Yes":
+            is_virtual_available = True
+            
+        facebook = request.POST.get("facebook")
+        instagram = request.POST.get("instagram")
+        linkedin = request.POST.get("linkedin")
+        degree = request.POST.get("degree")       
+        specialist = request.POST.get("specialist")
+
+        about = request.POST.get("about")
+        try:
+            id=kwargs['id']
+            hospital = HospitalDoctors.objects.get(id=id)
+            hospital.name_title=name_title
+            hospital.fisrt_name=first_name
+            hospital.last_name=last_name
+            hospital.about=about
+            hospital.address=address
+            hospital.city=city
+            hospital.zip_Code=zip_Code
+            hospital.state=state
+            hospital.country=country
+            hospital.phone=phone
+            if specialist:
+                specialist1 = get_object_or_404(Specailist,id=specialist)
+                hospital.specialist=specialist1
+            if profile_pic:
+                fs=FileSystemStorage()
+                filename1=fs.save(profile_pic.name,profile_pic)
+                profile_pic_url=fs.url(filename1)
+                hospital.profile_pic=profile_pic_url
+                hospital.admin.profile_pic=profile_pic_url    
+                
+            hospital.degree=degree
+            hospital.alternate_mobile=alternate_mobile
+            hospital.linkedin=linkedin
+            hospital.facebook=facebook
+            hospital.instagram=instagram
+            hospital.dob=dob
+            hospital.is_appiled=True
+            hospital.is_active=active
+            hospital.is_virtual_available=is_virtual_available
+            hospital.is_homevisit_available=is_homevisit_available
+            hospital.is_verified=False
+            hospital.gender=gender
+            hospital.opd_charges=opd_charges
+            hospital.online_charges=online_charges
+            hospital.emergency_charges=emergency_charges
+            hospital.home_charges=home_charges
+            hospital.is_hospital_added=False
+            hospital.save()
+            #edit customUSer
+            hospital.admin.first_name=first_name
+            hospital.admin.last_name=last_name
+            hospital.admin.name_title=name_title       
+            
+            hospital.admin.save()
+            
+
+            messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
+            
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,e)
+            
+        return HttpResponseRedirect(reverse("radmin_home"))
+
+
 
 """
 Pharmacy All Views
@@ -416,7 +638,144 @@ def PharmacyDelete(request,id):
     hospital.delete()
     return HttpResponseRedirect(reverse("radmin_home"))
 
+class PharmacyUpdateViews(SuccessMessageMixin,UpdateView):
+    def get(self, request, *args, **kwargs):
+        # hospital = None
+        # # contacts = None
+        # # insurances = None
+        # try:
+        id=kwargs['id']
+        pharmacy = Pharmacy.objects.get(id=id)
+        opdtime=OPDTime.objects.get(user=pharmacy.admin)
+            # insurances = Insurances.objects.filter(hospital=hospital)
+        # except Exception as e:
+        #     return HttpResponse(e)
+        param={'pharmacy':pharmacy,'opdtime':opdtime}
+        return render(request,"radmin/pharmacy_update.html",param) 
+    
+    def post(self, request, *args, **kwargs):
+        pharmacy_name = request.POST.get("pharmacy_name")
+        specialist = request.POST.get("specialist")
+        profile_pic = request.FILES.get("profile_pic")
 
+        about = request.POST.get("about")
+        address = request.POST.get("address")
+        city = request.POST.get("city")
+        pin_code = request.POST.get("pin_code")
+        state = "Gujarat"
+        country = "India"
+        landline = request.POST.get("landline")
+        establishment_year = request.POST.get("establishment_year")
+        registration_number = request.POST.get("registration_number")
+        registration_proof = request.FILES.get("registration_proof")
+        facebook = request.POST.get("facebook")
+        instagram = request.POST.get("instagram")
+        linkedin = request.POST.get("linkedin")
+        twitter = request.POST.get("twitter")
+        website = request.POST.get("website")
+        # user creation Data
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        # mobile = request.POST.get("phone")
+        alternate_mobile = request.POST.get("alternate_mobile")
+        # email = request.POST.get("email")
+        name_title = request.POST.get("name_title")
+
+        #Schedule for hospital OPD and Appointment
+        
+        Sunday = request.POST.get("Sunday")
+        Monday = request.POST.get("Monday")
+        Tuesday = request.POST.get("Tuesday")
+        Wednesday = request.POST.get("Wednesday")
+        Thursday = request.POST.get("Thursday")
+        Friday = request.POST.get("Friday")
+        Saturday = request.POST.get("Saturday")
+        Sunday = request.POST.get("Sunday")
+        opening_time1 = request.POST.get("opening_time")
+        print(opening_time1)
+        break_end_time1 = request.POST.get("break_end_time")
+        print(break_end_time1)
+        break_start_time1 = request.POST.get("break_start_time")
+        print(break_start_time1)
+        close_time1 = request.POST.get("close_time")
+        print(close_time1)
+
+        opening_time = datetime.strptime(opening_time1,"%H:%M").time()
+   
+        close_time = datetime.strptime(close_time1,"%H:%M").time()
+       
+        break_start_time = datetime.strptime(break_start_time1,"%H:%M").time()
+        
+        break_end_time = datetime.strptime(break_end_time1,"%H:%M").time()
+        id=kwargs['id']
+        pharmacy = Pharmacy.objects.get(id=id)
+        if Sunday is None and Monday is None and Tuesday is None and Wednesday is None and Thursday is None and Friday is None and Saturday is None:
+            messages.add_message(request,messages.ERROR,"At least select one day")
+            return HttpResponseRedirect(reverse("radmin_pharmacy_update", kwargs={'id':pharmacy.id}))
+        if opening_time >= close_time and break_start_time >= close_time and break_end_time >= close_time and opening_time >= break_start_time  and opening_time >= break_end_time and break_start_time >= break_end_time:
+            messages.add_message(request,messages.ERROR,"Time does not match kindly set Proper time ")
+            print(messages.error)
+           
+            return HttpResponseRedirect(reverse("radmin_pharmacy_update", kwargs={'id':pharmacy.id})) 
+
+        print("we are indside a add hspitals")
+        try:
+            print("inside pharmacy check")
+            id=kwargs['id']
+            pharmacy = Pharmacy.objects.get(id=id)
+            opd = OPDTime.objects.get(user=pharmacy.admin)
+            opd.delete()
+            opdtime= OPDTime(user=pharmacy.admin,opening_time=opening_time,close_time=close_time,break_start_time=break_start_time,break_end_time=break_end_time,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,is_active=True)
+            opdtime.save()
+            pharmacy.pharmacy_name=pharmacy_name
+            pharmacy.about=about
+            pharmacy.registration_number=registration_number
+            pharmacy.address=address
+            pharmacy.city=city
+            pharmacy.pin_code=pin_code
+            pharmacy.state=state
+            pharmacy.country=country
+            pharmacy.landline=landline
+
+            if profile_pic:
+                fs=FileSystemStorage()
+                filename1=fs.save(profile_pic.name,profile_pic)
+                profile_pic_url=fs.url(filename1)
+                pharmacy.profile_pic=profile_pic_url
+                pharmacy.admin.profile_pic=profile_pic_url
+
+            print(registration_proof)
+            if registration_proof:
+                fs=FileSystemStorage()
+                filename=fs.save(registration_proof.name,registration_proof)
+                registration_proof_url=fs.url(filename)
+                pharmacy.registration_proof=registration_proof_url
+            pharmacy.establishment_year=establishment_year
+            pharmacy.alternate_mobile=alternate_mobile
+            pharmacy.website=website
+            pharmacy.linkedin=linkedin
+            pharmacy.facebook=facebook
+            pharmacy.instagram=instagram
+            pharmacy.twitter=twitter
+            pharmacy.is_appiled=True
+            pharmacy.is_verified=False
+            pharmacy.save()
+            #edit customUSer
+            pharmacy.admin.first_name=first_name
+            pharmacy.admin.last_name=last_name
+            pharmacy.admin.name_title=name_title       
+            pharmacy.admin.save()           
+                    
+            
+            print("All data saved")
+
+            messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
+            
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,e)
+            
+        return HttpResponseRedirect(reverse("radmin_home"))
+    
 """
 Accident All Views
 """
@@ -663,6 +1022,27 @@ def deleteTimeSlot(request,id):
     messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
     return HttpResponseRedirect(reverse("time_slot")) 
 
+
+""" 
+Reviews List 
+"""
+
+class ReviewsList(ListView):
+    model = RatingAndComments 
+    template_name = "hospital/reviews.html" 
+
+    def get_context_data(self, **kwargs): 
+        context = super().get_context_data(**kwargs)
+        context["reviews"] = RatingAndComments.objects.filter(HLP = self.request.user) 
+        total_cmns = RatingAndComments.objects.filter(HLP = self.request.user).count()
+        cmnss = RatingAndComments.objects.filter(HLP = self.request.user)
+        rating = 0 
+        for cmn in cmnss:
+            rating = rating + cmn.rating
+        if total_cmns > 0: 
+            rating = rating / total_cmns
+        context["total_reviews"] = total_cmns
+        return context
 # def findState(request):
 #     country_id = request.POST.get("country_id")
 #     countries=Country.objects.all()

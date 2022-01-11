@@ -12,6 +12,13 @@ class LoginCheckMiddleWare(MiddlewareMixin):
 
         user=request.user
         if user.is_authenticated:
+            # if user.force_to_psswd_chngd:
+            #     if user.user_type == "4":
+            #         user.force_to_psswd_chngd = False
+            #         user.save()
+            #         return HttpResponseRedirect('/password_change/')
+            #     else:
+            #         return HttpResponseRedirect('/password_change/')
             if user.user_type == "1":
                 if modulename == "radmin.views" or modulename == "django.views.static":
                     pass
@@ -45,11 +52,11 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                 else:
                     return HttpResponseRedirect(reverse("hospital_dashboard"))
             elif user.user_type == "3":
-                if modulename == "customers.views" or modulename == "django.views.static":
+                if modulename == "doctor.views" or modulename == "django.views.static":
+                    pass
+                elif modulename == "accounts.logoutview":
                     pass
                 elif modulename == "accounts.profilePic":
-                    pass
-                elif modulename == "front.views":
                     pass
                 elif modulename == "front.views":
                     pass
@@ -61,10 +68,8 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     pass
                 elif  modulename == "chat.views":
                     pass
-                elif  modulename == "front.api.views":
-                    pass 
                 else:
-                    return HttpResponseRedirect(reverse("dashboard"))
+                    return HttpResponseRedirect(reverse("doctor_dashboard"))
             elif user.user_type == "4":
                 if modulename == "patient.views" or modulename == "django.views.static":
                     pass

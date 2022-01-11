@@ -1,4 +1,4 @@
-{% extends 'lab/blank-page.html' %}
+{% extends 'radmin/blank-page.html' %}
 {% load static %}
 {% block title %} Relief Pro : Update {% endblock title %}
  
@@ -212,28 +212,28 @@
                                     <div class="col-md-2">
                                         <label  class="form-label">Title *</label>
                                         <select class="form-select" aria-label="Default select example" name="name_title">
-                                        <option {% if request.user.name_title == "Mr." %}selected{% endif %} value="Mr."> Mr.</option>
-                                        <option {% if request.user.name_title == "Mrs." %}selected{% endif %} value="Mrs."> Mrs.</option>
-                                        <option {% if request.user.name_title == "Miss" %}selected{% endif %} value="Miss"> Miss</option>
-                                        <option {% if request.user.name_title == "Ms." %}selected{% endif %} value="Ms."> Ms.</option>
-                                        <option {% if request.user.name_title == "Dr." %}selected{% endif %} value="Dr."> Dr.</option>
+                                        <option {% if lab.admin.name_title == "Mr." %}selected{% endif %} value="Mr."> Mr.</option>
+                                        <option {% if lab.admin.name_title == "Mrs." %}selected{% endif %} value="Mrs."> Mrs.</option>
+                                        <option {% if lab.admin.name_title == "Miss" %}selected{% endif %} value="Miss"> Miss</option>
+                                        <option {% if lab.admin.name_title == "Ms." %}selected{% endif %} value="Ms."> Ms.</option>
+                                        <option {% if lab.admin.name_title == "Dr." %}selected{% endif %} value="Dr."> Dr.</option>
                                         </select>
                                     </div>
                                     <div class="col-md-5">
                                         <label for="first_name" class="form-label">First Name *</label>
-                                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="LAB Name" value="{{request.user.first_name}}" required>
+                                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="LAB Name" value="{{lab.admin.first_name}}" required>
                                     </div>
                                     <div class="col-md-5">
                                         <label for="last_name" class="form-label">Last Name *</label>
-                                        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="LAB Name" value="{{request.user.last_name}}" required>
+                                        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="LAB Name" value="{{lab.admin.last_name}}" required>
                                     </div>
                                         <div class="col-md-6">
                                         <label for="Username" class="form-label">Username *</label>
-                                        <input type="text" class="form-control" id="username" name="username" placeholder="LAB Name"  required  disabled="disabled" required value="{{request.user.username}}" >
+                                        <input type="text" class="form-control" id="username" name="username" placeholder="LAB Name"  required  disabled="disabled" required value="{{lab.admin.username}}" >
                                     </div>
                                     <div class="col-md-6">
                                         <label for="phone" class="form-label">Phone *</label>
-                                        <input type="tel" class="form-control" id="phone" name="phone" disabled="disabled" placeholder="LAB Name"  required value="{{request.user.phone}}">
+                                        <input type="tel" class="form-control" id="phone" name="phone" disabled="disabled" placeholder="LAB Name"  required value="{{lab.admin.phone}}">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="alternate_mobile" class="form-label">Alternate Phone</label>
@@ -241,7 +241,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="email" class="form-label">Email *</label>
-                                        <input type="email" class="form-control" id="email" name="email" placeholder="LAB Name"  required value="{{request.user.email}}" disabled="disabled">
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="LAB Name"  required value="{{lab.admin.email}}" disabled="disabled">
                                     </div>                                          
                                 </div>
                             </div>
@@ -377,7 +377,8 @@
                 console.log(xhr.responseText);
             }
         }
-        xhr.open("POST","{% url 'lab_update' %}",true);
+       
+        xhr.open("POST","{% url 'radmin_lab_update' lab.id %}",true);
         $("#progressbar").show();
         
         

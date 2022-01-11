@@ -1,0 +1,320 @@
+{% extends 'hospital/blank-page.html' %} 
+{% load static %} 
+{% block title %} Hospital Rooms  {% endblock title %}
+
+{% block custom_css %}
+<style>
+.ScrollStyle
+{
+    max-height: 150px;
+    overflow-y: scroll;
+}
+
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+ <!-- Body: Body -->
+    <div class="col-md-7 col-lg-8 col-xl-9">
+        <div class="row align-items-center">
+            <div class="border-0 mb-4">
+                <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                    <h3 class="fw-bold mb-0">All Rooms</h3>
+                    <div class="col-auto d-flex w-sm-100">
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100 " data-bs-toggle="modal" data-bs-target="#depadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add Room</button>
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;" data-bs-toggle="modal" data-bs-target="#priceadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add Price</button>
+                    </div>
+                   
+                </div>
+            </div>
+        </div> <!-- Row end  -->
+        <div class="row clearfix g-3">
+            <div class="col-sm-12">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Room No</th>                                   
+                                    <th>Floor</th>   
+                                    <th>Room Type</th> 
+                                    <th>Occupied</th>   
+                                    <th>Actions</th>  
+                                </tr>
+                            </thead> 
+                            <tbody>
+                            {% for room in rooms %}
+                                <tr>
+                                    <td>
+                                        <span class="fw-bold">{{room.room_no}}</span>
+                                    </td>
+                                   
+                                    <td>
+                                        {{room.floor}}
+                                    </td>
+                                    <td>
+                                         {{room.room}} price is Rs. {{room.room.rooms_price}}.
+                                    </td>
+                                   
+                                    </td>
+                                   
+                                   
+                                    {% if room.is_active %}
+                                    <td>
+                                        <a href="{% url 'deactive_room' room.id %}" class="btn btn-primary">Active</a>
+                                    </td>
+                                    {% else%}
+                                    <td>
+                                            <a href="{% url 'active_room' room.id %}"  class="btn btn-danger" >D-tive</a>
+                                    </td>
+                                    {% endif %} 
+                                    <td>
+                                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{room.id}}"><i class="far fa-edit"></i></button>
+                                            
+                                            <a type="button" class="btn btn-outline-danger deleterow" id="deleteroom" href="{% url 'delete_room' room.id %}" ><i class="far fa-trash-alt"></i><a>
+
+                                        </div>
+                                    </td>
+                                    
+                                   
+                                    
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div><!-- Row End -->
+    </div>
+
+ 
+{% endblock content %}
+{% block modal_fade %}
+<!--Add Price and List delete-->
+        <div class="modal fade" id="priceadd" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+            <div class="modal-content">
+            <form id="roomadd" method="post" action="{% url 'add_price' %}">
+            {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depaddLabel">Price Add</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="rooms_price" class="form-label">Price</label>
+                        <input type="number" min="1" step="any" class="form-control" name="rooms_price" id="rooms_price">
+                    </div>
+                    <div class="deadline-form">                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-12">
+                                <label  class="form-label">Room Type *</label>
+                                <select class="form-select" aria-label="Default select example" name="room_type">
+                                <option  value="A.C">A.C</option>
+                                <option  value="Non-A.C">Non A.C</option>
+                                <option  value="General">General</option>
+                                </select>
+                            </div>
+                          
+                        </div>                        
+                    </div>
+                   
+                    <div class="form-group" style="margin-left: 20px;">
+                        <label class="custom-switch mt-2">
+                            <input type="checkbox" name="is_active" id ="is_active" class="custom-switch-input">
+                            <span class="custom-switch-indicator" ></span>
+                            <span class="custom-switch-description">Price is active ?</span>
+                        </label>
+                    </div>
+                   
+                </div>
+                <div class="card-body basic-custome-color ">
+                    <div class="table-responsive ScrollStyle">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Room Type</th>
+                                <th scope="col">Room price</th>
+                                <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="auto-index">
+                            {% for price in prices %}
+                                <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{price.room_type}}</td>
+                                <td>{{price.rooms_price}}</td>
+                                <td> 
+                                    <a type="button" class="btn btn-outline-danger " id="deleteprice" href="{% url 'delete_price' price.id %}" ><i class="far fa-trash-alt"></i>   <a>
+                                </td>
+                                </tr>
+                            {% endfor %}  
+                            </tbody>
+                            </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button> {% endcomment %}
+                    <button type="submit" class="btn btn-primary submit_btn">Add</button>
+                </div>
+                
+            </div>
+
+            </form>
+            
+            </div>
+        </div>
+
+<!-- Add room-->
+        <div class="modal fade" id="depadd" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+            <div class="modal-content">
+            <form id="roomadd" method="post">
+            {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depaddLabel">Add Rooms</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">               
+                    <div class="deadline-form">                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-6">
+                                <label for="room_no" class="form-label">Room No *</label>
+                                <input type="text" class="form-control" id="room_no" name="room_no">
+                            </div> 
+                            <div class="col-sm-6">
+                            <label for="depone" class="form-label">Floor</label>
+                            <input type="text" class="form-control" id="floor" name="floor">
+                            </div>                       
+                            <div class="col-sm-6">
+                                <label  class="form-label">Room Type *</label>
+                                <select class="form-select" aria-label="Default select example" name="room" required>
+                                <option value="">select</option>
+                                {% for price in prices %}
+                                    <option value="{{price.id}}">{{price}} -INR {{price.rooms_price}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                       
+                            <div class="col-sm-6"></div>
+                           <div class="col-sm-6">
+                            <label class="custom-switch mt-2">
+                                <input type="checkbox" name="is_active" id ="is_active" class="custom-switch-input">
+                                <span class="custom-switch-indicator" ></span>
+                                <span class="custom-switch-description">Room is active ?</span>
+                            </label>
+                            </div>
+                           
+                        </div>                        
+                    </div>
+                    
+                   
+                </div>
+               
+                <div class="modal-footer">
+                    {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button> {% endcomment %}
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+
+            </div>
+             </form>
+            </div>
+        </div>
+
+<!-- Edit Rooms-->
+        {% for room in rooms %}
+        <div class="modal fade" id="depedit{{room.id}}" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+            <div class="modal-content">
+            <form id="roomupdate" method="post" action="{% url 'update_room' room.id %}">
+            {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depaddLabel">Edit Rooms</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">               
+                    <div class="deadline-form">                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-6">
+                                <label for="room_no" class="form-label">Room No *</label>
+                                <input type="text" class="form-control" id="room_no" name="room_no" value="{{room.room_no}}">
+                            </div> 
+                            <div class="col-sm-6">
+                            <label for="depone" class="form-label">Floor</label>
+                            <input type="text" class="form-control" id="floor" name="floor" value="{{room.floor}}">
+                            </div>                       
+                            <div class="col-sm-6">
+                                <label  class="form-label">Room Type *</label>
+                                <select class="form-select" aria-label="Default select example" name="room" required>
+                                <option value="">select</option>
+                                {% for price in prices %}
+                                    <option value="{{price.id}}" {% if room.room == price %}selected{% endif %}>{{price}} -INR{{price.rooms_price}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                           
+                            <div class="col-sm-6"></div>
+                           <div class="col-sm-6">
+                            <label class="custom-switch mt-2">
+                                <input type="checkbox" name="is_active" id ="is_active" class="custom-switch-input" {% if room.is_active %}checked{% endif %}>
+                                <span class="custom-switch-indicator" ></span>
+                                <span class="custom-switch-description">Room is active ?</span>
+                            </label>
+                            </div>
+                           
+                        </div>                        
+                    </div>
+                    
+                   
+                </div>
+               
+                <div class="modal-footer">
+                    {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button> {% endcomment %}
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+
+            </div>
+             </form>
+            </div>
+            </div>
+        </div> 
+        {% endfor %}
+{% endblock modal_fade %}
+
+{% block custom_js %}
+<script>
+    // project data table
+    
+    //submit form for add staff
+    $(".submit_btn").click(function(){
+        var form=new FormData($("#roomadd"));
+       // form.append("long_desc",tinyMCE.activeEditor.getContent());
+        //Ajax code
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange=function(){
+            if(xhr.status==200){
+                console.log(xhr.responseText);
+            }
+        }
+        xhr.open("POST","{% url 'manage_room' %}",true);
+       
+        xhr.send(form);
+        
+        setTimeout(location.reload.bind(location), 2000);
+
+        //update staff from edit page fade
+       
+
+    })
+   
+
+
+    
+</script>
+{% endblock custom_js %}

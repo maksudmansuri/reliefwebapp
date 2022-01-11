@@ -1,0 +1,480 @@
+{% extends './blank-page.html' %}
+{% load static %}
+{% block title %} Profile Settings {% endblock title %}
+
+{% block custom_css %}<script src="{% static 'newstatic/assets/js/cities.js' %} "></script>{% endblock custom_css %}
+{% block breadcrumb1 %}Profile Settings{% endblock breadcrumb1 %}
+{% block pageheading %}Profile Settings{% endblock pageheading %}
+{% block content %}
+
+
+<div class="col-md-7 col-lg-8 col-xl-9">
+<form id="myform" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+	<div class="card">
+		<div class="card-body">
+			<h4 class="card-title">Basic Information</h4>
+			<div class="row form-row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="change-avatar media_div_row">
+							<div class="profile-img">
+								<img src="{{hospital.profile_pic}}" alt="User Image"
+									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+									class="img_preview">
+							</div>
+							<div class="upload-img">
+								<div class="change-photo-btn">
+									<span><i class="fa fa-upload"></i> Upload Photo</span>
+									<input type="file" class="upload select_media" name="profile_pic">
+								</div>
+								<small class="form-text text-muted">Allowed JPG, GIF or PNG. Max
+									size of 2MB</small>
+							</div>
+						</div>
+					</div>
+				</div>				
+				<div class="col-md-6">
+					<label >Title *</label>
+					<select class="form-select" aria-label="Default select example" name="name_title">
+					<option {% if request.user.name_title == "Mr." %}selected{% endif %} value="Mr."> Mr.</option>
+					<option {% if request.user.name_title == "Mrs." %}selected{% endif %} value="Mrs."> Mrs.</option>
+					<option {% if request.user.name_title == "Miss" %}selected{% endif %} value="Miss"> Miss</option>
+					<option {% if request.user.name_title == "Ms." %}selected{% endif %} value="Ms."> Ms.</option>
+					<option {% if request.user.name_title == "Dr." %}selected{% endif %} value="Dr."> Dr.</option>
+					</select>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label>First Name <span class="text-danger">*</span></label>
+						<input type="text" class="form-control" id="first_name" name="fisrt_name"
+							placeholder="Contact Person First Name" value="{{request.user.first_name}}" required>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label>Last Name <span class="text-danger">*</span></label>
+						<input type="text" class="form-control" id="last_name" name="last_name"
+							placeholder="Contact Persone Last Name" value="{{request.user.last_name}}" required>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label>Phone Number</label>
+						<input type="tel" class="form-control" id="phone" name="phone" disabled="disabled"
+							placeholder="Contact person Number" required value="{{request.user.phone}}">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label>Alternate Phone Number</label>
+						<input type="tel" class="form-control" id="alternate_mobile" name="alternate_mobile"
+							placeholder="Contact Person Alternate Numaber" value="{{hospital.alternate_mobile}}" required>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label>Username <span class="text-danger">*</span></label>
+						<input type="text" class="form-control" id="username" name="username" placeholder="Hopital Name"
+							required disabled="disabled" required value="{{request.user.username}}">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label>Email <span class="text-danger">*</span></label>
+						<input type="email" class="form-control" id="email" name="email" placeholder="Hopital Name"
+							required value="{{request.user.email}}" disabled="disabled">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="zip_Code" class="form-label">Date Of Birth</label>
+						<input type="date" class="form-control" id="dob" name="dob" value="{{hospital.dob|date:'Y-m-d'}}" >
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+					<label  class="form-label">Gender</label>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="gender" id="gender" value="Male" {% if hospital.gender == "Male" %}checked{% endif %} >
+								<label class="form-check-label" for="gender">
+								Male
+								</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="gender" id="gender" value="Female" {% if hospital.gender == "Female" %}checked{% endif %}>
+								<label class="form-check-label" for="gender">
+								Female
+								</label>
+							</div>
+						</div>
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="card">
+		<div class="card-body">
+			<h4 class="card-title">About</h4>
+			<div class="form-group mb-0">
+
+				<textarea class="form-control" id="about" rows="5" name="about"
+					placeholder="write about  Hopital or Add Hospital Details">{{hospital.about}}</textarea>
+			</div>
+		</div>
+	</div>
+
+	<div class="card contact-card">
+		<div class="card-body">
+			<h4 class="card-title">Hospital Details</h4>
+			<div class="row form-row">
+				<div class="col-md-6">
+					<label for="degree" class="form-label">Category</label>					
+						<select class="form-select" aria-label="Default select example"
+							id="degree" name="degree">
+							<option value="">Please	select category</option>
+							<option value="MD" {% if hospital.degree == "MD" %}selected{% endif %}>MD</option>
+							<option value="MS" {% if hospital.degree == "MS" %}selected{% endif %}>MS</option>
+							<option value="DNB" {% if hospital.degree == "DNB" %}selected{% endif %}>DNB</option>
+							<option value="D.M" {% if hospital.degree == "D.M" %}selected{% endif %}>D.M</option>
+							<option value="M.Ch" {% if hospital.degree == "M.Ch" %}selected{% endif %}>M.Ch</option>
+						</select>
+				</div>				
+				<div class="col-md-6">
+					<label class="form-label"> Specilist *</label>
+					<select class="form-select" name="specialist" required>
+						<option selected disabled>Specilist</option>
+						{% for specailist1 in specailists %}
+						<option {% if specailist1.specialist_name == hospital.specailist %}selected{% endif %}
+							value="{{specailist1.id}}">{{specailist1.specialist_name}}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="col-md-12">
+					<div class="form-group">
+						<label>Address </label>
+						<input type="text" class="form-control" id="address" name="address"
+							placeholder="Doctor Address " value="{{hospital.address}}" required>
+					</div>
+				</div>				
+				<div class="col-md-6">
+					<div class="form-group"> 
+						<label class="control-label">State / Province</label>
+						<select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state" class="form-control" value="{{hospital.state}}">
+							{% if hospital.state %}
+								<option value="{{hospital.state}}"selected>{{hospital.state}}</option>
+								{% endif %} 
+						</select>
+						
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label">City</label>
+						<select id ="state" class="form-control" name="city" required value="{{hospital.city}}">
+							{% if hospital.city %}
+										<option value="{{hospital.city}}"selected>{{hospital.city}}</option>
+										{% endif %}
+						</select>
+						
+					</div>
+				</div>			
+				<script language="javascript">print_state("sts");</script>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label">Country</label>
+						<input type="text" class="form-control" id="country" name="country" placeholder="Country"
+						value="{{hospital.country}}" >
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label">Postal Code</label>
+						<input type="text" class="form-control" id="zip_Code" name="zip_Code" placeholder="Pin Code"
+							value="{{hospital.zip_Code}}" required>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label>Display Number </label>
+					<input type="text" class="form-control" id="phone" name="phone" placeholder="Display Number" value="{{hospital.phone}}">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card">		
+		<div class="card-body">
+			<div class="col-md-6">
+				<label  class="form-label">Are You Active ?</label>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="is_active" id="is_active" value="Yes" {% if hospital.is_active == 1 %}checked{% endif %} >
+							<label class="form-check-label" for="is_active">
+							Yes
+							</label>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="is_active" id="is_active" value="No" {% if hospital.is_active == 0 %}checked{% endif %}>
+							<label class="form-check-label" for="is_active">
+							No
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="card">
+		<div class="card-body">
+			<div class="row g-3 align-items-center media_div_row">
+				
+				<div class="col-md-6">
+					<label for="opd_charges" class="form-label">OPD Charges</label>
+					<input type="text" class="form-control" id="opd_charges" name="opd_charges" value="{{hospital.opd_charges}}" >
+				</div>
+				<div class="col-md-6">
+					<label for="home_charges" class="form-label">Home Visit Charges</label>
+					<input type="text" class="form-control" id="home_charges" name="home_charges" value="{{hospital.home_charges}}" >
+				</div>
+				<div class="col-md-6">
+					<label for="home_charges" class="form-label">Online Charges</label>
+					<input type="text" class="form-control" id="online_charges" name="online_charges" value="{{hospital.online_charges}}" >
+				</div>
+				<div class="col-md-6">
+					<label for="emergency_charges-Charges" class="form-label">Emergency Charges</label>
+					<input type="text" class="form-control" id="emergency_charges" name="emergency_charges" value="{{hospital.emergency_charges}}">
+				</div> 
+			  
+				<div class="col-md-6">
+					<label  class="form-label">Virtual call ?</label>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="is_virtual_available" id="is_virtual_available" value="Yes" {% if hospital.is_virtual_available == 1 %}checked{% endif %} >
+								<label class="form-check-label" for="is_virtual_available">
+								Yes
+								</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="is_virtual_available" id="is_virtual_available" value="No" {% if hospital.is_virtual_available == 0 %}checked{% endif %}>
+								<label class="form-check-label" for="is_virtual_available">
+								No
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label  class="form-label">Home Visit ?</label>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="is_homevisit_available" id="is_homevisit_available" value="Yes" {% if hospital.is_homevisit_available == 1 %}checked{% endif %} >
+								<label class="form-check-label" for="is_homevisit_available">
+								Yes
+								</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="is_homevisit_available" id="is_homevisit_available" value="No" {% if hospital.is_homevisit_available == 0 %}checked{% endif %}>
+								<label class="form-check-label" for="is_homevisit_available">
+								No
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			  
+			   
+				<div class="col-md-12">
+					<label for="speciality" class="form-label">Social link</label>
+					<div class="row g-3 row-cols-1 row-cols-lg-3">
+						<div class="col"><input type="text" class="form-control" id="speciality"  placeholder="Facebook Link" name="facebook" value="{{hospital.facebook}}"></div>
+						<div class="col"><input type="text" class="form-control" id="speciality"  placeholder="Instagram Link" name="instagram" value="{{hospital.instagram}}"></div>
+						<div class="col"><input type="text" class="form-control" id="speciality"  placeholder="linkedin Link" name="linkedin" value="{{hospital.linkedin}}"></div>
+					</div>
+					
+				</div>
+			</div>
+			</div>
+			
+			<button type="submit" class="btn btn-primary mt-4">Update Doctor</button>
+		</div>
+	</div>
+
+	
+
+	<div class="submit-section submit-btn-bottom">
+		<button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+	</div>
+</form>
+</div>
+
+{% endblock content %}
+
+
+{% block modal_fade %}
+
+{% endblock modal_fade %}
+
+{% block custom_js %}
+<script>
+	//for medias tab
+	$(".add_media").click(function () {
+		var media_row = $(".first_media").clone();
+		media_row.removeClass("first_media");
+		media_row.replaceAll("src", "")
+		media_row.find(".select_media").val("");
+		media_row.find(".img_preview").attr("src", "").css({
+			"border": "none"
+		}).css({
+			"border-radius": "0px"
+		}).hide();
+		media_row.find(".video_preview").attr("src", "").css({
+			"border": "none"
+		}).css({
+			"border-radius": "0px"
+		}).hide();
+
+		$(".media_div").append(media_row);
+	});
+	$(".remove_media").click(function () {
+		if ($(".media_div").find(".media_div_row").length > 1) {
+			$(".media_div").children().last().remove();
+		}
+	});
+
+	$(document).on("change", ".select_media", function () {
+		var media_type = $(this).parents(".media_div_row").find(".media_type").val();
+		var img_preview = $(this).parents(".media_div_row").find(".img_preview");
+		var vid_preview = $(this).parents(".media_div_row").find(".video_preview");
+		showPreviewMedia(this, media_type, img_preview, vid_preview);
+
+	});
+
+	function showPreviewMedia(input, media_type, img_preview, video_preview) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				if (media_type == "1") {
+					img_preview.attr("src", e.target.result);
+					img_preview.show();
+					img_preview.css({
+						"border": "5px solid orange"
+					});
+					img_preview.css({
+						"border-radius": "10px"
+					});
+				}
+				if (media_type == "2") {
+					video_preview.attr("src", e.target.result);
+					video_preview.show();
+					video_preview.css({
+						"border": "5px solid orange"
+					});
+					video_preview.css({
+						"border-radius": "10px"
+					});
+					video_preview.load();
+					video_preview.play();
+
+				}
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}	
+</script>
+
+<script>
+	$(document).on("change", ".select_media", function () {
+		var img_preview = $(this).parents(".media_div_row").find(".img_preview");
+		showPreviewMedia(this, img_preview);
+
+	});
+
+	function showPreviewMedia(input, img_preview) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				img_preview.attr("src", e.target.result);
+				img_preview.show();
+				img_preview.css({
+					"border": "5px solid primary"
+				});
+				img_preview.css({
+					"border-radius": "2px"
+				});
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+</script>
+<script>
+	document.getElementById('sts').value="{{hospital.state}}";
+</script>
+<script>
+    var locations = {
+
+            'MD': {'Anaesthesiology':[], 'Biochemistry':[], 'Community-Health':[],'Dermatology':[], 'Family-Medicine':[], 'Forensic-Medicine':[],'General-Medicine':[], 'Microbiology':[], 'Paediatrics':[],'Palliative-Medicine':[], 'Pathology':[], 'Skin-and-Venereal-diseases':[],'Pharmacology':[], 'Physical-Medicine-and-Rehabilitation':[], 'Physiology':[],'Preventive-and-Social-Medicine':[], 'Psychiatry':[], 'Radio-Diagnosis':[],'Radio-Therapy':[], 'Tuberculosis-and-Respiratory-diseases':[], 'Emergency-and-Critical-care':[],'Nuclear-Medicine':[], 'Transfusion-Medicine':[]},
+
+            'MS': {'Ear-Nose-and-Throat':[], 'General-Surgery':[], 'Ophthalmology':[],'Orthopaedics':[], 'Obstetrics-and-Gynaecology':[], 'Dermatology, Venerology-and-Leprosy':[]},
+
+            'DNB': {'Anaesthesiology':[], 'Anatomy':[], 'Biochemistry':[],'Dermatology':[], 'Emergency-Medicine':[], 'Forensic-Medicine':[],'General-Medicine':[], 'Family-Medicine':[], 'Field-Epidemiology':[],'General-Surgery':[], 'Health-Administration':[], 'Skin-and-Venereal-diseases':[],'Pharmacology':[], 'Physical-Medicine-and-Rehabilitation':[], 'Physiology':[],'Preventive-and-Social-Medicine':[], 'Psychiatry':[], 'Radio-Diagnosis':[],'Radio-Therapy':[], 'Tuberculosis-and-Respiratory-diseases':[], 'Emergency-and-Critical-care':[],'Nuclear-Medicine':[], 'Transfusion-Medicine':[],'Ophthalmology':[],'Orthopaedic-Surgery':[],'Oto-Rhino-Laryngology':[],'Paediatrics':[],'Pathology':[],'Immunohematology-and-transfusion-medicine':[],'Maternal-and-Child-Health':[],'Microbiology':[],'Obstetric-and-Gynecology':[],'Respiratory-diseases':[],'Rural-Surgery':[],'Social-and-Preventive-Medicine':[]},
+
+            'D.M': {'Psychiatry':[],'Cardiac-Anaesthesiology':[],'Cardiology':[],'Haematology':[],'Pharmacology':[],'Anaesthesiology-Pain Medicine-and-Critical-Care':[],'Endocrinology':[],'Gastroenterology':[],'Medicine-and-Microbiology':[],'Onco-Anesthesiology-and Palliative-Medicine':[],'Cardiology':[],'Pulmonary-and-Sleep-disorders':[],'Obstetrics-and-Gynecology':[],'Nuclear-Medicine':[],'Cardiac-Radiology':[],'Paediatrics':[],'Nephrology':[],'Neuro-Anaesthesiology-and-Critical-Care':[],'Neurology':[]},
+
+            'M.Ch': {'Surgery':[],'Cardiothoracic and Vascular Surgery':[],'Gastrointestinal Surgery':[],'Obstetrics and Gynaecology':[],'ENT':[],'Surgery':[],'Neuro Surgery':[],'Pediatric Surgery':[],'Plastic and Reconstructive Surgery':[],'Surgical Oncology':[],'Surgery Trauma Centre':[],'Urology':[]},
+    }
+
+    window.onload = function() {
+    var degreeSel = document.getElementById("category");
+    var specialistSel = document.getElementById("degree");
+   
+    for (var x in locations) {
+        degreeSel.options[degreeSel.options.length] = new Option(x);
+       
+    }
+   
+    
+    degreeSel.onchange = function() {
+        //empty Chapters- and Topics- dropdowns
+      
+        specialistSel.length = 1;
+        //display correct values
+        for (var y in locations[this.value]) {
+            specialistSel.options[specialistSel.options.length] = new Option(y);
+        }
+    }
+     
+    }
+    var degreeSel1 = document.getElementById("degree1");
+    var specialistSel1 = document.getElementById("specialist1");
+     for (var a in locations) {
+        degreeSel1.options[degreeSel1.options.length] = new Option(a);
+       
+    }
+    degreeSel1.onchange = function() {
+        //empty Chapters- and Topics- dropdowns
+      
+        specialistSel1.length = 1;
+        //display correct values
+        for (var z in locations[this.value]) {
+            specialistSel1.options[specialistSel1.options.length] = new Option(z);
+        }
+    }
+
+</script>
+{% endblock custom_js %}

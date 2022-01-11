@@ -11,6 +11,10 @@ urlpatterns = [
     # path('find_state',views.findState,name="find_state"),
     #Edit from admin hospital lab pharmacy
     path('radmin_hospital_update/<id>',views.hospitalUpdateViews.as_view(),name="radmin_hospital_update"),
+    path('radmin_lab_update/<id>',views.LabUpdateViews.as_view(),name="radmin_lab_update"),
+    path('radmin_doctor_update/<id>',views.DoctorUpdateViews.as_view(),name="radmin_doctor_update"),
+    path('radmin_pharmacy_update/<id>',views.PharmacyUpdateViews.as_view(),name="radmin_pharmacy_update"),
+    path('radmin_patients_update/<id>',views.hospitalUpdateViews.as_view(),name="radmin_patients_update"),
 
     path('loaction_area',views.AddCountriesView.as_view(),name="loaction_area"),
     path('delete_country/<id>',views.deleteCountry,name="delete_country"),
@@ -30,6 +34,7 @@ urlpatterns = [
     path('hospital_delete_admin/<id>',views.HospitalDelete,name="hospital_delete_admin"),
     path('manage_patient_admin',views.PatientAllViews.as_view(),name="manage_patient_admin"),
     path('patient_delete_admin/<id>',views.PatientDelete,name="patient_delete_admin"),
+    path('doctor_delete_admin/<id>',views.DoctorDelete,name="doctor_delete_admin"),
     path('manage_labs_admin',views.LabsAllViews.as_view(),name="manage_labs_admin"),
     path('labs_delete_admin/<id>',views.LabsDelete,name="labs_delete_admin"),
     path('manage_pharmacy_admin',views.PharmacyAllViews.as_view(),name="manage_pharmacy_admin"),
@@ -44,7 +49,7 @@ urlpatterns = [
 
     #Profiel for Hospital, Labs , Pharmcy, Patient 
     path('hospital_profile_admin/<id>',views.HospitalDetailsViews.as_view(),name="hospital_profile_admin"),
-    path('doctor_profile_admin/<id>/<did>',views.DoctorsBookAppoinmentViews.as_view(),name="doctor_profile_admin"),
+    path('doctor_profile_admin/<id>',views.DoctorsBookAppoinmentViews.as_view(),name="doctor_profile_admin"),
     path('labs_profile_admin/<id>',views.LabDetailsViews.as_view(),name="labs_profile_admin"),
     path('pharmacy_profile_admin/<id>',views.PharmacyDetailsViews.as_view(),name="pharmacy_profile_admin"),
     path('patient_profile_admin/<id>',views.PatientDetailsViews.as_view(),name="patient_profile_admin"),
@@ -59,8 +64,11 @@ urlpatterns = [
     path('pharmacydeactivate/<id>',views.PharmacyDeactivate,name="pharmacydeactivate"),
     path('labsactivate/<id>',views.LabsActivate,name="labsactivate"),
     path('labsdeactivate/<id>',views.LabsDeactivate,name="labsdeactivate"),
+    path('doctorsactivate/<id>',views.DoctorsActivate,name="doctorsactivate"),
+    path('doctorsdeactivate/<id>',views.DoctorsDeactivate,name="doctorsdeactivate"),
     path('accidentactivate/<id>',views.AccidentActivate,name="accidentactivate"),
     path('accidentdeactivate/<id>',views.AccidentDeactivate,name="accidentdeactivate"),
 
-
+    #All Reviews
+    path('reviews',views.ReviewsList.as_view(),name="reviews"),
 ]

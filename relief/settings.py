@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',   
     'radmin',
     'hospital',
+    'doctor',
     'accounts.apps.AccoumtsConfig',
     'lab',
     'pharmacy',
@@ -195,6 +196,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT=os.path.join(BASE_DIR,"static")
 
 STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
     BASE_DIR / "static"
 ]
 
@@ -213,7 +215,7 @@ SIMPLE_EMAIL_CONFIRMATION_PERIOD = timedelta(days=EMAIL_CONFIRMATION_PERIOD_DAYS
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'intellecttec@gmail.com'
-EMAIL_HOST_PASSWORD ="onpiiddefwaschwi"
+EMAIL_HOST_PASSWORD ="bzsgrxiakqlxfqjz"
 EMAIL_PORT = 587
 
 

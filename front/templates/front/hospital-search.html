@@ -128,15 +128,15 @@ Booking{% endblock title %}
 												<div class="doctor-img">
 													<a href="#">
 														<img src="{{hospital.hospital.admin.profile_pic}}" class="img-fluid"
-															alt="User Image">
+															alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 													</a>
 												</div>
 												<div class="doc-info-cont">
 													<h4 class="doc-name"><a href="{% url 'hospital_details' hospital.hospital.id %}">{{hospital.hospital.hopital_name|upper}}</a></h4>
 													{% comment %} <p class="doc-speciality">{{hospital.hospital.specialist}}
 													</p> {% endcomment %}
-													<h5 class="doc-department"><img
-															src="{% static 'newstatic/assets/img/specialities/specialities-05.png' %}" class="img-fluid"
+													<h5 class="doc-department"><img 	
+															src="{{hospital.hospital.specialist.hover_icon}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
 															alt="Speciality">{{hospital.hospital.specialist}}</h5>
 													<div class="rating">
 														{% if  hospital.rating <= 5 and hospital.rating > 4 %}
@@ -169,6 +169,13 @@ Booking{% endblock title %}
 														{% endif %}
 														{% if hospital.rating <= 1 and hospital.rating > 0 %}
 															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star"></i> 
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+														{% endif %}
+														{% if hospital.rating == 0 %}
+															<i class="fas fa-star"></i>
 															<i class="fas fa-star"></i> 
 															<i class="fas fa-star"></i>
 															<i class="fas fa-star"></i>

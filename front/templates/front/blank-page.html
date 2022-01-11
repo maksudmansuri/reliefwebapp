@@ -19,6 +19,7 @@
 	<link rel="stylesheet" href="{% static 'newstatic/assets/plugins/swiper/css/swiper.min.css'%}">
 	<link rel="stylesheet" href="{% static 'newstatic/assets/plugins/daterangepicker/daterangepicker.css'%}">
 	<link rel="stylesheet" href="{% static 'newstatic/assets/plugins/fancybox/jquery.fancybox.min.css'%}">
+	<link href="{% static 'newstatic/assets/css/bs4Toast.css'%}" rel="stylesheet" >
 	<link rel="stylesheet" href="{% static 'newstatic/assets/css/style.css'%}">
 
 
@@ -36,7 +37,18 @@
 		<![endif]-->
 </head>
 
-<body>
+<body {% if messages %} 
+{% for message in messages  %}
+  {% if message.tags == "error" %}
+   
+	 onload='toast(message)'
+			
+  {% endif %}
+  {% if message.tags == "success" %}
+	onload='dangerT(message)'
+  {% endif %}
+{% endfor %}
+{% endif %} >
 
 	<div class="main-wrapper">
 		{% include 'front/headersnipet.html' %}
@@ -181,9 +193,81 @@
 	<script src="{% static 'newstatic/assets/js/moment.min.js'%}"></script>
 	<script src="{% static 'newstatic/assets/plugins/daterangepicker/daterangepicker.js'%}"></script>
 	<script src="{% static 'newstatic/assets/plugins/fancybox/jquery.fancybox.min.js'%}"></script>
+	<script src="{% static 'newstatic/assets/js/bs4-toast.js'%}"></script>
 	<script src="{% static 'newstatic/assets/js/script.js'%}"></script>
 
+	<script>
 
+
+
+  
+		function toast(msg){
+			bs4Toast.primary('Success', msg);
+		  }
+		
+		  function dangerT(msg){
+			console.log('danger');
+			bs4Toast.error('Danger Toast', msg);
+		  }
+		
+		  function warning(msg){
+			bs4Toast.warning('Warning Toast', msg);
+		  }
+		  function imaget(msg){
+			bs4Toast.show('Toast with Icon', msg, 
+			{
+			  delay : 2000,  
+			  icon : {
+				type : 'image',
+				src : 'https://via.placeholder.com/150'
+			  }
+		  
+			});
+		  }
+		
+		  function icont(msg){
+			bs4Toast.show('Toast with Icon', msg, 
+			{
+			  delay : 2000,  
+			  icon : {
+				type : 'fontawesome',
+				class : 'fa-bell'
+			  }
+		  
+			});
+		  }
+		
+		  function buttontoast(msg){
+		  bs4Toast.show('Toast with Button', msg, 
+		  {
+			delay : 2000,
+			buttons: [
+			{
+			  text : 'Button 1',
+			  class : 'btn btn-success btn-sm mr-2',
+			  callback : () => {
+				alert('Button 1 clicked');
+			  }
+			},
+			{
+			  text : 'Button 2',
+			  class : 'btn btn-primary btn-sm',
+			  callback : () => {
+				alert('Button 2 clicked');
+			  }
+			}
+			],  
+			icon : {
+			  type : 'fontawesome',
+			  src : 'https://via.placeholder.com/150',
+			  class : 'fa-bell'
+			}
+		
+		  }
+		  
+		  );
+		}
+</script>
 	{% block custom_js %}
 	{% endblock custom_js %}
 </body>
