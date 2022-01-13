@@ -564,7 +564,7 @@ class PatientBottelAndInjections(models.Model):
 class Temp(models.Model):
     id                      =           models.AutoField(primary_key=True)
     user                    =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    order_id                =           models.CharField(max_length=500,unique=True,null=True,blank=True)
+    order_id                =           models.CharField(max_length=500,null=True,blank=True)
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
