@@ -92,7 +92,7 @@ TEMPLATES = [
                 'radmin.context_processors.Badgeson',
                 'radmin.context_processors.BadgeNewAppointment',
             ],
-        },
+        }, 
     },
 ]
 AUTH_USER_MODEL="accounts.CustomUser"
