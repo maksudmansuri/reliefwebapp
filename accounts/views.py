@@ -22,7 +22,7 @@ from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
-from django.utils.encoding import force_bytes,force_text,DjangoUnicodeDecodeError
+from django.utils.encoding import force_bytes,force_str,DjangoUnicodeDecodeError
 from django.core.mail import EmailMessage, message
 from django.conf import settings
 from .utils import generate_token
@@ -652,7 +652,7 @@ def adminSingup(request):
 
 def activate(request,uidb64,token):
     try:
-        uid=force_text(urlsafe_base64_decode(uidb64))
+        uid=force_str(urlsafe_base64_decode(uidb64))
         print(uid)
         user=CustomUser.objects.get(pk=uid) 
     except:
