@@ -1,6 +1,8 @@
 from accounts.api import views
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
+
+from rest_framework.schemas import get_schema_view
   
 urlpatterns = [
     # path('register', views.Register.as_view(), name='register'),
@@ -16,4 +18,10 @@ urlpatterns = [
     path('change_password/', views.ChangePasswordView.as_view(), name="change_password"),
     path('check_if_account_exists/',  views.does_account_exist_view, name="check_if_account_exists"),
     # path('rest_activate/<uidb64>/<token>/$', views.rest_activate,name='rest_activate'),
+  
+    path('schemasapi',get_schema_view(
+        title= "BookingAppAPI",
+        description = "APIs for Authentication only",
+        version = "1.0.0"
+    ),name='schemas'),
 ]

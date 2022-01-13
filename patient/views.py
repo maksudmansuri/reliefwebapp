@@ -5,7 +5,6 @@ from django.db.models import deletion
 from django.db.models.base import Model
 from django.db.models.query_utils import Q
 from django.http.request import HttpRequest
-from pyotp.otp import OTP
 from accounts.views import send_otp
 from chat.models import Notification
 from lab.models import LabSchedule, Medias
@@ -27,12 +26,10 @@ from django.urls.base import resolve, reverse
 from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import csrf_exempt
 import json
-from patient import PaytmChecksum
 from django.utils.encoding import force_bytes,force_text,DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from accounts.utils import generate_token
 import base64
-import pyotp 
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime,timedelta
 import random

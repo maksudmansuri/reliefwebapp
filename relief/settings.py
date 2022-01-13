@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     'chat',
     'mathfilters',
     'django.contrib.humanize',
+    'drf_yasg',
+    'coreapi',
+    'rest_framework_swagger',
 
 ]
 
@@ -218,5 +221,5 @@ EMAIL_HOST_USER = 'intellecttec@gmail.com'
 EMAIL_HOST_PASSWORD ="bzsgrxiakqlxfqjz"
 EMAIL_PORT = 587
 
-
+REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema'} 
 django_heroku.settings(locals())

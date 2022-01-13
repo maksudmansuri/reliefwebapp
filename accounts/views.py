@@ -27,7 +27,6 @@ from django.core.mail import EmailMessage, message
 from django.conf import settings
 from .utils import generate_token
 import base64
-import pyotp
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import date, datetime, timedelta
 import random
