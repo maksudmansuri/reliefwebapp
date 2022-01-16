@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from chat.models import Notification
+from front.models import RatingAndComments
 from lab.models import Medias
 from patient.models import OrderBooking, Orders, PicturesForMedicine, phoneOPTforoders
 from django.core.files.storage import FileSystemStorage
@@ -420,6 +421,19 @@ def UpdloadInvoicePharmacy(request,id):
     except Exception as e:
         messages.add_message(request,messages.SUCCESS,e)
         return HttpResponseRedirect(reverse("pharmacy_home"))
+
+"""Reviews list and edit delete """
+class PharmacyReviewsListView(SuccessMessageMixin,ListView):
+     def get(self, request, *args, **kwargs):
+        try:
+            review_list = RatingAndComments.objects.filter(HLP = request.user)
+            total_review = RatingAndComments.objects.filter(HLP = request.user).count()
+            print(review_list)
+            param={'review_list':review_list,'total_review':total_review}
+            return render(request,"pharmacy/view_reviews.html",param)       
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"No reviews Available")
+            return HttpResponseRedirect(reverse("pharmacy_reviews")) 
 
 
 class ManageMainGalleryView(SuccessMessageMixin,CreateView):

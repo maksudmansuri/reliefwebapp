@@ -68,8 +68,9 @@
                         </a>
                     </li>
                     
-                    <li>
-                        <a href="#">
+                    {% url 'lab_reviews' as lab_reviews %}  
+                    <li {% if request.path == lab_reviews %} class="active" {% endif %} >
+                        <a href="{% url 'lab_reviews' %}">
                             <i class="fas fa-star"></i>
                             <span>Reviews</span>
                         </a>

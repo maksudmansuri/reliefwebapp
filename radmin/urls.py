@@ -70,5 +70,5 @@ urlpatterns = [
     path('accidentdeactivate/<id>',views.AccidentDeactivate,name="accidentdeactivate"),
 
     #All Reviews
-    path('reviews',views.ReviewsList.as_view(),name="reviews"),
+    path('admin_reviews/',views.ReviewsList.as_view(),name="admin_reviews"),
 ]

@@ -48,6 +48,8 @@ urlpatterns = [
     path('<booking_id>',views.bookingConfirmation,name="booking_confirmation"),
     path('lab/<slot_id>',views.slotConfirmation,name="lab_confirmation"),
     path('pharmacy/<booking_id>',views.picturesformedicineConfirmation,name="pharmacy_confirmation"),
+    #View list of reviews given
+    path('patine_reviews/',views.PatineReviewsListView.as_view(),name="patine_reviews"),
 
     # path('add_file',views.MedicalFiles,name="add_file"),
 

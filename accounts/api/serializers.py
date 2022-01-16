@@ -16,7 +16,8 @@ from django.core.mail import EmailMessage
 from django.contrib import messages
 from django.conf import settings
 from django.utils.encoding import force_bytes,force_str,DjangoUnicodeDecodeError
-
+import random
+import string
 
 
 
@@ -26,41 +27,48 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = CustomUser
-		fields = ['email', 'username', 'password', 'phone','user_type']
+		fields = ['email', 'phone','user_type']
 		extra_kwargs = {
 				'password': {'write_only': True},
 		}	
 	
 	
 	def	save(self,request):
-		username = self.validated_data['username']
-		password = self.validated_data['password']
 		phone = self.validated_data['phone']
 		email = self.validated_data['email']
 		user_type = self.validated_data['user_type']
+		lower = string.ascii_lowercase
+		upper = string.ascii_uppercase
+		num = string.digits
+		symbols = string.punctuation
+		all = lower + upper + num + symbols
+		temp = random.sample(all,6)
+		password = "".join(temp)
+		print(password)
 		# if password != password_2:
 		# 	raise serializers.ValidationError({'password':'password does not match'})
-		account = CustomUser.objects.create_user(username=username,password=password,email=email)
-		account.user_type=user_type
-		account.phone=phone
+		account = CustomUser.objects.create_phone_user(phone=phone,email=email,username=phone,password=password)
+		account.user_type = user_type
 		account.is_active = True
-		if user_type == "2":
+		account.is_Mobile_Verified = True
+		if user_type == 2:
 			patient = Hospitals()
 			patient.admin = account
 			patient.save()
-		if user_type == "3":
+		if user_type == 3:
 			patient = DoctorForHospital()
 			patient.admin = account
+			patient.is_hospital_added = False
 			patient.save()
 		if user_type == 4:
 			patient = Patients()
 			patient.admin = account
 			patient.save()
-		if user_type == "5":
+		if user_type == 5:
 			patient = Labs()
 			patient.admin = account
 			patient.save()
-		if user_type == "6":
+		if user_type == 6:
 			patient = Pharmacy()
 			patient.admin = account
 			patient.save()		
@@ -76,7 +84,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
 			'domain':current_site.domain,
 			# 'domain':"127.0.0.1:8000",
 			'uid':urlsafe_base64_encode(force_bytes(account.pk)),
-			'token':generate_token.make_token(account)
+			'token':generate_token.make_token(account),
+			'username' : phone,
+			'password' : password,
 		}
 		)	
 		email_message=EmailMessage(
@@ -85,6 +95,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 			settings.EMAIL_HOST_USER,
 			[email]
 		)
+		print(email_message)
 		email_message.send()
 		return account
 

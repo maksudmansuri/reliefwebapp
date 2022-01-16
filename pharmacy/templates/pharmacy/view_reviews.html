@@ -1,0 +1,261 @@
+{% extends 'pharmacy/blank-page.html' %}
+{% load static %}
+{% block title %} :: Relief Pro:: Review List {% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block content %}
+
+
+		<div class="col-md-7 col-lg-8 col-xl-9">
+			<div class="card">
+				<div class="card-header">
+					<div class="row">
+						<div class="col-sm-6">
+							<h3 class="card-title">List Of Review</h3>
+						</div>
+						{% comment %} <div class="col-sm-6">
+							<div class="text-end">
+								<a href="#large_someone" data-bs-toggle="modal" class="btn btn-primary btn-sm"
+									tabindex="0">Add Dependent</a>
+							</div>
+						</div> {% endcomment %}
+					</div>
+				</div>
+				<div class="card-body ">
+
+					<div class="card card-table mb-0">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-hover table-center mb-0">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Rating</th>
+											<th>Comments</th>
+											<th>From</th>
+											<th>Date and Time</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+									{% for review in review_list %}
+										<tr>
+											<td>
+												{{forloop.counter}}
+											</td>
+											<td><div class="rating">
+												{% if  review.rating <= 5 and review.rating > 4 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+												{% endif %}
+												{% if review.rating <= 4 and review.rating > 3 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star "></i>
+												{% endif %}
+												{% if review.rating <= 3 and review.rating > 2 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star "></i>
+													<i class="fas fa-star "></i>
+												{% endif %}
+												{% if review.rating <= 2 and review.rating > 1 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												{% if review.rating <= 1 and review.rating > 0 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												{% if review.rating == 0 %}
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												
+											</div> </td>
+											<td>{{review.comment|truncatechars:20}}</td>
+											<td>
+												{% if review.patient.user_type == "2" %}
+													{{review.patient.hospitals.hopital_name}}
+												{% endif %}
+												{% if review.patient.user_type == "3" %}
+													{{review.patient.hospitaldoctors.fisrt_name}} {{review.patient.hospitaldoctors.last_name}}
+												{% endif %}
+												{% if review.patient.user_type == "4" %} 
+													<h2 class="table-avatar">
+													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.patient.patients.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
+													<a href="patient-profile.html">{{review.patient.patients.first_name}}
+														{{review.patient.patients.last_name}} <span>#PT00{{review.patient.patients.id}}</span></a>
+													</h2>
+													
+												{% endif %} 
+												{% if review.patient.user_type == "5" %}
+													{{review.patient.labs.lab_name}}
+												{% endif %}
+												{% if review.patient.user_type == "6" %}
+													{{review.patient.pharmacy.pharmacy_name}}
+												{% endif %} 	
+											</td>
+											<td> 
+												{{review.created_date|date:'d M Y'}}<span
+												class="d-block text-info">{{review.created_date|time:"H i a"}}</span>
+											</td>
+											<td>
+												<div class="btn-group" role="group" aria-label="Basic outlined example">
+													<button type="button" class="btn btn-outline-secondary"  toolkit="view "data-bs-toggle="modal" data-bs-target="#depedit{{review.id}}"><i class="far fa-eye"></i></button>
+													
+													
+												</div>
+											</td>
+										</tr>
+									{% endfor %}
+										
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+				
+
+					
+		 	
+		
+{% endblock content %}
+
+{% block modal_fade %}
+{% for review in review_list %}
+<div class="modal fade" id="depedit{{review.id}}" tabindex="-1"  aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+	<div class="modal-content">
+	<form id="roomupdate" method="post" action="#">
+	{% csrf_token %}
+		<div class="modal-header">
+			<h5 class="modal-title  fw-bold" id="depaddLabel">Edit Review</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		
+		<div class="modal-body">               
+			<div class="deadline-form">                        
+				<div class="row g-3 mb-3">
+					<div class="col-sm-12">
+						<label for="room_no" class="form-label">Comment</label>
+						<input type="text" class="form-control" id="room_no" name="room_no" value="{{review.comment}}" disabled>
+					</div> 
+					<div class="col-sm-6">
+					<label for="depone" class="form-label">Rating</label>
+					<div class="star-rating">					
+						<input id="star-5" type="radio" name="rating" value="5" disabled {% if review.rating == 5 %} checked{% endif %}>
+						<label for="star-5" title="5 stars">
+							<i class="active fa fa-star"></i>
+						</label>						
+						<input id="star-4" type="radio" name="rating" value="4" {% if review.rating == 4 %} checked{% endif %}>
+						<label for="star-4" title="4 stars">
+							<i class="active fa fa-star"></i>
+						</label>
+						<input id="star-3" type="radio" name="rating" value="3" {% if review.rating == 3 %} checked{% endif %}>
+						<label for="star-3" title="3 stars">
+							<i class="active fa fa-star"></i>
+						</label>
+						<input id="star-2" type="radio" name="rating" value="2" {% if review.rating == 2 %} checked{% endif %}>
+						<label for="star-2" title="2 stars">
+							<i class="active fa fa-star"></i>
+						</label>
+						<input id="star-1" type="radio" name="rating" value="1" {% if review.rating == 1 %} checked{% endif %}>
+						<label for="star-1" title="1 star">
+							<i class="active fa fa-star"></i>
+						</label>
+					</div>
+					</div>
+				</div>                        
+			</div>
+			
+		   
+		</div>
+	   
+		<div class="modal-footer">
+			{% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button> {% endcomment %}
+			<button type="submit" class="btn btn-primary">Add</button>
+		</div>
+
+	</div>
+	 </form>
+	</div>
+	</div>
+</div> 
+{% endfor %}
+	
+
+{% endblock modal_fade %}
+{% block custom_js %}
+<script>
+ $(".submit_btn").click(function(){
+        var form=new FormData($("#hpatientadd"));
+       // form.append("long_desc",tinyMCE.activeEditor.getContent());
+        console.log("hello")
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'add_someone_as_patient' %}",
+            data:form,
+            success: function (json) {
+                console.log(json)
+            },
+            error: function (xhr, errmsg, err) {
+
+            }
+        });
+        //Ajax code
+
+        
+       // setTimeout(location.reload.bind(location), 2000);
+
+        //update staff from edit page fade
+       
+
+    })
+</script>
+<script>
+	$(document).on("change",".select_media",function(){
+        var img_preview=$(this).parents(".media_div_row").find(".img_preview");
+        showPreviewMedia(this,img_preview);
+
+    });
+
+    function showPreviewMedia(input,img_preview){
+        if(input.files && input.files[0]){
+            var reader=new FileReader();
+            reader.onload=function(e){
+            img_preview.attr("src",e.target.result);
+            img_preview.show();
+            img_preview.css({"border":"5px solid primary"});
+            img_preview.css({"border-radius":"2px"});
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+{% endblock custom_js %}
+
+
+				

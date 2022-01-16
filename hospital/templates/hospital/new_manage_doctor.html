@@ -29,7 +29,7 @@
              <div class="col-md-6 col-xl-4 col-sm-12">
                  <div class="col">
                      <div class="card h-100">
-                         <img class="card-img-top" src="{{doctor.doctor.profile_pic}}" alt="" height="200" />
+                         <img class="card-img-top" src="{{doctor.doctor.profile_pic}}" alt="" height="200" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" />
                          <div class="card-body">
                              <h5 class="card-title">Dr. {{doctor.doctor.fisrt_name}} {{doctor.doctor.last_name}}</h5>
                              <p class="card-text">{{doctor.doctor.about|truncatechars:20}}</p>

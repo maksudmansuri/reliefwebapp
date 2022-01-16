@@ -101,6 +101,7 @@ urlpatterns = [
     # path('delete_price/<id>',views.deletePrice,name="delete_price"),
     
     re_path('doc_verifybooking',views.verifybooking,name="doc_verifybooking"),
+    path('doctor_reviews/',views.DoctorReviewsListView.as_view(),name="doctor_reviews"),
     
     #Blog Urls
     path('add_blog',views.addBlogView.as_view(),name="add_blog"),

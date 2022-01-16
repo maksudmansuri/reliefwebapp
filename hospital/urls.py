@@ -17,7 +17,7 @@ urlpatterns = [
     path('reject_apt/<id>',views.RejectedAPT,name="reject_apt"),
 
     #review list
-    path('reviews',views.ReviewsList.as_view(),name="reviews"),
+    path('hospitalreviews/',views.HospitalReviewsListView.as_view(),name="hospitalreviews"),
     
     
     # for treatment tab menu Treatment includes Diseas , Medicine(with time) , Reports , Follow ups dates , Exercise 
@@ -99,7 +99,8 @@ urlpatterns = [
     #delete price add price
     path('add_price',views.PriceCreate,name="add_price"),
     path('delete_price/<id>',views.deletePrice,name="delete_price"),
-    
+    path('hospital_reviews/',views.HospitalReviewsListView.as_view(),name="hospital_reviews"),
+
     re_path('verifybooking',views.verifybooking,name="verifybooking"),
     
     #Blog Urls

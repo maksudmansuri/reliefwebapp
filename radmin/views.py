@@ -332,12 +332,6 @@ def PatientDelete(request,id):
     hospital.delete()
     return HttpResponseRedirect(reverse("radmin_home"))
 
-def DoctorDelete(request,id):
-    hospital=HospitalDoctors.objects.get(id=id)
-    hospital.delete()
-    return HttpResponseRedirect(reverse("radmin_home"))
-
-
 """
 Labs All Views
 """
@@ -366,25 +360,6 @@ def LabsDeactivate(request,id):
     return HttpResponseRedirect(reverse("radmin_home"))
     # return render(request,'counsellor/manage_student.html',{'hospitals_list':hospitals_list})
 
-def DoctorsActivate(request,id):
-    hospital=HospitalDoctors.objects.get(id=id)
-    if hospital is not None and hospital.is_verified == False:
-        hospital.is_verified=True
-        hospital.is_appiled=False
-        hospital.is_deactive=False
-        hospital.save()
-    # hospitals_list=Hospitals.objects.filter((Q(is_appiled=True) | Q(is_verified=True))  & Q(admin__is_active=True) & Q(admin__user_type=3))
-    return HttpResponseRedirect(reverse("radmin_home"))
-
-def DoctorsDeactivate(request,id):
-    hospital=HospitalDoctors.objects.get(id=id)
-    if hospital is not None and hospital.is_verified == True:
-        hospital.is_verified=False
-        hospital.is_appiled=False
-        hospital.is_deactive=True
-        hospital.save()
-    return HttpResponseRedirect(reverse("radmin_home"))
-    # return render(request,'counsellor/manage_student.html',{'hospitals_list':hospitals_list})
 
 def LabsDelete(request,id):
     hospital=Labs.objects.get(id=id)
@@ -602,6 +577,32 @@ class DoctorUpdateViews(SuccessMessageMixin,View):
             messages.add_message(request,messages.ERROR,e)
             
         return HttpResponseRedirect(reverse("radmin_home"))
+
+def DoctorsActivate(request,id):
+    hospital=HospitalDoctors.objects.get(id=id)
+    if hospital is not None and hospital.is_verified == False:
+        hospital.is_verified=True
+        hospital.is_appiled=False
+        hospital.is_deactive=False
+        hospital.save()
+    # hospitals_list=Hospitals.objects.filter((Q(is_appiled=True) | Q(is_verified=True))  & Q(admin__is_active=True) & Q(admin__user_type=3))
+    return HttpResponseRedirect(reverse("radmin_home"))
+
+def DoctorsDeactivate(request,id):
+    hospital=HospitalDoctors.objects.get(id=id)
+    if hospital is not None and hospital.is_verified == True:
+        hospital.is_verified=False
+        hospital.is_appiled=False
+        hospital.is_deactive=True
+        hospital.save()
+    return HttpResponseRedirect(reverse("radmin_home"))
+    # return render(request,'counsellor/manage_student.html',{'hospitals_list':hospitals_list})
+
+def DoctorDelete(request,id):
+    hospital=HospitalDoctors.objects.get(id=id)
+    hospital.delete()
+    return HttpResponseRedirect(reverse("radmin_home"))
+
 
 
 
@@ -1028,21 +1029,18 @@ Reviews List
 """
 
 class ReviewsList(ListView):
-    model = RatingAndComments 
-    template_name = "hospital/reviews.html" 
+    def get(self, request, *args, **kwargs):
+        try:
+            review_list = RatingAndComments.objects.all()
+            total_review = RatingAndComments.objects.all().count()
+            print(review_list)
+            param={'review_list':review_list,'total_review':total_review}
+            return render(request,"radmin/view_reviews.html",param)       
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"No reviews Available")
+            return HttpResponseRedirect(reverse("admin_reviews")) 
 
-    def get_context_data(self, **kwargs): 
-        context = super().get_context_data(**kwargs)
-        context["reviews"] = RatingAndComments.objects.filter(HLP = self.request.user) 
-        total_cmns = RatingAndComments.objects.filter(HLP = self.request.user).count()
-        cmnss = RatingAndComments.objects.filter(HLP = self.request.user)
-        rating = 0 
-        for cmn in cmnss:
-            rating = rating + cmn.rating
-        if total_cmns > 0: 
-            rating = rating / total_cmns
-        context["total_reviews"] = total_cmns
-        return context
+
 # def findState(request):
 #     country_id = request.POST.get("country_id")
 #     countries=Country.objects.all()

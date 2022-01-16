@@ -396,51 +396,51 @@ class DoctorsBookAppoinmentViews(View):
 class PharmacyDetailsViews(DetailView):
     def get(self, request, *args, **kwargs):
         pharmacy_id=kwargs['id']
-        if request.user.user_type == "4": 
-            pharmacy = get_object_or_404(Pharmacy,is_verified=True,is_deactive=False,id=pharmacy_id)
-            medias = Medias.objects.filter(is_active=True,user=pharmacy.admin)  
-            cmns = RatingAndComments.objects.filter(HLP =pharmacy.admin)[0:5]
-        
-            total_cmns = RatingAndComments.objects.filter(HLP =pharmacy.admin).count()
-            cmnss = RatingAndComments.objects.filter(HLP =pharmacy.admin)
-            rating = 0 
-            for cmn in cmnss:
-                rating = rating + cmn.rating        
-            if total_cmns > 0: 
-                rating = rating / total_cmns 
+        # if request.user.user_type == "4": 
+        pharmacy = get_object_or_404(Pharmacy,is_verified=True,is_deactive=False,id=pharmacy_id)
+        medias = Medias.objects.filter(is_active=True,user=pharmacy.admin)  
+        cmns = RatingAndComments.objects.filter(HLP =pharmacy.admin)[0:5]
+    
+        total_cmns = RatingAndComments.objects.filter(HLP =pharmacy.admin).count()
+        cmnss = RatingAndComments.objects.filter(HLP =pharmacy.admin)
+        rating = 0 
+        for cmn in cmnss:
+            rating = rating + cmn.rating        
+        if total_cmns > 0: 
+            rating = rating / total_cmns 
 
-            #rating for bar 
-            cmn_5 = RatingAndComments.objects.filter(HLP =pharmacy.admin,rating=5).count()
-            cmn_5_per = 0
-            if total_cmns > 0: 
-                cmn_5_per = cmn_5 * 100 / total_cmns
-            print(cmn_5_per)
-            cmn_4 = RatingAndComments.objects.filter(HLP =pharmacy.admin,rating=4).count()
-            cmn_4_per = 0
-            if total_cmns > 0: 
-                cmn_4_per = cmn_4 * 100 / total_cmns
-            print(cmn_4_per)
-            cmn_3 = RatingAndComments.objects.filter(HLP =pharmacy.admin,rating=3).count()
-            cmn_3_per = 0
-            if total_cmns > 0: 
-                cmn_3_per = cmn_3 * 100 / total_cmns
-            print(cmn_3_per)
-            cmn_2 = RatingAndComments.objects.filter(HLP =pharmacy.admin,rating=2).count()
-            cmn_2_per = 0
-            if total_cmns > 0: 
-                cmn_2_per = cmn_2 * 100 / total_cmns
-            print(cmn_2_per)
-            cmn_1 = RatingAndComments.objects.filter(HLP =pharmacy.admin,rating=1).count()
-            cmn_1_per = 0
-            if total_cmns > 0: 
-                cmn_1_per = cmn_1 * 100 / total_cmns
-            print(cmn_1_per)
-        
-            param = {'pharmacy':pharmacy,'medias':medias,'total_cmns':total_cmns,'cmns':cmns,'rating':rating,'cmn_5':cmn_5,'cmn_1':cmn_1,'cmn_2':cmn_2,'cmn_3':cmn_3,'cmn_4':cmn_4,'cmn_1_per':cmn_1_per,'cmn_2_per':cmn_2_per,'cmn_3_per':cmn_3_per,'cmn_4_per':cmn_4_per,'cmn_5_per':cmn_5_per,}  
-            return render(request,"front/pharmacy_details.html",param)
-        else:
-            messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
-            return HttpResponseRedirect(reverse("front_home"))   
+        #rating for bar 
+        cmn_5 = RatingAndComments.objects.filter(HLP =pharmacy.admin,rating=5).count()
+        cmn_5_per = 0
+        if total_cmns > 0: 
+            cmn_5_per = cmn_5 * 100 / total_cmns
+        print(cmn_5_per)
+        cmn_4 = RatingAndComments.objects.filter(HLP =pharmacy.admin,rating=4).count()
+        cmn_4_per = 0
+        if total_cmns > 0: 
+            cmn_4_per = cmn_4 * 100 / total_cmns
+        print(cmn_4_per)
+        cmn_3 = RatingAndComments.objects.filter(HLP =pharmacy.admin,rating=3).count()
+        cmn_3_per = 0
+        if total_cmns > 0: 
+            cmn_3_per = cmn_3 * 100 / total_cmns
+        print(cmn_3_per)
+        cmn_2 = RatingAndComments.objects.filter(HLP =pharmacy.admin,rating=2).count()
+        cmn_2_per = 0
+        if total_cmns > 0: 
+            cmn_2_per = cmn_2 * 100 / total_cmns
+        print(cmn_2_per)
+        cmn_1 = RatingAndComments.objects.filter(HLP =pharmacy.admin,rating=1).count()
+        cmn_1_per = 0
+        if total_cmns > 0: 
+            cmn_1_per = cmn_1 * 100 / total_cmns
+        print(cmn_1_per)
+    
+        param = {'pharmacy':pharmacy,'medias':medias,'total_cmns':total_cmns,'cmns':cmns,'rating':rating,'cmn_5':cmn_5,'cmn_1':cmn_1,'cmn_2':cmn_2,'cmn_3':cmn_3,'cmn_4':cmn_4,'cmn_1_per':cmn_1_per,'cmn_2_per':cmn_2_per,'cmn_3_per':cmn_3_per,'cmn_4_per':cmn_4_per,'cmn_5_per':cmn_5_per,}  
+        return render(request,"front/pharmacy_details.html",param)
+        # else:
+        #     messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
+        #     return HttpResponseRedirect(reverse("front_home"))   
 
 """Lab Details"""
 class LabDetailsViews(DetailView):
@@ -676,6 +676,27 @@ class InvoiceViews(View):
             param ={'booking':booking}
         return render(request,"front/invoice-view.html",param)
      
+"""Review delete for all"""
+def deleteReviews(request,id):
+    try:
+        if request.user.user_type == "4" or request.user.is_superuser:
+            rev = get_object_or_404(RatingAndComments,id=id,patient=request.user)
+            rev.delete()
+            messages.add_message(request,messages.SUCCESS,"Deleted Successfully")
+            return HttpResponseRedirect(reverse("patine_reviews"))
+        elif request.user.user_type == "1":
+            rev = get_object_or_404(RatingAndComments,id=id)
+            rev.delete()
+            messages.add_message(request,messages.SUCCESS,"Deleted Successfully")
+            return HttpResponseRedirect(reverse("admin_reviews"))
+        else:
+            messages.add_message(request,messages.ERROR,"YOu are not Autosried")
+
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,"Somethingwent wrong")
+    
+
+"""Reviews list and edit delete """
 
 class BLoodDonorList(View):
     def get(self, request, *args, **kwargs):

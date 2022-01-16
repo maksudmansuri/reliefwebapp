@@ -913,7 +913,21 @@ def verifybooking(request):
         # except Exception as e:
         #     messages.add_message(request,messages.ERROR,e)
         #     return HttpResponse(e)  # False Call    
-        
+
+"""Reviews list and edit delete """
+class DoctorReviewsListView(SuccessMessageMixin,ListView):
+     def get(self, request, *args, **kwargs):
+        try:
+            review_list = RatingAndComments.objects.filter(HLP = request.user)
+            total_review = RatingAndComments.objects.filter(HLP = request.user).count()
+            print(review_list)
+            param={'review_list':review_list,'total_review':total_review}
+            return render(request,"doctor/view_reviews.html",param)       
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"No reviews Available")
+            return HttpResponseRedirect(reverse("doctor_reviews")) 
+
+
 """
 Update appointment yet not implemented will think more that
 """

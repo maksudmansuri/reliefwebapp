@@ -33,6 +33,20 @@ class MyAccountManager(BaseUserManager):
 
         return user
 
+    def create_phone_user(self, phone,username,email,password=None):
+        if not email:
+            raise ValueError("User must have an Email Address")
+
+        user = self.model(
+                email=self.normalize_email(email),
+                phone =phone, 
+                username = username, 
+               
+            )
+        user.is_active= True
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
 
     def create_superuser(self, email, username, password,**extra_fields):
         user = self.create_user(

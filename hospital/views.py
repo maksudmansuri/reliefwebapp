@@ -677,6 +677,19 @@ def deletePrice(request,id):
     messages.add_message(request,messages.SUCCESS,"Successfully Delete")
     return HttpResponseRedirect(reverse("manage_room"))
 
+"""Reviews list and edit delete """
+class HospitalReviewsListView(SuccessMessageMixin,ListView):
+     def get(self, request, *args, **kwargs):
+        try:
+            review_list = RatingAndComments.objects.filter(HLP = request.user)
+            print(review_list)
+            total_review = RatingAndComments.objects.filter(HLP = request.user).count()
+            param={'review_list':review_list,'total_review':total_review}
+            return render(request,"hospital/view_reviews.html",param)       
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"No reviews Available")
+            return HttpResponseRedirect(reverse("hospitalreviews")) 
+
 class manageDoctorView(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):
         try: 

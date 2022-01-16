@@ -227,12 +227,7 @@ def registration_view(request):
 			data['error_message'] = 'That email is already in use.'
 			data['response'] = 'Error'
 			return Response(data)
-
-		username = request.data.get('username', '0')
-		if validate_username(username) != None:
-			data['error_message'] = 'That username is already in use.'
-			data['response'] = 'Error'
-			return Response(data)
+	
 
 		phone = request.data.get('phone', '0')
 		if validate_phone(phone) != None:
@@ -240,39 +235,32 @@ def registration_view(request):
 			data['response'] = 'Error'
 			return Response(data)
 		
-		old = PhoneOTP.objects.filter(phone__iexact = phone)
-		old = old.first()
-		if old.validated:
-			serializer = RegistrationSerializer(data=request.data)
+		# old = PhoneOTP.objects.filter(phone__iexact = phone)
+		# old = old.first()
+		# if old.validated:
+		serializer = RegistrationSerializer(data=request.data)
 		
-			if serializer.is_valid():
-				account = serializer.save(request)
-				data['response'] = 'successfully registered new user.'
-				data['email'] = account.email
-				data['username'] = account.username
-				data['phone'] = account.phone
-				data['pk'] = account.pk
-				token = Token.objects.get(user=account).key
-				data['token'] = token
-				# user = Customers.objects.filter(admin = request.user)
-				# user.phone = account.phone
-				
-				old.delete()
+		if serializer.is_valid():
+			account = serializer.save(request)
+			data['response'] = 'successfully registered new user.'
+			data['email'] = account.email
+			data['username'] = account.username
+			data['phone'] = account.phone
+			data['pk'] = account.pk
+			token = Token.objects.get(user=account).key
+			data['token'] = token
+			# user = Customers.objects.filter(admin = request.user)
+			# user.phone = account.phone
+			
+			# old.delete()
 
-			else:
-				data = serializer.errors
-			return Response(data)
+		else:
+			data = serializer.errors
+		return Response(data)
 			# return Response(
             #             {'status' : True,
             #             'detail' : 'Account Created Successfully'}
             #             )   		
-		else:
-			return Response(data,
-				{
-				'status' : False,
-				'detail' : 'OTP havent Verified. First do that Step.'
-				}
-			)
 
 def validate_email(email):
 	account = None
@@ -521,93 +509,42 @@ class ChangePasswordView(UpdateAPIView):
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class CustomerRegister(CreateAPIView):
-	# 	permission_classes = (AllowAny,)
+class VerifyUser(APIView):
+	authentication_classes = []
+	permission_classes = []
+	
+	def post(self, request, *args, **kwargs):
+		context = {}
 
-	# 	serializer_class = CustomerRegisterSerializer
+		phone = request.data.get('phone', '0')	
+		account = EmailBackEnd.get_user(request,username=phone)
+		if account:
+			try:
+				token = Token.objects.get(user=account)
+			except Token.DoesNotExist:
+				token = Token.objects.create(user=account)
+			if account.is_active == True:
+				context['response'] = 'Successfully authenticated.'
+				context['pk'] = account.pk
+				context['email'] = account.email.lower()
+				context['phone'] = account.phone
+				context['username'] = account.username
+				context['token'] = token.key
+				context['user'] = 'Existed'
+			else:
+				context['response'] = 'Error'
+				context['error_message'] = 'Somethi9ng Wrong Try Again'
+		else:
+			context['response'] = 'NA'
+			context['success_message'] = 'Please Singup'
 
-	# 	queryset = CustomUser.objects.all()
-		
-	# class InstructorRegister(CreateAPIView):
-	# 	permission_classes = (AllowAny,)
+		return Response(context)
 
-	# 	serializer_class = InstructorRegisterSerializer
-	# 	queryset = CustomUser.objects.all()
+def User_logout(request):
 
+	account = request.user
+	token = Token.objects.get(user=account)
+	token.delete()
+	logout(request)
 
-	# @api_view(['GET',])
-	# @permission_classes((IsAuthenticated,))
-	# def account_properties_view(request):
-	# 	try:
-	# 		account = request.user
-	# 	except CustomUser.DoesNotExist:
-	# 		return Response(status=status.HTTP_404_NOT_FOUND)
-
-	# 	if request.method == 'GET':
-	# 		serializer = AccountPropertiesSerializer(account)
-	# 		return Response(serializer.data)
-
-	# @api_view(['POST',])
-	# def CustomerRegister(request):
-		
-	# 	if request.method == "POST":
-	# 		serializer = CustomerRegisterSerializer(data=request.data)
-	# 		data = {}
-	# 		if serializer.is_valid():
-	# 			user_obj = serializer.save(request)
-	# 			data['response'] = "successfully Registered a new user"
-	# 			data['email'] = user_obj.email
-	# 			data['username'] = user_obj.username
-	# 			token = Token.objects.get(user=user_obj).key
-	# 			data['token'] = token
-	# 		else:
-	# 			data = serializer.errors
-	# 		return Response(data) 
-
-	# @api_view(['POST',])
-	# def InstructorRegister(request):
-		
-	# 	if request.method == "POST":
-	# 		serializer = InstructorRegisterSerializer(data=request.data)
-	# 		data = {}
-	# 		if serializer.is_valid():
-	# 			user_obj = serializer.save(request)
-	# 			data['response'] = "successfully Registered a new user"
-	# 			data['email'] = user_obj.email
-	# 			data['username'] = user_obj.username
-	# 			token = Token.objects.get(user=user_obj).key
-	# 			data['token'] = token
-	# 		else:
-	# 			data = serializer.errors
-	# 		return Response(data) 
-
-	# @api_view(['PUT',])
-	# @permission_classes((IsAuthenticated,))
-	# def update_account_view(request):
-	# 	try:
-	# 		account = request.user
-	# 	except CustomUser.DoesNotExist:
-	# 		return Response(status=status.HTTP_404_NOT_FOUND)
-		
-	# 	if request.method == 'PUT':
-	# 		serializer = AccountPropertiesSerializer(account,data=request.data)
-	# 		data = {}
-	# 		if serializer.is_valid():
-	# 			serializer.save()
-	# 			data['response'] = "Account Updated Successfully"
-	# 			return Response(data=data)
-	# 		return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-
-	# @api_view(['GET',])
-	# @permission_classes((IsAuthenticated,))
-	# def profile_properties_view(request):
-	# 	try:
-	# 		account = Patients.objects.get(admin=request.user)
-	# 		print(account)
-	# 	except Patients.DoesNotExist:
-	# 		return Response(status=status.HTTP_404_NOT_FOUND)
-
-	# 	if request.method == 'GET':
-	# 		serializer = ProfilePropertiesSerializer(account)
-	# 		return Response(serializer.data)
+	return Response('User Logged out successfully')

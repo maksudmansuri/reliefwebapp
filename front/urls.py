@@ -17,6 +17,8 @@ urlpatterns = [
     #profiles Hospital
     path('hospital_details/<id>', views.HospitalDetailsViews.as_view(), name="hospital_details"),
     path('ratingandcomment', views.HospitalComments.as_view(), name="ratingandcomment"),
+    
+    path('delete_reviews/<id>',views.deleteReviews,name="delete_reviews"),
 
     path('bookappoinment/<id>/<did>', views.DoctorsBookAppoinmentViews.as_view(), name="bookappoinment"),
     #Profile Labs

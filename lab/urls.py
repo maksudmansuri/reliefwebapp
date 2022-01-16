@@ -33,5 +33,6 @@ urlpatterns = [
     path('lab_accept_apt/<id>',views.AcceptAPT,name="lab_accept_apt"),
     path('lab_accept_otp/<id>',views.AcceptOTP,name="lab_accept_otp"),
     path('lab_reject_apt/<id>',views.RejectedAPT,name="lab_reject_apt"),
- 
+    path('lab_reviews/',views.LabReviewsListView.as_view(),name="lab_reviews"),
+    
 ]

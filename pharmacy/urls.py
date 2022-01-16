@@ -11,6 +11,7 @@ urlpatterns = [
     path('delete_pharma_gallery',views.deleteMainGallery,name="delete_pharma_gallery"),
     path('delete_pharmacy_appointment/<id>',views.deleteServicesViews,name="delete_pharmacy_appointment"),
     re_path('verifypharmacybooking',views.verifypharmacybooking,name="verifypharmacybooking"),
+    path('pharmacy_reviews/',views.PharmacyReviewsListView.as_view(),name="pharmacy_reviews"),
 
      #previous Patients or Tests
     path('ph_accept_apt/<id>',views.AcceptAPT,name="ph_accept_apt"),

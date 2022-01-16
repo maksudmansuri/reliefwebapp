@@ -65,12 +65,13 @@
 							<span>Add Medical Records</span>
 						</a>
 					</li>
-					{% comment %} <li>
-						<a href="medical-details.html">
-							<i class="fas fa-file-medical-alt"></i>
-							<span>Medical Details</span>
-						</a>
-					</li> {% endcomment %}
+					{% url 'patine_reviews' as patine_reviews %}
+                    <li {% if request.path == patine_reviews %} class="active" {% endif %} >
+                        <a href="{% url 'patine_reviews' %}">
+                            <i class="fas fa-star"></i>
+                            <span>Reviews</span>
+                        </a>
+                    </li>
 					{% url 'patient_update' as patient_update %}
 					<li {% if request.path == patient_update %}class="active"{% endif %}>
 						<a href="{% url 'patient_update' %}">

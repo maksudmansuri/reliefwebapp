@@ -1,5 +1,6 @@
 
 from chat.models import Notification
+from front.models import RatingAndComments
 from patient.models import LabTest, NewLabTest, OrderBooking, Orders, Slot, TreatmentReliefPetient, phoneOPTforoders
 from lab.models import HomeVisitCharges, LabSchedule, Medias
 from hospital.models import DoctorSchedule, ServiceAndCharges, TimeSlot
@@ -298,6 +299,19 @@ class LabUpdateViews(SuccessMessageMixin,UpdateView):
             messages.add_message(request,messages.ERROR,e)
             
         return HttpResponseRedirect(reverse("lab_update"))
+
+"""Reviews list and edit delete """
+class LabReviewsListView(SuccessMessageMixin,ListView):
+     def get(self, request, *args, **kwargs):
+        try:
+            review_list = RatingAndComments.objects.filter(HLP = request.user)
+            total_review = RatingAndComments.objects.filter(HLP = request.user).count()
+            print(review_list)
+            param={'review_list':review_list,'total_review':total_review}
+            return render(request,"lab/view_reviews.html",param)       
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"No reviews Available")
+            return HttpResponseRedirect(reverse("lab_reviews")) 
 
 """
 Lab new slot booking

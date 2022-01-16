@@ -1,4 +1,5 @@
 from datetime import datetime, date, timedelta
+from webbrowser import get
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.paginator import Paginator
 from django.db.models import deletion
@@ -7,6 +8,7 @@ from django.db.models.query_utils import Q
 from django.http.request import HttpRequest
 from accounts.views import send_otp
 from chat.models import Notification
+from front.models import RatingAndComments
 from lab.models import LabSchedule, Medias
 from django.views.generic.base import View
 # from requests.models import Response
@@ -993,3 +995,21 @@ def BookanAppointmentForHomeVisit(request):
                 return JsonResponse({'message' : 'success','status': True,'Booking_id':booking.id,"otp":key})
             else:
                 return JsonResponse({'message' : 'error','status': False,})
+
+
+"""Reviews list and edit delete """
+class PatineReviewsListView(SuccessMessageMixin,ListView):
+     def get(self, request, *args, **kwargs):
+        try:
+            review_list = RatingAndComments.objects.filter(patient = request.user)
+            total_review = RatingAndComments.objects.filter(patient = request.user).count()
+            print(review_list)
+            param={'review_list':review_list,'total_review':total_review}
+            return render(request,"patient/view_reviews.html",param)       
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"No reviews Available")
+            return HttpResponseRedirect(reverse("patine_reviews")) 
+    
+     def post(self, request, *args, **kwargs):
+        return HttpResponseRedirect(reverse("patine_reviews"))
+
