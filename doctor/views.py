@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 from django.http import request
 from django.http.request import HttpRequest
 from accounts import models
+import accounts
 from chat.models import Notification
+import doctor
 from front.models import RatingAndComments
 from patient.models import Booking, LabTest, OrderBooking, Orders, Slot, TreatmentReliefPetient, patientFile, phoneOPTforoders
 from django.db.models.query_utils import Q
@@ -650,60 +652,101 @@ Patient creations just for hosiptal visit patients but for backend i and adding 
 class managePatientView(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):
         try:
-            hospital=Hospitals.objects.get(admin=request.user)
-            hos_patients = HospitalsPatients.objects.filter(hospital=hospital,is_active=True)
+            doctor=HospitalDoctors.objects.get(admin=request.user)
+            hos_patients = Patients.objects.filter(doctor=doctor,is_active=True)
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")
             return HttpResponseRedirect(reverse("manage_patient"))        
-        param={'hospital':hospital,'hos_patients':hos_patients}
-        return render(request,"hospital/manage_patient.html",param)        
+        param={'doctor':doctor,'hos_patients':hos_patients}
+        return render(request,"doctor/manage_patient.html",param)        
 
     def post(self, request, *args, **kwargs):
         #for CustomUSer creation
-        first_name = request.POST.get("first_name")
+        first_name = request.POST.get("fisrt_name")
         last_name = request.POST.get("last_name")
         name_title = request.POST.get("name_title")
         treatment = request.POST.get("treatment")
         age = request.POST.get("age")
+        dob = request.POST.get("dob")
+        alternate_mobile = request.POST.get("alternate_mobile")
         email = request.POST.get("email")
         add_notes = request.POST.get("add_notes")
         phone = request.POST.get("phone")
         ID_number = request.POST.get("ID_number")
         status = request.POST.get("status")
         ID_proof = request.FILES.get("ID_proof")
+        profile_pic = request.FILES.get("profile_pic")
         address = request.POST.get("address")
         city = request.POST.get("city")
+        state = request.POST.get("state")
+        zip_Code = request.POST.get("zip_Code")
         gender = request.POST.get("gender")
+        blood_docation_date = request.POST.get("blood_docation_date")
+        bloodgroup = request.POST.get("bloodgroup")
+       
         # for Hospital staff user creation
 
-        profile_pic_url = ""
         if ID_proof:
             fs=FileSystemStorage()
             filename=fs.save(ID_proof.name,ID_proof)
             media_url=fs.url(filename)
-            profile_pic_url = media_url
-            print("insdie id_proof")
-        print(ID_proof)
-        print(profile_pic_url)
-        # p=CustomUser.objects.filter(phone=phone)
-        # if p.count():
-        #     msg=messages.error(request,"Phone Already Exits")
-        #     return HttpResponseRedirect(reverse("manage_patient"))        
+            ID_proof_url = media_url
+
+        p=CustomUser.objects.filter(phone=phone).count()
+        e=CustomUser.objects.filter(email=email).count()
+        if p > 0:
+            msg=messages.error(request,"Phone Already Exits")
+            return HttpResponseRedirect(reverse("doc_manage_patient"))        
+        if e > 0:
+            msg=messages.error(request,"Email Already Exits")
+            return HttpResponseRedirect(reverse("doc_manage_patient"))        
        
-        hospital=Hospitals.objects.get(admin=request.user)
+        doctor=HospitalDoctors.objects.get(admin=request.user)
 
         
         """
         here i m adding admin as request.user means as a hospital 
         I Assuming this will only work for patient 
         """
-
-        patient = HospitalsPatients(name_title=name_title,first_name=first_name,last_name=last_name,address=address,city=city,age=age,phone=phone,treatment=treatment,ID_number=ID_number,status=status,ID_proof=profile_pic_url,add_notes=add_notes,gender=gender,is_active=True,email=email)
-        patient.hospital=hospital     
+        account = CustomUser.objects.create_user(username=phone,password=phone,email=email)
+        account.user_type=4
+        account.phone=phone
+        patient = Patients()
+        patient.admin = account
         patient.save()
+        account.is_active = True
+        account.save()
+        if profile_pic:
+            fs=FileSystemStorage()
+            filename1=fs.save(profile_pic.name,profile_pic)
+            profile_pic_url=fs.url(filename1)
+            account.profile_pic=profile_pic_url
+            account.patients.profile_pic=profile_pic_url        
+        account.name_title = name_title
+        account.first_name = first_name
+        account.last_name = last_name
+        account.patients.fisrt_name = first_name
+        account.patients.last_name = last_name
+        account.patients.address = address
+        account.patients.city = city
+        account.patients.state = state
+        account.patients.country = "India"
+        account.patients.zip_Code = zip_Code
+        account.patients.dob = dob
+        account.patients.age = age
+        account.patients.alternate_mobile = alternate_mobile
+        account.patients.profile_pic = profile_pic
+        account.patients.gender = gender
+        account.patients.bloodgroup = bloodgroup
+        account.patients.doctor = doctor
+        account.patients.status = status
+        account.patients.added_by_doctor = True 
+        account.patients.is_active = True 
+        account.patients.save()   
+        account.save()
        
         messages.add_message(request,messages.SUCCESS,"Successfully Added")
-        return HttpResponseRedirect(reverse("manage_patient"))
+        return HttpResponseRedirect(reverse("doc_manage_patient"))
 
 def updatePatientView(request):
     if request.method == "POST":
@@ -723,49 +766,62 @@ def updatePatientView(request):
         city = request.POST.get("city")
         gender = request.POST.get("gender")
         id = request.POST.get("id")
+        state = request.POST.get("state")
+        zip_Code = request.POST.get("zip_Code")
+        gender = request.POST.get("gender")
+        bloodgroup = request.POST.get("bloodgroup")
+        dob = request.POST.get("dob")
+        alternate_mobile = request.POST.get("alternate_mobile")
+        profile_pic = request.FILES.get("profile_pic")
         # for Hospital staff user creation
 
-        profile_pic_url = ""
         if ID_proof:
             fs=FileSystemStorage()
             filename=fs.save(ID_proof.name,ID_proof)
             media_url=fs.url(filename)
-            profile_pic_url = media_url
+            ID_proof_url = media_url
            
-        hospital=Hospitals.objects.get(admin=request.user)     
+        doctor=HospitalDoctors.objects.get(admin=request.user)     
         """
        Updating Hospital Patient for now
         """
-        
+        patient = get_object_or_404(Patients,id=id)
 
-        patient = HospitalsPatients(id=id,hospital=hospital)
-        patient.name_title=name_title
-        patient.first_name=first_name
-        patient.last_name=last_name
-        patient.address=address
-        patient.city=city
-        patient.age=age
-        patient.phone=phone
-        patient.treatment=treatment
-        patient.ID_number=ID_number
-        patient.status=status
-        patient.ID_proof=profile_pic_url
-        patient.add_notes=add_notes
-        patient.gender=gender
-        patient.is_active=True
-        patient.email=email        
-        patient.save()
+        patient.admin.name_title = name_title
+        patient.admin.first_name = first_name
+        patient.admin.last_name = last_name
+        patient.fisrt_name = first_name
+        patient.last_name = last_name
+        patient.address = address
+        patient.city = city
+        patient.state = state
+        patient.country = "India"
+        patient.zip_Code = zip_Code
+        patient.dob = dob
+        patient.age = age
+        patient.alternate_mobile = alternate_mobile
+        patient.profile_pic = profile_pic
+        patient.gender = gender
+        patient.bloodgroup = bloodgroup
+        patient.doctor = doctor
+        patient.ID_number = ID_number
+        patient.ID_proof = ID_proof_url
+        patient.status = status 
+        patient.added_by_doctor = True 
+        patient.is_active = True 
+        patient.save()   
+        patient.admin.save()
        
         messages.add_message(request,messages.SUCCESS,"Successfully Update")
         return HttpResponseRedirect(reverse("manage_patient"))
 
 def deleteDoctorPatient(request,id):
-    hospital=Hospitals.objects.get(admin=request.user)  
-    patient = HospitalsPatients.objects.get(id=id,hospital=hospital)
+    doctor=HospitalDoctors.objects.get(admin=request.user)  
+    patient = Patients.objects.get(id=id,doctor=doctor)
     patient.is_active=False
     patient.save()
     messages.add_message(request,messages.SUCCESS,"Successfully Delete")
-    return HttpResponseRedirect(reverse("manage_patient"))
+    return HttpResponseRedirect(reverse("doc_manage_patient"))
 
 class managePricesView(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):
@@ -1014,14 +1070,14 @@ def ReliefPatientViewsFiles(request,id):
 class manageReliefPatientViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
         try:
-            hospital=Hospitals.objects.get(admin=request.user)
-            treatmentreliefpetient = TreatmentReliefPetient.objects.filter(is_active=True,booking__is_taken=True,booking__hospitalstaffdoctor__hospital=hospital)
+            hospital=HospitalDoctors.objects.get(admin=request.user)
+            treatmentreliefpetient = TreatmentReliefPetient.objects.filter(is_active=True,booking__is_taken=True,booking__HLP=hospital.admin)
             print(treatmentreliefpetient)
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")
             return HttpResponseRedirect(reverse("manage_relief_patient"))        
         param={'hospital':hospital,'treatmentreliefpetient':treatmentreliefpetient}
-        return render(request,"hospital/manage_relief_patient.html",param)        
+        return render(request,"doctor/manage_relief_patient.html",param)        
 
     def post(self, request, *args, **kwargs):
         id = request.POST.get('a_id')        

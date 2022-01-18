@@ -74,15 +74,16 @@ class CustomUser(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     name_title   =models.CharField(max_length=256,blank=True,null=True,default="")
-    first_name = models.CharField(max_length=254)
-    last_name = models.CharField(max_length=254)
+    first_name = models.CharField(max_length=254,blank=True,null=True)
+    last_name = models.CharField(max_length=254,blank=True,null=True)
     user_type_data=((1,"AdminHOD"),(2,"Hospitals"),(3,"HospitalDoctors"),(4,"Patients"),(5 ,"Labs"),(6 ,"Pharmacy"),(0,"Admin"))
     user_type=models.CharField(choices=user_type_data,max_length=50)
     phone_regex     = RegexValidator( regex = r'^\+?1?\d{9,10}$', message ="Phone number must be entered in the format +919999999999. Up to 10 digits allowed.")
     phone           = models.CharField('Phone',validators =[phone_regex], max_length=10, unique = True,null=True)
-    is_Mobile_Verified      = models.BooleanField(blank=False, default=False)
-    is_Email_Verified      = models.BooleanField(blank=False, default=False)
-    counter         = models.IntegerField(default=0, blank=False) #OTP counter
+    is_Mobile_Verified      = models.BooleanField(blank=True, default=True)
+    is_Email_Verified      = models.BooleanField(blank=True, default=True)
+    counter         = models.IntegerField(default=0, blank=True) #OTP counter
+    share         = models.FloatField(default=0, blank=True,null=True)
     otp_session_id  = models.CharField(max_length=120, null=True, default = "")
     otp              = models.CharField(max_length=120, null=True, default = "")
     profile_pic         =models.FileField(upload_to="user/profile_pic",max_length=500,null=True,default="")
@@ -203,38 +204,9 @@ class HospitalPhones(models.Model):
     created_at          =models.DateTimeField(auto_now_add=True)
     updated_at          =models.DateTimeField(auto_now_add=True)
  
-class Patients(models.Model):
-    id                  =models.AutoField(primary_key=True)
-    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
-    fisrt_name          =models.CharField(max_length=250,blank=True,null=True,default="")
-    last_name           =models.CharField(max_length=250,blank=True,null=True,default="")
-    address             =models.CharField(max_length=500,blank=True,null=True,default="")
-    city                =models.CharField(max_length=250,blank=True,null=True,default="")
-    state               =models.CharField(max_length=250,blank=True,null=True,default="")
-    country             =models.CharField(max_length=250,blank=True,null=True,default="")
-    zip_Code            =models.CharField(max_length=250,blank=True,null=True,default="")
-    dob                 =models.DateField(blank=True,null=True)
-    age                 =models.IntegerField(blank=True,null=True)  
-    alternate_mobile    =models.CharField(max_length=250,blank=True,null=True,default="")
-    profile_pic         =models.FileField(upload_to="patients/profile/images",blank=True,null=True,default="")
-    gender              =models.CharField(max_length=255,null=True,default="")
-    bloodgroup          =models.CharField(max_length=255,null=True,default="")
-    blood_docation_date                 =models.DateField(blank=True,null=True)
-    is_donated           =models.BooleanField(blank=True,null=True,default=False)
-    blood_donation           =models.BooleanField(blank=True,null=True,default=False)
-    is_active           =models.BooleanField(blank=True,null=True,default=False)
-    is_verified         =models.BooleanField(blank=True,null=True,default=False)
-    created_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
-    updated_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
-    objects             =models.Manager()
-     
-    def __str__(self):
-        self.is_active =True
-        return self.admin.phone 
-        
 class HospitalDoctors(models.Model):
     id                  =models.AutoField(primary_key=True)
-    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)   
     name_title          =models.CharField(max_length=256,blank=True,null=True,default="")
     fisrt_name          =models.CharField(max_length=250,blank=True,null=True,default="")
     last_name           =models.CharField(max_length=250,blank=True,null=True,default="")
@@ -272,6 +244,44 @@ class HospitalDoctors(models.Model):
     
     def __str__(self):
         return self.fisrt_name +" "+ self.last_name
+
+
+class Patients(models.Model):
+    id                  =models.AutoField(primary_key=True)
+    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    fisrt_name          =models.CharField(max_length=250,blank=True,null=True,default="")
+    last_name           =models.CharField(max_length=250,blank=True,null=True,default="")
+    address             =models.CharField(max_length=500,blank=True,null=True,default="")
+    city                =models.CharField(max_length=250,blank=True,null=True,default="")
+    state               =models.CharField(max_length=250,blank=True,null=True,default="")
+    country             =models.CharField(max_length=250,blank=True,null=True,default="")
+    zip_Code            =models.CharField(max_length=250,blank=True,null=True,default="")
+    dob                 =models.DateField(blank=True,null=True)
+    age                 =models.IntegerField(blank=True,null=True)  
+    alternate_mobile    =models.CharField(max_length=250,blank=True,null=True,default="")
+    profile_pic         =models.FileField(upload_to="patients/profile/images",blank=True,null=True,default="")
+    gender              =models.CharField(max_length=255,null=True,default="")
+    bloodgroup          =models.CharField(max_length=255,null=True,default="")
+    blood_docation_date                 =models.DateField(blank=True,null=True)
+    is_donated           =models.BooleanField(blank=True,null=True,default=False)
+    blood_donation           =models.BooleanField(blank=True,null=True,default=False)
+    hospital            =models.ForeignKey(Hospitals, on_delete=models.DO_NOTHING,blank=True,null=True,default="")
+    doctor            =models.ForeignKey(HospitalDoctors, on_delete=models.DO_NOTHING,blank=True,null=True,default="")
+    ID_number           =models.CharField(max_length=250,blank=True,null=True,default="")
+    ID_proof            =models.FileField(upload_to="patients/profile/images",blank=True,null=True,default="")
+    status              =models.CharField(max_length=250,blank=True,null=True,default="") #Healthy,Weak
+    added_by_hospital   =models.BooleanField(blank=True,null=True,default=False)
+    added_by_doctor   =models.BooleanField(blank=True,null=True,default=False)
+    is_active           =models.BooleanField(blank=True,null=True,default=False)
+    is_verified         =models.BooleanField(blank=True,null=True,default=False)
+    created_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    updated_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    objects             =models.Manager()
+     
+    def __str__(self):
+        self.is_active =True
+        return self.admin.phone 
+        
 
 class Labs(models.Model):
     id                  =models.AutoField(primary_key=True)

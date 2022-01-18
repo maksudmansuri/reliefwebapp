@@ -12,7 +12,7 @@ import random
 from django.contrib.auth import authenticate,login,logout
 from django.utils.encoding import force_bytes
 
-import lab
+
 
 from .serializers import DProfilePropertiesSerializer, HProfilePropertiesSerializer, LProfilePropertiesSerializer, PHProfilePropertiesSerializer, PProfilePropertiesSerializer, RegistrationSerializer,AccountPropertiesSerializer,ChangePasswordSerializer #ProfilePropertiesSerializer
 
@@ -20,7 +20,7 @@ from rest_framework.generics import (CreateAPIView, RetrieveUpdateAPIView, Updat
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes,authentication_classes
 
-from rest_framework import status,permissions
+from rest_framework import status,permissions,viewsets
 
 from accounts.models import AdminHOD, CustomUser, DoctorForHospital, Hospitals, Labs,Patients, Pharmacy,PhoneOTP
 from accounts.EmailBackEnd import EmailBackEnd
@@ -37,7 +37,6 @@ from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
-
 conn = http.client.HTTPConnection("2factor.in")
 
 
@@ -256,7 +255,8 @@ def registration_view(request):
 
 		else:
 			data = serializer.errors
-		return Response(data)
+			return Response(data,status=status.HTTP_400_BAD_REQUEST)
+		return Response(data,status=status.HTTP_200_OK)
 			# return Response(
             #             {'status' : True,
             #             'detail' : 'Account Created Successfully'}
@@ -294,14 +294,12 @@ class AccountProperpertiesView(APIView):
 	authentication_classes = (TokenAuthentication,)
 	def get(self, request):
 		try:
-			account = request.user
-			print("succes")
-		except CustomUser.DoesNotExist:
-			print("fialed")
+			account = request.user			
+		except CustomUser.DoesNotExist:			
 			return Response(status=status.HTTP_404_NOT_FOUND)
 		
 		serializer = AccountPropertiesSerializer(account)
-		return Response(serializer.data)
+		return Response(serializer.data,status=status.HTTP_200_OK)
 		
 class AccountProperpertiesUpdateView(UpdateAPIView):
 	serializer_class = AccountPropertiesSerializer
@@ -310,10 +308,8 @@ class AccountProperpertiesUpdateView(UpdateAPIView):
 	authentication_classes = (TokenAuthentication,)
 	def put(self, request):
 		try:
-			account = request.user
-			print("succes")
-		except CustomUser.DoesNotExist:
-			print("fialed")
+			account = request.user			
+		except CustomUser.DoesNotExist:		
 			return Response(status=status.HTTP_404_NOT_FOUND)
 			
 		serializer = AccountPropertiesSerializer(account,data=request.data)
@@ -321,7 +317,7 @@ class AccountProperpertiesUpdateView(UpdateAPIView):
 		if serializer.is_valid():
 			serializer.save()
 			data['response'] = "Account Updated Successfully"
-			return Response(data=data)
+			return Response(data=data,status=status.HTTP_200_OK)
 		return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -361,10 +357,10 @@ class ProfileProperpertiesView(APIView):
 		if request.user.user_type == "5":
 			serializer = LProfilePropertiesSerializer(account)
 		if request.user.user_type == "6":
-			print("pahrmacy")
 			serializer = PHProfilePropertiesSerializer(account)
+		
 
-		return Response(serializer.data)
+		return Response(serializer.data,status=status.HTTP_200_OK)
 
 class ProfileProperpertiesUpdateView(UpdateAPIView):
 	serializer_class = AccountPropertiesSerializer
@@ -404,7 +400,7 @@ class ProfileProperpertiesUpdateView(UpdateAPIView):
 		if serializer.is_valid():
 			serializer.save()
 			data['response'] = "Account Updated Successfully"
-			return Response(data=data)
+			return Response(data=data,status=status.HTTP_200_OK)
 		return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class ObtainAuthTokenView(APIView):
@@ -433,11 +429,11 @@ class ObtainAuthTokenView(APIView):
 			else:
 				context['response'] = 'Error'
 				context['error_message'] = 'Check you email for activte account'
+				return Response(context,status=status.HTTP_400_BAD_REQUEST)
 		else:
 			context['response'] = 'Error'
 			context['error_message'] = 'Invalid credentials'
-
-		return Response(context)
+			return Response(context,status=status.HTTP_200_OK)
 
 @api_view(['POST', ])
 @permission_classes([])
@@ -512,33 +508,42 @@ class ChangePasswordView(UpdateAPIView):
 class VerifyUser(APIView):
 	authentication_classes = []
 	permission_classes = []
+	serializer_class = AccountPropertiesSerializer
+	model = CustomUser
 	
 	def post(self, request, *args, **kwargs):
-		context = {}
+		# context = {}
+		# phone = request.data.get('phone', '0')
+		# account = EmailBackEnd.get_user(request,username=phone)
+		serializer = AccountPropertiesSerializer(data=request.data)
+		data = {}
 
-		phone = request.data.get('phone', '0')	
-		account = EmailBackEnd.get_user(request,username=phone)
-		if account:
-			try:
-				token = Token.objects.get(user=account)
-			except Token.DoesNotExist:
-				token = Token.objects.create(user=account)
-			if account.is_active == True:
-				context['response'] = 'Successfully authenticated.'
-				context['pk'] = account.pk
-				context['email'] = account.email.lower()
-				context['phone'] = account.phone
-				context['username'] = account.username
-				context['token'] = token.key
-				context['user'] = 'Existed'
-			else:
-				context['response'] = 'Error'
-				context['error_message'] = 'Somethi9ng Wrong Try Again'
-		else:
-			context['response'] = 'NA'
-			context['success_message'] = 'Please Singup'
-
-		return Response(context)
+		if serializer.is_valid():
+			serializer.save()
+			data['response'] = "Account Updated Successfully"
+			return Response(data=data,status=status.HTTP_200_OK)
+		
+		# if account:
+		# 	try:
+		# 		token = Token.objects.get(user=account)
+		# 	except Token.DoesNotExist:
+		# 		token = Token.objects.create(user=account)
+		# 	if account.is_active == True:
+		# 		context['response'] = 'Successfully authenticated.'
+		# 		context['pk'] = account.pk
+		# 		context['email'] = account.email.lower()
+		# 		context['phone'] = account.phone
+		# 		context['username'] = account.username
+		# 		context['token'] = token.key
+		# 		context['user'] = 'Existed'
+		# 	else:
+		# 		context['response'] = 'Error'
+		# 		context['error_message'] = 'Somethi9ng Wrong Try Again'
+		# 		return Response(context,status=status.HTTP_400_BAD_REQUEST)
+		# else:
+		# 	context['response'] = 'NA'
+		# 	context['success_message'] = 'Please Singup'
+		# 	return Response(context,status=status.HTTP_200_OK)
 
 def User_logout(request):
 
@@ -546,5 +551,4 @@ def User_logout(request):
 	token = Token.objects.get(user=account)
 	token.delete()
 	logout(request)
-
-	return Response('User Logged out successfully')
+	return Response('User Logged out successfully',status.HTTP_200_OK)

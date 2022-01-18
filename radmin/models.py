@@ -1,4 +1,8 @@
+from pyexpat import model
 from django.db import models
+
+from accounts.models import CustomUser, HospitalDoctors, Hospitals
+import doctor
 
 
 class Country(models.Model):
@@ -25,4 +29,30 @@ class City(models.Model):
     updated_at                   =models.DateTimeField(auto_now=True)
     objects                      =models.Manager()
  
-   
+class DonorRequest(models.Model):
+    id = models.AutoField(primary_key=True)
+    reqestpersoned = models.ForeignKey(CustomUser,related_name="request_from",on_delete=models.CASCADE,null=True,blank=True)#who request
+    forpersoned = models.ForeignKey(CustomUser,related_name="request_to",on_delete=models.CASCADE,null=True,blank=True)#who request
+    is_active           =models.BooleanField(blank=True,null=True,default=False)
+    created_at                   =models.DateTimeField(auto_now=True)
+    updated_at                   =models.DateTimeField(auto_now=True)
+    objects                      =models.Manager()
+
+class Disease(models.Model):
+    id =            models.AutoField(primary_key=True)
+    name =          models.CharField(max_length=50,null=True,blank=True,default="")
+    desc =              models.CharField(max_length=50,null=True,blank=True,default="")
+    d_icon                 =models.FileField(max_length=500,null=True,default="")
+    is_active           =models.BooleanField(blank=True,null=True,default=False)
+    created_at                   =models.DateTimeField(auto_now=True)
+    updated_at                   =models.DateTimeField(auto_now=True)
+    objects                      =models.Manager()
+
+class HospitalDisease(models.Model):
+    id =            models.AutoField(primary_key=True)
+    hospital            =models.ForeignKey(Hospitals, on_delete=models.DO_NOTHING,blank=True,null=True,default="")
+    doctor            =models.ForeignKey(HospitalDoctors, on_delete=models.DO_NOTHING,blank=True,null=True,default="")
+    disease                 =models.ForeignKey(Disease, on_delete=models.DO_NOTHING,blank=True,null=True,default="")
+    created_at                   =models.DateTimeField(auto_now=True)
+    updated_at                   =models.DateTimeField(auto_now=True)
+    objects                      =models.Manager()

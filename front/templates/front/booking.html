@@ -30,100 +30,151 @@ Booking {% endblock title %}
 		<div class="content">
 			<div class="container">
 				<div class="row">
-					<div class="col-12">
+					<div class="col-12">		
+						
+						{% if doctor.hospitalstaffdoctors %}
 						<div class="card">
 							<div class="card-body">
 								<div class="doctor-widget">
 									<div class="doc-info-left">
 										<div class="doctor-img">
-											<img src="{{hospital.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
+											<img src="{{doctor.hospitalstaffdoctors.hospital.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
 												alt="User Image">
 										</div>
 										<div class="doc-info-cont">
-											<h4 class="doc-name">{{hospital.hopital_name}}</h4>
-											<p class="doc-speciality">{{hospital.specialist}}</p>
-											<p class="doc-department"><img src="{{hospital.specialist.hover_icon}}"
-													class="img-fluid" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Speciality">Dentist</p>
-											<div class="rating">
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star"></i>
-												<span class="d-inline-block average-rating">(35)</span>
-											</div>
+											<h4 class="doc-name">{{doctor.hospitalstaffdoctors.hospital.hopital_name}}</h4>
+											<p class="doc-speciality">{{doctor.hospitalstaffdoctors.hospital.specialist}}</p>
+											<p class="doc-department"><img src="{{doctor.hospitalstaffdoctors.hospital.specialist.hover_icon}}"
+													class="img-fluid" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Speciality">Dentist</p>													
 											<div class="clinic-details">
-												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{hospital.city}}, {{hospital.state}} - <a
+												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{doctor.hospitalstaffdoctors.hospital.city}}, {{doctor.hospitalstaffdoctors.hospital.state}} - <a
 														href="javascript:void(0);">Get Directions</a></p>
-												<ul class="clinic-gallery">
-												{% for media in medias %}
-												{% if media.media_type == "1" %}
-													<li>
-														<a href="{{media.media_content}}" data-fancybox="gallery">
-															<img src="{{media.media_content}}" alt="Feature">
-														</a>
-													</li>
-												{% endif %}
-												{% endfor %}
-												</ul>
+												
 											</div>
-											{% comment %} <div class="clinic-services">
-												<span>Dental Fillings</span>
-												<span>Teeth Whitneing</span>
-											</div> {% endcomment %}
+											
 										</div>
 									</div>
 									<div class="doc-info-right">
-										{% comment %} <div class="clini-infos">
-											<ul>
-												{% comment %} <li><i class="far fa-thumbs-up"></i> 99%</li>
-												<li><i class="far fa-comment"></i> 35 Feedback</li>
-												<li><i class="fas fa-map-marker-alt"></i> Newyork, USA</li> 
-												<li><i class="far fa-money-bill-alt"></i> &#8377;{{amount.service_charge}} </li>
-											</ul>
-										</div> 
-										{% comment %} <div class="doctor-action">
-											<a href="javascript:void(0)" class="btn btn-white fav-btn">
-												<i class="far fa-bookmark"></i>
-											</a>
-											<a href="chat.html" class="btn btn-white msg-btn">
-												<i class="far fa-comment-alt"></i>
-											</a>
-											<a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
-												data-bs-target="#voice_call">
-												<i class="fas fa-phone"></i>
-											</a>
-											<a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
-												data-bs-target="#video_call">
-												<i class="fas fa-video"></i>
-											</a>
-										</div> {% endcomment %}
-										{% comment %} <div class="clinic-booking">
-											<a class="apt-btn" href="booking.html">Book Appointment</a>
-										</div> {% endcomment %}
+										
 									</div>
 								</div>
 							</div>
 						</div>
+						{% endif %}
 						<div class="card">
 							<div class="card-body">						
 
-								<div class="booking-doc-info">
-									<a href="#" class="booking-doc-img">
-										<img src="{{doctor.doctor.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
-									</a>
-									<div class="booking-info">
-										<h4><a href="#">Dr. {{doctor.doctor.fisrt_name}} {{doctor.doctor.last_name}}</a></h4>
-				
-										<p class="text-muted mb-0"><i class="far fa-id-card"></i> {{doctor.doctor.specialist}}
-										<p class="text-muted mb-0"><i class="fas fa-map-marker-alt"></i> {{doctor.doctor.city}} {{doctor.doctor.state}}
-										</p>
+								<div class="doctor-widget">
+									<div class="doc-info-left">
+										<div class="doctor-img">
+											<a href="#">
+												<img src="{{doctor.profile_pic}}" class="img-fluid"
+													alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+											</a>
+										</div>
+										<div class="doc-info-cont">
+											<h4 class="doc-name"><a href="#">{{doctor.name_title}} {{doctor.fisrt_name}} {{doctor.last_name}}</a></h4>
+											<p class="doc-speciality">{{doctor.degree}}
+											</p>
+											
+											<h5 class="doc-department"><img
+													src="{{doctor.specialist.specialist_icon}}" class="img-fluid"
+													alt="Speciality" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">{{doctor.specialist}}</h5>
+													<div class="rating">
+														{% if rating <= 5 and rating > 4 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i> 
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+														{% endif %}
+														{% if rating <= 4 and rating > 3 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i> 
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star "></i>
+														{% endif %}
+														{% if rating <= 3 and rating > 2 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i> 
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star "></i>
+															<i class="fas fa-star "></i>
+														{% endif %}
+														{% if rating <= 2 and rating > 1 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i> 
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+														{% endif %}
+														{% if rating <= 1 and rating > 0 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star"></i> 
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+														{% endif %}
+														{% if rating == 0 %}
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i> 
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+														{% endif %}
+														<span class="d-inline-block average-rating">({{total_cmns}})</span>
+													</div>
+											<div class="clinic-details">
+												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{doctor.city}},{{doctor.state}}</p>
+												
+											</div>  
+											
+										</div>
 									</div>
 									
+									<div class="doc-info-right">
+										<div class="clini-infos">
+											<ul>
+												<li><i class="fas fa-first-aid"></i>OPD &#8377;{{doctor.opd_charges}}
+												</li>
+												<li><i class="fas fa-first-aid"></i>Emergency
+													{% if doctor.emergency_charges %}&#8377;{{doctor.emergency_charges}}{% else %}
+													NA {% endif %} </li>
+												<li><i class="fas fa-home"></i>Home Visit {% if doctor.home_charges %}
+													&#8377;{{doctor.home_charges}}{% else %} NA {% endif %} </li>
+												<li><i class="fas fa-video"></i>Online {% if doctor.online_charges %}
+													&#8377;{{doctor.online_charges}}{% else %} NA {% endif %}</li>
+											</ul>
+										</div>
+										<div class="doctor-action">
+											{% if doctor.emergency_charges %}
+											<a href="javascript:void(0)" class="btn btn-white call-btn"
+												data-bs-toggle="modal" data-bs-target="#voice_call">
+												<i class="fas fa-first-aid"></i>
+
+											</a>
+											{% endif %}
+											{% if doctor.home_charges %}
+											<a href="javascript:void(0)" class="btn btn-white call-btn"
+												data-bs-toggle="modal" tooltip="Home visit " data-bs-target="#voice_call">
+												<i class="fas fa-home"></i>
+											</a>
+											{% endif %}
+											{% if doctor.is_virtual_available %}
+											<a href="javascript:void(0)" class="btn btn-white call-btn"
+												data-bs-toggle="modal" data-bs-target="#video_call">
+												<i class="fas fa-video"></i>
+											</a>
+											{% endif %}
+
+										</div>
+										
+									</div>
 								</div>
 
 							</div>
-						</div>
+						</div>						
 						<div class="card">
 							<div class="card-body pt-0">	
 
@@ -449,7 +500,7 @@ Booking {% endblock title %}
 				
 				
 										<div class="write-review">
-											<h4>Write a review for <strong>Dr. {{doctor.doctor.fisrt_name|upper}} {{doctor.doctor.last_name|upper}}</strong></h4>
+											<h4>Write a review for <strong>Dr. {{doctor.fisrt_name|upper}} {{doctor.last_name|upper}}</strong></h4>
 											
 											{% if user.is_authenticated %}
 											{% if user.user_type == '4' %}
@@ -484,7 +535,8 @@ Booking {% endblock title %}
 													<label>Your review</label>
 													<textarea id="review_desc" maxlength="100" class="form-control"
 														name="comment"></textarea>
-														<input type="hidden" value="{{hospital.admin.id}}" name="HLP">
+														<input type="hidden" value="{{doctor.admin.id}}" name="HLP">
+														<input type="hidden" value="doctor" name="pagename">
 														<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span
 																id="chars">100</span> characters
 															remaining</small></div>

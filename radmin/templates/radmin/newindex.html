@@ -1,528 +1,658 @@
 {% extends 'radmin/blank-page.html' %}
 {% load static %}
 {% block title %} :: Relief Pro:: Admin Dashboard {% endblock title %}
-  
+
 {% block custom_css %}{% endblock custom_css %}
-	
-	{% block content %}
-			
-	<div class="col-md-7 col-lg-8 col-xl-9">
-						
-		<div class="card">
+
+{% block content %}
+
+<div class="col-md-9 col-lg-8 col-xl-9">
+
+	<div class="card">
 		<div class="card-header d-flex justify-content-between border-bottom flex-wrap">
-						<h4 class="card-title">Manage  <a type="button" class="btn btn-rounded btn-primary">{{badgetotal}}</a> </h4>
-						<div class="col-auto d-flex w-sm-100">
-							<button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;" onclick = "refesh()"><i class="fas fa-sync-alt"></i></button>
-						</div> 
-					</div>
-			<div class="card-body pt-0">
+			<h4 class="card-title">Manage <a type="button" class="btn btn-rounded btn-primary">{{badgetotal}}</a> </h4>
+			<div class="col-auto d-flex w-sm-100">
+				<button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;"
+					onclick="refesh()"><i class="fas fa-sync-alt"></i></button>
+			</div>
+		</div>
+		<div class="card-body pt-0">
 
-				<nav class="user-tabs mb-4">
-					<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
-						<li class="nav-item">
-							<a class="nav-link active" href="#pat_appointments"
-								data-bs-toggle="tab">Hospital {{chospital}}</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#doctor"
-								data-bs-toggle="tab">Doctors {{cdoctor}}</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#pat_prescriptions"
-								data-bs-toggle="tab">Laboratory {{clab}}</a>
-						</li>
-						<li class="nav-item"> 
-							<a class="nav-link" href="#pat_medical_records" data-bs-toggle="tab">Pharmacy {{cpharmacy}}</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#patient" data-bs-toggle="tab">Patient {{cpatient}}</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#accident" data-bs-toggle="tab">Accident {{caccidents}}</a>
-						</li>
-					</ul>
-				</nav>
+			<nav class="user-tabs mb-4">
+				<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+					<li class="nav-item">
+						<a class="nav-link active" href="#pat_appointments" data-bs-toggle="tab">Hospital
+							{{chospital}}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#doctor" data-bs-toggle="tab">Doctors {{cdoctor}}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#pat_prescriptions" data-bs-toggle="tab">Laboratory {{clab}}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#pat_medical_records" data-bs-toggle="tab">Pharmacy {{cpharmacy}}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#patient" data-bs-toggle="tab">Patient {{cpatient}}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#accident" data-bs-toggle="tab">Accident {{caccidents}}</a>
+					</li>
+				</ul>
+			</nav>
 
- 
-				<div class="tab-content pt-0">
- 
-					<div id="pat_appointments" class="tab-pane fade show active">
-						<div class="card mb-3">
-							<div class="card-body">
-								<table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
+
+			<div class="tab-content pt-0">
+
+				<div id="pat_appointments" class="tab-pane show active">
+					<div class="card mb-3">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table id="myProjectTable" class="table table-hover table-center mb-0"
+									style="width: 100%">
 									<thead>
 										<tr>
 											<th>Code</th>
-											<th>Hospital Name</th> 
-											<th>City</th> 
-											<th>Phone</th>   
-											<th>Verify</th>   
-											<th>Actions</th>  
+											<th>Hospital Name</th>
+											<th>Phone</th>
+											<th>Share(%)</th>
+											<th>Verify</th>
+											<th>Actions</th>
 										</tr>
-									</thead> 
+									</thead>
 									<tbody>
-									{% for hospital in hospitals_list %}
+										{% for hospital in hospitals_list %}
 										<tr>
 											<td>
 												<span class="fw-bold">HP00{{hospital.id}}</span>
 											</td>
 											<td>
-												<img class="avatar rounded-circle" src="{{hospital.profile_pic}}" alt="">
+												<img class="avatar rounded-circle" src="{{hospital.profile_pic}}"
+													alt="">
 												<span class="fw-bold ms-1">{{hospital.hopital_name|upper}}</span>
 											</td>
 											<td>
-												{{hospital.city}}
+												{{hospital.landline}}
 											</td>
 											<td>
-												 {{hospital.landline}}
+												<a type="button" data-bs-toggle="modal"
+													data-bs-target="#share{{hospital.admin.id}}" data-whatever=""
+													data-original-title=""
+													title="Share for Relief">{{hospital.admin.share}} %</a>
 											</td>
-										   
+
 											</td>
-											{% comment %} <td>
-												<div class="btn-group" role="group" aria-label="Basic outlined example">
-													<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}"><i class="icofont-edit text-success"></i></button>
-													<button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
-												</div>
-											</td> {% endcomment %}
-											{% if hospital.is_verified is not True %}
+										{% if hospital.admin.share > 0 %}
+											{% if hospital.is_verified is not True  %}
 												{% if hospital.is_appiled %}
 												<td>
-													<a href="{% url 'hospitalactivate' hospital.id %}" class="btn btn-primary">Appllied</a>
+													<a href="{% url 'hospitalactivate' hospital.id %}"
+														class="btn btn-primary">Appllied</a>
 												</td>
-											   {% elif hospital.is_deactive%}
+												{% elif hospital.is_deactive%}
 												<td>
-														<a href="{% url 'hospitalactivate' hospital.id %}"  class="btn btn-danger" disabled>Rejected</a>
+													<a href="{% url 'hospitalactivate' hospital.id %}"
+														class="btn btn-danger" disabled>Rejected</a>
 												</td>
 												{% else %}
 												<td>
 													<a class="btn btn-warning">Progess</a>
 												</td>
 												{% endif %}
-											
+
 											{% else %}
-												<td>
-													<a href="{% url 'hospitaldeactivate' hospital.id %}" class="btn btn-success">Activated</a>
-												</td>
+											<td>
+												<a href="{% url 'hospitaldeactivate' hospital.id %}"
+													class="btn btn-success">Activated</a>
+											</td>
 											{%endif%}
-												<td>
+										{% else %}
+										<td>
+												<-- Add % First
+										</td>
+										{% endif %}
+											<td>
 												<div class="btn-group">
 													<button type="button" class="btn btn-primary">Action</button>
-													<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+													<button type="button"
+														class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+														data-bs-toggle="dropdown" aria-expanded="false">
 														<span class="visually-hidden">Toggle Dropdown</span>
-													</button> 
+													</button>
 													<ul class="dropdown-menu border-0 shadow py-3 px-2">
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'hospital_profile_admin' hospital.id %}">View Profile</a></li>
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'radmin_hospital_update' hospital.id %}">Edit</a></li>
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'hospital_delete_admin' hospital.id %}">Delete</a></li>
-														<li><hr class="dropdown-divider"></li>
-														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
+														<li><a class="dropdown-item py-2 rounded" target="_blank"
+																href="{% url 'hospital_details' hospital.id %}">View
+																Profile</a></li>
+														<li><a class="dropdown-item py-2 rounded"															
+															href="{% url 'admin_all_patients_view' hospital.admin.id %}">Patient list</a></li>
+														<li><a class="dropdown-item py-2 rounded"
+																href="{% url 'radmin_hospital_update' hospital.id %}">Edit</a>
+														</li>
+														<li><a class="dropdown-item py-2 rounded"
+																href="{% url 'hospital_delete_admin' hospital.id %}">Delete</a>
+														</li>
+														<li>
+															<hr class="dropdown-divider">
+														</li>
+														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal"
+																data-bs-target="#depedit{{hospital.id}}">Contact
+																Person</a></li>
 													</ul>
-												</div></td><!-- /btn-group -->
-											
+												</div>
+											</td><!-- /btn-group -->
+
 										</tr>
-									{% endfor %}
+										{% endfor %}
 									</tbody>
 								</table>
 							</div>
 						</div>
 					</div>
+				</div>
 
-					<div id="doctor" class="tab-pane fade">
-						<div class="card mb-3">
-							<div class="card-body">
-								<table id="myProjectTable3" class="table table-hover align-middle mb-0" style="width:100%">
+				<div id="doctor" class="tab-pane fade">
+					<div class="card mb-0">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table id="myProjectTable1" class="table table-hover table-center mb-0"
+									style="width:100%">
 									<thead>
 										<tr>
 											<th>Code</th>
-											<th>Doctor Name</th> 
-											<th>City</th> 
-											<th>Phone</th>   
-											<th>Orders</th>   
-											<th>Actions</th>  
+											<th>Doctor Name</th>
+											<th>Phone</th>
+											<th>Share(%)</th>
+											<th>Verify</th>
+											<th>Actions</th>
 										</tr>
-									</thead> 
-									<tbody> 
-									{% for doctor in hospitaldoctors_list %}
+									</thead>
+									<tbody>
+										{% for doctor in hospitaldoctors_list %}
 										<tr>
 											<td>
 												<span class="fw-bold">DT00{{doctor.id}}</span>
-											</td> 
-											<td>
-												<img class="avatar rounded-circle" src="{{doctor.profile_pic}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
-												<span class="fw-bold ms-1">{{doctor.admin.name_title}} {{doctor.fisrt_name}} {{doctor.last_name}}</span>
 											</td>
 											<td>
-												{{doctor.city}}
+												<img class="avatar rounded-circle" src="{{doctor.profile_pic}}" alt=""
+													onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+												<span class="fw-bold ms-1">{{doctor.admin.name_title}}
+													{{doctor.fisrt_name}} {{doctor.last_name}}</span>
 											</td>
 											<td>
-												 {{doctor.admin.phone}}
+												{{doctor.admin.phone}}
 											</td>
-										   
+											<td>												
+												<a type="button" data-bs-toggle="modal"	data-bs-target="#share{{doctor.admin.id}}" data-whatever="" data-original-title="" title="Share for Relief">{{doctor.admin.share}} %</a>
 											</td>
-											{% if doctor.is_verified is not True %}
+
+											</td>
+											{% if doctor.admin.share > 0 %}
+												{% if doctor.is_verified is not True %}
 												{% if doctor.is_appiled %}
 												<td>
-													<a href="{% url 'doctorsactivate' doctor.id %}" class="btn btn-primary">Appllied</a>
+													<a href="{% url 'doctorsactivate' doctor.id %}"
+														class="btn btn-primary">Appllied</a>
 												</td>
-											   {% elif doctor.is_deactive%}
+												{% elif doctor.is_deactive%}
 												<td>
-														<a href="{% url 'doctorsactivate' doctor.id %}"  class="btn btn-danger" disabled>Rejected</a>
+													<a href="{% url 'doctorsactivate' doctor.id %}" class="btn btn-danger"
+														disabled>Rejected</a>
 												</td>
 												{% else %}
 												<td>
 													<a class="btn btn-warning">Progess</a>
 												</td>
 												{% endif %}
-											
-											{% else %}
+
+												{% else %}
 												<td>
-													<a href="{% url 'doctorsdeactivate' doctor.id %}" class="btn btn-success">Activated</a>
+													<a href="{% url 'doctorsdeactivate' doctor.id %}"
+														class="btn btn-success">Activated</a>
 												</td>
-											{%endif%}
+												{%endif%}
+											{% else %}
+											<td>
+													<-- Add % First
+											</td>
+											{% endif %}
 											<!-- /btn-group -->
-												<td>
+											<td>
 												<div class="btn-group">
 													<button type="button" class="btn btn-primary">Action</button>
-													<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+													<button type="button"
+														class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+														data-bs-toggle="dropdown" aria-expanded="false">
 														<span class="visually-hidden">Toggle Dropdown</span>
 													</button>
 													<ul class="dropdown-menu border-0 shadow py-3 px-2">
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'doctor_profile_admin' doctor.id %}">View Profile</a></li>
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'radmin_doctor_update' doctor.id %}">Edit</a></li>
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'doctor_delete_admin' doctor.id %}">Delete</a></li>
-														<li><hr class="dropdown-divider"></li>
-														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.patient.id}}">Contact Person</a></li>
+														<li><a class="dropdown-item py-2 rounded" target="_blank"
+																href="{% url 'doctor_details' doctor.id %}">View
+																Profile</a></li>
+														<li><a class="dropdown-item py-2 rounded"	
+																	href="{% url 'admin_relief_patient_profile' doctor.id %}">Patients</a></li>
+														<li><a class="dropdown-item py-2 rounded"
+																href="{% url 'radmin_doctor_update' doctor.id %}">Edit</a>
+														</li>
+														<li><a class="dropdown-item py-2 rounded"
+																href="{% url 'doctor_delete_admin' doctor.id %}">Delete</a>
+														</li>
+														<li>
+															<hr class="dropdown-divider">
+														</li>
+														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal"
+																data-bs-target="#depedit{{hospital.patient.id}}">Contact
+																Person</a></li>
 													</ul>
-												</div></td><!-- /btn-group -->
-											
+												</div>
+											</td><!-- /btn-group -->
+
 										</tr>
-									{% endfor %}
+										{% endfor %}
 									</tbody>
 								</table>
 							</div>
 						</div>
 					</div>
+				</div>
 
-					<div class="tab-pane fade" id="pat_prescriptions">
-						<div class="card mb-3">
-							<div class="card-body">
-								<table id="myProjectTable1" class="table table-hover align-middle mb-0" style="width:100%">
+				<div class="tab-pane fade" id="pat_prescriptions">
+					<div class="card mb-3">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table id="myProjectTable2" class="table table-hover align-middle mb-0"
+									style="width:100%">
 									<thead>
 										<tr>
 											<th>Code</th>
-											<th>Lab Name</th> 
-											<th>City</th> 
-											<th>Phone</th>   
-											<th>Verify</th>   
-											<th>Actions</th>  
+											<th>Lab Name</th>											
+											<th>Phone</th>
+											<th>Share(%)</th>
+											<th>Verify</th>
+											<th>Actions</th>
 										</tr>
-									</thead> 
-									<tbody> 
-									{% for hospital in labs_list %}
+									</thead>
+									<tbody>
+										{% for hospital in labs_list %}
 										<tr>
-											<td> 
+											<td>
 												<span class="fw-bold">LB00{{hospital.id}}</span>
 											</td>
 											<td>
-												<img class="avatar rounded-circle" src="{{hospital.profile_pic}}" alt="">
+												<img class="avatar rounded-circle" src="{{hospital.profile_pic}}"
+													alt="">
 												<span class="fw-bold ms-1">{{hospital.lab_name|upper}}</span>
 											</td>
 											<td>
-												{{hospital.city}}
+												{{hospital.landline}}
 											</td>
 											<td>
-												 {{hospital.landline}}
+												<a type="button" data-bs-toggle="modal"	data-bs-target="#share{{hospital.admin.id}}" data-whatever="" data-original-title="" title="Share for Relief">{{hospital.admin.share}} %</a>
 											</td>
-										   
+
 											</td>
 											{% comment %} <td>
 												<div class="btn-group" role="group" aria-label="Basic outlined example">
-													<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}"><i class="icofont-edit text-success"></i></button>
-													<button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
+													<button type="button" class="btn btn-outline-secondary"
+														data-bs-toggle="modal"
+														data-bs-target="#depedit{{hospital.id}}"><i
+															class="icofont-edit text-success"></i></button>
+													<button type="button" class="btn btn-outline-secondary deleterow"><i
+															class="icofont-ui-delete text-danger"></i></button>
 												</div>
 											</td> {% endcomment %}
-											{% if hospital.is_verified is not True %}
+											{% if hospital.admin.share > 0 %}
+												{% if hospital.is_verified is not True %}
 												{% if hospital.is_appiled %}
 												<td>
-													<a href="{% url 'labsactivate' hospital.id %}" class="btn btn-primary">Appllied</a>
+													<a href="{% url 'labsactivate' hospital.id %}"
+														class="btn btn-primary">Appllied</a>
 												</td>
-											   {% elif hospital.is_deactive%}
+												{% elif hospital.is_deactive%}
 												<td>
-														<a href="{% url 'labsactivate' hospital.id %}"  class="btn btn-danger" disabled>Rejected</a>
+													<a href="{% url 'labsactivate' hospital.id %}" class="btn btn-danger"
+														disabled>Rejected</a>
 												</td>
 												{% else %}
 												<td>
 													<a class="btn btn-warning">Progess</a>
 												</td>
 												{% endif %}
-											
-											{% else %}
+
+												{% else %}
 												<td>
-													<a href="{% url 'labsdeactivate' hospital.id %}" class="btn btn-success">Activated</a>
+													<a href="{% url 'labsdeactivate' hospital.id %}"
+														class="btn btn-success">Activated</a>
 												</td>
-											{%endif%}
-												<td>
+												{%endif%}
+											{% else %}
+											<td>
+													<-- Add % First
+											</td>
+											{% endif %}
+											<td>
 												<div class="btn-group">
 													<button type="button" class="btn btn-primary">Action</button>
-													<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+													<button type="button"
+														class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+														data-bs-toggle="dropdown" aria-expanded="false">
 														<span class="visually-hidden">Toggle Dropdown</span>
 													</button>
 													<ul class="dropdown-menu border-0 shadow py-3 px-2">
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'labs_profile_admin' hospital.id %}">View Profile</a></li>
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'radmin_lab_update' hospital.id %}">Edit</a></li>
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'labs_delete_admin' hospital.id %}">Delete</a></li>
-														<li><hr class="dropdown-divider"></li>
-														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
+														<li><a class="dropdown-item py-2 rounded" target="_blank"
+																href="{% url 'lab_details' hospital.id %}">View
+																Profile</a></li>
+														<li><a class="dropdown-item py-2 rounded"
+																href="{% url 'radmin_lab_update' hospital.id %}">Edit</a>
+														</li>
+														<li><a class="dropdown-item py-2 rounded"
+																href="{% url 'labs_delete_admin' hospital.id %}">Delete</a>
+														</li>
+														<li>
+															<hr class="dropdown-divider">
+														</li>
+														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal"
+																data-bs-target="#depedit{{hospital.id}}">Contact
+																Person</a></li>
 													</ul>
-												</div></td><!-- /btn-group -->
-											
+												</div>
+											</td><!-- /btn-group -->
+
 										</tr>
-									{% endfor %}
+										{% endfor %}
 									</tbody>
 								</table>
 							</div>
 						</div>
 					</div>
+				</div>
 
-					<div id="pat_medical_records" class="tab-pane fade">
-						<div class="card mb-3">
-							<div class="card-body">
-								<table id="myProjectTable2" class="table table-hover align-middle mb-0" style="width:100%">
+				<div id="pat_medical_records" class="tab-pane fade">
+					<div class="card mb-3">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table id="myProjectTable3" class="table table-hover align-middle mb-0"
+									style="width:100%">
 									<thead>
 										<tr>
 											<th>Code</th>
-											<th>Pharmacy Name</th> 
-											<th>City</th> 
-											<th>Phone</th>   
-											<th>Verify</th>   
-											<th>Actions</th>  
+											<th>Pharmacy Name</th>											
+											<th>Phone</th>
+											<th>Share(%)</th>
+											<th>Verify</th>
+											<th>Actions</th>
 										</tr>
-									</thead> 
-									<tbody> 
-									{% for hospital in pharmacy_list %}
+									</thead>
+									<tbody>
+										{% for hospital in pharmacy_list %}
 										<tr>
 											<td>
 												<span class="fw-bold">PH00{{hospital.id}}</span>
 											</td>
 											<td>
-												<img class="avatar rounded-circle" src="{{hospital.profile_pic}}" alt="">
+												<img class="avatar rounded-circle" src="{{hospital.profile_pic}}"
+													alt="">
 												<span class="fw-bold ms-1">{{hospital.pharmacy_name}}</span>
 											</td>
 											<td>
-												{{hospital.city}}
+												{{hospital.landline}}
 											</td>
 											<td>
-												 {{hospital.landline}}
+												<a type="button" data-bs-toggle="modal"	data-bs-target="#share{{hospital.admin.id}}" data-whatever="". data-original-title="" title="Share for Relief">{{hospital.admin.share}} %</a>
 											</td>
-										   
+
 											</td>
 											{% comment %} <td>
 												<div class="btn-group" role="group" aria-label="Basic outlined example">
-													<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}"><i class="icofont-edit text-success"></i></button>
-													<button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
+													<button type="button" class="btn btn-outline-secondary"
+														data-bs-toggle="modal"
+														data-bs-target="#depedit{{hospital.id}}"><i
+															class="icofont-edit text-success"></i></button>
+													<button type="button" class="btn btn-outline-secondary deleterow"><i
+															class="icofont-ui-delete text-danger"></i></button>
 												</div>
 											</td> {% endcomment %}
-											{% if hospital.is_verified is not True %}
+											{% if hospital.admin.share > 0 %}
+												{% if hospital.is_verified is not True %}
 												{% if hospital.is_appiled %}
 												<td>
-													<a href="{% url 'pharmacyactivate' hospital.id %}" class="btn btn-primary">Appllied</a>
+													<a href="{% url 'pharmacyactivate' hospital.id %}"
+														class="btn btn-primary">Appllied</a>
 												</td>
-											   {% elif hospital.is_deactive%}
+												{% elif hospital.is_deactive%}
 												<td>
-														<a href="{% url 'pharmacyactivate' hospital.id %}"  class="btn btn-danger" disabled>Rejected</a>
+													<a href="{% url 'pharmacyactivate' hospital.id %}"
+														class="btn btn-danger" disabled>Rejected</a>
 												</td>
 												{% else %}
 												<td>
 													<a class="btn btn-warning">Progess</a>
 												</td>
 												{% endif %}
-											
-											{% else %}
+
+												{% else %}
 												<td>
-													<a href="{% url 'pharmacydeactivate' hospital.id %}" class="btn btn-success">Activated</a>
+													<a href="{% url 'pharmacydeactivate' hospital.id %}"
+														class="btn btn-success">Activated</a>
 												</td>
-											{%endif%}
-												<td>
+												{%endif%}
+											{% else %}
+											<td>
+													<-- Add % First
+											</td>
+											{% endif %}
+											<td>
 												<div class="btn-group">
 													<button type="button" class="btn btn-primary">Action</button>
-													<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+													<button type="button"
+														class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+														data-bs-toggle="dropdown" aria-expanded="false">
 														<span class="visually-hidden">Toggle Dropdown</span>
 													</button>
 													<ul class="dropdown-menu border-0 shadow py-3 px-2">
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_profile_admin' hospital.id %}">View Profile</a></li>
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'radmin_pharmacy_update' hospital.id %}">Edit</a></li>
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_delete_admin' hospital.id %}">Delete</a></li>
-														<li><hr class="dropdown-divider"></li>
-														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
+														<li><a class="dropdown-item py-2 rounded" target="_blank"
+																href="{% url 'new_pharmacy_details' hospital.id %}">View
+																Profile</a></li>
+														<li><a class="dropdown-item py-2 rounded"
+																href="{% url 'radmin_pharmacy_update' hospital.id %}">Edit</a>
+														</li>
+														<li><a class="dropdown-item py-2 rounded"
+																href="{% url 'pharmacy_delete_admin' hospital.id %}">Delete</a>
+														</li>
+														<li>
+															<hr class="dropdown-divider">
+														</li>
+														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal"
+																data-bs-target="#depedit{{hospital.id}}">Contact
+																Person</a></li>
 													</ul>
-												</div></td><!-- /btn-group -->
-											
+												</div>
+											</td><!-- /btn-group -->
+
 										</tr>
-									{% endfor %}
+										{% endfor %}
 									</tbody>
 								</table>
 							</div>
 						</div>
 					</div>
+				</div>
 
-					<div id="patient" class="tab-pane fade">
-						<div class="card mb-3">
-							<div class="card-body">
-								<table id="myProjectTable3" class="table table-hover align-middle mb-0" style="width:100%">
+				<div id="patient" class="tab-pane fade">
+					<div class="card mb-3">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table id="myProjectTable4" class="table table-hover align-middle mb-0"
+									style="width:100%">
 									<thead>
 										<tr>
 											<th>Code</th>
-											<th>Patient Name</th> 
-											<th>City</th> 
-											<th>Phone</th>   
-											<th>Orders</th>   
-											<th>Actions</th>  
+											<th>Patient Name</th>
+											<th>City</th>
+											<th>Phone</th>
+											<th>Orders</th>
+											<th>Actions</th>											
 										</tr>
-									</thead> 
-									<tbody> 
-									{% for hospital in patient_list %}
+									</thead>
+									<tbody>
+										{% for hospital in patient_list %}
 										<tr>
 											<td>
 												<span class="fw-bold">PT00{{hospital.patient.id}}</span>
 											</td>
 											<td>
-												<img class="avatar rounded-circle" src="{{hospital.patient.profile_pic}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
-												<span class="fw-bold ms-1">{{hospital.patient.admin.name_title}} {{hospital.patient.fisrt_name}} {{hospital.patient.last_name}}</span>
+												<img class="avatar rounded-circle"
+													src="{{hospital.patient.profile_pic}}" alt=""
+													onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+												<span class="fw-bold ms-1">{{hospital.patient.admin.name_title}}
+													{{hospital.patient.fisrt_name}}
+													{{hospital.patient.last_name}}</span>
 											</td>
 											<td>
 												{{hospital.patient.city}}
 											</td>
 											<td>
-												 {{hospital.patient.admin.phone}}
+												{{hospital.patient.admin.phone}}
 											</td>
-										   
+
 											</td>
-											{% comment %} <td>
-												<div class="btn-group" role="group" aria-label="Basic outlined example">
-													<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}"><i class="icofont-edit text-success"></i></button>
-													<button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
-												</div>
-											</td> {% endcomment %}
-											<td>  {{hospital.total_apt}} </td>
-											{% comment %} {% if hospital.is_verified is not True %}
-												{% if hospital.is_appiled %}
-												<td>
-													<a href="{% url 'pharmacyactivate' hospital.id %}" class="btn btn-primary">Appllied</a>
-												</td>
-											   {% elif hospital.is_deactive%}
-												<td>
-														<a href="{% url 'pharmacyactivate' hospital.id %}"  class="btn btn-danger" disabled>Rejected</a>
-												</td>
-												{% else %}
-												<td>
-													<a class="btn btn-warning">Progess</a>
-												</td>
-												{% endif %}
 											
-											{% else %}
-												<td>
-													<a href="{% url 'pharmacydeactivate' hospital.patient.id %}" class="btn btn-success">Activated</a>
-												</td>
-											{%endif%} {% endcomment %}
-												<td>
+											<td> {{hospital.total_apt}} </td>
+											
+											<td>
 												<div class="btn-group">
 													<button type="button" class="btn btn-primary">Action</button>
-													<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+													<button type="button"
+														class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+														data-bs-toggle="dropdown" aria-expanded="false">
 														<span class="visually-hidden">Toggle Dropdown</span>
 													</button>
 													<ul class="dropdown-menu border-0 shadow py-3 px-2">
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_profile_admin' hospital.patient.id %}">View Profile</a></li>
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'radmin_patients_update' hospital.patient.id %}">Edit</a></li>
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_delete_admin' hospital.patient.id %}">Delete</a></li>
-														<li><hr class="dropdown-divider"></li>
-														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.patient.id}}">Contact Person</a></li>
+														<li><a class="dropdown-item py-2 rounded"															
+																href="{% url 'admin_relief_patient_profile' hospital.patient.id %}">View
+																Profile</a></li>
+														
+														<li><a class="dropdown-item py-2 rounded"
+																href="{% url 'radmin_patients_update' hospital.patient.id %}">Edit</a>
+														</li>
+														<li><a class="dropdown-item py-2 rounded"
+																href="{% url 'pharmacy_delete_admin' hospital.patient.id %}">Delete</a>
+														</li>
+														<li>
+															<hr class="dropdown-divider">
+														</li>
+														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal"
+																data-bs-target="#depedit{{hospital.patient.id}}">Contact
+																Person</a></li>
 													</ul>
-												</div></td><!-- /btn-group -->
-											
+												</div>
+											</td><!-- /btn-group -->
+
 										</tr>
-									{% endfor %}
+										{% endfor %}
 									</tbody>
 								</table>
 							</div>
 						</div>
 					</div>
-					
+				</div>
 
-					<div id="accident" class="tab-pane fade">
-						<div class="card mb-3">
-							<div class="card-body">
-								<table id="myProjectTable2" class="table table-hover align-middle mb-0" style="width:100%">
+				<div id="accident" class="tab-pane fade">
+					<div class="card mb-3">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table id="myProjectTable5" class="table table-hover align-middle mb-0"
+									style="width:100%">
 									<thead>
 										<tr>
 											<th>Code</th>
-											<th>Pharmacy Name</th> 
-											<th>City</th> 
-											<th>Phone</th>   
-											<th>Verify</th>   
-											<th>Actions</th>  
+											<th>Pharmacy Name</th>
+											<th>City</th>
+											<th>Phone</th>
+											<th>Verify</th>
+											<th>Actions</th>
 										</tr>
-									</thead> 
-									<tbody> 
-									{% for hospital in pharmacy_list %}
+									</thead>
+									<tbody>
+										{% for hospital in pharmacy_list %}
 										<tr>
 											<td>
 												<span class="fw-bold">{{forloop.counter}}</span>
 											</td>
 											<td>
-												<img class="avatar rounded-circle" src="{{hospital.profile_pic}}" alt="">
+												<img class="avatar rounded-circle" src="{{hospital.profile_pic}}"
+													alt="">
 												<span class="fw-bold ms-1">{{hospital.pharmacy_name}}</span>
 											</td>
 											<td>
 												{{hospital.city}}
 											</td>
 											<td>
-												 {{hospital.landline}}
+												{{hospital.landline}}
 											</td>
-										   
+
 											</td>
 											{% comment %} <td>
 												<div class="btn-group" role="group" aria-label="Basic outlined example">
-													<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}"><i class="icofont-edit text-success"></i></button>
-													<button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
+													<button type="button" class="btn btn-outline-secondary"
+														data-bs-toggle="modal"
+														data-bs-target="#depedit{{hospital.id}}"><i
+															class="icofont-edit text-success"></i></button>
+													<button type="button" class="btn btn-outline-secondary deleterow"><i
+															class="icofont-ui-delete text-danger"></i></button>
 												</div>
 											</td> {% endcomment %}
 											{% if hospital.is_verified is not True %}
-												{% if hospital.is_appiled %}
-												<td>
-													<a href="{% url 'pharmacyactivate' hospital.id %}" class="btn btn-primary">Appllied</a>
-												</td>
-											   {% elif hospital.is_deactive%}
-												<td>
-														<a href="{% url 'pharmacyactivate' hospital.id %}"  class="btn btn-danger" disabled>Rejected</a>
-												</td>
-												{% else %}
-												<td>
-													<a class="btn btn-warning">Progess</a>
-												</td>
-												{% endif %}
-											
+											{% if hospital.is_appiled %}
+											<td>
+												<a href="{% url 'pharmacyactivate' hospital.id %}"
+													class="btn btn-primary">Appllied</a>
+											</td>
+											{% elif hospital.is_deactive%}
+											<td>
+												<a href="{% url 'pharmacyactivate' hospital.id %}"
+													class="btn btn-danger" disabled>Rejected</a>
+											</td>
 											{% else %}
-												<td>
-													<a href="{% url 'pharmacydeactivate' hospital.id %}" class="btn btn-success">Activated</a>
-												</td>
+											<td>
+												<a class="btn btn-warning">Progess</a>
+											</td>
+											{% endif %}
+
+											{% else %}
+											<td>
+												<a href="{% url 'pharmacydeactivate' hospital.id %}"
+													class="btn btn-success">Activated</a>
+											</td>
 											{%endif%}
-												<td>
+											<td>
 												<div class="btn-group">
 													<button type="button" class="btn btn-primary">Action</button>
-													<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+													<button type="button"
+														class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+														data-bs-toggle="dropdown" aria-expanded="false">
 														<span class="visually-hidden">Toggle Dropdown</span>
 													</button>
 													<ul class="dropdown-menu border-0 shadow py-3 px-2">
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_profile_admin' hospital.id %}">View Profile</a></li>
-														
-														<li><a class="dropdown-item py-2 rounded" href="{% url 'pharmacy_delete_admin' hospital.id %}">Delete</a></li>
-														<li><hr class="dropdown-divider"></li>
-														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
+														<li><a class="dropdown-item py-2 rounded"
+																href="{% url 'pharmacy_profile_admin' hospital.id %}">View
+																Profile</a></li>
+
+														<li><a class="dropdown-item py-2 rounded"
+																href="{% url 'pharmacy_delete_admin' hospital.id %}">Delete</a>
+														</li>
+														<li>
+															<hr class="dropdown-divider">
+														</li>
+														<li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal"
+																data-bs-target="#depedit{{hospital.id}}">Contact
+																Person</a></li>
 													</ul>
-												</div></td><!-- /btn-group -->
-											
+												</div>
+											</td><!-- /btn-group -->
+
 										</tr>
-									{% endfor %}
+										{% endfor %}
 									</tbody>
 								</table>
 							</div>
@@ -531,117 +661,288 @@
 				</div>
 
 			</div>
+
 		</div>
 	</div>
- 
-		
 
- 	{% endblock content %}
-	
-{% block custom_modal %}{% endblock custom_modal %}
+</div>
+
+
+
+{% endblock content %}
+
+{% block modal_fade %}
+{% for hospital in hospitals_list  %}
+<div class="modal fade" id="share{{hospital.admin.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
+	role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel2">ADD RElIEF SHARE</h5>
+				<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+					data-original-title="" title=""></button>
+			</div>
+			<div class="modal-body">
+				<form action="{% url 'reliefshare' %}" method ="post">
+					{% csrf_token %}
+					<div class="form-group">
+						<label class="col-form-label" for="recipient-name">Percentage</label>
+						<input class="form-control" type="number" name="share" data-original-title="Percentage" title="" value="{{hospital.admin.share}}" step="0.01">
+						<input class="form-control" type="hidden" name="page" value= "hospital">
+						<input class="form-control" type="hidden" name="id" value= "{{hospital.admin.id}}">
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-secondary" type="button" data-bs-dismiss="modal" data-original-title=""
+							title="">Close</button>
+						<button class="btn btn-primary" type="submit" data-original-title="" title="">Add</button>
+					</div>
+				</form>
+			</div>
+			
+		</div>
+	</div>
+</div>
+{% endfor %}
+{% for hospital in hospitaldoctors_list  %}
+<div class="modal fade" id="share{{hospital.admin.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
+	role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel2">ADD RElIEF SHARE</h5>
+				<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+					data-original-title="" title=""></button>
+			</div>
+			<div class="modal-body">
+				<form action="{% url 'reliefshare' %}" method ="post">
+					{% csrf_token %}
+					<div class="form-group">
+						<label class="col-form-label" for="recipient-name">Percentage</label>
+						<input class="form-control" type="number" name="share" data-original-title="Percentage" title="" value="{{hospital.admin.share}}" step="0.01">
+						<input class="form-control" type="hidden" name="page" value= "hospital">
+						<input class="form-control" type="hidden" name="id" value= "{{hospital.admin.id}}">
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-secondary" type="button" data-bs-dismiss="modal" data-original-title=""
+							title="">Close</button>
+						<button class="btn btn-primary" type="submit" data-original-title="" title="">Add</button>
+					</div>
+				</form>
+			</div>
+			
+		</div>
+	</div>
+</div>
+{% endfor %}
+{% for hospital in labs_list  %}
+<div class="modal fade" id="share{{hospital.admin.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
+	role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel2">ADD RElIEF SHARE</h5>
+				<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+					data-original-title="" title=""></button>
+			</div>
+			<div class="modal-body">
+				<form action="{% url 'reliefshare' %}" method ="post">
+					{% csrf_token %}
+					<div class="form-group">
+						<label class="col-form-label" for="recipient-name">Percentage</label>
+						<input class="form-control" type="number" name="share" data-original-title="Percentage" title="" value="{{hospital.admin.share}}" step="0.01">
+						<input class="form-control" type="hidden" name="page" value= "hospital">
+						<input class="form-control" type="hidden" name="id" value= "{{hospital.admin.id}}">
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-secondary" type="button" data-bs-dismiss="modal" data-original-title=""
+							title="">Close</button>
+						<button class="btn btn-primary" type="submit" data-original-title="" title="">Add</button>
+					</div>
+				</form>
+			</div>
+			
+		</div>
+	</div>
+</div>
+{% endfor %}
+{% for hospital in pharmacy_list  %}
+<div class="modal fade" id="share{{hospital.admin.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
+	role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel2">ADD RElIEF SHARE</h5>
+				<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+					data-original-title="" title=""></button>
+			</div>
+			<div class="modal-body">
+				<form action="{% url 'reliefshare' %}" method ="post">
+					{% csrf_token %}
+					<div class="form-group">
+						<label class="col-form-label" for="recipient-name">Percentage</label>
+						<input class="form-control" type="number" name="share" data-original-title="Percentage" title="" value="{{hospital.admin.share}}" step="0.01">
+						<input class="form-control" type="hidden" name="page" value= "hospital">
+						<input class="form-control" type="hidden" name="id" value= "{{hospital.admin.id}}">
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-secondary" type="button" data-bs-dismiss="modal" data-original-title=""
+							title="">Close</button>
+						<button class="btn btn-primary" type="submit" data-original-title="" title="">Add</button>
+					</div>
+				</form>
+			</div>
+			
+		</div>
+	</div>
+</div>
+{% endfor %}
+
+
+{% endblock modal_fade %}
 
 {% block custom_js %}
 <script>
-    // project data table
-    $(document).ready(function() {
-        $('#myProjectTable')
-        .addClass( 'nowrap' )
-        .dataTable( {
-            responsive: true,
-            columnDefs: [
-                { targets: [-1, -3], className: 'dt-body-right' }
-            ]
-        });
-        $('.deleterow').on('click',function(){
-        var tablename = $(this).closest('table').DataTable();  
-        tablename
-            .row( $(this)
-            .parents('tr') )
-            .remove()
-            .draw();
+	// project data table
+	$(document).ready(function () {
+		$('#myProjectTable')
+			.addClass('nowrap')
+			.dataTable({
+				responsive: true,
+				columnDefs: [{
+					targets: [-1, -3],
+					className: 'dt-body-right'
+				}]
+			});
 
-        } );
-    });
-    $(document).ready(function() {
-        $('#myProjectTable1')
-        .addClass( 'nowrap' )
-        .dataTable( {
-            responsive: true,
-            columnDefs: [
-                { targets: [-1, -3], className: 'dt-body-right' }
-            ]
-        });
-        $('.deleterow1').on('click',function(){
-        var tablename = $(this).closest('table').DataTable();  
-        tablename
-            .row( $(this)
-            .parents('tr') )
-            .remove()
-            .draw();
+	});
+	$(document).ready(function () {
+		$('#myProjectTable1')
+			.addClass('nowrap')
+			.dataTable({
+				responsive: true,
+				columnDefs: [{
+					targets: [-1, -3],
+					className: 'dt-body-right'
+				}]
+			});
+		$('.deleterow1').on('click', function () {
+			var tablename = $(this).closest('table').DataTable();
+			tablename
+				.row($(this)
+					.parents('tr'))
+				.remove()
+				.draw();
 
-        } );
-    });
-    $(document).ready(function() {
-        $('#myProjectTable2')
-        .addClass( 'nowrap' )
-        .dataTable( {
-            responsive: true,
-            columnDefs: [
-                { targets: [-1, -3], className: 'dt-body-right' }
-            ]
-        });
-        $('.deleterow2').on('click',function(){
-        var tablename = $(this).closest('table').DataTable();  
-        tablename
-            .row( $(this)
-            .parents('tr') )
-            .remove()
-            .draw();
+		});
+	});
+	$(document).ready(function () {
+		$('#myProjectTable2')
+			.addClass('nowrap')
+			.dataTable({
+				responsive: true,
+				columnDefs: [{
+					targets: [-1, -3],
+					className: 'dt-body-right'
+				}]
+			});
+		$('.deleterow2').on('click', function () {
+			var tablename = $(this).closest('table').DataTable();
+			tablename
+				.row($(this)
+					.parents('tr'))
+				.remove()
+				.draw();
 
-        } );
-    });
-    $(document).ready(function() {
-        $('#myProjectTable3')
-        .addClass( 'nowrap' )
-        .dataTable( {
-            responsive: true,
-            columnDefs: [
-                { targets: [-1, -3], className: 'dt-body-right' }
-            ]
-        });
-        $('.deleterow3').on('click',function(){
-        var tablename = $(this).closest('table').DataTable();  
-        tablename
-            .row( $(this)
-            .parents('tr') )
-            .remove()
-            .draw();
+		});
+	});
+	$(document).ready(function () {
+		$('#myProjectTable3')
+			.addClass('nowrap')
+			.dataTable({
+				responsive: true,
+				columnDefs: [{
+					targets: [-1, -3],
+					className: 'dt-body-right'
+				}]
+			});
+		$('.deleterow3').on('click', function () {
+			var tablename = $(this).closest('table').DataTable();
+			tablename
+				.row($(this)
+					.parents('tr'))
+				.remove()
+				.draw();
 
-        } );
-    });
-    $(document).ready(function() {
-        $('#myProjectTable4')
-        .addClass( 'nowrap' )
-        .dataTable( {
-            responsive: true,
-            columnDefs: [
-                { targets: [-1, -3], className: 'dt-body-right' }
-            ]
-        });
-        $('.deleterow4').on('click',function(){
-        var tablename = $(this).closest('table').DataTable();  
-        tablename
-            .row( $(this)
-            .parents('tr') )
-            .remove()
-            .draw();
+		});
+	});
+	$(document).ready(function () {
+		$('#myProjectTable4')
+			.addClass('nowrap')
+			.dataTable({
+				responsive: true,
+				columnDefs: [{
+					targets: [-1, -3],
+					className: 'dt-body-right'
+				}]
+			});
+		$('.deleterow4').on('click', function () {
+			var tablename = $(this).closest('table').DataTable();
+			tablename
+				.row($(this)
+					.parents('tr'))
+				.remove()
+				.draw();
 
-        } );
-    });
-	function refesh(){
+		});
+	});
+	$(document).ready(function () {
+		$('#myProjectTable5')
+			.addClass('nowrap')
+			.dataTable({
+				responsive: true,
+				columnDefs: [{
+					targets: [-1, -3],
+					className: 'dt-body-right'
+				}]
+			});
+		$('.deleterow5').on('click', function () {
+			var tablename = $(this).closest('table').DataTable();
+			tablename
+				.row($(this)
+					.parents('tr'))
+				.remove()
+				.draw();
+
+		});
+	});
+
+	function refesh() {
 		//  $("#mydiv").load(location.href + " #mydiv");
 		//  $( "#mydiv" ).load(window.location.href);
-		  location.reload();
-	  }
+		location.reload();
+	}
 </script>
+<script>
+	$(document).ready(function () {
+		$('#patient-table')
+			.addClass('nowrap')
+			.dataTable({
+				responsive: true,
+				columnDefs: [{
+					targets: [-1, -3],
+					className: 'dt-body-right'
+				}]
+			});
+		$('#patient-table1')
+			.addClass('nowrap')
+			.dataTable({
+				responsive: true,
+				columnDefs: [{
+					targets: [-1, -3],
+					className: 'dt-body-right'
+				}]
+			});
+	});
+</script>
+
 {% endblock custom_js %}

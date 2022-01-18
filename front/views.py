@@ -12,7 +12,7 @@ from django.views.generic import View,ListView,DetailView
 from django.contrib import messages
 from django.db.models import Q
 from chat.models import Notification
-from accounts.models import AdminHOD, CustomUser, Hospitals, Labs, Patients, Pharmacy, Specailist
+from accounts.models import AdminHOD, CustomUser, HospitalDoctors, Hospitals, Labs, Patients, Pharmacy, Specailist
 from accounts.views import send_otp
 from front.models import RatingAndComments
 from hospital.models import AmbulanceDetails, Blog, DoctorSchedule, HospitalMedias, HospitalRooms, HospitalStaffDoctors, ServiceAndCharges
@@ -22,23 +22,78 @@ from datetime import datetime,timedelta
 from django.db.models import Avg, Max, Min, Sum
 from lab.models import HomeVisitCharges, LabSchedule, Medias
 from patient.models import ForSome, NewLabTest, OrderBooking, Temp, phoneOPTforoders
+from radmin.models import DonorRequest
 # Create your views here.
   
 class FrontView(View):
     def get(self, request, *args, **kwargs):        
         hospitals=Hospitals.objects.filter(admin__is_active=True,is_verified = True,is_deactive=False)
+        hospitals_list = []
+        for hospital in hospitals:
+            total_cmns = RatingAndComments.objects.filter(HLP =hospital.admin).count()
+            cmnss = RatingAndComments.objects.filter(HLP =hospital.admin)
+            rating = 0
+            for cmn in cmnss: 
+                rating = rating + cmn.rating
+            if total_cmns == 0:
+                rating = rating /1
+            else:    
+                rating = rating / total_cmns
+            hospitals_list.append({'hospital':hospital,'rating':rating,'total_cmns':total_cmns})
+        doctors=HospitalDoctors.objects.filter(admin__is_active=True,is_verified = True,is_deactive=False,is_active=True)
+        #Doctor with ratings
+        doctor_list = []
+        for doctor in doctors:
+            total_cmns = RatingAndComments.objects.filter(HLP =doctor.admin).count()
+            cmnss = RatingAndComments.objects.filter(HLP =doctor.admin)
+            rating = 0
+            for cmn in cmnss: 
+                rating = rating + cmn.rating
+            if total_cmns == 0:
+                rating = rating /1
+            else:    
+                rating = rating / total_cmns
+            doctor_list.append({'doctor':doctor,'rating':rating,'total_cmns':total_cmns})
+        print(doctor_list)
         labs=Labs.objects.filter(admin__is_active=True,is_verified = True)
+        labs_list = []
+        for lab in labs:
+            total_cmns = RatingAndComments.objects.filter(HLP =lab.admin).count()
+            cmnss = RatingAndComments.objects.filter(HLP =lab.admin)
+            rating = 0
+            for cmn in cmnss: 
+                rating = rating + cmn.rating
+            if total_cmns == 0:
+                rating = rating /1
+            else:    
+                rating = rating / total_cmns
+            labs_list.append({'lab':lab,'rating':rating,'total_cmns':total_cmns})
+        #Pharmac with rating
         pharmacys=Pharmacy.objects.filter(admin__is_active=True,is_verified = True)
+        pharmacys_list = []
+        for pharmacy in pharmacys:
+            total_cmns = RatingAndComments.objects.filter(HLP =pharmacy.admin).count()
+            cmnss = RatingAndComments.objects.filter(HLP =pharmacy.admin)
+            rating = 0
+            for cmn in cmnss: 
+                rating = rating + cmn.rating
+            if total_cmns == 0:
+                rating = rating /1
+            else:    
+                rating = rating / total_cmns
+            pharmacys_list.append({'pharmacy':pharmacy,'rating':rating,'total_cmns':total_cmns})
         specilist = Specailist.objects.all()
         specilist_list = [] 
         for spc in specilist:
             cet_hospitals = Hospitals.objects.filter(admin__is_active=True,is_verified = True,is_deactive=False,specialist = spc).count()
-            specilist_list.append({'cet_hospitals':cet_hospitals,'specilist':spc})
+            cet_doctors = HospitalDoctors.objects.filter(admin__is_active=True,is_verified = True,is_deactive=False,specialist = spc).count()
+            specilist_list.append({'cet_hospitals':cet_hospitals,'specilist':spc,'cet_doctors':cet_doctors,})
+       
         blogs = Blog.objects.filter(is_active=True)
         # departments = Departments.objects.filter(hospital=hospital)
         
         print(hospitals) 
-        param={'hospitals':hospitals,'labs':labs,'pharmacys':pharmacys,'specilist_list':specilist_list,'blogs':blogs}
+        param={'hospitals':hospitals_list,'doctors':doctor_list,'labs':labs_list,'pharmacys':pharmacys_list,'specilist_list':specilist_list,'blogs':blogs}
         return render(request,"front/index.html",param)
 
 class BlogListView(ListView):
@@ -57,48 +112,106 @@ class BlogDetailsView(DetailView):
         return context
 
 """Searcch all"""
+class SearchDoctorView(ListView):
+    model = HospitalDoctors
+    template_name = "front/doctor-search.html"
+
+    def get_queryset(self):
+        filter_val=self.request.GET.get("filter","")
+        order_by=self.request.GET.get("orderby","id")
+        if filter_val!="":
+            doctors=HospitalDoctors.objects.filter( Q(is_virtual_available=True,is_active=True) ).order_by(order_by)
+            #  (Q(hopital_name__contains=filter_val) | Q(about__contains=filter_val) | Q(city__contains=filter_val) | Q(specialist__contains=filter_val))).order_by(order_by)
+        else:
+            doctors=HospitalDoctors.objects.filter(is_active=True).order_by(order_by)
+            doctor_list = []
+            for doctor in doctors:
+                total_cmns = RatingAndComments.objects.filter(HLP =doctor.admin).count()
+                cmnss = RatingAndComments.objects.filter(HLP =doctor.admin)
+                rating = 0
+                for cmn in cmnss: 
+                    rating = rating + cmn.rating
+                if total_cmns == 0:
+                    rating = rating /1
+                else:    
+                    rating = rating / total_cmns
+                doctor_list.append({'doctor':doctor,'rating':rating,'total_cmns':total_cmns})
+        return doctor_list
+    
+    def get_context_data(self,**kwargs):
+        context=super(SearchDoctorView,self).get_context_data(**kwargs)
+        context["filter"]=self.request.GET.get("filter","")
+        context["orderby"]=self.request.GET.get("orderby","id")
+        context["doctors_number"]=HospitalDoctors.objects.filter(is_virtual_available=True,is_active=True).count()
+        context["all_table_fields"]=HospitalDoctors._meta.get_fields()
+        return context
+
 class SearchOnlineHospitalView(ListView):
-    model = HospitalStaffDoctors
+    model = HospitalDoctors
     template_name = "front/online-doctor-search.html"
 
     def get_queryset(self):
         filter_val=self.request.GET.get("filter","")
         order_by=self.request.GET.get("orderby","id")
         if filter_val!="":
-            doctors=HospitalStaffDoctors.objects.filter( Q(is_virtual_available=True,is_active=True) ).order_by(order_by)
+            doctors=HospitalDoctors.objects.filter( Q(is_virtual_available=True,is_active=True) ).order_by(order_by)
             #  (Q(hopital_name__contains=filter_val) | Q(about__contains=filter_val) | Q(city__contains=filter_val) | Q(specialist__contains=filter_val))).order_by(order_by)
         else:
-            doctors=HospitalStaffDoctors.objects.filter(is_virtual_available=True,is_active=True).order_by(order_by)
-        return doctors
+            doctors=HospitalDoctors.objects.filter(is_virtual_available=True,is_active=True).order_by(order_by)
+            doctor_list = []
+            for doctor in doctors:
+                total_cmns = RatingAndComments.objects.filter(HLP =doctor.admin).count()
+                cmnss = RatingAndComments.objects.filter(HLP =doctor.admin)
+                rating = 0
+                for cmn in cmnss: 
+                    rating = rating + cmn.rating
+                if total_cmns == 0:
+                    rating = rating /1
+                else:    
+                    rating = rating / total_cmns
+                doctor_list.append({'doctor':doctor,'rating':rating,'total_cmns':total_cmns})
+        return doctor_list
     
     def get_context_data(self,**kwargs):
         context=super(SearchOnlineHospitalView,self).get_context_data(**kwargs)
         context["filter"]=self.request.GET.get("filter","")
         context["orderby"]=self.request.GET.get("orderby","id")
-        context["doctors_number"]=HospitalStaffDoctors.objects.filter(is_virtual_available=True,is_active=True).count()
-        context["all_table_fields"]=HospitalStaffDoctors._meta.get_fields()
+        context["doctors_number"]=HospitalDoctors.objects.filter(is_virtual_available=True,is_active=True).count()
+        context["all_table_fields"]=HospitalDoctors._meta.get_fields()
         return context
 
 class SearchHomeVisitHospitalView(ListView):
-    model = HospitalStaffDoctors
+    model = HospitalDoctors
     template_name = "front/homevisit-doctor-search.html"
 
     def get_queryset(self):
         filter_val=self.request.GET.get("filter","")
         order_by=self.request.GET.get("orderby","id")
         if filter_val!="":
-            doctors=HospitalStaffDoctors.objects.filter( Q(is_homevisit_available=True,is_active=True) ).order_by(order_by)
+            doctors=HospitalDoctors.objects.filter( Q(is_homevisit_available=True,is_active=True) ).order_by(order_by)
             #  (Q(hopital_name__contains=filter_val) | Q(about__contains=filter_val) | Q(city__contains=filter_val) | Q(specialist__contains=filter_val))).order_by(order_by)
         else:
-            doctors=HospitalStaffDoctors.objects.filter(is_homevisit_available=True,is_active=True).order_by(order_by)
-        return doctors
+            doctors=HospitalDoctors.objects.filter(is_homevisit_available=True,is_active=True).order_by(order_by)
+            doctor_list = []
+            for doctor in doctors:
+                total_cmns = RatingAndComments.objects.filter(HLP =doctor.admin).count()
+                cmnss = RatingAndComments.objects.filter(HLP =doctor.admin)
+                rating = 0
+                for cmn in cmnss: 
+                    rating = rating + cmn.rating
+                if total_cmns == 0:
+                    rating = rating /1
+                else:    
+                    rating = rating / total_cmns
+                doctor_list.append({'doctor':doctor,'rating':rating,'total_cmns':total_cmns})
+        return doctor_list
     
     def get_context_data(self,**kwargs):
         context=super(SearchHomeVisitHospitalView,self).get_context_data(**kwargs)
         context["filter"]=self.request.GET.get("filter","")
         context["orderby"]=self.request.GET.get("orderby","id")
-        context["doctors_number"]=HospitalStaffDoctors.objects.filter(is_homevisit_available=True,is_active=True).count()
-        context["all_table_fields"]=HospitalStaffDoctors._meta.get_fields()
+        context["doctors_number"]=HospitalDoctors.objects.filter(is_homevisit_available=True,is_active=True).count()
+        context["all_table_fields"]=HospitalDoctors._meta.get_fields()
         return context
 
 class SearchAmbulanceHospitalView(ListView):
@@ -140,7 +253,17 @@ class SearchLabView(ListView):
         for lab in labs:
             medias = Medias.objects.filter(is_active=True,user=lab.admin)
             services = ServiceAndCharges.objects.filter(user__labs = lab,is_active = True)
-            lab_list.append({'lab':lab,'medias':medias,'services':services})
+            
+            total_cmns = RatingAndComments.objects.filter(HLP =lab.admin).count()
+            cmnss = RatingAndComments.objects.filter(HLP =lab.admin)
+            rating = 0
+            for cmn in cmnss: 
+                rating = rating + cmn.rating
+            if total_cmns == 0:
+                rating = rating /1
+            else:    
+                rating = rating / total_cmns
+            lab_list.append({'lab':lab,'medias':medias,'services':services,'rating':rating,'total_cmns':total_cmns})
         print(lab_list)        
         return lab_list
     
@@ -167,7 +290,16 @@ class SearchPharmacyView(ListView):
         pharma_list = []
         for pharma in pharmacy:
             medias = Medias.objects.filter(is_active=True,user=pharma.admin)
-            pharma_list.append({'pharma':pharma,'medias':medias})       
+            total_cmns = RatingAndComments.objects.filter(HLP =pharma.admin).count()
+            cmnss = RatingAndComments.objects.filter(HLP =pharma.admin)
+            rating = 0
+            for cmn in cmnss: 
+                rating = rating + cmn.rating
+            if total_cmns == 0:
+                rating = rating /1
+            else:    
+                rating = rating / total_cmns
+            pharma_list.append({'pharma':pharma,'medias':medias,'rating':rating,'total_cmns':total_cmns})       
         return pharma_list
      
     def get_context_data(self,**kwargs):
@@ -254,6 +386,43 @@ class SearcCathHospitalView(ListView):
         context["all_table_fields"]=Hospitals._meta.get_fields()
         return context
 
+class SearcCathDoctorView(ListView):
+    model = HospitalDoctors
+    template_name = "front/doctor-search.html"
+
+    def get_queryset(self,*args, **kwargs):
+        hid = self.kwargs['hid']
+        filter_val=self.request.GET.get("filter","")
+        order_by=self.request.GET.get("orderby","id")
+        if filter_val!="":
+            # doctors=HospitalDoctors.objects.filter( Q(is_verified=True,is_deactive=False,admin__is_active=True,specialist=hid) and (Q(hopital_name__contains=filter_val) | Q(about__contains=filter_val) | Q(city__contains=filter_val) | Q(specialist__contains=filter_val))).order_by(order_by)
+            doctors=HospitalDoctors.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True,specialist=hid,is_active=True).order_by(order_by)
+        else:
+            doctors=HospitalDoctors.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True,specialist=hid,is_active=True).order_by(order_by)
+        
+        doctor_list = []
+        for doctor in doctors:
+            total_cmns = RatingAndComments.objects.filter(HLP =doctor.admin).count()
+            cmnss = RatingAndComments.objects.filter(HLP =doctor.admin)
+            rating = 0
+            for cmn in cmnss: 
+                rating = rating + cmn.rating
+            if total_cmns == 0:
+                rating = rating /1
+            else:    
+                rating = rating / total_cmns
+            doctor_list.append({'doctor':doctor,'rating':rating,'total_cmns':total_cmns})
+        return doctor_list
+    
+    def get_context_data(self,**kwargs):
+        context=super(SearcCathDoctorView,self).get_context_data(**kwargs)
+        hid = self.kwargs['hid']
+        context["filter"]=self.request.GET.get("filter","")
+        context["orderby"]=self.request.GET.get("orderby","id")
+        context["c_hospital"] = HospitalDoctors.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True,specialist=hid).count()
+        context["all_table_fields"]=HospitalDoctors._meta.get_fields()
+        return context
+
 """Details View Hospital"""
    
 class HospitalDetailsViews(DetailView):
@@ -317,20 +486,21 @@ class HospitalComments(views.SuccessMessageMixin,View):
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
-    def post(self,request, *args, **kwargs):    
-
+    def post(self,request, *args, **kwargs):  
         patient = request.user
         HLP = request.POST.get('HLP')
         pagename = request.POST.get('pagename')
         rating = request.POST.get('rating')
         comment = request.POST.get('comment')
         hlp = get_object_or_404(CustomUser,id=HLP)
-        print(patient,HLP,rating)
+        print(patient,HLP,rating,comment)
         ratingandcommect = RatingAndComments(patient=patient,HLP=hlp,rating=rating,comment=comment)
         ratingandcommect.save() 
         # messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!"
         if pagename == "hospital":
             return HttpResponseRedirect(reverse("hospital_details",kwargs={'id':hlp.hospitals.id}))
+        elif pagename == "doctor":
+            return HttpResponseRedirect(reverse("doctor_details",kwargs={'id':hlp.hospitaldoctors.id}))
         elif pagename == "lab":
             return HttpResponseRedirect(reverse("lab_details",kwargs={'id':hlp.labs.id}))
         elif pagename == "pharmacy":
@@ -354,7 +524,6 @@ class CommentView(View):
             pharma_list.append({'pharma':pharma,'medias':medias})       
         return pharma_list
 
-
 class DoctorsBookAppoinmentViews(View):
     
     @method_decorator(login_required)
@@ -364,12 +533,22 @@ class DoctorsBookAppoinmentViews(View):
         hosital_id=kwargs['id']
         hositaldcotorid_id=kwargs['did']
         hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
-        doctor = get_object_or_404(HospitalStaffDoctors,is_active=True,id=hositaldcotorid_id)
+        doctor = get_object_or_404(HospitalDoctors,is_active=True,id=hositaldcotorid_id)
         if request.user.user_type == "4":
             doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,hospital=hospital)
             forsome = ForSome.objects.filter(patient = request.user.patients) 
+            total_cmns = RatingAndComments.objects.filter(HLP =doctor.admin).count()
+            cmnss = RatingAndComments.objects.filter(HLP =doctor.admin)
+            rating = 0
+            for cmn in cmnss: 
+                rating = rating + cmn.rating
+            if total_cmns == 0:
+                rating = rating /1
+            else:    
+                rating = rating / total_cmns        
+
             token =False
-            param = {'hospital':hospital,'doctor':doctor,'doctorschedules':doctorschedules,'token':token,'someones':forsome}  
+            param = {'hospital':hospital,'doctor':doctor,'doctorschedules':doctorschedules,'token':token,'someones':forsome,'rating':rating,'total_cmns':total_cmns}  
             return render(request,"front/booking.html",param)
         else:
             messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
@@ -380,11 +559,105 @@ class DoctorsBookAppoinmentViews(View):
         date = request.POST.get('scheduleDate')
         if doc_id is None or date is None:
             doc_id=kwargs['did'] 
-        doctor = get_object_or_404(HospitalStaffDoctors,is_active=True,id=doc_id)
+        doctor = get_object_or_404(HospitalDoctors,is_active=True,id=doc_id)
         doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,scheduleDate=date)
         if request.user.user_type == "4":
             forsome = ForSome.objects.filter(patient = request.user.patients) 
             print(date,doctor,doctorschedules)
+            total_cmns = RatingAndComments.objects.filter(HLP =doctor.admin).count()
+            cmnss = RatingAndComments.objects.filter(HLP =doctor.admin)
+            rating = 0
+            for cmn in cmnss: 
+                rating = rating + cmn.rating
+            if total_cmns == 0:
+                rating = rating /1
+            else:    
+                rating = rating / total_cmns
+            token = True
+            param = {'hospital': doctor.hospital,'doctor':doctor,'doctorschedules':doctorschedules,'date':date,'token':token,'someones':forsome,'rating':rating,'total_cmns':total_cmns}  
+            return render(request,"front/booking.html",param)
+        else:
+            messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
+            return HttpResponseRedirect(reverse("bookappoinment",kwargs={'id':doctor.hospital.id,'did':doctor.id}))
+
+class DoctorDetailsViews(View):
+    
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        doctor_id=kwargs['id']
+        doctor = get_object_or_404(HospitalDoctors,is_active=True,id=doctor_id)
+        # if request.user.user_type == "4":
+        doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,is_active=True)
+
+        forsome = ""
+        if request.user.user_type == "4":
+            forsome = ForSome.objects.filter(patient = request.user.patients)
+        cmns = RatingAndComments.objects.filter(HLP =doctor.admin)[0:5]
+    
+        total_cmns = RatingAndComments.objects.filter(HLP =doctor.admin).count()
+        cmnss = RatingAndComments.objects.filter(HLP =doctor.admin)
+        rating = 0 
+        for cmn in cmnss:
+            rating = rating + cmn.rating
+
+    
+        if total_cmns > 0: 
+            rating = rating / total_cmns 
+
+        #rating for bar 
+        cmn_5 = RatingAndComments.objects.filter(HLP =doctor.admin,rating=5).count()
+        cmn_5_per = 0
+        if total_cmns > 0: 
+            cmn_5_per = cmn_5 * 100 / total_cmns
+        print(cmn_5_per)
+        cmn_4 = RatingAndComments.objects.filter(HLP =doctor.admin,rating=4).count()
+        cmn_4_per = 0
+        if total_cmns > 0: 
+            cmn_4_per = cmn_4 * 100 / total_cmns
+        print(cmn_4_per)
+        cmn_3 = RatingAndComments.objects.filter(HLP =doctor.admin,rating=3).count()
+        cmn_3_per = 0
+        if total_cmns > 0: 
+            cmn_3_per = cmn_3 * 100 / total_cmns
+        print(cmn_3_per)
+        cmn_2 = RatingAndComments.objects.filter(HLP =doctor.admin,rating=2).count()
+        cmn_2_per = 0
+        if total_cmns > 0: 
+            cmn_2_per = cmn_2 * 100 / total_cmns
+        print(cmn_2_per)
+        cmn_1 = RatingAndComments.objects.filter(HLP =doctor.admin,rating=1).count()
+        cmn_1_per = 0
+        if total_cmns > 0: 
+            cmn_1_per = cmn_1 * 100 / total_cmns
+        print(cmn_1_per)
+        token =False
+        param = {'doctor':doctor,'doctorschedules':doctorschedules,'token':token,'someones':forsome,'rating':rating,'total_cmns':total_cmns,'cmns':cmns,'total_cmns':total_cmns,'rating':rating,'cmn_5':cmn_5,'cmn_1':cmn_1,'cmn_2':cmn_2,'cmn_3':cmn_3,'cmn_4':cmn_4,'cmn_1_per':cmn_1_per,'cmn_2_per':cmn_2_per,'cmn_3_per':cmn_3_per,'cmn_4_per':cmn_4_per,'cmn_5_per':cmn_5_per,}  
+        return render(request,"front/booking.html",param)
+        # else:
+        #     messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
+        #     return HttpResponseRedirect(reverse("front_home"))  
+     
+    def post(self, request, *args, **kwargs):
+        doc_id = request.POST.get('doc_id')        
+        date = request.POST.get('scheduleDate')
+        if doc_id is None or date is None:
+            doc_id=kwargs['did'] 
+        doctor = get_object_or_404(HospitalDoctors,is_active=True,id=doc_id)
+        doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,scheduleDate=date)
+        if request.user.user_type == "4":
+            forsome = ForSome.objects.filter(patient = request.user.patients) 
+            print(date,doctor,doctorschedules)
+            total_cmns = RatingAndComments.objects.filter(HLP =doctor.admin).count()
+            cmnss = RatingAndComments.objects.filter(HLP =doctor.admin)
+            rating = 0
+            for cmn in cmnss: 
+                rating = rating + cmn.rating
+            if total_cmns == 0:
+                rating = rating /1
+            else:    
+                rating = rating / total_cmns
             token = True
             param = {'hospital': doctor.hospital,'doctor':doctor,'doctorschedules':doctorschedules,'date':date,'token':token,'someones':forsome}  
             return render(request,"front/booking.html",param)
@@ -564,7 +837,7 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
                 forsome = get_object_or_404(ForSome,id=someone)
                 booking.for_whom=forsome
             if where == "hospital":
-                hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
+                hospitalstaffdoctor = get_object_or_404(HospitalDoctors,id=doctorid)
                 doctorschedule = get_object_or_404(DoctorSchedule,id=timeslot,doctor=hospitalstaffdoctor)
                 doctorschedule.is_booked =True
                 doctorschedule.save()
@@ -691,9 +964,11 @@ def deleteReviews(request,id):
             return HttpResponseRedirect(reverse("admin_reviews"))
         else:
             messages.add_message(request,messages.ERROR,"YOu are not Autosried")
+            return HttpResponseRedirect(reverse("front_home"))
 
     except Exception as e:
         messages.add_message(request,messages.ERROR,"Somethingwent wrong")
+        return HttpResponseRedirect(reverse("front_home"))
     
 
 """Reviews list and edit delete """
@@ -704,3 +979,29 @@ class BLoodDonorList(View):
         patients = Patients.objects.filter(admin__is_active=True,blood_donation =True,blood_docation_date__lte = last_three_month)
         print(patients)
         return render(request,"front/blood-donor-search.html",{'patients':patients})
+    
+class BloodRequestView(View):   
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        reqestpersoned = request.user        
+        id = request.POST.get('forpersoned')
+        print(id)
+        print(reqestpersoned)
+        try:
+            forpersoned = get_object_or_404(CustomUser,id=id) 
+            donorrequest = DonorRequest(reqestpersoned=reqestpersoned,forpersoned=forpersoned)
+            donorrequest.save()
+            return HttpResponseRedirect(reverse("successfullpage",kwargs={'id':donorrequest.id}))
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"Somethingwent wrong")
+            return HttpResponseRedirect(reverse("search_blood_donor")) 
+
+class DonorRequestDone(DetailView):
+    def get(self, request, *args, **kwargs):
+        lab_id=kwargs['id'] 
+        donorrequest = get_object_or_404(DonorRequest,id=lab_id)
+        donorrequest.is_active=True
+        donorrequest.save()
+        return render(request,"front/donor-success.html",{"donorrequest":donorrequest})

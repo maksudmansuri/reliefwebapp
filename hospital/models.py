@@ -26,7 +26,7 @@ class TimeSlot(models.Model):
 class HospitalStaffDoctors(models.Model):
     id                  =models.AutoField(primary_key=True)
     email               =models.EmailField(default="", max_length=254,blank=True,null=True)
-    doctor              =models.OneToOneField(HospitalDoctors, related_name="hospitaldoctor", on_delete=models.CASCADE)
+    doctor              =models.OneToOneField(HospitalDoctors, on_delete=models.CASCADE)
     hospital            =models.ForeignKey(Hospitals, related_name="hospitalstaffdoctors", on_delete=models.CASCADE)
     ssn_id              =models.CharField(max_length=50,default="",blank=True,null=True)
     opd_charges         =models.FloatField(default=0.0,blank=True,null=True)
@@ -45,12 +45,10 @@ class HospitalStaffDoctors(models.Model):
     def __str__(self):
         return self.doctor.fisrt_name + " " + self.doctor.last_name
 
-
-
 class DoctorSchedule(models.Model):
     id                  =models.AutoField(primary_key=True)
     hospital            =models.ForeignKey(Hospitals,on_delete=models.CASCADE,default="",blank=True,null=True)
-    doctor              =models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE)
+    doctor              =models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE)
     timeslot            =models.ForeignKey(TimeSlot, on_delete=models.CASCADE,blank=True,null=True,default="")
     scheduleDate        = models.DateField(auto_now=False, auto_now_add=False,blank=True,null=True)
     is_active           =models.BooleanField(blank=True,null=True,default=False)
@@ -63,7 +61,7 @@ class DoctorSchedule(models.Model):
         return str(self.timeslot)
     
     class Meta:
-        ordering = ['scheduleDate']
+        ordering = ['-scheduleDate']
 
 class HospitalStaffs(models.Model):
     id                  =models.AutoField(primary_key=True)
@@ -81,7 +79,6 @@ class HospitalStaffs(models.Model):
     
     def __str__(self):
         return self.name_title + self.first_name + " " + self.last_name
-
 
 class HospitalStaffDoctorSchedual(models.Model):
     id                           =models.AutoField(primary_key=True)

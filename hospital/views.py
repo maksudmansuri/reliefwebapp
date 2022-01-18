@@ -7,7 +7,7 @@ from django.http.request import HttpRequest
 from accounts import models
 from chat.models import Notification
 from front.models import RatingAndComments
-import hospital
+
 from patient.models import Booking, LabTest, OrderBooking, Orders, Slot, TreatmentReliefPetient, patientFile, phoneOPTforoders
 from django.db.models.query_utils import Q
 from django.urls.base import reverse
@@ -26,6 +26,8 @@ from django.urls import reverse
 from datetime import datetime, timedelta
 import pytz
 from django.core.paginator import Paginator
+
+from radmin.models import Disease, HospitalDisease
 IST = pytz.timezone('Asia/Kolkata')
 
 # Create your views here. 
@@ -761,7 +763,7 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
             active= True
         hospital=Hospitals.objects.get(admin=request.user)
 
-        account = CustomUser.objects.create_user(username=phone,password=email,email=email)
+        account = CustomUser.objects.create_user(username=phone,password=phone,email=email)
         account.user_type=3
         account.phone=phone
         patient = HospitalDoctors()
@@ -1181,7 +1183,7 @@ class managePatientView(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):
         try:
             hospital=Hospitals.objects.get(admin=request.user)
-            hos_patients = HospitalsPatients.objects.filter(hospital=hospital,is_active=True)
+            hos_patients = Patients.objects.filter(hospital=hospital,is_active=True)
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")
             return HttpResponseRedirect(reverse("manage_patient"))        
@@ -1190,35 +1192,43 @@ class managePatientView(SuccessMessageMixin,CreateView):
 
     def post(self, request, *args, **kwargs):
         #for CustomUSer creation
-        first_name = request.POST.get("first_name")
+        first_name = request.POST.get("fisrt_name")
         last_name = request.POST.get("last_name")
         name_title = request.POST.get("name_title")
         treatment = request.POST.get("treatment")
         age = request.POST.get("age")
+        dob = request.POST.get("dob")
+        alternate_mobile = request.POST.get("alternate_mobile")
         email = request.POST.get("email")
         add_notes = request.POST.get("add_notes")
         phone = request.POST.get("phone")
         ID_number = request.POST.get("ID_number")
         status = request.POST.get("status")
         ID_proof = request.FILES.get("ID_proof")
+        profile_pic = request.FILES.get("profile_pic")
         address = request.POST.get("address")
         city = request.POST.get("city")
+        state = request.POST.get("state")
+        zip_Code = request.POST.get("zip_Code")
         gender = request.POST.get("gender")
+        country = request.POST.get("country")
+        blood_docation_date = request.POST.get("blood_docation_date")
+        bloodgroup = request.POST.get("bloodgroup")
         # for Hospital staff user creation
 
-        profile_pic_url = ""
         if ID_proof:
             fs=FileSystemStorage()
             filename=fs.save(ID_proof.name,ID_proof)
             media_url=fs.url(filename)
-            profile_pic_url = media_url
-            print("insdie id_proof")
-        print(ID_proof)
-        print(profile_pic_url)
-        # p=CustomUser.objects.filter(phone=phone)
-        # if p.count():
-        #     msg=messages.error(request,"Phone Already Exits")
-        #     return HttpResponseRedirect(reverse("manage_patient"))        
+            ID_proof_url = media_url
+        p=CustomUser.objects.filter(phone=phone).count()
+        e=CustomUser.objects.filter(email=email).count()
+        if p > 0:
+            msg=messages.error(request,"Phone Already Exits")
+            return HttpResponseRedirect(reverse("manage_patient"))        
+        if e > 0:
+            msg=messages.error(request,"Email Already Exits")
+            return HttpResponseRedirect(reverse("manage_patient"))        
        
         hospital=Hospitals.objects.get(admin=request.user)
 
@@ -1228,9 +1238,43 @@ class managePatientView(SuccessMessageMixin,CreateView):
         I Assuming this will only work for patient 
         """
 
-        patient = HospitalsPatients(name_title=name_title,first_name=first_name,last_name=last_name,address=address,city=city,age=age,phone=phone,treatment=treatment,ID_number=ID_number,status=status,ID_proof=profile_pic_url,add_notes=add_notes,gender=gender,is_active=True,email=email)
-        patient.hospital=hospital     
+        account = CustomUser.objects.create_user(username=phone,password=phone,email=email)
+        account.user_type=4
+        account.phone=phone
+        patient = Patients()
+        patient.admin = account
         patient.save()
+        account.is_active = True
+        account.save()
+        if profile_pic:
+            fs=FileSystemStorage()
+            filename1=fs.save(profile_pic.name,profile_pic)
+            profile_pic_url=fs.url(filename1)
+            account.profile_pic=profile_pic_url
+            account.patients.profile_pic=profile_pic_url        
+        account.name_title = name_title
+        account.first_name = first_name
+        account.last_name = last_name
+        account.patients.fisrt_name = first_name
+        account.patients.last_name = last_name
+        account.patients.address = address 
+        account.patients.city = city 
+        account.patients.state = state
+        account.patients.country = country 
+        account.patients.zip_Code = zip_Code  
+        account.patients.dob = dob 
+        account.patients.age = age 
+        account.patients.alternate_mobile = alternate_mobile
+        account.patients.profile_pic = profile_pic
+        account.patients.gender = gender
+        account.patients.bloodgroup = bloodgroup
+        account.patients.doctor = hospital
+        account.patients.status = status
+      
+        account.patients.added_by_hospital = True 
+        account.patients.is_active = True 
+        account.patients.save()   
+        account.save()
        
         messages.add_message(request,messages.SUCCESS,"Successfully Added")
         return HttpResponseRedirect(reverse("manage_patient"))
@@ -1253,6 +1297,13 @@ def updatePatientView(request):
         city = request.POST.get("city")
         gender = request.POST.get("gender")
         id = request.POST.get("id")
+        state = request.POST.get("state")
+        zip_Code = request.POST.get("zip_Code")
+        gender = request.POST.get("gender")
+        bloodgroup = request.POST.get("bloodgroup")
+        dob = request.POST.get("dob")
+        alternate_mobile = request.POST.get("alternate_mobile")
+        profile_pic = request.FILES.get("profile_pic")
         # for Hospital staff user creation
 
         profile_pic_url = ""
@@ -1291,7 +1342,7 @@ def updatePatientView(request):
 
 def deleteHospitalPatient(request,id):
     hospital=Hospitals.objects.get(admin=request.user)  
-    patient = HospitalsPatients.objects.get(id=id,hospital=hospital)
+    patient = Patients.objects.get(id=id,hospital=hospital)
     patient.is_active=False
     patient.save()
     messages.add_message(request,messages.SUCCESS,"Successfully Delete")
@@ -1596,25 +1647,24 @@ def deleteReliefHospitalPatient(request,id):
 class DoctorScheduleCreateView(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):
         doctor_id = kwargs['id']
-        doctor = get_object_or_404(HospitalStaffDoctors,id=doctor_id)
-        dates = DoctorSchedule.objects.filter(doctor=doctor).values('scheduleDate','id')
+        doctor = get_object_or_404(HospitalDoctors,id=doctor_id)
+        dates = DoctorSchedule.objects.filter(doctor=doctor).values('scheduleDate','id').order_by('-scheduleDate')
         schedule_dates ={item['scheduleDate'] for item in dates}
         schedule_dates_list = []
         for sch_Dat in schedule_dates:
             scd_type = DoctorSchedule.objects.filter(scheduleDate=sch_Dat,doctor=doctor).first()
-            scd_type_all = DoctorSchedule.objects.filter(scheduleDate=sch_Dat,doctor=doctor)
+            scd_type_all = DoctorSchedule.objects.filter(scheduleDate=sch_Dat,doctor=doctor).order_by('-scheduleDate')
             schedule_dates_list.append({'scd_type':scd_type,'sch_Dat':sch_Dat,'scd_type_all':scd_type_all})
             
             # sch_type = DoctorSchedule.objects.values('scheduleDate','id')
-        print(schedule_dates_list)
 
 
         # schedule_dates = DoctorSchedule.objects.filter()
         timeslots_15s = TimeSlot.objects.filter(schedule_type="15")
         timeslots_30s = TimeSlot.objects.filter(schedule_type="30")
         timeslots_45s = TimeSlot.objects.filter(schedule_type="45")
-        timeslots_60s = TimeSlot.objects.filter(schedule_type="60")
-
+        timeslots_60s = TimeSlot.objects.filter(schedule_type="60")       
+        
         param = {'timeslots_15s':timeslots_15s,'timeslots_30s':timeslots_30s,'timeslots_45s':timeslots_45s,'timeslots_60s':timeslots_60s,'doctor':doctor,'schedule_dates_list':schedule_dates_list}
        
         return render(request,'hospital/view-doctor-schedule.html',param)
@@ -1623,24 +1673,28 @@ class DoctorScheduleCreateView(SuccessMessageMixin,CreateView):
         timeslot_list = request.POST.getlist('timeslot[]')
         scheduleDate = request.POST.get('scheduleDate')
         doctor_id = request.POST.get('doctor_id') 
-        doctor = get_object_or_404(HospitalStaffDoctors,id=doctor_id)
-        doctorschedules = DoctorSchedule.objects.filter(doctor = doctor)
-        for doctorschedule in doctorschedules:
-            print(doctorschedule.scheduleDate)
-            print(scheduleDate)
-            if str(doctorschedule.scheduleDate) == str(scheduleDate):
-                messages.add_message(request,messages.ERROR,"Already Booked date please delete if you want to change")
-                return HttpResponseRedirect(reverse("manage_doctorschedule",kwargs={'id':doctor.id}))
-        is_active =True
-        for timeslot in timeslot_list:
-            timeslot_obj = get_object_or_404(TimeSlot,id=timeslot)
-            doctorschedule = DoctorSchedule(scheduleDate=scheduleDate,doctor=doctor,is_active=is_active,timeslot=timeslot_obj,hospital=request.user.hospitals)
-            doctorschedule.save()
+        days = request.POST.get('days')
+
+        doctor = get_object_or_404(HospitalDoctors,id=doctor_id)
+        for x in range(int(days)):
+            newdate = datetime.strptime(scheduleDate,"%Y-%m-%d") + timedelta(days=int(x))
+            doctorschedules = DoctorSchedule.objects.filter(doctor = doctor)
+            for doctorschedule in doctorschedules:
+                print(doctorschedule.scheduleDate)
+                print(newdate.date())
+                if doctorschedule.scheduleDate == newdate.date():
+                    messages.add_message(request,messages.ERROR,"Already Booked date please delete if you want to change")
+                    return HttpResponseRedirect(reverse("manage_doctorschedule",kwargs={'id':doctor.id}))
+            is_active =True
+            for timeslot in timeslot_list:
+                timeslot_obj = get_object_or_404(TimeSlot,id=timeslot)
+                doctorschedule = DoctorSchedule(scheduleDate=newdate,doctor=doctor,is_active=is_active,timeslot=timeslot_obj,hospital=request.user.hospitals)
+                doctorschedule.save()
         messages.add_message(request,messages.SUCCESS,"Suucessfully Created")
         return HttpResponseRedirect(reverse("manage_doctorschedule",kwargs={'id':doctor.id}))
  
 def deleteTimeSlot(request,id,did):
-    doctor = get_object_or_404(HospitalStaffDoctors,id=did)
+    doctor = get_object_or_404(HospitalDoctors,id=did)
     date1 = DoctorSchedule.objects.get(doctor=doctor,id=id)
     dates = DoctorSchedule.objects.filter(doctor=doctor,scheduleDate=date1.scheduleDate)
     for date in dates:
@@ -1771,3 +1825,28 @@ class ReviewsList(ListView):
         context["total_reviews"] = total_cmns
         return context
 
+"""Manage Disease Add and Update Listout"""
+class manageDiseaseView(SuccessMessageMixin,CreateView):
+    def get(self, request, *args, **kwargs):  
+        hospital = get_object_or_404(Hospitals,admin=request.user)        
+        hos_diseases = HospitalDisease.objects.filter(hospital=hospital)
+        diseases = Disease.objects.filter(is_active=True)
+        param={'diseases':diseases,'hos_diseases':hos_diseases}
+        return render(request,"hospital/add-disease.html",param)  
+
+    def post(self, request, *args, **kwargs):
+        name_list = request.POST.getlist('name []') 
+        try:
+            hospital = get_object_or_404(Hospitals,admin=request.user)
+            hos_des_dl = HospitalDisease.objects.filter(hospital=hospital)
+            for hos in hos_des_dl:
+                hos.delete()      
+            for name in name_list:
+                ds = get_object_or_404(Disease,id=name)
+                hospitaldiseas = HospitalDisease(hospital=hospital,disease = ds)
+                hospitaldiseas.save()
+            messages.add_message(request,messages.SUCCESS,"Successfully Added")
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"Something Wrong with connnections")
+            return HttpResponseRedirect(reverse("add_blog"))
+        return HttpResponseRedirect(reverse("manage_disease"))

@@ -1,3 +1,4 @@
+from sre_constants import SUCCESS
 from django.urls import path
 from .import views
  
@@ -8,12 +9,17 @@ urlpatterns = [
     path('search_hospital',views.SearchHospitalView.as_view(),name="search_hospital"),
     path('search_online_hospital',views.SearchOnlineHospitalView.as_view(),name="search_online_hospital"),
     path('search_homevisit_hospital',views.SearchHomeVisitHospitalView.as_view(),name="search_homevisit_hospital"),
+    path('search_doctor',views.SearchDoctorView.as_view(),name="search_doctor"),
     path('search_ambulance_hospital',views.SearchAmbulanceHospitalView.as_view(),name="search_ambulance_hospital"),
     path('search_Labs',views.SearchLabView.as_view(),name="search_Labs"),
     path('search_pharmcy',views.SearchPharmacyView.as_view(),name="search_pharmcy"),
     path('search_blood_donor',views.BLoodDonorList.as_view(),name="search_blood_donor"),
     path('specilist_hospitals/<hid>',views.SearcCathHospitalView.as_view(),name="specilist_hospitals"),
-      
+    path('specilist_doctor/<hid>',views.SearcCathDoctorView.as_view(),name="specilist_doctor"),
+
+    #doctor_details
+    path('doctor_details/<id>', views.DoctorDetailsViews.as_view(), name="doctor_details"),
+
     #profiles Hospital
     path('hospital_details/<id>', views.HospitalDetailsViews.as_view(), name="hospital_details"),
     path('ratingandcomment', views.HospitalComments.as_view(), name="ratingandcomment"),
@@ -42,7 +48,9 @@ urlpatterns = [
     # path('blood_donor_list', views.BLoodDonorList.as_view(), name="blood_donor_list"),
     
 
-
+    #SUCCESS Full pages
+    path('donorrequest', views.BloodRequestView.as_view(), name="donorrequest"),
+    path('successfullpage/<id>', views.DonorRequestDone.as_view(), name="successfullpage"),
     #extra for json
     # path('scheduledatechange', views.ScheduleDateChange, name="scheduledatechange"),
 ]

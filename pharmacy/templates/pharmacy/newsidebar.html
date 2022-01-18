@@ -23,12 +23,13 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    {% comment %} <li>
-                        <a href="{% url 'hospital_dashboard' %}">
+                    {% url 'appointment_list' as appointment_list %}
+                    <li {% if request.path == appointment_list %} class="active" {% endif %} >
+                        <a href="{% url 'appointment_list' %}">
                             <i class="fas fa-calendar-check"></i>
                             <span>Appointments</span>
                         </a>
-                    </li> {% endcomment %}
+                    </li>
                     {% comment %} <li>
                         <a href="{% url 'hospital_dashboard' %}">
                             <i class="fas fa-calendar-check"></i>
@@ -59,13 +60,13 @@
                             <span>Reviews</span>
                         </a>
                     </li>
-                    <li>
+                    {% comment %} <li>
                         <a href="#">
                             <i class="fas fa-comments"></i>
                             <span>Message</span>
                             <small class="unread-msg">23</small>
                         </a>
-                    </li>
+                    </li> {% endcomment %}
                     
                 </ul>
             </nav>

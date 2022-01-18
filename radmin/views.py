@@ -5,12 +5,10 @@ from front.models import RatingAndComments
 IST = pytz.timezone('Asia/Kolkata')
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.http import response
-from django.http.request import HttpRequest 
-from patient.models import Booking, LabTest, OrderBooking, Orders, PicturesForMedicine, Slot
+from patient.models import Booking, LabTest, OrderBooking, Orders, PicturesForMedicine, Slot, TreatmentReliefPetient, patientFile
 from django.core.files.storage import FileSystemStorage
 from django.http.response import HttpResponse, HttpResponseBase, HttpResponseRedirect, JsonResponse
-from hospital.models import ContactPerson, HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, Insurances, ServiceAndCharges, TimeSlot
+from hospital.models import ContactPerson, HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, HospitalsPatients, Insurances, ServiceAndCharges, TimeSlot
 from accounts.models import CustomUser, HospitalDoctors, HospitalPhones, Hospitals, Labs, OPDTime, Patients, Pharmacy, Specailist
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,UpdateView
@@ -18,7 +16,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
 from django.db.models import Q 
 
-from radmin.models import City, Country, State
+from radmin.models import City, Country, Disease, DonorRequest, State
 # Create your views here.
    
 class indexListView(ListView):
@@ -26,7 +24,7 @@ class indexListView(ListView):
     template_name = "radmin/newindex.html" 
 
     def get_context_data(self, **kwargs): 
-        context = super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)  
         context["labs_list"] = Labs.objects.all() 
         context["pharmacy_list"] = Pharmacy.objects.all() 
         patients = Patients.objects.all()
@@ -829,6 +827,7 @@ class AppointmentListView(ListView):
         context["hos_apt"] = OrderBooking.objects.filter(booking_for = "H") 
         context["labs_apt"] = OrderBooking.objects.filter(booking_for = "L") 
         context["pharmacy_apt"] = OrderBooking.objects.filter(booking_for = "P") 
+        context["doctor_apt"] = OrderBooking.objects.filter(booking_for = "D") 
         return context
 
 class HosAppointmentAllViews(ListView):
@@ -1051,4 +1050,109 @@ class ReviewsList(ListView):
 #     response = {'findstates':findstates}
 #     return  HttpResponse(findstates)
 
+"""RElief share view"""
+def ReliefShare(request):
+    # if request.method == "POST":
+    id = request.POST.get("id")
+    share = request.POST.get("share")
+    page = request.POST.get("page")
 
+    account = get_object_or_404(CustomUser,id=id)
+    account.share = share
+    account.save()
+    messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
+    return HttpResponseRedirect(reverse("radmin_home")) 
+"""Donor Request List"""
+class RequestForDonorListView(ListView):
+    model = DonorRequest
+    template_name = "radmin/request_donor.html"
+    
+"""Pateints Prfile And edit"""
+class ReliefPatientViewsProfile(SuccessMessageMixin,DetailView):
+     def get(self, request, *args, **kwargs):
+        try:
+            id = kwargs['id']
+            patient=Patients.objects.get(id=id)
+            # treatmentreliefpetient = TreatmentReliefPetient.objects.get(is_active=True,id=id)
+            oldbooking = TreatmentReliefPetient.objects.filter(is_active=True,patient=patient)
+            # hospitaldoctors = HospitalStaffDoctors.objects.filter(hospital=hospital,is_active=True)
+            # serviceandcharges = ServiceAndCharges.objects.filter(user=hospital.admin)
+            patientfiles = patientFile.objects.filter(patient=patient) 
+            # slot = Slot.objects.filter(patient=treatmentreliefpetient.patient.admin) # yet not required
+            # labtests =LabTest.objects.filter(slot__patient=treatmentreliefpetient.patient.admin,is_active=True,slot__send_to_doctor=True)
+            # print(labtests)
+            apts = OrderBooking.objects.filter(patient = patient.admin)
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,e)
+            return HttpResponseRedirect(reverse("manage_relief_patient"))        
+        param={'apts':apts,'oldbooking':oldbooking,'patient':patient,'patientfiles':patientfiles}
+        return render(request,"radmin/patient_profile.html",param)        
+ 
+"""Lsit of All PAtients with hospital,docotr filter"""
+class AdminAllPatientListView(ListView):
+    def get(self, request, *args, **kwargs):
+        try:
+            hos=kwargs['id'] 
+            hospital = get_object_or_404(Hospitals,admin=hos)           
+            hospital_patient = Patients.objects.filter(hospital=hospital)
+            chospital_patient = Patients.objects.filter(hospital=hospital).count()
+            relief_patient = TreatmentReliefPetient.objects.filter(hospital=hospital)
+            crelief_patient = TreatmentReliefPetient.objects.filter(hospital=hospital).count()
+
+            param={'relief_patient':relief_patient,'chospital_patient':chospital_patient,'hospital_patient':hospital_patient,'crelief_patient':crelief_patient}
+            return render(request,"radmin/patient_list.html",param)       
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"No Patients Available")
+            return HttpResponseRedirect(reverse("radmin_home")) 
+
+"""Disease Add Update Delete"""
+class DiseaseListView(SuccessMessageMixin,CreateView):
+    
+    def get(self, request, *args, **kwargs):      
+        diseases=Disease.objects.all()
+        param={'diseases':diseases}
+        return render(request,"radmin/diseases.html",param)
+    
+    def post(self, request, *args, **kwargs):
+        name=request.POST.get("name")
+        desc=request.POST.get("desc")
+        d_icon=request.FILES.get("d_icon")
+        print(desc)
+        if d_icon:
+            fs=FileSystemStorage()
+            filename1=fs.save(d_icon.name,d_icon)
+            profile_pic_url=fs.url(filename1)
+        try:
+            disease = Disease(name=name,d_icon=profile_pic_url,desc=desc,is_active=True)
+            disease.save()
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,e)
+        messages.add_message(request,messages.SUCCESS,"Succesfully Added")
+        return HttpResponseRedirect(reverse("diseaselist")) 
+
+def updateDisease(request,id):
+    name=request.POST.get("name")
+    desc=request.POST.get("desc")
+    d_icon=request.FILES.get("d_icon")
+    
+    try: 
+        disease = get_object_or_404(Disease,id=id)
+        disease.name=name
+        disease.desc=desc
+        if d_icon:
+            fs=FileSystemStorage()
+            filename1=fs.save(d_icon.name,d_icon)
+            profile_pic_url=fs.url(filename1)
+            disease.d_icon=profile_pic_url      
+        disease.save()
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,e)
+    messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
+    return HttpResponseRedirect(reverse("diseaselist")) 
+
+def deleteDisease(request,id):
+    disease = get_object_or_404(Disease,id=id)
+    disease.delete()
+    messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
+    return HttpResponseRedirect(reverse("diseaselist")) 
+ 

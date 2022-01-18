@@ -21,14 +21,19 @@
 					<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
 						<li class="nav-item">
 							<a class="nav-link active" href="#pat_appointments"
-								data-bs-toggle="tab">Hospital {{chospital}}</a>
+								data-bs-toggle="tab">Hospital</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" href="#pat_doctor"
+								data-bs-toggle="tab">Doctors </a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="#pat_prescriptions"
-								data-bs-toggle="tab">Laboratory {{clab}}</a>
+								data-bs-toggle="tab">Laboratory </a>
 						</li>
 						<li class="nav-item"> 
-							<a class="nav-link" href="#pat_medical_records" data-bs-toggle="tab">Pharmacy {{cpharmacy}}</a>
+							<a class="nav-link" href="#pat_medical_records"
+                                data-bs-toggle="tab">Pharmacy </a>
 						</li>
 					</ul>
 				</nav>
@@ -62,6 +67,70 @@
                                             </td>
                                             <td>
                                                 {{hospital.HLP.hospitals.hopital_name|upper}}
+                                            </td>
+                                            <td>
+                                                 {{hospital.amount}}
+                                            </td>
+                                           
+                                            </td>
+                                            {% comment %} <td>
+                                                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}"><i class="icofont-edit text-success"></i></button>
+                                                    <button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
+                                                </div>
+                                            </td> {% endcomment %}
+                                            
+                                                <td>
+                                                    {{ hospital.status }}
+                                                </td>
+                                                <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-primary">Action</button>
+                                                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <span class="visually-hidden">Toggle Dropdown</span>
+                                                    </button>
+                                                    <ul class="dropdown-menu border-0 shadow py-3 px-2">
+                                                        <li><a class="dropdown-item py-2 rounded" href="#">View</a></li>
+                                                        <li><a class="dropdown-item py-2 rounded" href="{% url 'labs_delete_admin' hospital.id %}">Delete</a></li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
+                                                    </ul>
+                                                </div></td><!-- /btn-group -->
+                                            
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+					</div>
+
+					<div id="pat_doctor" class="tab-pane fade">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Patient Name</th> 
+                                            <th>Hospital Name</th>    
+                                            <th>Amount</th> 
+                                            <th>Status</th>   
+                                            <th>Actions</th>  
+                                        </tr>
+                                    </thead> 
+                                    <tbody>
+                                    {% for hospital in doctor_apt %}
+                                        <tr>
+                                            <td> 
+                                               AP00{{hospital.id}}
+                                            </td>
+                                            <td>
+                                                <img class="avatar rounded-circle" src="{{hospital.patient.patients.profile_pic}}" alt="">												
+                                                <span class="fw-bold ms-1">{{hospital.patient.patients|upper}}</span>
+                                            </td>
+                                            <td>
+                                                {{hospital.HLP.hospitaldoctors.fisrt_name|upper}} {{hospital.HLP.hospitaldoctors.last_name|upper}}
                                             </td>
                                             <td>
                                                  {{hospital.amount}}

@@ -41,8 +41,10 @@
                                      <span class="visually-hidden">Toggle Dropdown</span>
                                  </button>
                                  <ul class="dropdown-menu border-0 shadow py-3 px-2">
+                                     <li><a class="dropdown-item py-2 rounded" target="blank"
+                                             href="{% url 'doctor_details' doctor.doctor.id %}">View Schedule</a></li>
                                      <li><a class="dropdown-item py-2 rounded"
-                                             href="{% url 'manage_doctorschedule' doctor.id %}">View Schedule</a></li>
+                                             href="{% url 'manage_doctorschedule' doctor.doctor.id %}">View Schedule</a></li>
                                      <li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal"
                                              data-bs-target="#editDoctor{{doctor.id}}">Edit</a></li>
                                      {% if doctor.is_active %}

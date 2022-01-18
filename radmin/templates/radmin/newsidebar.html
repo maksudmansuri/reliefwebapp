@@ -44,6 +44,13 @@
                             <span>Speciality</span>
                         </a>
                     </li>
+                    {% url 'diseaselist' as diseaselist %}
+                    <li {% if request.path == diseaselist %} class="active" {% endif %} >
+                        <a href="{% url 'diseaselist' %}">
+                            <i class="fas fa-procedures"></i>
+                            <span>Disease</span>
+                        </a>
+                    </li>
                     {% url 'appointment' as appointment %}
                     <li {% if request.path == appointment %} class="active" {% endif %}>
                         <a href="{% url 'appointment' %}">
@@ -68,6 +75,13 @@
                         </a> 
                     </li>
                     
+                    {% url 'donor_request' as donor_request %}
+                    <li {% if request.path == donor_request %} class="active" {% endif %}>
+                        <a href="{% url 'donor_request' %}">
+                            <i class="fas fa-user"></i>
+                            <span>Request For Donor</span>
+                        </a>
+                    </li>
                     {% url 'admin_reviews' as admin_reviews %}
                     <li {% if request.path == admin_reviews %} class="active" {% endif %}>
                         <a href="{% url 'admin_reviews' %}">

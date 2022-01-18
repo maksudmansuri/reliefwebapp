@@ -20,19 +20,24 @@ IST = pytz.timezone('Asia/Kolkata')
 # Create your views here.
 
 
-class LabDashboardViews(SuccessMessageMixin,ListView):
+class PharmaDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
         # try: 
             pharmacy = Pharmacy.objects.get(admin=request.user.id)
             showtime = datetime.now(tz=IST).date()
             print(showtime)
-            bookings = OrderBooking.objects.filter(HLP=pharmacy.admin,is_taken=False,is_active=True,is_cancelled = False,is_rejected = False) 
+            bookings = OrderBooking.objects.filter(HLP=pharmacy.admin,is_taken=False,is_active=True,is_cancelled = False,is_rejected = False)
+            total_order = OrderBooking.objects.filter(HLP=pharmacy.admin,is_active=True,is_cancelled = False,is_rejected = False).count()
             bookings_now = OrderBooking.objects.filter(HLP=pharmacy.admin,is_taken=False,is_active=True,is_cancelled = False,applied_date=showtime,is_rejected = False)
-            booking_now_list = []
-            param = {'bookings':bookings,'bookings_now':bookings_now}
+            total_bookings_today = OrderBooking.objects.filter(HLP=pharmacy.admin,is_active=True,is_cancelled = False,applied_date=showtime,is_rejected = False).count()
+            total_anount = 0
+            for booking in bookings:
+                total_anount = total_anount + booking.amount
+
+            param = {'bookings':bookings,'bookings_now':bookings_now,'total_order':total_order,'total_bookings_today':total_bookings_today,'total_anount':total_anount}
             return render(request,"pharmacy/index.html",param)
             
-             
+         
             # messages.add_message(request,messages.ERROR,"Some detail still Missing !")
             # param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
             # return render(request,"hospital/hospital_update.html",param)
@@ -40,7 +45,17 @@ class LabDashboardViews(SuccessMessageMixin,ListView):
     # def get(self,request):
     #     print("hello in m  in lab")
     #     return render(request,"lab/index.html")
-
+class PharmaDashboardListViews(SuccessMessageMixin,ListView):
+    def get(self, request, *args, **kwargs):
+        # try: 
+            pharmacy = Pharmacy.objects.get(admin=request.user.id)
+            showtime = datetime.now(tz=IST).date()
+            print(showtime)
+            bookings = OrderBooking.objects.filter(HLP=pharmacy.admin,is_cancelled = False,is_rejected = False) 
+            bookings_now = OrderBooking.objects.filter(HLP=pharmacy.admin,is_taken=False,is_active=True,is_cancelled = False,applied_date=showtime,is_rejected = False)
+            booking_now_list = []
+            param = {'bookings':bookings,'bookings_now':bookings_now}
+            return render(request,"pharmacy/appointment_list.html",param)
  
 def AcceptAPT(request,id): 
     try: 
@@ -482,3 +497,4 @@ def deleteServicesViews(request,id):
     booking.save()
     messages.add_message(request,messages.SUCCESS,"Appointment Successfully Deleted")
     return HttpResponseRedirect(reverse("view_pharmacy_appointment"))
+

@@ -120,38 +120,74 @@ Booking{% endblock title %}
 
 					</div>
 					<div class="col-md-12 col-lg-8 col-xl-9">
-						{% for hospital in object_list %}
+						{% for doctor in object_list %}
 								<div class="card product-box" >
 									<div class="card-body">
 										<div class="doctor-widget">
 											<div class="doc-info-left">
 												<div class="doctor-img">
 													<a href="#">
-														<img src="{{hospital.doctor.profile_pic}}" class="img-fluid"
+														<img src="{{doctor.doctor.profile_pic}}" class="img-fluid"
 															alt="User Image">
 													</a>
 												</div>
 												<div class="doc-info-cont">
-													<h4 class="doc-name"><a href="{% url 'bookappoinment' hospital.hospital.id hospital.doctor.id %}">Dr. {{hospital.doctor.fisrt_name}} {{hospital.doctor.last_name}}</a></h4>
-                                                    
-                                                    <p class="doc-speciality">{{hospital.hospital.hopital_name|upper}}</p>
-
-                                                    <p class="doc-department"><img src="{{hospital.doctor.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid" alt="Speciality">{{hospital.doctor.specialist|upper}}</p>
+													<h4 class="doc-name"><a href="#">Dr. {{doctor.doctor.fisrt_name}} {{doctor.doctor.last_name}}</a></h4>
+													<p class="doc-speciality">{{doctor.doctor.degree|upper}}</p>   
+													{% if doctor.doctor.hospitalstaffdoctors %}                                                
+                                                    <p class="doc-department"><img src="{{doctor.doctor.hospitalstaffdoctors.hospital.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid" alt="Speciality">{{doctor.doctor.hospitalstaffdoctors.hospital.hopital_name|upper}}</p>{% endif %}
 													{% comment %} <p class="doc-speciality">{{hospital.hospital.specialist}}
 													</p> {% endcomment %}
 													<h5 class="doc-department"><img
 															src="{% static 'newstatic/assets/img/specialities/specialities-05.png' %}" class="img-fluid"
-															alt="Speciality">{{hospital.hospital.specialist|upper}}</h5>
-													<div class="rating">
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star"></i>
-														<span class="d-inline-block average-rating">(17)</span>
-													</div>
+															alt="Speciality">{{doctor.doctor.specialist|upper}}</h5>
+															<div class="rating">
+																{% if  doctor.rating <= 5 and doctor.rating > 4 %}
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star filled"></i> 
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star filled"></i>
+																{% endif %}
+																{% if doctor.rating <= 4 and doctor.rating > 3 %}
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star filled"></i> 
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star "></i>
+																{% endif %}
+																{% if doctor.rating <= 3 and doctor.rating > 2 %}
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star filled"></i> 
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star "></i>
+																	<i class="fas fa-star "></i>
+																{% endif %}
+																{% if doctor.rating <= 2 and doctor.rating > 1 %}
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star filled"></i> 
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																{% endif %}
+																{% if doctor.rating <= 1 and doctor.rating > 0 %}
+																	<i class="fas fa-star filled"></i>
+																	<i class="fas fa-star"></i> 
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																{% endif %}
+																{% if doctor.rating == 0 %}
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i> 
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																{% endif %}
+																<span class="d-inline-block average-rating">({{doctor.total_cmns}})</span>
+															</div>
 													<div class="clinic-details">
-														<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{hospital.doctor.city|upper}},{{hospital.doctor.state|upper}}</p>
+														<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{doctor.doctor.city|upper}},{{doctor.doctor.state|upper}}</p>
 													
 													</div> 
 													{% comment %} <div class="clinic-services">
@@ -162,28 +198,35 @@ Booking{% endblock title %}
 											</div>
 											<div class="doc-info-right">
                                                 <div class="clini-infos">
-                                                    <ul> 
-                                                        <li><i class="fas fa-first-aid"></i>OPD &#8377;{{hospital.opd_charges}} </li>
-                                                        <li><i class="fas fa-first-aid"></i>Emergency {% if hospital.emergency_charges %}&#8377;{{hospital.emergency_charges}}{% else %} NA {% endif %} </li>
-                                                        <li><i class="fas fa-home"></i>Home Visit  {% if hospital.home_charges %} &#8377;{{hospital.home_charges}}{% else %} NA {% endif %}  </li>
-                                                        <li><i class="fas fa-video"></i>Online {% if hospital.online_charges %} &#8377;{{hospital.online_charges}}{% else %} NA {% endif %}</li>                                                        
+												<ul> 	{% if doctor.doctor.opd_charges %}
+                                                        <li><i class="fas fa-first-aid"></i>OPD &#8377;{{doctor.doctor.opd_charges}} </li>
+														{% endif %}
+														{% if doctor.doctor.emergency_charges %}
+                                                        <li><i class="fas fa-first-aid"></i>Emergency &#8377;{{doctor.doctor.emergency_charges}} </li>
+														{% endif %} 
+														{% if doctor.home_charges %}
+                                                        <li><i class="fas fa-home"></i>Home Visit   &#8377;{{doctor.doctor.home_charges}}  </li>
+														{% endif %}
+														{% if doctor.doctor.online_charges %}
+                                                        <li><i class="fas fa-video"></i>Online  &#8377;{{doctor.doctor.online_charges}}</li>      
+														{% endif %}                                                  
                                                     </ul>
                                                 </div>
                                                 <div class="doctor-action">
-													{% if hospital.emergency_charges %} 
+													{% if doctor.doctor.emergency_charges %} 
                                                     <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
                                                         data-bs-target="#voice_call">
 														<i class="fas fa-first-aid"></i>
                                                        
                                                     </a>
 													{% endif %}
-													{% if hospital.home_charges %} 
+													{% if doctor.doctor.home_charges %} 
                                                     <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
                                                         data-bs-target="#voice_call">
 														<i class="fas fa-home"></i>
                                                     </a>
 													{% endif %}
-													{% if hospital.is_virtual_available %}
+													{% if doctor.doctor.is_virtual_available %}
                                                     <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
                                                         data-bs-target="#video_call">
                                                         <i class="fas fa-video"></i>
@@ -192,7 +235,7 @@ Booking{% endblock title %}
 
 												</div>
                                                 <div class="clinic-booking">
-                                                    <a class="apt-btn" href="{% url 'bookappoinment' hospital.hospital.id hospital.doctor.id %}">Book Appointment</a>
+                                                    <a class="apt-btn" href="{% url 'doctor_details' doctor.doctor.id %}">Book Appointment</a>
                                                 </div>
                                             </div>
 										</div>

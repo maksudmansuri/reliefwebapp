@@ -1,0 +1,61 @@
+{% extends './blank-page.html' %}
+{% load static %}
+{% block title %} Relief Pro - Search for Doctor Online Consulting | Successfully
+Booking{% endblock title %}
+
+{% block custom_css %} 	
+
+{% endblock custom_css %}
+
+ 
+{% block content %} 
+
+
+		<div class="breadcrumb-bar">
+			<div class="container-fluid">
+				<div class="row align-items-center">
+					<div class="col-md-12 col-12">
+						<nav aria-label="breadcrumb" class="page-breadcrumb">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="{% url 'front_home' %}">Home</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Booking</li>
+							</ol>
+						</nav>
+						<h2 class="breadcrumb-title">Booking</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="content success-page-cont">
+			<div class="container-fluid">
+				<div class="row justify-content-center">
+					<div class="col-lg-6">
+
+						<div class="card success-card">
+							<div class="card-body">
+								<div class="success-cont">
+									<i class="fas fa-check"></i>
+									<h3>Request for Blood has been booked successfully!</h3>
+									<br> on <strong>{{donorrequest.created_at|date:'d M Y'}} {{donorrequest.created_at|time:'H:i'}}</strong>
+									<p>WE Will Contact You After talking To</p> <strong> {{donorrequest.forpersoned.name_title}} {{donorrequest.forpersoned.first_name}} {{donorrequest.forpersoned.last_name}}</strong><br><br>
+									<a href="{% url 'search_blood_donor' %}" class="btn btn-primary view-inv-btn">Request Another</a>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	
+
+
+{% endblock content %}
+
+{% block custom_js %}
+
+{% endblock custom_js %}

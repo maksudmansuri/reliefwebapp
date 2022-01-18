@@ -151,35 +151,17 @@ Booking{% endblock title %}
                                                 <div class="clini-infos">
                                                     <ul> 
                                                         <li><i class="fas fa-first-aid" ></i><b>Blood Group : </b>{{ambulacnce.bloodgroup}} </li>
-                                                        <li><i class="fas fa-first-aid"></i><b>Last Donation : </b> {% if ambulacnce.blood_docation_date %}{{ambulacnce.blood_docation_date|date:'d-m-y'}}{% else %} NA {% endif %} </li>                                                              
+                                                        <li><i class="fas fa-first-aid"></i><b>Last Donated : </b> {% if ambulacnce.blood_docation_date %}{{ambulacnce.blood_docation_date|date:'d/m/y'}}{% else %} NA {% endif %} </li>                                                              
                                                                                                  
                                                     </ul>
                                                 </div>
-                                                <div class="doctor-action">
-													{% if hospital.emergency_charges %} 
-                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
-                                                        data-bs-target="#voice_call">
-														<i class="fas fa-first-aid"></i>
-                                                       
-                                                    </a>
-													{% endif %}
-													{% if hospital.home_charges %} 
-                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
-                                                        data-bs-target="#voice_call">
-														<i class="fas fa-home"></i>
-                                                    </a>
-													{% endif %}
-													{% if hospital.is_virtual_available %}
-                                                    <a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
-                                                        data-bs-target="#video_call">
-                                                        <i class="fas fa-video"></i>
-                                                    </a>
-													{% endif %}
-
-												</div>
-                                                <div class="clinic-booking">
-                                                    <a class="apt-btn"><i class="fas fa-phone-alt" >  {{ambulacnce.drive_number}}</i> </a>
-                                                </div>
+                                                <form method="post" action="{% url 'donorrequest' %}" id="myForm">
+													{% csrf_token %}									
+													<input type="hidden" value="{{ambulacnce.admin.id}}" name="forpersoned">
+													<div class="clinic-booking">
+														<a class="apt-btn" type="submit" onclick="myFunction()">Request For Blood</a>
+													</div>
+												</form>
                                             </div>
 										</div>
 									</div>
@@ -203,6 +185,8 @@ Booking{% endblock title %}
 
 {% block custom_js %}
 <script>
-
+	function myFunction() {
+		document.getElementById("myForm").submit();
+	}
 </script>
 {% endblock custom_js %}

@@ -102,6 +102,9 @@ urlpatterns = [
     path('hospital_reviews/',views.HospitalReviewsListView.as_view(),name="hospital_reviews"),
 
     re_path('verifybooking',views.verifybooking,name="verifybooking"),
+
+    #deaprtment manage add update delete 
+    path('manage_disease',views.manageDiseaseView.as_view(),name="manage_disease"),
     
     #Blog Urls
     # path('add_blog',views.addBlogView.as_view(),name="add_blog"),

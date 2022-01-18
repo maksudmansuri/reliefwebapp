@@ -92,7 +92,7 @@ class OrderBooking(models.Model):
     HLP                     =           models.ForeignKey(CustomUser,related_name="merchant", on_delete=models.CASCADE,null=True,blank=True)
     booking_type            =           models.CharField(default="",blank=True,null=True,max_length=64)#homevisit,emergency,online,test,medicine,opd,rebooking -> checkout
     # BOOKING_FOR_CHOICE      =           ((1,"Hospital"),(2,"Laboratory"),(3,"Pharmacy"))
-    booking_for             =           models.CharField(max_length=256,default="",blank=True,null=True)#hospital,lab,pharmcy
+    booking_for             =           models.CharField(max_length=256,default="",blank=True,null=True)#hospital-H,Doctor-D,lab-L,pharmcy-P,
 
     applied_time            =           models.TimeField(blank=True,null=True)
     applied_date            =           models.DateField(blank=True,null=True)

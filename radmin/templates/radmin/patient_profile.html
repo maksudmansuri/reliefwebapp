@@ -1,444 +1,215 @@
-{% extends 'radmin/base.html' %}
-{% load static %}
-{% block title %} :: I-Health:: Hospital Detail {% endblock title %}
+{% extends './blank-page.html' %} 
+{% load static %} 
+{% block title %} Relief Patient List {% endblock title %}
 
-{% block custom_css %}
-<style>
-    a {
-        text-decoration: none;
-        -webkit-transition: all 0.3s ease-out;
-        -moz-transition: all 0.3s ease-out;
-        -ms-transition: all 0.3s ease-out;
-        -o-transition: all 0.3s ease-out;
-        transition: all 0.3s ease-out;
-    }
-
-    a:hover {
-        -webkit-transition: all 0.3s ease-out;
-        -moz-transition: all 0.3s ease-out;
-        -ms-transition: all 0.3s ease-out;
-        -o-transition: all 0.3s ease-out;
-        transition: all 0.3s ease-out;
-    }
-
-    .style-4 {
-        background: ;
-        color: #fff;
-        font: 13px Montserrat;
-        text-transform: uppercase;
-        padding: 11px;
-        font-weight: 600;
-        max-width: 250px;
-        display: block;
-        text-align: center;
-        margin: 10px auto;
-        position: relative;
-        -moz-transform: skewX(-6deg);
-        -webkit-transform: skewX(-6deg);
-        -o-transform: skewX(-6deg);
-        -ms-transform: skewX(-6deg);
-        transform: skewX(-6deg);
-        box-shadow: inset -150px 0 0 0 #6aab9c, inset 200px 0 0 0 #6aab9c;
-        /* set the 150 for maximum width division */
-        -webkit-transition: box-shadow 0.5s ease-out;
-        -moz-transition: box-shadow 0.5s ease-out;
-        -ms-transition: box-shadow 0.5s ease-out;
-        -o-transition: box-shadow 0.5s ease-out;
-        transition: box-shadow 0.5s ease-out;
-    }
-
-    .style-4:hover {
-        -webkit-transition: box-shadow 0.5s ease-out;
-        -moz-transition: box-shadow 0.5s ease-out;
-        -ms-transition: box-shadow 0.5s ease-out;
-        -o-transition: box-shadow 0.5s ease-out;
-        transition: box-shadow 0.5s ease-out;
-        box-shadow: inset 200px 0 0 0 #9f4d4e, inset -200px 0 0 0 #9f4d4e;
-        /* set the 150 for maximum width division */
-        color: #fff;
-    }
-</style>
-{% endblock custom_css %}
+{% block custom_css %}{% endblock custom_css %}
 
 {% block content %}
-<!-- Body: Body -->
-<div class="body d-flex py-3">
-    <div class="container-xxl">
-
-        <div class="row g-3">
-            <div class="col-xl-12 col-lg-12 col-md-12">
-                <div class="card teacher-card  mb-3">
-                    <div class="card-body d-flex teacher-fulldeatil">
-                        <div class="profile-teacher pe-xl-4 pe-md-2 pe-sm-4 pe-4 text-center w220">
-                            <a href="#">
-                                <img src="{{patient.profile_pic}}" alt=""
-                                    class="avatar xl rounded-circle img-thumbnail shadow-sm">
-                            </a>
-                            <div class="about-info d-flex align-items-center mt-3 justify-content-center flex-column">
-                                <span class="text-muted small">PATIENT ID: P{{patient.id}}</span>
-                            </div>
-                        </div>
-                        <div class="teacher-info border-start ps-xl-4 ps-md-4 ps-sm-4 ps-4 w-100">
-                            <h6 class="mb-0 mt-2  fw-bold d-block fs-6">{{patient.admin.name_title}}. {{patient.fisrt_name}} {{patient.last_name}}</h6>
-                            <span class="py-1 fw-bold small-11 mb-0 mt-1 text-muted">{{patient.bloodgroup}}</span>
-                            <p class="mt-2">{{patient.gender}}</p>
-                            <div class="row g-2 pt-2">                                
-                                <div class="col-xl-3">
-                                    <div class="d-flex align-items-center">
-                                        <i class="icofont-birthday-cake"></i>
-                                        <span class="ms-2">{{patient.dob}}</span>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4">
-                                    <div class="d-flex align-items-center">
-                                        <i class="icofont-address-book"></i>
-                                        <span
-                                            class="ms-2">{{patient.address}}{{patient.city}}{{patient.pin_code}}{{patient.state}}{{patient.country}}</span>
-                                    </div>
-                                </div>
-                                
-                            </div>
+ <!-- Body: Body -->
+    <div class="col-md-7 col-lg-8 col-xl-9">
+                <div class="row align-items-center">
+                    <div class="border-0 mb-4">
+                        <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                            <h3 class="fw-bold mb-0">Patient Overview</h3>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div><!-- Row End -->
-
-        <div class="row g-3 mb-3">
-            <div class="col-xl-12">
-
-                <div class="card g-3 mb-3">
-
-                    <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
-                        <h6 class="mb-0 fw-bold ">Number Of Booking For Hospital</h6>
-
-                    </div>
-
-                    <div class="card-body">
-                        <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>Ref.No</th>
-                                    <th>Booking Date</th>                                   
-                                    <th>Hospital Name</th>    
-                                    <th>Amount</th> 
-                                    <th>Status</th>   
-                                    <th>Actions</th>  
-                                </tr>
-                            </thead> 
-                            <tbody>
-                            {% for hospital in booking %}
-                                <tr>
-                                    <td> 
-                                        <span class="fw-bold">HB-{{hospital.id}}</span>
-                                    </td>
-                                    <td>
-                                        <span class="fw-bold ms-1">{{hospital.applied_date}}</span>
-                                    </td>
-                                    <td>
-                                        {{hospital.hospitalstaffdoctor.hospital}}
-                                    </td>
-                                    <td>
-                                         {{hospital.amount}}
-                                    </td>
-                                   
-                                    </td>
+                </div> <!-- Row end  -->
+                <div class="row g-3 mb-3">
+                    <div class="col-xl-4 col-lg-12 col-md-12">
+                        <div class="card teacher-card mb-3 flex-column">
+                            <div class="card-body d-flex teacher-fulldeatil flex-column">
+                                <div class="profile-teacher text-center w220 mx-auto">
+                                    <a href="#">
+                                        <img src="{{patient.profile_pic}}" alt="" class="avatar xl rounded-circle img-thumbnail shadow-sm" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+                                    </a>
+                                    <div class="about-info d-flex align-items-center mt-3 justify-content-center flex-column">
+                                        <span class="text-muted small">Patient ID : PT00{{patient.id}}</span>
+                                    </div>
+                                </div>
+                                <div class="teacher-info   w-100">
+                                    <h6  class="mb-0 mt-2  fw-bold d-block fs-6 text-center"> {{patient.admin.name_title|title}} {{patient.fisrt_name|title}} {{patient.last_name|title}}</h6>
+                                    <span class="py-1 fw-bold small-11 mb-0 mt-1 text-muted text-center mx-auto d-block">{{patient.age}} years, {{patient.city|title}} {{patient.state|title}}</span>
                                     
-                                    <td>
-                                        {% if hospital.is_cancelled %}
-                                        Cancelled By user
-                                        {% else %}
-                                            {{ hospital.status }}
-                                        {% endif %}
-                                        
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#hosdetail{{hospital.id}}">Details</button>                                    
-                                    </td><!-- /btn-group -->
+                                    <div class="row g-2 pt-2">
+                                        <div class="col-xl-12">
+                                            <div class="d-flex align-items-center">
+                                                <i class="icofont-ui-touch-phone"></i>
+                                                <span class="ms-2">{{patient.admin.phone}} </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-12">
+                                            <div class="d-flex align-items-center">
+                                                <i class="icofont-email"></i>
+                                                <span class="ms-2">{{patient.admin.email}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-12">
+                                            <div class="d-flex align-items-center">
+                                                <i class="icofont-birthday-cake"></i>
+                                                <span class="ms-2">{{patient.dob}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-12">
+                                            <div class="d-flex align-items-center">
+                                                <i class="icofont-birthday-cake"></i>
+                                                <span class="ms-2">{{patient.gender}}</span>
+                                                <span class="ms-2">{{patient.bloodgroup}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-12">
+                                            <div class="d-flex align-items-center">
+                                                <i class="icofont-address-book"></i>
+                                                <span class="ms-2">{{patient.address|title}},  {{patient.city|title}},{{patient.state|title}}-{{patient.zip_Code}}.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                    </div>
+                    <div class="col-xl-8 col-lg-12 col-md-12">
+                        <div class="card mb-3">
+                            <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                <h6 class="mb-0 fw-bold ">Documents </h6>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#depadd">Add Documents</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-3 row-cols-xxl-4">
+                                    {% for patientfile in patientfiles %}
+                                    <div class="col">
+                                        <div class="patientinfo-file shadow-sm p-3">
+                                            <a type="button" class="btn btn-outline-success" href="{{patientfile.file}}" download><i class="fas fa-arrow-down"> </i></a>
+                                           
+                                            <span class="text-end float-end small"> {{patientfile.created_at}}</span>
+                                            <h6 class="fw-bold mt-4 pt-4 mb-4">{{patientfile.file_purpose}}</h6>
+                                            <div class="d-flex align-items-center">
+                                                <img src="{{patientfile.hospitaldoctors.doctor.profile_pic}}" class="avatar   rounded-circle me-2" alt="profile-image">
+                                                <span class="ms-1 small">{{patientfile.hospitaldoctors}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}                                    
+                                </div>
+                            </div>                           
+                        </div>
+                        <div class="card mb-3">
+                            <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                <h6 class="mb-0 fw-bold ">Reports </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-3 row-cols-xxl-4">
+                                    {% for labtest in labtests %}
+                                    <div class="col">
+                                        <div class="patientinfo-file shadow-sm p-3">
+                                            <div class="patient-did p-2">
+                                                <a type="button" href="{{labtest.slot.report}}" download><i class="icofont-download text-primary fs-4 text-white"></i></a>
+                                            </div>
+                                            <span class="text-end float-end small">{{labtest.slot.taken_date}}</span>
+                                            <h6 class="fw-bold mt-4 pt-4 mb-4">{{labtest.service}}</h6>
+                                            <div class="d-flex align-items-center">
+                                                <img src="{{labtest.lab.profile_pic}}" class="avatar   rounded-circle me-2" alt="profile-image">
+                                                <span class="ms-1 small">{{labtest.lab}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}                                    
+                                </div>
+                            </div>                           
+                        </div>
+
+                     
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                    <h6 class="mb-0 fw-bold ">All Appointments </h6>
+                                </div>
+                                <table id="patient-table" class="table table-hover align-middle mb-0" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>B Id</th>
+                                            <th>Booking date</th>
+                                            <th>Amount Paid</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for book  in apts %}
+                                        <tr>
+                                            <td>APT00{{book.id}}</td>
+                                            <td>
+                                            {% comment %} <img src="assets/images/xs/avatar3.jpg" class="avatar  rounded-circle me-2" alt="profile-image"> {% endcomment %}
+                                            <span><a href="{% url 'admin_relief_patient_profile' book.patient.patients.id %}">{{book.applied_date}} {{book.applied_time}}</a></span></td>
+                                            <td>{{book.amount}}</td>
+                                            <td><h6><span class="badge bg-primary">{{book.status}}</span></td></h6>
+                                            <td>
+                                            
+                                                <a href="#"
+                                                class="btn btn-sm bg-danger-light">
+                                                <i class="far fa-trash-alt"></i>
+                                           
+                                            </td>
+                                        </tr>
                                     
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="card g-3 mb-3">
-
-                    <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
-                        <h6 class="mb-0 fw-bold ">Number Of Booking For Laboratory</h6>
-
                     </div>
-
-                    <div class="card-body">
-                        <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>Ref.No</th>
-                                    <th>Date</th> 
-                                    <th>Laboratory Name</th>    
-                                    <th>Services</th>
-                                    <th>Amount</th> 
-                                    <th>Status</th>  
-                                    <th>Details</th>  
-                                </tr>
-                            </thead> 
-                            <tbody>
-                            {% for hospital in allslot_list %}
-                                <tr>
-                                    <td> 
-                                        <span class="fw-bold">LB-{{hospital.slot.id}}</span>
-                                    </td>
-                                    <td>
-                                        <span class="fw-bold ms-1">{{hospital.slot.applied_date}}</span>
-                                    </td>
-                                    <td>
-                                        {{hospital.slot.lab}}
-                                    </td>
-                                    <td>   <ul> 
-                                        {% for labtest in hospital.labtests %}
-                                            <li>{{labtest.service}}</li>
-                                          {% endfor %}
-                                          </ul>
-                                    </td>
-                                   
-                                    <td>
-                                         {{hospital.slot.amount}}
-                                   </td>
-                                    <td>
-                                            {{ hospital.slot.status }}
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#labdetail{{hospital.slot.id}}">Details</button>
-                                    </td><!-- /btn-group --> 
-                                    
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                   
+                </div><!-- Row End -->
             </div>
-            
-
-        </div><!-- Row End -->
-        <div class="card mb-3">
-           
-        </div>
-        <div class="row g-3 mb-3">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
-                        <h6 class="mb-0 fw-bold ">Appointment</h6>
-                    </div>
-                    <div class="card-body">
-                        <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Patient</th>
-                                    <th>Appointment</th>
-                                    <th>Last Visit</th>
-                                    <th>Age</th>
-                                    <th>Number</th>
-                                    <th>Address</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>P015</td>
-                                    <td>
-                                        <img src="assets/images/xs/avatar1.jpg" class="avatar rounded-circle me-2"
-                                            alt="profile-image">
-                                        <span class="fw-bold">Alexander</span>
-                                    </td>
-                                    <td>Jan 11, 2021</td>
-                                    <td>Dec 25, 2020</td>
-                                    <td>23</td>
-                                    <td>404-447-6013</td>
-                                    <td>123 6th St. Melbourne, FL 32904</td>
-                                </tr>
-                                <tr>
-                                    <td>P016</td>
-                                    <td>
-                                        <img src="assets/images/xs/avatar2.jpg" class="avatar rounded-circle me-2"
-                                            alt="profile-image">
-                                        <span class="fw-bold">Cameron</span>
-                                    </td>
-                                    <td>Jan 11, 2021</td>
-                                    <td>Dec 26, 2020</td>
-                                    <td>30</td>
-                                    <td>404-447-9696</td>
-                                    <td>123 6th St. Melbourne, FL 32904</td>
-                                </tr>
-                                <tr>
-                                    <td>P017</td>
-                                    <td>
-                                        <img src="assets/images/xs/avatar3.jpg" class="avatar rounded-circle me-2"
-                                            alt="profile-image">
-                                        <span class="fw-bold">Alex lee</span>
-                                    </td>
-                                    <td>Jan 16, 2021</td>
-                                    <td>Dec 28, 2020</td>
-                                    <td>55</td>
-                                    <td>404-447-5858</td>
-                                    <td>123 6th St. Melbourne, FL 32904</td>
-                                </tr>
-                                <tr>
-                                    <td>P018</td>
-                                    <td>
-                                        <img src="assets/images/xs/avatar4.jpg" class="avatar rounded-circle me-2"
-                                            alt="profile-image">
-                                        <span class="fw-bold">Richard</span>
-                                    </td>
-                                    <td>Jan 20, 2021</td>
-                                    <td>Dec 28, 2020</td>
-                                    <td>47</td>
-                                    <td>404-447-6013</td>
-                                    <td>123 6th St. Melbourne, FL 32904</td>
-                                </tr>
-                                <tr>
-                                    <td>P020</td>
-                                    <td>
-                                        <img src="assets/images/xs/avatar5.jpg" class="avatar rounded-circle me-2"
-                                            alt="profile-image">
-                                        <span class="fw-bold">Stephen</span>
-                                    </td>
-                                    <td>Jan 20, 2021</td>
-                                    <td>Dec 30, 2020</td>
-                                    <td>26</td>
-                                    <td>404-447-2536</td>
-                                    <td>123 6th St. Melbourne, FL 32904</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div><!-- Row End -->
-    </div>
-</div>
-
+      
+     
 {% endblock content %}
 
-
 {% block modal_fade %}
-{% for hospital in booking %}
-    <div class="modal fade" id="hosdetail{{hospital.id}}" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+<!-- Add Document-->
+        <div class="modal fade" id="depadd" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">Detail Of HB - {{hospital.id}} </h5>
+                    <h5 class="modal-title  fw-bold" id="depaddLabel"> Documents Add</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="card" style="width: 30rem;">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Doctor Name : {{hospital.hospitalstaffdoctor}}</li>
-                            <li class="list-group-item">Service :{{hospital.service}}</li>
-                            <li class="list-group-item">Appllied Date: {{hospital.applied_date}}</li>
-                            <li class="list-group-item">Appllied Time: {{hospital.applied_time}}</li>
-                            <li class="list-group-item">Status: {{hospital.status}}</li>
-                            <li class="list-group-item">Acceptd Date: {{hospital.accepted_date}}</li>
-                            <li class="list-group-item">Visited Date: {{hospital.taken_date}}</li>
-                            <li class="list-group-item">Rejected Date:{{hospital.rejected_date}}</li>
-                            <li class="list-group-item">Is Cancelled:{{hospital.is_cancelled}}</li>
-                            <li class="list-group-item">Remark Note: {{hospital.add_note}}</li>
-                            <li class="list-group-item">Is active{{hospital.is_active}}</li>
-                            
-                        </ul>
+                    <div class="deadline-form">
+                        <form action="#" method="post" enctype="multipart/form-data" id="docform">
+                        {% csrf_token %}
+                            <div class="row g-3 mb-3">
+                              <div class="col-sm-12">
+                                <label for="depone" class="form-label">Documents Upload</label>
+                                <input type="file" class="form-control" id="depone" name="file">
+                              </div>
+                             
+                              <div class="col-sm-12">
+                                <label for="amount_paid" class="form-label">Next Visit</label>
+                                <input type="date" class="form-control scheduleDate" id="next_date" name="next_date" >
+                              </div>
+                            </div>
+                        </form> 
+                    </div>
+                    <div class="mb-3">
+                        <label  class="form-label">Documents Note</label>
+                        <textarea class="form-control" form="docform" rows="4" name="file_addnote"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button> {% endcomment %}
+                    <button type="submit" class="btn btn-primary" form="docform" id="submit_button">Add</button>
                 </div>
             </div>
-        </div>
-    </div>
-{% endfor %}
-<!--For Lab tast modal-->
-{% for hospital in allslot_list %}
-    <div class="modal fade" id="labdetail{{hospital.slot.id}}" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">Detail Of LB - {{hospital.slot.id}} </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="card" style="width: 30rem;">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Lab Name : {{hospital.slot.lab}}</li>
-                            
-                            <li class="list-group-item">Service <ol>{% for labtest in hospital.labtests %}<li>{{labtest.service}}</li>{% endfor %}</ol></li>
-                            <li class="list-group-item">Appllied Date: {{hospital.slot.applied_date}}</li>
-                            <li class="list-group-item">Appllied Time: {{hospital.slot.applied_time}}</li>
-                            <li class="list-group-item">Status: {{hospital.slot.status}}</li>
-                            <li class="list-group-item">Acceptd Date: {{hospital.slot.accepted_date}}</li>
-                            <li class="list-group-item">Visited Date: {{hospital.slot.taken_date}}</li>
-                            <li class="list-group-item">Rejected Date:{{hospital.slot.rejected_date}}</li>
-                            <li class="list-group-item">Is Cancelled:{{hospital.slot.is_cancelled}}</li>
-                            <li class="list-group-item">Remark Note: {{hospital.slot.add_note}}</li>
-                            <li class="list-group-item">Is active{{hospital.slot.is_active}}</li>
-                            
-                        </ul>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
             </div>
         </div>
-    </div>
-{% endfor %}
 
 {% endblock modal_fade %}
 
-
 {% block custom_js %}
-
 <script>
-    $(document).on("click", "#sbt_button", function (e){
-        e.preventDefault();
-        var scdat = document.getElementById('schdate').innerHTML
-        var schtime = document.getElementById('schtime').innerHTML
-        var  val1= $("select[name=\'serviceid[]\']").map(function() {return $(this).val();}).toArray();
-        console.log(val1)
-        
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'labbookanappointment' %}",
-            data: {
-                'labid':"{{lab.id}}",
-                'doctorid':'blank',
-                'serviceid[]':val1,
-                'time':schtime,
-                'date':scdat,
-                'csrfmiddlewaretoken': "{{csrf_token}}",
-                'action': 'Laboratory'
-            },
-            success: function (json) {
-                console.log(json)
-                window.location.replace("{% url 'checkout' %}");
-            },
-            error: function (xhr, errmsg, err) {
-
-            }
-        });
-    })
-        
-
-    $(".add_about").click(function(){
-        var about_row=$(".first_about").clone();
-        about_row.removeClass("first_about");  
-        about_row.find(".about_title").val("");
-        $(".about_div").append(about_row);
-    });
-    $(".remove_about").click(function(){
-        if ($(".about_div").find(".about_div_row").length>1){
-            $(".about_div").children().last().remove();
-        }
-    });
-
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementsByName("next_date")[0].setAttribute('min', today);
 </script>
-
 {% endblock custom_js %}

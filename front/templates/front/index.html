@@ -55,8 +55,10 @@ Booking{% endblock title %}
 											src="{{spes.specilist.hover_icon}}" />
 									</a>
 									<h4>{{spes.specilist.specialist_name}}</h4> 
-									<p>{{spes.cet_hospitals}} <span>Hospitals</span></p>
-									<a href="{% url 'specilist_hospitals' spes.specilist.id %}" class="arrow"><i class="fas fa-chevron-right"></i></a>
+									{% comment %} <p>{{spes.cet_hospitals}} <span>Hospitals</span></p>
+									<a href="{% url 'specilist_hospitals' spes.specilist.id %}" class="arrow"><i class="fas fa-chevron-right"></i></a> {% endcomment %}
+									<p>{{spes.cet_doctors}} <span>Doctors</span></p>
+									<a href="{% url 'specilist_doctor' spes.specilist.id %}" class="arrow"><i class="fas fa-chevron-right"></i></a>
 								</div> 
 							</div>   
 						{% endfor %}
@@ -70,7 +72,7 @@ Booking{% endblock title %}
 		<section class="book-doctor">
 			<div class="container">
 				<div class="sec-header">
-					<h2>Book Our Best Doctor</h2>
+					<h2>Book Our Best Hospitals</h2>
 					<span class="bottom-border"></span>
 				</div>
 				<div class="row"> 
@@ -78,29 +80,66 @@ Booking{% endblock title %}
 						<div class="book-slider slider">
 						{% for hospital in hospitals %}
 							<div class="profile-widget">
-								<a href="{% url 'hospital_details' hospital.id %}">
-									<img src="{{hospital.profile_pic}}" alt="" />
+								<a href="{% url 'hospital_details' hospital.hospital.id %}">
+									<img src="{{hospital.hospital.profile_pic}}" alt="" />
 								</a>
 								<div class="pro-content">
 									<div class="row row-sm">
-										{% comment %} <div class="col-md-6">
+									{% comment %} <div class="col-md-6">
 											<span class="amt">$20 - $50</span>
-										</div> {% endcomment %}
+										</div>  {% endcomment %}
 										<div class="col-md-6 text-end">
 											<a href="#" class="star"><i class="fas fa-star"></i></a>
 										</div>
 									</div>
 									<div class="provider-info">
-										<h3><a href="{% url 'hospital_details' hospital.id %}">{{hospital.hopital_name|upper}}</a></h3>
+										<h3><a href="{% url 'hospital_details' hospital.hospital.id %}">{{hospital.hospital.hopital_name|upper}}</a></h3>
 										<div>
-											<h5>{{hospital.specialist}} </h5>
+											<h5>{{hospital.hospital.specialist}} </h5>
 											<div class="rating">
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star"></i>
-												<span class="d-inline-block average-rating">3.5</span>
+												{% if  hospital.rating <= 5 and hospital.rating > 4 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+												{% endif %}
+												{% if hospital.rating <= 4 and hospital.rating > 3 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star "></i>
+												{% endif %}
+												{% if hospital.rating <= 3 and hospital.rating > 2 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star "></i>
+													<i class="fas fa-star "></i>
+												{% endif %}
+												{% if hospital.rating <= 2 and hospital.rating > 1 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												{% if hospital.rating <= 1 and hospital.rating > 0 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												{% if hospital.rating == 0 %}
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												<span class="d-inline-block average-rating">{{hospital.total_cmns}}</span>
 											</div>
 										</div>
 										<a href="#" class="side-arrow">
@@ -109,7 +148,7 @@ Booking{% endblock title %}
 										<div class="content-info">
 											<ul class="available-info">
 												<li>
-													<i class="fas fa-map-marker-alt"></i>{{hospital.city|title}} , {{hospital.country|title}} 
+													<i class="fas fa-map-marker-alt"></i>{{hospital.hospital.city|title}} , {{hospital.hospital.country|title}} 
 												</li>
 												<li>
 													{% comment %} <i class="far fa-clock"></i> 450 Consultations {% endcomment %}
@@ -117,11 +156,11 @@ Booking{% endblock title %}
 											</ul>
 											<div class="row row-sm">
 												<div class="col-6">
-													<a href="{% url 'hospital_details' hospital.id%}" class="btn view-btn" tabindex="0">View
+													<a href="{% url 'hospital_details' hospital.hospital.id%}" class="btn view-btn" tabindex="0">View
 														Profile</a>
 												</div>
 												<div class="col-6">
-													<a href="{% url 'hospital_details' hospital.id%}" class="btn book-btn" tabindex="0">Book
+													<a href="{% url 'hospital_details' hospital.hospital.id%}" class="btn book-btn" tabindex="0">Book
 														Now</a>
 												</div>
 											</div>
@@ -145,6 +184,118 @@ Booking{% endblock title %}
 		<section class="book-doctor">
 			<div class="container">
 				<div class="sec-header">
+					<h2>Book Our Best Doctors</h2>
+					<span class="bottom-border"></span>
+				</div>
+				<div class="row"> 
+					<div class="col-md-12">
+						<div class="book-slider slider">
+						{% for doctor in doctors %}
+							<div class="profile-widget">
+								<a href="{% url 'doctor_details' doctor.doctor.id %}">
+									<img src="{{doctor.doctor.profile_pic}}" alt="" />
+								</a>
+								<div class="pro-content">
+									<div class="row row-sm">
+									{% comment %} <div class="col-md-6">
+											<span class="amt">$20 - $50</span>
+										</div>  {% endcomment %}
+										<div class="col-md-6 text-end">
+											<a href="#" class="star"><i class="fas fa-star"></i></a>
+										</div>
+									</div>
+									<div class="provider-info">
+										<h3><a href="{% url 'doctor_details' doctor.doctor.id %}">Dr. {{doctor.doctor.fisrt_name|upper}} {{doctor.doctor.last_name|upper}}</a></h3>
+										<div>
+											<h5>{{doctor.doctor.specialist}} </h5>
+											<div class="rating">
+												{% if  doctor.rating <= 5 and doctor.rating > 4 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+												{% endif %}
+												{% if doctor.rating <= 4 and doctor.rating > 3 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star "></i>
+												{% endif %}
+												{% if doctor.rating <= 3 and doctor.rating > 2 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star "></i>
+													<i class="fas fa-star "></i>
+												{% endif %}
+												{% if doctor.rating <= 2 and doctor.rating > 1 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												{% if doctor.rating <= 1 and doctor.rating > 0 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												{% if doctor.rating == 0 %}
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												<span class="d-inline-block average-rating">{{doctor.total_cmns}}</span>
+											</div>
+										</div>
+										<a href="#" class="side-arrow">
+											<i class="fas fa-chevron-right"></i>
+										</a>
+										<div class="content-info">
+											<ul class="available-info">
+												<li>
+													<i class="fas fa-map-marker-alt"></i>{{doctor.doctor.city|title}} , {{doctor.doctor.country|title}} 
+												</li>
+												<li>
+													{% comment %} <i class="far fa-clock"></i> 450 Consultations {% endcomment %}
+												</li>
+											</ul>
+											<div class="row row-sm">
+												<div class="col-6">
+													<a href="{% url 'doctor_details' doctor.doctor.id %}" class="btn view-btn" tabindex="0">View
+														Profile</a>
+												</div>
+												<div class="col-6">
+													<a href="{% url 'doctor_details' doctor.doctor.id %}" class="btn book-btn" tabindex="0">Book
+														Now</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+							
+						</div>
+					</div>
+				</div>
+				<div class="row justify-content-center mt-4">
+					<div class="col-md-12 text-center">
+						<a href="{% url 'search_doctor' %}" class="view-btn d-inline-block">View More</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="book-doctor">
+			<div class="container">
+				<div class="sec-header">
 					<h2>Book Our Best Laboratory</h2>
 					<span class="bottom-border"></span>
 				</div>
@@ -153,8 +304,8 @@ Booking{% endblock title %}
 						<div class="book-slider slider">
 						{% for lab in labs %}
 							<div class="profile-widget">
-								<a href="{% url 'lab_details' lab.id %}">
-									<img src="{{lab.profile_pic}}" alt="" />
+								<a href="{% url 'lab_details' lab.lab.id %}">
+									<img src="{{lab.lab.profile_pic}}" alt="" />
 								</a>
 								<div class="pro-content">
 									<div class="row row-sm">
@@ -166,16 +317,53 @@ Booking{% endblock title %}
 										</div>
 									</div>
 									<div class="provider-info">
-										<h3><a href="{% url 'lab_details' lab.id %}">{{lab.lab_name|upper}}</a></h3>
+										<h3><a href="{% url 'lab_details' lab.lab.id %}">{{lab.lab.lab_name|upper}}</a></h3>
 										<div>
-											<h5>{{lab.specialist}} </h5>
+											<h5>{{lab.lab.specialist}} </h5>
 											<div class="rating">
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star"></i>
-												<span class="d-inline-block average-rating">3.5</span>
+												{% if  lab.rating <= 5 and lab.rating > 4 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+												{% endif %}
+												{% if lab.rating <= 4 and lab.rating > 3 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star "></i>
+												{% endif %}
+												{% if lab.rating <= 3 and lab.rating > 2 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star "></i>
+													<i class="fas fa-star "></i>
+												{% endif %}
+												{% if lab.rating <= 2 and lab.rating > 1 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												{% if lab.rating <= 1 and lab.rating > 0 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												{% if lab.rating == 0 %}
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												<span class="d-inline-block average-rating">{{lab.total_cmns}}</span>
 											</div>
 										</div>
 										<a href="#" class="side-arrow">
@@ -184,7 +372,7 @@ Booking{% endblock title %}
 										<div class="content-info">
 											<ul class="available-info">
 												<li>
-													<i class="fas fa-map-marker-alt"></i> {{lab.city|title}} , {{lab.country|title}} 
+													<i class="fas fa-map-marker-alt"></i> {{lab.lab.city|title}} , {{lab.lab.country|title}} 
 												</li>
 												<li>
 													{% comment %} <i class="far fa-clock"></i> 450 Consultations {% endcomment %}
@@ -192,11 +380,11 @@ Booking{% endblock title %}
 											</ul>
 											<div class="row row-sm">
 												<div class="col-6">
-													<a href="{% url 'laboratory_details' lab.id %}" class="btn view-btn" tabindex="0">View
+													<a href="{% url 'lab_details' lab.lab.id %}" class="btn view-btn" tabindex="0">View
 														Profile</a>
 												</div>
 												<div class="col-6">
-													<a href="{% url 'laboratory_details' lab.id %}" class="btn book-btn" tabindex="0">Book
+													<a href="{% url 'lab_details' lab.lab.id %}" class="btn book-btn" tabindex="0">Book
 														Now</a>
 												</div>
 											</div>
@@ -228,8 +416,8 @@ Booking{% endblock title %}
 						<div class="book-slider slider">
 						{% for pharmacy in pharmacys %}
 							<div class="profile-widget">
-								<a href="{% url 'pharmacy_details' pharmacy.id %}">
-									<img src="{{pharmacy.profile_pic}}" alt="" />
+								<a href="{% url 'new_pharmacy_details' pharmacy.pharmacy.id %}">
+									<img src="{{pharmacy.pharmacy.profile_pic}}" alt="" />
 								</a>
 								<div class="pro-content">
 									<div class="row row-sm">
@@ -241,16 +429,53 @@ Booking{% endblock title %}
 										</div>
 									</div>
 									<div class="provider-info">
-										<h3><a href="{% url 'pharmacy_details' pharmacy.id %}">{{pharmacy.pharmacy_name|upper}}</a></h3>
+										<h3><a href="{% url 'new_pharmacy_details' pharmacy.pharmacy.id %}">{{pharmacy.pharmacy.pharmacy_name|upper}}</a></h3>
 										<div>
-											<h5>{{pharmacy.specialist}} </h5>
+											<h5>{{pharmacy.pharmacy.specialist}} </h5>
 											<div class="rating">
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star"></i>
-												<span class="d-inline-block average-rating">3.5</span>
+												{% if  pharmacy.rating <= 5 and pharmacy.rating > 4 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+												{% endif %}
+												{% if pharmacy.rating <= 4 and pharmacy.rating > 3 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star "></i>
+												{% endif %}
+												{% if pharmacy.rating <= 3 and pharmacy.rating > 2 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star "></i>
+													<i class="fas fa-star "></i>
+												{% endif %}
+												{% if pharmacy.rating <= 2 and pharmacy.rating > 1 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star filled"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												{% if pharmacy.rating <= 1 and pharmacy.rating > 0 %}
+													<i class="fas fa-star filled"></i>
+													<i class="fas fa-star"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												{% if pharmacy.rating == 0 %}
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i> 
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+													<i class="fas fa-star"></i>
+												{% endif %}
+												<span class="d-inline-block average-rating">{{pharmacy.total_cmns}}</span>
 											</div>
 										</div>
 										<a href="#" class="side-arrow">
@@ -259,7 +484,7 @@ Booking{% endblock title %}
 										<div class="content-info">
 											<ul class="available-info">
 												<li>
-													<i class="fas fa-map-marker-alt"></i> {{pharmacy.city|title}} , {{pharmacy.country|title}} 
+													<i class="fas fa-map-marker-alt"></i> {{pharmacy.pharmacy.city|title}} , {{pharmacy.pharmacy.country|title}} 
 												</li>
 												<li>
 													<i class="far fa-clock"></i> 450 Consultations
@@ -267,11 +492,11 @@ Booking{% endblock title %}
 											</ul>
 											<div class="row row-sm">
 												<div class="col-6">
-													<a href="{% url 'pharmacy_details' pharmacy.id %}" class="btn view-btn" tabindex="0">View
+													<a href="{% url 'new_pharmacy_details' pharmacy.pharmacy.id %}" class="btn view-btn" tabindex="0">View
 														Profile</a>
 												</div>
 												<div class="col-6">
-													<a href="{% url 'pharmacy_details' pharmacy.id %}" class="btn book-btn" tabindex="0">Book
+													<a href="{% url 'new_pharmacy_details' pharmacy.pharmacy.id %}" class="btn book-btn" tabindex="0">Book
 														Now</a>
 												</div>
 											</div>

@@ -50,6 +50,13 @@
                             <span>Relief Patients</span>
                         </a>
                     </li>
+                    {% url 'manage_disease' as manage_disease %}
+                    <li {% if request.path == manage_disease %} class="active" {% endif %} >
+                        <a href="{% url 'manage_disease' %}">
+                            <i class="fas fa-procedures"></i>
+                            <span>Diseases</span>
+                        </a>
+                    </li>
                     {% url 'manage_room' as manage_room %}
                     <li {% if request.path == manage_room %} class="active" {% endif %} >
                         <a href="{% url 'manage_room' %}">

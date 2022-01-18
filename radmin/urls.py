@@ -54,7 +54,10 @@ urlpatterns = [
     path('pharmacy_profile_admin/<id>',views.PharmacyDetailsViews.as_view(),name="pharmacy_profile_admin"),
     path('patient_profile_admin/<id>',views.PatientDetailsViews.as_view(),name="patient_profile_admin"),
    
-  
+    #NEw Profile view and url 
+    path('relief_patient_profile/<id>',views.ReliefPatientViewsProfile.as_view(),name="admin_relief_patient_profile"),
+    path('admin_all_patients_view/<id>',views.AdminAllPatientListView.as_view(),name="admin_all_patients_view"),
+    
     # ACTIVATE DEACTIVATE HOSPITAL, DOCTOR, PATIENT, LABS, PHARMACY ,ACCIDENT
     path('hospitalactivate/<id>',views.HospitalActivate,name="hospitalactivate"),
     path('hospitaldeactivate/<id>',views.HospitalDeactivate,name="hospitaldeactivate"),
@@ -71,4 +74,12 @@ urlpatterns = [
 
     #All Reviews
     path('admin_reviews/',views.ReviewsList.as_view(),name="admin_reviews"),
+    #Share for relief
+    path('reliefshare/',views.ReliefShare,name="reliefshare"),
+
+    path('donor_request/',views.RequestForDonorListView.as_view(),name="donor_request"),
+    #List of disease
+    path('diseaselist',views.DiseaseListView.as_view(),name="diseaselist"),
+    path('updatedisease/<id>',views.updateDisease,name="updatedisease"),
+    path('deletedisease/<id>',views.deleteDisease,name="deletedisease"),
 ]
