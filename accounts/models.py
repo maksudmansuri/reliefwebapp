@@ -153,14 +153,14 @@ class Specailist(models.Model):
 
 class AdminHOD(models.Model):
     id                  =models.AutoField(primary_key=True)
-    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE,blank=True,null=True,default="")
     created_at          =models.DateTimeField(auto_now_add=True)
     updated_at          =models.DateTimeField(auto_now_add=True)
     objects             =models.Manager()
  
 class Hospitals(models.Model): 
     id                  =models.AutoField(primary_key=True)
-    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE,blank=True,null=True,default="")
     hopital_name        =models.CharField(max_length=500,default="",null=True)
     about               =models.TextField(blank=True,null=True,default="")
     # registration_number =models.DateField(blank=True,null=True,default="")
@@ -206,7 +206,7 @@ class HospitalPhones(models.Model):
  
 class HospitalDoctors(models.Model):
     id                  =models.AutoField(primary_key=True)
-    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)   
+    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE,blank=True,null=True,default="")   
     name_title          =models.CharField(max_length=256,blank=True,null=True,default="")
     fisrt_name          =models.CharField(max_length=250,blank=True,null=True,default="")
     last_name           =models.CharField(max_length=250,blank=True,null=True,default="")
@@ -248,7 +248,7 @@ class HospitalDoctors(models.Model):
 
 class Patients(models.Model):
     id                  =models.AutoField(primary_key=True)
-    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE,blank=True,null=True,default="")
     fisrt_name          =models.CharField(max_length=250,blank=True,null=True,default="")
     last_name           =models.CharField(max_length=250,blank=True,null=True,default="")
     address             =models.CharField(max_length=500,blank=True,null=True,default="")
@@ -285,7 +285,7 @@ class Patients(models.Model):
 
 class Labs(models.Model):
     id                  =models.AutoField(primary_key=True)
-    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE,blank=True,null=True,default="")
     lab_name            =models.CharField(max_length=500,default="",null=True)
     about                =models.TextField(max_length=5000,default="",null=True)
     registration_number =models.CharField(max_length=50,blank=True,null=True,default="")
@@ -318,7 +318,7 @@ class Labs(models.Model):
 
 class Pharmacy(models.Model):
     id                  =models.AutoField(primary_key=True)
-    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE,blank=True,null=True,default="")
     pharmacy_name       =models.CharField(max_length=500,default="",null=True)
     registration_number =models.CharField(max_length=50,blank=True,null=True,default="")
     address             =models.CharField(max_length=500,blank=True,null=True,default="")
