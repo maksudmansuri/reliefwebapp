@@ -59,7 +59,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
 			patient = DoctorForHospital()
 			patient.admin = account
 			patient.is_hospital_added = False
-			patient.is_active = True
 			patient.save()
 		if user_type == 4:
 			patient = Patients()
