@@ -47,6 +47,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 		print(password)
 		# if password != password_2:
 		# 	raise serializers.ValidationError({'password':'password does not match'})
+		print(phone,user_type,email)
 		account = CustomUser.objects.create_phone_user(phone=phone,email=email,username=phone,password=password)
 		account.user_type = user_type
 		account.is_active = True
