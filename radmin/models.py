@@ -50,7 +50,7 @@ class Disease(models.Model):
 
 class HospitalDisease(models.Model):
     id =            models.AutoField(primary_key=True)
-    hospital            =models.ForeignKey(Hospitals, on_delete=models.DO_NOTHING,blank=True,null=True,default="")
+    hospital            =models.ForeignKey(Hospitals,related_name="hospitaldisease", on_delete=models.DO_NOTHING,blank=True,null=True,default="")
     doctor            =models.ForeignKey(HospitalDoctors, on_delete=models.DO_NOTHING,blank=True,null=True,default="")
     disease                 =models.ForeignKey(Disease, on_delete=models.DO_NOTHING,blank=True,null=True,default="")
     created_at                   =models.DateTimeField(auto_now=True)

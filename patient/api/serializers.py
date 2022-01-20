@@ -4,13 +4,41 @@ from rest_framework import serializers
 from rest_framework.fields import ReadOnlyField
 
 from accounts.models import  HospitalDoctors, Hospitals, Labs, Pharmacy, Specailist
-from hospital.models import HospitalMedias, ServiceAndCharges
+from hospital.models import AmbulanceDetails, HospitalMedias, HospitalRooms, ServiceAndCharges
 from patient import models
-from patient.models import Booking, LabTest, Orders, PicturesForMedicine, Slot
+from patient.models import Booking, LabTest, OrderBooking, Orders, PicturesForMedicine, Slot
+from radmin.models import Disease, HospitalDisease
 
 
 	
+"""Serilizer by pages"""
+class HomeScreenSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Specailist
+		fields = ['pk','specialist_name','hover_icon','specialist_icon']
+	
+class HospitalHomeScreenSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Hospitals
+		fields = ['pk','hopital_name','address1','address2','city','pin_code','state','specialist','profile_pic']
 
+class HospitalDoctorHomeScreenSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = HospitalDoctors
+		fields = ['pk','fisrt_name','last_name','address','city','pin_code','state','specialist','profile_pic','degree','gender','is_virtual_available','is_online']
+	
+class LabHomeScreenSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Labs
+		fields = ['pk','lab_name','address','city','pin_code','state','profile_pic']
+
+class PharmaHomeScreenSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Pharmacy
+		fields = ['pk','pharmacy_name','address','city','pin_code','state','specialist','profile_pic']
+
+
+"""ALl OLD Serializers"""
 class SpecialistHosSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Specailist
@@ -20,6 +48,27 @@ class MediaHospitalSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = HospitalMedias
 		fields = "__all__"
+
+class RoomsHospitalSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = HospitalRooms
+		fields = "__all__"
+
+class OrderHospitalSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = OrderBooking
+		fields = "__all__"
+
+class DiseaseHospitalSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = HospitalDisease
+		fields = "__all__"
+
+class ambulanceHospitalSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = AmbulanceDetails
+		fields = "__all__"
+
 
 class HospitalsSerializer(serializers.ModelSerializer):
 
@@ -52,6 +101,8 @@ class SpecialistSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Specailist
 		fields = "__all__"
+	
+
 
 class DoctorDetailSerialzer(serializers.ModelSerializer):
 
@@ -60,6 +111,7 @@ class DoctorDetailSerialzer(serializers.ModelSerializer):
 		fields = "__all__"	
 
 class HospitalDoctorSerialzer(serializers.ModelSerializer):
+	doctorbooking = OrderHospitalSerializer(many=True)	
 	class Meta:
 		model = HospitalDoctors
 		fields ="__all__"
@@ -73,10 +125,14 @@ class HospitalDoctorSerialzer(serializers.ModelSerializer):
 
 class HospitalDoctorsViewSerializer(serializers.ModelSerializer):
 	hospitalstaffdoctors = HospitalDoctorSerialzer(many=True)	
-	media = MediaHospitalSerializer(many=True)
+	hospitalmedia = MediaHospitalSerializer(many=True)
+	hospitalrooms = RoomsHospitalSerializer(many=True)
+	hospitaldisease = DiseaseHospitalSerializer(many=True)	
+	hospitalambulance = ambulanceHospitalSerializer(many=True)
+
 	class Meta:
 		model = Hospitals
-		fields = ['hopital_name','about','address1','address2','city','pin_code','state','country','landline','profile_pic','registration_proof','establishment_year','registration_number','alternate_mobile','firm','website','linkedin','facebook','instagram','twitter','created_at','updated_at','hospitalstaffdoctors','media']
+		fields = ['hopital_name','about','address1','address2','city','pin_code','state','country','landline','profile_pic','registration_proof','establishment_year','registration_number','alternate_mobile','firm','website','linkedin','facebook','instagram','twitter','created_at','updated_at','hospitalstaffdoctors','hospitalmedia','hospitalrooms','hospitaldisease','hospitalambulance']
 
 		def to_representation(self, instance):
 			response = super().to_representation(instance)

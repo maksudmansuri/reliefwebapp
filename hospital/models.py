@@ -115,7 +115,7 @@ class RoomOrBadTypeandRates(models.Model):
 
 class HospitalRooms(models.Model):
     id                  =models.AutoField(primary_key=True)
-    hospital            =models.ForeignKey(Hospitals,on_delete=models.CASCADE,default="")
+    hospital            =models.ForeignKey(Hospitals,related_name="hospitalrooms", on_delete=models.CASCADE,default="")
     department          =models.ForeignKey(Departments,on_delete=models.CASCADE,default="",blank=True,null=True)
     room                =models.ForeignKey(RoomOrBadTypeandRates,on_delete=models.CASCADE,default="")
     floor               =models.CharField(max_length=50,default="",blank=True,null=True)
@@ -175,10 +175,10 @@ class DepartmentPhones(models.Model):
 
 class HospitalMedias(models.Model):
     id                      =           models.AutoField(primary_key=True)
-    hospital                =           models.ForeignKey(Hospitals,related_name="media",on_delete=models.CASCADE)
+    hospital                =           models.ForeignKey(Hospitals,related_name="hospitalmedia",on_delete=models.CASCADE)
     media_type              =           models.CharField(max_length=255,blank=True,null=True,default="")
     media_type_choice       =           ((1,"Image"),(2,"Video"))
-    media_content           =           models.FileField(choices=media_type_choice,blank=True,null=True,default="")
+    media_content           =           models.FileField(blank=True,null=True,default="")
     media_desc              =           models.CharField(max_length=255,blank=True,null=True,default="")
     is_active               =           models.BooleanField(default=False)     
     is_default              =           models.BooleanField(default=False)     
@@ -221,7 +221,7 @@ class HospitalsPatients(models.Model):
     city                =models.CharField(max_length=250,blank=True,null=True,default="")
     state               =models.CharField(max_length=250,blank=True,null=True,default="")
     country             =models.CharField(max_length=250,blank=True,null=True,default="")
-    zip_Code            =models.CharField(max_length=250,blank=True,null=True,default="")
+    pin_code            =models.CharField(max_length=250,blank=True,null=True,default="")
     age                 =models.CharField(blank=True,null=True,default="",max_length=25)
     phone               =models.CharField(max_length=250,blank=True,null=True,default="")
     email               =models.EmailField(max_length=254,blank=True,null=True,default="")
@@ -267,7 +267,7 @@ class ServiceAndCharges(models.Model):
 
 class AmbulanceDetails(models.Model):  
     id                      =           models.AutoField(primary_key=True)
-    hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE)
+    hospital                =           models.ForeignKey(Hospitals,related_name="hospitalambulance", on_delete=models.CASCADE)
     profile_pic                =           models.FileField(upload_to="hospital/services/images",blank=True,null=True,default="")
     drive_name              =           models.CharField(max_length=500,blank=True,null=True,default="")
     phone_regex             =           RegexValidator( regex = r'^\+?1?\d{9,10}$', message ="Phone number must be entered in the format +919999999999. Up to 10 digits allowed.")
@@ -303,3 +303,4 @@ class Blog(models.Model):
     
     class Meta:
         ordering = ['created_at']
+

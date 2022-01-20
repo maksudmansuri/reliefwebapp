@@ -9,11 +9,28 @@
 				<div class="login-left">
 					<img class="img-fluid" src="{% static 'newstatic/assets/img/logo-white.png' %} " alt="Logo">
 				</div> 
+				
 				<div class="login-right">
 					<div class="login-right-wrap">
 						<h1>Login</h1>
 						<p class="account-subtitle">Access to our dashboard</p>
-
+						{% if messages %}  
+						{% for message in messages  %}
+							{% if message.tags == "error" %}
+								<div class="alert alert-danger alert-dismissible fade show" role="alert">
+									<strong> {{message}}</strong>
+									<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+								</div>               
+							{% endif %}
+							{% if message.tags == "success" %}
+									<div class="alert alert-primary alert-dismissible fade show" role="alert">
+										<strong>{{message}}</strong> 
+										<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+									</div>
+							
+							{% endif %}
+						{% endfor %}
+					{% endif %}
 						<form method="post">
                             {% csrf_token %}
 							<div class="form-group">

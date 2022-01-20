@@ -904,7 +904,7 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
         state = request.POST.get("state")
         ssn_id = request.POST.get("ssn_id")
         country = request.POST.get("country")
-        zip_Code = request.POST.get("zip_Code")
+        pin_code = request.POST.get("pin_code")
         degree = request.POST.get("degree")
         specialist_id = request.POST.get("specialist")
         dob = request.POST.get("dob")
@@ -956,7 +956,7 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
         account.hospitaldoctors.city=city
         account.hospitaldoctors.state=state
         account.hospitaldoctors.country=country
-        account.hospitaldoctors.zip_Code=zip_Code
+        account.hospitaldoctors.pin_code=pin_code
         account.hospitaldoctors.phone=phone
         account.hospitaldoctors.degree=degree
         account.hospitaldoctors.dob=dob
@@ -1032,7 +1032,7 @@ def updateDoctor(request):
         state = request.POST.get("state")
         ssn_id = request.POST.get("ssn_id")
         country = request.POST.get("country")
-        zip_Code = request.POST.get("zip_Code")
+        pin_code = request.POST.get("pin_code")
         degree = request.POST.get("degree")
         specialist_id = request.POST.get("specialist")
         dob = request.POST.get("dob")
@@ -1076,7 +1076,7 @@ def updateDoctor(request):
         doctor.city=city
         doctor.state=state
         doctor.country=country
-        doctor.zip_Code=zip_Code
+        doctor.pin_code=pin_code
         doctor.degree=degree
         doctor.dob=dob
         doctor.alternate_mobile=alternate_mobile
@@ -1335,6 +1335,7 @@ class manageGalleryView(SuccessMessageMixin,CreateView):
             fs=FileSystemStorage()
             filename=fs.save(media_content.name,media_content)
             media_url=fs.url(filename)
+
             hospital_media = HospitalMedias(hospital=hospital,media_type=media_type_list,media_desc=media_desc_list,media_content=media_url)
             hospital_media.is_active=True
             hospital_media.save() 
@@ -1385,7 +1386,7 @@ class managePatientView(SuccessMessageMixin,CreateView):
         address = request.POST.get("address")
         city = request.POST.get("city")
         state = request.POST.get("state")
-        zip_Code = request.POST.get("zip_Code")
+        pin_code = request.POST.get("pin_code")
         gender = request.POST.get("gender")
         country = request.POST.get("country")
         blood_docation_date = request.POST.get("blood_docation_date")
@@ -1437,7 +1438,7 @@ class managePatientView(SuccessMessageMixin,CreateView):
         account.patients.city = city 
         account.patients.state = state
         account.patients.country = country 
-        account.patients.zip_Code = zip_Code  
+        account.patients.pin_code = pin_code  
         account.patients.dob = dob 
         account.patients.age = age 
         account.patients.alternate_mobile = alternate_mobile
@@ -1474,7 +1475,7 @@ def updatePatientView(request):
         gender = request.POST.get("gender")
         id = request.POST.get("id")
         state = request.POST.get("state")
-        zip_Code = request.POST.get("zip_Code")
+        pin_code = request.POST.get("pin_code")
         gender = request.POST.get("gender")
         bloodgroup = request.POST.get("bloodgroup")
         dob = request.POST.get("dob")

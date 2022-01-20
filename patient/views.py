@@ -114,7 +114,7 @@ class patientdDashboardViews(SuccessMessageMixin,ListView):
             phamacybooking = OrderBooking.objects.filter(patient = request.user,booking_for = "P")
             print(booked)
             param = {'booked':booked,"booking_labtest_list":booking_labtest_list,'phamacybooking':phamacybooking}
-            # if patient.fisrt_name and patient.last_name and patient.address and patient.city and patient.zip_Code and patient.state and patient.country and patient.dob and patient.profile_pic and patient.gender and patient.bloodgroup:
+            # if patient.fisrt_name and patient.last_name and patient.address and patient.city and patient.pin_code and patient.state and patient.country and patient.dob and patient.profile_pic and patient.gender and patient.bloodgroup:
             
             return render(request,"patient/patient-dashboard.html",param)            
             # else:
@@ -140,7 +140,7 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
         alternate_mobile = request.POST.get('alternate_mobile')
         address = request.POST.get('address')
         city = request.POST.get('city')
-        zip_Code = request.POST.get('zip_Code') 
+        pin_code = request.POST.get('pin_code') 
         state = request.POST.get('state')
         country = request.POST.get('country')
         gender = request.POST.get('gender')
@@ -163,7 +163,7 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
         # import datetime
         # age = (datetime.date.today() - datetime.datetime.strptime(dob, "%Y-%m-%d").date())/365
         # try: 
-        print(name_title,profile_pic,alternate_mobile,address,city,state,zip_Code,country,gender,bloodgroup,age1)
+        print(name_title,profile_pic,alternate_mobile,address,city,state,pin_code,country,gender,bloodgroup,age1)
         user= request.user
         print(user.first_name)         
         print(user.last_name)         
@@ -183,7 +183,7 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
         user.patients.address=address
         user.patients.city=city
         user.patients.state=state
-        user.patients.zip_Code=zip_Code
+        user.patients.pin_code=pin_code
         user.patients.country=country
         user.patients.gender=gender
         user.patients.dob=dob 
@@ -746,7 +746,7 @@ class AddSomeoneAsPatient(SuccessMessageMixin,CreateView):
             someoneid = request.POST.get("someoneid")
             state = "Gujarat"
             country = "India"
-            zip_Code = request.POST.get("zip_Code")
+            pin_code = request.POST.get("pin_code")
             relationship = request.POST.get("relationship")
             page_name = request.POST.get("page_name")
             print("inside add someone view")
@@ -761,7 +761,7 @@ class AddSomeoneAsPatient(SuccessMessageMixin,CreateView):
                     print("insdie id_proof")     
                 
                     patient=get_object_or_404(Patients,admin=request.user)
-                    someone = ForSome(patient=patient,name_title=name_title,fisrt_name=fisrt_name,last_name=last_name,address=address,city=city,state=state,country=country,zip_Code=zip_Code,age=age,phone=phone,add_notes=add_notes,gender=gender,is_active=True,email=email,bloodgroup=bloodgroup,relationship=relationship)
+                    someone = ForSome(patient=patient,name_title=name_title,fisrt_name=fisrt_name,last_name=last_name,address=address,city=city,state=state,country=country,pin_code=pin_code,age=age,phone=phone,add_notes=add_notes,gender=gender,is_active=True,email=email,bloodgroup=bloodgroup,relationship=relationship)
                     if profile_pic:
                         fs=FileSystemStorage()
                         filename=fs.save(profile_pic.name,profile_pic)
@@ -803,7 +803,7 @@ class AddSomeoneAsPatient(SuccessMessageMixin,CreateView):
                     someone.city=city
                     someone.state=state
                     someone.country=country
-                    someone.zip_Code=zip_Code
+                    someone.pin_code=pin_code
                     someone.age=age
                     someone.phone=phone
                     if ID_proof:

@@ -38,7 +38,7 @@ class Medias(models.Model):
 
 class HomeVisitCharges(models.Model):
     id                      =           models.AutoField(primary_key=True)
-    lab                    =           models.ForeignKey(Labs, on_delete=models.CASCADE)
+    lab                     =           models.ForeignKey(Labs, on_delete=models.CASCADE)
     charges                 =           models.FloatField(default=0,blank=True,null=True)
     is_active               =           models.BooleanField(default=False)     
     is_default              =           models.BooleanField(default=False)     

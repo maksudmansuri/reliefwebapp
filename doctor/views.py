@@ -182,7 +182,7 @@ class doctorUpdateViews(SuccessMessageMixin,UpdateView):
         state = request.POST.get("state")
         ssn_id = request.POST.get("ssn_id")
         country = request.POST.get("country")
-        zip_Code = request.POST.get("zip_Code")
+        pin_code = request.POST.get("pin_code")
         dob = request.POST.get("dob")
         alternate_mobile = request.POST.get("alternate_mobile")
         gender = request.POST.get("gender")
@@ -223,7 +223,7 @@ class doctorUpdateViews(SuccessMessageMixin,UpdateView):
             hospital.about=about
             hospital.address=address
             hospital.city=city
-            hospital.zip_Code=zip_Code
+            hospital.pin_code=pin_code
             hospital.state=state
             hospital.country=country
             hospital.phone=phone
@@ -308,7 +308,7 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
         state = request.POST.get("state")
         ssn_id = request.POST.get("ssn_id")
         country = request.POST.get("country")
-        zip_Code = request.POST.get("zip_Code")
+        pin_code = request.POST.get("pin_code")
         degree = request.POST.get("degree")
         specialist = request.POST.get("specialist")
         dob = request.POST.get("dob")
@@ -343,7 +343,7 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
         print(profile_pic_url)
         hospital=Hospitals.objects.get(admin=request.user)
 
-        doctor = HospitalDoctors(fisrt_name=first_name,last_name=last_name,address=address,city=city,state=state,country=country,zip_Code=zip_Code,phone=phone,degree=degree,dob=dob,alternate_mobile=alternate_mobile,profile_pic=profile_pic_url,gender=gender,facebook=facebook,instagram=instagram,linkedin=linkedin,specialist=specialist)
+        doctor = HospitalDoctors(fisrt_name=first_name,last_name=last_name,address=address,city=city,state=state,country=country,pin_code=pin_code,phone=phone,degree=degree,dob=dob,alternate_mobile=alternate_mobile,profile_pic=profile_pic_url,gender=gender,facebook=facebook,instagram=instagram,linkedin=linkedin,specialist=specialist)
         doctor.save()
        
         # staffdoctor= HospitalStaffDoctors(doctor=doctor,hospital=hospital,joindate=joindate,is_active=active,ssn_id=ssn_id,is_virtual_available=is_virtual_available,email=email,emergency_charges=emergency_charges,home_charges=home_charges,online_charges=online_charges,opd_charges=opd_charges)
@@ -390,7 +390,7 @@ class managePatientView(SuccessMessageMixin,CreateView):
         address = request.POST.get("address")
         city = request.POST.get("city")
         state = request.POST.get("state")
-        zip_Code = request.POST.get("zip_Code")
+        pin_code = request.POST.get("pin_code")
         gender = request.POST.get("gender")
         blood_docation_date = request.POST.get("blood_docation_date")
         bloodgroup = request.POST.get("bloodgroup")
@@ -442,7 +442,7 @@ class managePatientView(SuccessMessageMixin,CreateView):
         account.patients.city = city
         account.patients.state = state
         account.patients.country = "India"
-        account.patients.zip_Code = zip_Code
+        account.patients.pin_code = pin_code
         account.patients.dob = dob
         account.patients.age = age
         account.patients.alternate_mobile = alternate_mobile
@@ -478,7 +478,7 @@ def updatePatientView(request):
         gender = request.POST.get("gender")
         id = request.POST.get("id")
         state = request.POST.get("state")
-        zip_Code = request.POST.get("zip_Code")
+        pin_code = request.POST.get("pin_code")
         gender = request.POST.get("gender")
         bloodgroup = request.POST.get("bloodgroup")
         dob = request.POST.get("dob")
@@ -507,7 +507,7 @@ def updatePatientView(request):
         patient.city = city
         patient.state = state
         patient.country = "India"
-        patient.zip_Code = zip_Code
+        patient.pin_code = pin_code
         patient.dob = dob
         patient.age = age
         patient.alternate_mobile = alternate_mobile

@@ -33,7 +33,7 @@ class ForSome(models.Model):
     city                =models.CharField(max_length=250,blank=True,null=True,default="")
     state               =models.CharField(max_length=250,blank=True,null=True,default="")
     country             =models.CharField(max_length=250,blank=True,null=True,default="")
-    zip_Code            =models.CharField(max_length=250,blank=True,null=True,default="")
+    pin_code            =models.CharField(max_length=250,blank=True,null=True,default="")
     age                 =models.IntegerField(blank=True,null=True)
     phone               =models.CharField(max_length=250,blank=True,null=True,default="")
     ID_proof            =models.FileField(upload_to="someone/ID/images",blank=True,null=True,default="")
@@ -88,7 +88,7 @@ class OrderBooking(models.Model):
     parent                  =           models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
     patient                 =           models.ForeignKey(CustomUser,related_name="patient", on_delete=models.CASCADE)
     for_whom                =           models.ForeignKey(ForSome, on_delete=models.CASCADE,null=True,blank=True)
-    hospitalstaffdoctor     =           models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE,null=True,blank=True)
+    hospitalstaffdoctor     =           models.ForeignKey(HospitalDoctors,related_name="doctorbooking" , on_delete=models.CASCADE,null=True,blank=True)
     HLP                     =           models.ForeignKey(CustomUser,related_name="merchant", on_delete=models.CASCADE,null=True,blank=True)
     booking_type            =           models.CharField(default="",blank=True,null=True,max_length=64)#homevisit,emergency,online,test,medicine,opd,rebooking -> checkout
     # BOOKING_FOR_CHOICE      =           ((1,"Hospital"),(2,"Laboratory"),(3,"Pharmacy"))

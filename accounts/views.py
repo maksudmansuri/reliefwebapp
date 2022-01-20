@@ -207,76 +207,79 @@ def dologin(request):
     print(request.user)
     if request.method == "POST":
     #check user is authenticate or not
-        user=EmailBackEnd.authenticate(request,username=request.POST.get("username"),password=request.POST.get("password"))
-        if user is not None:
-            if user.is_active == True:
-                login(request,user)
-                next = request.POST.get('next')
-                # request.session['logged in']=True
-                if user.user_type=="1":
-                    if next:
-                        return HttpResponseRedirect(next)
-                    # elif user.profile_pic:
-                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
+        try:
+            user=EmailBackEnd.authenticate(request,username=request.POST.get("username"),password=request.POST.get("password"))
+            if user is not None:
+                if user.is_active == True:
+                    login(request,user)
+                    next = request.POST.get('next')
+                    # request.session['logged in']=True
+                    if user.user_type=="1":
+                        if next:
+                            return HttpResponseRedirect(next)
+                        # elif user.profile_pic:
+                        #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                        else:
+                            return HttpResponseRedirect(reverse('radmin_home'))
+                            # return HttpResponseRedirect(reverse('admin:index'))
+                    elif user.user_type=="2":
+                        if next:
+                            return HttpResponseRedirect(next)
+                        # elif user.profile_pic:
+                        #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                        else: 
+                            return HttpResponseRedirect(reverse('hospital_dashboard'))
+                    elif user.user_type=="3": 
+                        if next:
+                            return HttpResponseRedirect(next)
+                        # elif user.profile_pic:
+                        #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                        else:
+                            return HttpResponseRedirect(reverse('doctor_dashboard'))
+                    elif user.user_type=="4":
+                        print(next)
+                        if next:
+                            return HttpResponseRedirect(request.POST.get('next'))
+                        # elif user.profile_pic:
+                        #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                        # print("hello",user.profile_pic,user.first_name,user.patients.address)
+                        # if user.profile_pic is None:
+                        #     return HttpResponseRedirect(reverse("patientregisterstep1",kwargs={'user_id':user.id}))
+                        # elif user.first_name is None:
+                        #     return HttpResponseRedirect(reverse('patientregisterstep2',kwargs={'user_id':user.id}))
+                        # elif user.patients.address is None:
+                        #     return HttpResponseRedirect(reverse('patientregisterstep3',kwargs={'user_id':user.id}))
+                        else:
+                            return HttpResponseRedirect(reverse('front_home'))
+                    elif user.user_type=="5":
+                        if next:
+                            return HttpResponseRedirect(next)
+                        # elif user.profile_pic:
+                        #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                        else:
+                            return HttpResponseRedirect(reverse('lab_home'))
+                    elif user.user_type=="6":
+                        if next:
+                            return HttpResponseRedirect(next)
+                        # elif user.profile_pic:
+                        #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                        else:
+                            return HttpResponseRedirect(reverse('pharmacy_home'))
                     else:
-                        return HttpResponseRedirect(reverse('radmin_home'))
-                        # return HttpResponseRedirect(reverse('admin:index'))
-                elif user.user_type=="2":
-                    if next:
-                        return HttpResponseRedirect(next)
-                    # elif user.profile_pic:
-                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
-                    else: 
-                        return HttpResponseRedirect(reverse('hospital_dashboard'))
-                elif user.user_type=="3": 
-                    if next:
-                        return HttpResponseRedirect(next)
-                    # elif user.profile_pic:
-                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
-                    else:
-                        return HttpResponseRedirect(reverse('doctor_dashboard'))
-                elif user.user_type=="4":
-                    print(next)
-                    if next:
-                        return HttpResponseRedirect(request.POST.get('next'))
-                    # elif user.profile_pic:
-                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
-                    # print("hello",user.profile_pic,user.first_name,user.patients.address)
-                    # if user.profile_pic is None:
-                    #     return HttpResponseRedirect(reverse("patientregisterstep1",kwargs={'user_id':user.id}))
-                    # elif user.first_name is None:
-                    #     return HttpResponseRedirect(reverse('patientregisterstep2',kwargs={'user_id':user.id}))
-                    # elif user.patients.address is None:
-                    #     return HttpResponseRedirect(reverse('patientregisterstep3',kwargs={'user_id':user.id}))
-                    else:
-                        return HttpResponseRedirect(reverse('front_home'))
-                elif user.user_type=="5":
-                    if next:
-                        return HttpResponseRedirect(next)
-                    # elif user.profile_pic:
-                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
-                    else:
-                        return HttpResponseRedirect(reverse('lab_home'))
-                elif user.user_type=="6":
-                    if next:
-                        return HttpResponseRedirect(next)
-                    # elif user.profile_pic:
-                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
-                    else:
-                        return HttpResponseRedirect(reverse('pharmacy_home'))
+                    # For Djnago default Admin Login 
+                        return HttpResponseRedirect(reverse('admin:index'))
+                        
+                        # return RedirectView.as_view(url=reverse_lazy('admin:index'))
+                        # return HttpResponseRedirect(reverse('admin_home'))
                 else:
-                # For Djnago default Admin Login 
-                    return HttpResponseRedirect(reverse('admin:index'))
-                    
-                    # return RedirectView.as_view(url=reverse_lazy('admin:index'))
-                    # return HttpResponseRedirect(reverse('admin_home'))
-            else:
-                # message.add_message(request,messages.ERROR,"Please Verify Your Account First")
-                return redirect('/accounts/dologin')
-        else: 
-            # print(user.is_active)
-            # messages.add_message(request,messages.ERROR,"User Not Found you haved to Register First")
-            return redirect("dologin")
+                    message.add_message(request,messages.ERROR,"Please Verify Your Account First")
+                    return redirect('/accounts/dologin')
+            else: 
+                messages.add_message(request,messages.ERROR,"User Not Found you haved to Register First")
+                return redirect("dologin")
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,e) 
+            return HttpResponseRedirect(reverse("dologin"))
     return render(request,'accounts/login.html')
        
 class HospitalSingup(SuccessMessageMixin,CreateView):
@@ -285,35 +288,39 @@ class HospitalSingup(SuccessMessageMixin,CreateView):
     fields=["email","phone","password"]
     success_message = "Hospital User Created"  
     def form_valid(self,form):
-        #Saving Custom User Object for Merchant User
-        print('i m here at Hospital singup')
-        user=form.save(commit=False)
-        user.user_type=2
-        user.username=form.cleaned_data["email"]
-        user.set_password(form.cleaned_data["password"])
-        print('just one step ahead save?')   
-        user.counter += 1  # Update Counter At every Call
-        user.save() # Save the data
-        mobile= user.phone
-        #key = base64.b32encode((send_otp(mobile).encode()))
-        # key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
-        key = send_otp(mobile)
-        # OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
-        # print(OTP.at(user.counter))
-        # otp=OTP.at(user.counter)
-        # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(otp)+"&templatename=WomenMark1")
-        # res = conn.getresponse()
-        # data = res.read()
-        # data=data.decode("utf-8")
-        # data=ast.literal_eval(data)
-        # print(data)
-        # if data["Status"] == 'Success':
-        #     user.otp_session_id = data["Details"]
-        user.otp = str(key)
-        user.save()
-            # print('In validate phone :'+user.otp_session_id)
-        messages.add_message(self.request,messages.SUCCESS,"OTP has been sent successfully") 
-        return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
+        try:
+            #Saving Custom User Object for Merchant User
+            print('i m here at Hospital singup')
+            user=form.save(commit=False)
+            user.user_type=2
+            user.username=form.cleaned_data["email"]
+            user.set_password(form.cleaned_data["password"])
+            print('just one step ahead save?')   
+            user.counter += 1  # Update Counter At every Call
+            user.save() # Save the data
+            mobile= user.phone
+            #key = base64.b32encode((send_otp(mobile).encode()))
+            # key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
+            key = send_otp(mobile)
+            # OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
+            # print(OTP.at(user.counter))
+            # otp=OTP.at(user.counter)
+            # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(otp)+"&templatename=WomenMark1")
+            # res = conn.getresponse()
+            # data = res.read()
+            # data=data.decode("utf-8")
+            # data=ast.literal_eval(data)
+            # print(data)
+            # if data["Status"] == 'Success':
+            #     user.otp_session_id = data["Details"]
+            user.otp = str(key)
+            user.save()
+                # print('In validate phone :'+user.otp_session_id)
+            messages.add_message(self.request,messages.SUCCESS,"OTP has been sent successfully") 
+            return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
+        except Exception as e:
+            messages.add_message(self.request,messages.ERROR,e) 
+            return HttpResponseRedirect(reverse("hospitalsingup",kwargs={'form':form}))
         # else:
         #     messages.add_message(self.request,messages.ERROR,"OTP sending Failed") 
         #     return HttpResponseRedirect(reverse("hospitalsingup"))
@@ -327,23 +334,27 @@ class DoctorSingup(SuccessMessageMixin,CreateView):
     fields=["email","phone","password"]
     success_message = "Hospital User Created"  
     def form_valid(self,form):
-        #Saving Custom User Object for Doctor User
-        print('i m here at dosignup')
-        user=form.save(commit=False)
-        user.is_active=True
-        user.user_type=3
-        user.username=form.cleaned_data["email"]
-        user.set_password(form.cleaned_data["password"])
-        print('just one step ahead save?')
-        user.counter += 1  # Update Counter At every Call
-        user.save() # Save the data
-        mobile= user.phone
-        key = send_otp(mobile)
-        user.otp = str(key)
-        user.hospitaldoctors.is_hospital_added = False 
-        user.save()
-        messages.add_message(self.request,messages.SUCCESS,"OTP has been sent successfully") 
-        return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
+        try:
+            #Saving Custom User Object for Doctor User
+            print('i m here at dosignup')
+            user=form.save(commit=False)
+            user.is_active=True
+            user.user_type=3
+            user.username=form.cleaned_data["email"]
+            user.set_password(form.cleaned_data["password"])
+            print('just one step ahead save?')
+            user.counter += 1  # Update Counter At every Call
+            user.save() # Save the data
+            mobile= user.phone
+            key = send_otp(mobile)
+            user.otp = str(key)
+            user.hospitaldoctors.is_hospital_added = False 
+            user.save()
+            messages.add_message(self.request,messages.SUCCESS,"OTP has been sent successfully") 
+            return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
+        except Exception as e:
+            messages.add_message(self.request,messages.ERROR,e) 
+            return HttpResponseRedirect(reverse("doctorsingup",kwargs={'form':form}))
 
 class PatientSingup(SuccessMessageMixin,CreateView):
     template_name="accounts/patientsingupnew.html"
@@ -353,35 +364,39 @@ class PatientSingup(SuccessMessageMixin,CreateView):
  
     def form_valid(self,form):
         #Saving Custom User Object for Merchant User
-        user=form.save(commit=False)
-        user.user_type=4
-        user.username=form.cleaned_data["email"]
-        user.set_password(form.cleaned_data["password"])
-        user.counter += 1  # Update Counter At every Call
-        user.is_active= True
-        user.save() # Save the data
-        mobile= user.phone
-        key = send_otp(mobile)
-        print("i am here")
-        # keygen = generateKey()
-        # key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
-        # key = base64.b32encode((send_otp(mobile).encode()))
-        # OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
-        # print(OTP.at(user.counter))
-        # otp=OTP.at(user.counter)
-        # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
-        # res = conn.getresponse()
-        # data = res.read()
-        # data=data.decode("utf-8")
-        # data=ast.literal_eval(data)
-        # print(data)
-        # if data["Status"] == 'Success':
-        #     user.otp_session_id = data["Details"]
-        user.otp = str(key)
-        user.save()
-            # print('In validate phone :'+user.otp_session_id)
-        messages.add_message(self.request,messages.SUCCESS,"OTP has been sent successfully") 
-        return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
+        try:
+            user=form.save(commit=False)
+            user.user_type=4
+            user.username=form.cleaned_data["email"]
+            user.set_password(form.cleaned_data["password"])
+            user.counter += 1  # Update Counter At every Call
+            user.is_active= True
+            user.save() # Save the data
+            mobile= user.phone
+            key = send_otp(mobile)
+            print("i am here")
+            # keygen = generateKey()
+            # key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
+            # key = base64.b32encode((send_otp(mobile).encode()))
+            # OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
+            # print(OTP.at(user.counter))
+            # otp=OTP.at(user.counter)
+            # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
+            # res = conn.getresponse()
+            # data = res.read()
+            # data=data.decode("utf-8")
+            # data=ast.literal_eval(data)
+            # print(data)
+            # if data["Status"] == 'Success':
+            #     user.otp_session_id = data["Details"]
+            user.otp = str(key)
+            user.save()
+                # print('In validate phone :'+user.otp_session_id)
+            messages.add_message(self.request,messages.SUCCESS,"OTP has been sent successfully") 
+            return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
+        except Exception as e:
+            messages.add_message(self.request,messages.ERROR,e) 
+            return HttpResponseRedirect(reverse("patientsingup",kwargs={'form':form}))
 
 class PatientSingupStep1(UpdateView):
     def get(self, request, *args, **kwargs) :
@@ -460,15 +475,15 @@ class PatientSingupStep3(UpdateView):
         alternate_mobile = request.POST.get('alternate_mobile')
         address = request.POST.get('address')
         city = request.POST.get('city')
-        zip_Code = request.POST.get('zip_Code') 
+        pin_code = request.POST.get('pin_code') 
         state = request.POST.get('state')
         country = request.POST.get('country')
-        if alternate_mobile == None or address == None or city == None or zip_Code == None or  state == None or country == None:
+        if alternate_mobile == None or address == None or city == None or pin_code == None or  state == None or country == None:
             user.patients.alternate_mobile=alternate_mobile
             user.patients.address=address
             user.patients.city=city
             user.patients.state=state
-            user.patients.zip_Code=zip_Code
+            user.patients.pin_code=pin_code
             user.patients.country=country
             user.patients.save()
         else:
@@ -498,16 +513,20 @@ class AuthorizedSingup(SuccessMessageMixin,CreateView):
     success_message = "Admin User Created" 
 
     def form_valid(self,form):
-        #Saving Custom User Object for Merchant User
-        print('i m here at Hospital singup')
-        user=form.save(commit=False)
-        user.user_type=1
-        user.is_active=True
-        user.username=form.cleaned_data["email"]
-        user.set_password(form.cleaned_data["password"])
-        print('just one step ahead save?')   
-        user.save() # Save the data
-        return HttpResponseRedirect(reverse("dologin"))
+        try:
+            #Saving Custom User Object for Merchant User
+            print('i m here at Hospital singup')
+            user=form.save(commit=False)
+            user.user_type=1
+            user.is_active=True
+            user.username=form.cleaned_data["email"]
+            user.set_password(form.cleaned_data["password"])
+            print('just one step ahead save?')   
+            user.save() # Save the data
+            return HttpResponseRedirect(reverse("dologin"))
+        except Exception as e:
+            messages.add_message(self.request,messages.ERROR,e) 
+            return HttpResponseRedirect(reverse("Authorizedsingup",kwargs={'form':form}))
  
 class LabSingup(SuccessMessageMixin,CreateView):
     template_name="accounts/labsingupnew.html"
@@ -515,36 +534,40 @@ class LabSingup(SuccessMessageMixin,CreateView):
     fields=["email","phone","password"]
     success_message = "LAB User Created"  
     def form_valid(self,form):
-        #Saving Custom User Object for Merchant User
-        print('I am here at LAB singup')
-        user=form.save(commit=False)
-        user.user_type=5
-        user.username=form.cleaned_data["email"]    
-        user.set_password(form.cleaned_data["password"])
-        print('just one step ahead save?')   
-        user.counter += 1  # Update Counter At every Call
-        user.save() # Save the data
-        mobile= user.phone
-        # keygen = generateKey()
-        # key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
-        key = send_otp(mobile)
-        print(key)
-        # OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
-        # print(OTP.at(user.counter))
-        # otp=OTP.at(user.counter)
-        # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
-        # res = conn.getresponse()
-        # data = res.read()
-        # data=data.decode("utf-8")
-        # data=ast.literal_eval(data)
-        # print(data)
-        # if data["Status"] == 'Success':
-        #     user.otp_session_id = data["Details"]
-        user.otp = str(key)
-        user.save()
-        #     print('In validate phone :'+user.otp_session_id)
-        messages.add_message(self.request,messages.SUCCESS,"OTP sent successfully") 
-        return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
+        try:
+            #Saving Custom User Object for Merchant User
+            print('I am here at LAB singup')
+            user=form.save(commit=False)
+            user.user_type=5
+            user.username=form.cleaned_data["email"]    
+            user.set_password(form.cleaned_data["password"])
+            print('just one step ahead save?')   
+            user.counter += 1  # Update Counter At every Call
+            user.save() # Save the data
+            mobile= user.phone
+            # keygen = generateKey()
+            # key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
+            key = send_otp(mobile)
+            print(key)
+            # OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
+            # print(OTP.at(user.counter))
+            # otp=OTP.at(user.counter)
+            # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
+            # res = conn.getresponse()
+            # data = res.read()
+            # data=data.decode("utf-8")
+            # data=ast.literal_eval(data)
+            # print(data)
+            # if data["Status"] == 'Success':
+            #     user.otp_session_id = data["Details"]
+            user.otp = str(key)
+            user.save()
+            #     print('In validate phone :'+user.otp_session_id)
+            messages.add_message(self.request,messages.SUCCESS,"OTP sent successfully") 
+            return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
+        except Exception as e:
+            messages.add_message(self.request,messages.ERROR,e) 
+            return HttpResponseRedirect(reverse("labsingup",kwargs={'form':form}))
 
 class PharmacySingup(SuccessMessageMixin,CreateView):
     template_name="accounts/pharmacysingupnew.html"
@@ -552,35 +575,40 @@ class PharmacySingup(SuccessMessageMixin,CreateView):
     fields=["email","phone","password"]
     success_message = "Hospital User Created"  
     def form_valid(self,form):
-        #Saving Custom User Object for Merchant User
-        print('i m here at Hospital singup')
-        user=form.save(commit=False)
-        user.user_type=6
-        user.username=form.cleaned_data["email"]
-        user.set_password(form.cleaned_data["password"])
-        print('just one step ahead save?')   
-        user.counter += 1  # Update Counter At every Call
-        user.save() # Save the data
-        mobile= user.phone
-        key = send_otp(mobile)
-        # key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
-        
-        # OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
-        # print(OTP.at(user.counter))
-        # otp=OTP.at(user.counter)
-        # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
-        # res = conn.getresponse()
-        # data = res.read()
-        # data=data.decode("utf-8")
-        # data=ast.literal_eval(data)
-        # print(data)
-        # if data["Status"] == 'Success':
-        #     user.otp_session_id = data["Details"]
-        user.otp = str(key)
-        user.save()
-        # print('In validate phone :'+user.otp_session_id)
-        messages.add_message(self.request,messages.SUCCESS,"OTP sent successfully") 
-        return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
+        try:
+            #Saving Custom User Object for Merchant User
+            print('i m here at Hospital singup')
+            user=form.save(commit=False)
+            user.user_type=6
+            user.username=form.cleaned_data["email"]
+            user.set_password(form.cleaned_data["password"])
+            print('just one step ahead save?')   
+            user.counter += 1  # Update Counter At every Call
+            user.save() # Save the data
+            mobile= user.phone
+            key = send_otp(mobile)
+            # key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
+            
+            # OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
+            # print(OTP.at(user.counter))
+            # otp=OTP.at(user.counter)
+            # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
+            # res = conn.getresponse()
+            # data = res.read()
+            # data=data.decode("utf-8")
+            # data=ast.literal_eval(data)
+            # print(data)
+            # if data["Status"] == 'Success':
+            #     user.otp_session_id = data["Details"]
+            user.otp = str(key)
+            user.save()
+            # print('In validate phone :'+user.otp_session_id)
+            messages.add_message(self.request,messages.SUCCESS,"OTP sent successfully") 
+            return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
+        except Exception as e:
+            messages.add_message(self.request,messages.ERROR,e) 
+            return HttpResponseRedirect(reverse("pharmacysingup",kwargs={'form':form}))
+
 
 def adminSingup(request):
     if request.method=="POST":

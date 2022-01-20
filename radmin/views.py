@@ -487,7 +487,7 @@ class DoctorUpdateViews(SuccessMessageMixin,View):
         state = request.POST.get("state")
         ssn_id = request.POST.get("ssn_id")
         country = request.POST.get("country")
-        zip_Code = request.POST.get("zip_Code")
+        pin_code = request.POST.get("pin_code")
         dob = request.POST.get("dob")
         alternate_mobile = request.POST.get("alternate_mobile")
         gender = request.POST.get("gender")
@@ -529,7 +529,7 @@ class DoctorUpdateViews(SuccessMessageMixin,View):
             hospital.about=about
             hospital.address=address
             hospital.city=city
-            hospital.zip_Code=zip_Code
+            hospital.pin_code=pin_code
             hospital.state=state
             hospital.country=country
             hospital.phone=phone

@@ -14,18 +14,54 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter,OrderingFilter
 from patient.models import Orders
 
-from .serializers import AppointmentSerializer, HospitalDoctorSerialzer, HospitalDoctorsViewSerializer, HospitalsSerializer, LabsViewSerializer, OnlineDoctorserializer, PharmacysViewSerializer, SpecialistSerializer
+from .serializers import AppointmentSerializer, HomeScreenSerializer, HospitalDoctorHomeScreenSerializer, HospitalDoctorSerialzer, HospitalDoctorsViewSerializer, HospitalHomeScreenSerializer, HospitalsSerializer, LabHomeScreenSerializer, LabsViewSerializer, OnlineDoctorserializer, PharmaHomeScreenSerializer, PharmacysViewSerializer, SpecialistSerializer
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 2
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
 
 SUCCESS = 'success'
 ERROR = 'error'
 DELETE_SUCCESS = 'deleted'
 UPDATE_SUCCESS = 'updated'
 CREATE_SUCCESS = 'created'
+"""NEw APIS by pages"""
 
+class HomeScreenView(ListAPIView):
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated,)
+	queryset = Specailist.objects.all().order_by('updated_at')
+	# pagination_class = StandardResultsSetPagination
+	
+	def get(self, request, format=None, **kwargs):
+		spc = Specailist.objects.all().order_by('updated_at')[:10]
+		specialistserializer = HomeScreenSerializer(spc,many=True)
+		hos = Hospitals.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
+		hospitals = HospitalHomeScreenSerializer(hos,many=True)
+		doc = HospitalDoctors.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
+		doctors = HospitalDoctorHomeScreenSerializer(doc,many=True)
+		lab = Labs.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
+		labs = LabHomeScreenSerializer(lab,many=True)
+		pharma = Pharmacy.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
+		pharmacy = PharmaHomeScreenSerializer(pharma,many=True)
+
+		return Response({
+			"status": "success",
+			'specialists': specialistserializer.data,
+			'hospitals': hospitals.data,
+			'doctors': doctors.data,
+			'labs': labs.data,
+			'Pharmas': pharmacy.data,
+			
+		})
+
+"""Old APIs"""
 class specialistViewSets(viewsets.ModelViewSet):
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = (IsAuthenticated,)
 	queryset = Specailist.objects.all().order_by('id')
+	pagination_class = StandardResultsSetPagination
 	serializer_class = SpecialistSerializer
 
 class ApiHospitalListView(ListAPIView):
@@ -33,7 +69,7 @@ class ApiHospitalListView(ListAPIView):
 	serializer_class = HospitalsSerializer
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = (IsAuthenticated,)
-	pagination_class = PageNumberPagination
+	pagination_class = StandardResultsSetPagination
 	filter_backends = (SearchFilter,OrderingFilter)
 	search_fields = ('hopital_name','specialist','city')
 
@@ -49,6 +85,7 @@ class ApiHospitalListAndDetailsView(APIView):
 		if id:
 			hospital = get_object_or_404(Hospitals,id = id,is_verified = True,admin__is_active = True)
 			serializer = HospitalDoctorsViewSerializer(hospital)
+			print(serializer.data)
 			return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 		hospital = Hospitals.objects.filter(is_verified = True,admin__is_active = True)
@@ -69,8 +106,7 @@ class HospitalDoctorDetailsView(APIView):
 		hospital = HospitalDoctors.objects.filter(is_verified=True,admin__is_active = True)
 		serializer = HospitalDoctorSerialzer(hospital, many=True)
 		return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
-		
-
+	
 class APIDoctorListView(APIView):
 	permission_classes = (IsAuthenticated,)
 	authentication_classes = (TokenAuthentication,)

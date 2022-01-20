@@ -10,6 +10,9 @@ router.register(r'specialist', views.specialistViewSets)
 urlpatterns = [
     path('', include((router.urls, 'relief.patient.api'))),
 
+    #New API By page
+    path('homescreen', views.HomeScreenView.as_view(),name='homescreen'),
+
     #Hospital's APIs     
     path('hospitalslist', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalslist'),
     path('hospitalslist/<id>', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalsdetials'),
