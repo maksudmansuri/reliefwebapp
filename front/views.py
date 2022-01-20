@@ -428,8 +428,9 @@ class SearcCathDoctorView(ListView):
 
 """Details View Hospital"""
 def UserVerified(request):
-    if request.user.patients.is_verified == 0:
-        return True
+    if request.user.user_type == "4":
+        if request.user.patients.is_verified == 0:
+            return True
     else:
         return False 
         
@@ -437,6 +438,7 @@ class HospitalDetailsViews(DetailView):
     def get(self, request, *args, **kwargs):
         hosital_id=kwargs['id'] 
         if request.user.is_authenticated:
+            
             a = UserVerified(request)
             if a:
                 messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
