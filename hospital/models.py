@@ -175,7 +175,7 @@ class DepartmentPhones(models.Model):
 
 class HospitalMedias(models.Model):
     id                      =           models.AutoField(primary_key=True)
-    hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE)
+    hospital                =           models.ForeignKey(Hospitals,related_name="media",on_delete=models.CASCADE)
     media_type              =           models.CharField(max_length=255,blank=True,null=True,default="")
     media_type_choice       =           ((1,"Image"),(2,"Video"))
     media_content           =           models.FileField(choices=media_type_choice,blank=True,null=True,default="")

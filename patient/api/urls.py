@@ -1,33 +1,38 @@
 from patient.api import views
-from django.urls import path
+from django.urls import path,include
 from rest_framework.authtoken.views import obtain_auth_token
-  
+from rest_framework import routers
+from . import views
+
+router = routers.SimpleRouter()
+router.register(r'specialist', views.specialistViewSets)
+# router.register(r'delivery-cost', views.DeliveryCostViewSet)
 urlpatterns = [
+    path('', include((router.urls, 'relief.patient.api'))),
+
     #Hospital's APIs     
     path('hospitalslist', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalslist'),
-    path('hospitalsdetials/<id>', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalsdetials'),
+    path('hospitalslist/<id>', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalsdetials'),
     #Doctorhosptial Apis
-    path('hospitaldoctordetail/<id>/<did>', views.HospitalDoctorDetailsView.as_view(),name='hospitaldoctordetail'),
+    # path('hospitaldoctordetail/<id>/<did>', views.HospitalDoctorDetailsView.as_view(),name='hospitaldoctordetail'),
     #Online Doctor Apis
-    path('onlinedoctorlist',views.APIOnlineDoctorListView.as_view(),name='onlinedoctorlist'),
-    path('onlinedoctordetail/<id>',views.APIOnlineDoctorListView.as_view(),name='onlinedoctordetail'),
+    path('onlinedoctors',views.APIOnlineDoctorListView.as_view(),name='onlinedoctorlist'),
+    path('onlinedoctors/<id>',views.APIOnlineDoctorListView.as_view(),name='onlinedoctordetail'),
     #Doctor Apis
-    path('doctorlist',views.APIDoctorListView.as_view(),name='doctorlist'),
-    path('doctordetail/<id>',views.APIDoctorListView.as_view(),name='doctordetail'),
+    path('doctors',views.HospitalDoctorDetailsView.as_view(),name='doctorlist'),
+    path('doctors/<id>',views.HospitalDoctorDetailsView.as_view(),name='doctordetail'),
     #HomeDoctor Apis
-    path('homevisitdoctorlist',views.APIHomevisitDoctorListView.as_view(),name='homevisitdoctorlist'),
-    path('homevisitdetail/<id>',views.APIHomevisitDoctorListView.as_view(),name='homevisitdetail'),
+    path('homevisitdoctors',views.APIHomevisitDoctorListView.as_view(),name='homevisitdoctorlist'),
+    path('homevisitdoctors/<id>',views.APIHomevisitDoctorListView.as_view(),name='homevisitdetail'),
     # path('doctorschedules/<id>/<did>/<sid>', views.HospitalDoctorDetailsView.as_view(),name='hospitaldoctordetail'),
 
     # Lab's APIs
-
-    path('labslist', views.ApiLabsListAndDetailsView.as_view(),name='labslist'),
-    path('labsdetials/<id>', views.ApiLabsListAndDetailsView.as_view(),name='labsdetials'),
+    path('labs', views.ApiLabsListAndDetailsView.as_view(),name='labslist'),
+    path('labs/<id>', views.ApiLabsListAndDetailsView.as_view(),name='labsdetials'),
   
     # Pharmacy's APIs
-
-    path('pharmacylist', views.ApiPharmacyListAndDetailsView.as_view(),name='pharmacylist'),
-    path('pharmacydetials/<id>', views.ApiPharmacyListAndDetailsView.as_view(),name='pharmacydetials'),
+    path('pharmacy', views.ApiPharmacyListAndDetailsView.as_view(),name='pharmacylist'),
+    path('pharmacy/<id>', views.ApiPharmacyListAndDetailsView.as_view(),name='pharmacydetials'),
 
     # List Of AppointmentBooked
     path('appointmentlist', views.AppointmentListView.as_view(),name='appointmentlist'),

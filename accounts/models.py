@@ -173,7 +173,7 @@ class Hospitals(models.Model):
     landline            =models.CharField(max_length=50,blank=True,null=True,default="")
     # SPECIALIST_TYPE_CHOICE=((1,"PHYSICIAN"),(2,"SURGEN"),(3,"CARDIOLOGY"),(4,"NEUROLOGISTS"))
     # specialist          =models.CharField(max_length=256,blank=True,null=True,default="",choices=SPECIALIST_TYPE_CHOICE)
-    specialist          =models.ForeignKey(Specailist,on_delete=models.CASCADE,blank=True,null=True)
+    specialist          =models.ForeignKey(Specailist, related_name="hospital",on_delete=models.CASCADE,blank=True,null=True)
     profile_pic         =models.FileField(upload_to="Hospital/profile/images",max_length=500,null=True,default="")
     is_appiled          =models.BooleanField(blank=True,null=True,default=False)
     is_verified         =models.BooleanField(blank=True,null=True,default=False)
