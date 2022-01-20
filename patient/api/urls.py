@@ -3,15 +3,15 @@ from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
   
 urlpatterns = [
-    #Hospital's APIs 
-    
+    #Hospital's APIs     
     path('hospitalslist', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalslist'),
     path('hospitalsdetials/<id>', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalsdetials'),
+    #Doctorhosptial Apis
     path('hospitaldoctordetail/<id>/<did>', views.HospitalDoctorDetailsView.as_view(),name='hospitaldoctordetail'),
-
+    #Online Doctor Apis
     path('onlinedoctorlist',views.APIOnlineDoctorListView.as_view(),name='onlinedoctorlist'),
     path('onlinedoctordetail/<id>',views.APIOnlineDoctorListView.as_view(),name='onlinedoctordetail'),
-  
+    #Doctor Apis
     path('doctorlist',views.APIDoctorListView.as_view(),name='doctorlist'),
     path('doctordetail/<id>',views.APIDoctorListView.as_view(),name='doctordetail'),
    
