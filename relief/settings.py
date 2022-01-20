@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'coreapi',
     'rest_framework_swagger',
+    'django_filters',
 
 ]
 
@@ -116,6 +117,12 @@ REST_FRAMWORK = {
         # 'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
     ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+
+        ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 'DEFAULT_PAGINATION_CLASS': 'apps.core.pagination.StandardResultsSetPagination',
     'PAGE_SIZE':1,
@@ -203,10 +210,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 
-MEDIA_URL = "/media/"
+MEDIA_URL = "media/"
 MEDIA_ROOT=os.path.join(BASE_DIR,"media")
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 STATIC_ROOT=os.path.join(BASE_DIR,"static")
 
 STATICFILES_DIRS = [

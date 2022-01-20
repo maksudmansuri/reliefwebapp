@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.fields import ReadOnlyField
 
 from accounts.models import  HospitalDoctors, Hospitals, Labs, Pharmacy, Specailist
+from front.models import RatingAndComments
 from hospital.models import AmbulanceDetails, HospitalMedias, HospitalRooms, ServiceAndCharges
 from patient import models
 from patient.models import Booking, LabTest, OrderBooking, Orders, PicturesForMedicine, Slot
@@ -16,8 +17,15 @@ class HomeScreenSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Specailist
 		fields = ['pk','specialist_name','hover_icon','specialist_icon']
-	
+
+
+class ratingSerilizers(serializers.ModelSerializer):
+	class Meta:
+		model = RatingAndComments
+		fields =['pk','patient','HLP','rating','comment'] 
+
 class HospitalHomeScreenSerializer(serializers.ModelSerializer):
+	comment_to = ratingSerilizers
 	class Meta:
 		model = Hospitals
 		fields = ['pk','hopital_name','address1','address2','city','pin_code','state','specialist','profile_pic']
@@ -36,6 +44,8 @@ class PharmaHomeScreenSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Pharmacy
 		fields = ['pk','pharmacy_name','address','city','pin_code','state','specialist','profile_pic']
+
+
 
 
 """ALl OLD Serializers"""
@@ -95,14 +105,6 @@ class HospitalsSerializer(serializers.ModelSerializer):
 		if "?" in new_url:
 			new_url = crs_imge.url[:crs_imge.url.rfind("?")]
 		return new_url
-
-class SpecialistSerializer(serializers.ModelSerializer):
-	hospital = HospitalsSerializer(many=True)
-	class Meta:
-		model = Specailist
-		fields = "__all__"
-	
-
 
 class DoctorDetailSerialzer(serializers.ModelSerializer):
 

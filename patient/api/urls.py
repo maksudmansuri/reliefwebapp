@@ -1,5 +1,5 @@
 from patient.api import views
-from django.urls import path,include
+from django.urls import path,include, re_path
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework import routers
 from . import views
@@ -14,7 +14,7 @@ urlpatterns = [
     path('homescreen', views.HomeScreenView.as_view(),name='homescreen'),
 
     #Hospital's APIs     
-    path('hospitalslist', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalslist'),
+    re_path('hospitalslist/', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalslist'),
     path('hospitalslist/<id>', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalsdetials'),
     #Doctorhosptial Apis
     # path('hospitaldoctordetail/<id>/<did>', views.HospitalDoctorDetailsView.as_view(),name='hospitaldoctordetail'),

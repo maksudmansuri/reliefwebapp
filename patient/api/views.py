@@ -6,6 +6,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django_filters.rest_framework import DjangoFilterBackend
 
 from accounts.models import HospitalDoctors, Hospitals, Labs, Pharmacy, Specailist
 from rest_framework.permissions import IsAuthenticated
@@ -14,10 +15,10 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter,OrderingFilter
 from patient.models import Orders
 
-from .serializers import AppointmentSerializer, HomeScreenSerializer, HospitalDoctorHomeScreenSerializer, HospitalDoctorSerialzer, HospitalDoctorsViewSerializer, HospitalHomeScreenSerializer, HospitalsSerializer, LabHomeScreenSerializer, LabsViewSerializer, OnlineDoctorserializer, PharmaHomeScreenSerializer, PharmacysViewSerializer, SpecialistSerializer
+from .serializers import AppointmentSerializer, HomeScreenSerializer, HospitalDoctorHomeScreenSerializer, HospitalDoctorSerialzer, HospitalDoctorsViewSerializer, HospitalHomeScreenSerializer, HospitalsSerializer, LabHomeScreenSerializer, LabsViewSerializer, OnlineDoctorserializer, PharmaHomeScreenSerializer, PharmacysViewSerializer
 
 class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 2
+    page_size = 3
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
@@ -62,7 +63,7 @@ class specialistViewSets(viewsets.ModelViewSet):
 	permission_classes = (IsAuthenticated,)
 	queryset = Specailist.objects.all().order_by('id')
 	pagination_class = StandardResultsSetPagination
-	serializer_class = SpecialistSerializer
+	serializer_class = HomeScreenSerializer
 
 class ApiHospitalListView(ListAPIView):
 	queryset = Hospitals.objects.all()
@@ -73,23 +74,38 @@ class ApiHospitalListView(ListAPIView):
 	filter_backends = (SearchFilter,OrderingFilter)
 	search_fields = ('hopital_name','specialist','city')
 
-class ApiHospitalListAndDetailsView(APIView):
+class ApiHospitalListAndDetailsView(ListAPIView):
 	permission_classes = (IsAuthenticated,)
 	authentication_classes = (TokenAuthentication,)
 	pagination_class = PageNumberPagination
-	filter_backends = (SearchFilter,OrderingFilter)
-	search_fields = ('hopital_name','specialist','city')
+	filter_backends = [SearchFilter,OrderingFilter]
+	filter_fields = (
+        'specialist',
+        'city',
+    )
+	search_fields = ['hopital_name','specialist','city']
+
+		# def get_queryset(self):
+		# 	"""
+		# 	Optionally restricts the returned purchases to a given user,
+		# 	by filtering against a `username` query parameter in the URL.
+		# 	"""
+		# 	queryset = Hospitals.objects.filter(is_verified = True,admin__is_active = True)
+		# 	spc = self.request.query_params.get('specialist')
+		# 	if spc is not None:
+		# 		queryset = queryset.filter(specialist=spc)
+		# 	return queryset
 
 	def get(self, request, id=None):
 		# print(request.data['id'])		
 		if id:
 			hospital = get_object_or_404(Hospitals,id = id,is_verified = True,admin__is_active = True)
-			serializer = HospitalDoctorsViewSerializer(hospital)
+			serializer = HospitalHomeScreenSerializer(hospital)
 			print(serializer.data)
 			return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 		hospital = Hospitals.objects.filter(is_verified = True,admin__is_active = True)
-		serializer = HospitalsSerializer(hospital, many=True)
+		serializer = HospitalHomeScreenSerializer(hospital, many=True)
 		return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 class HospitalDoctorDetailsView(APIView):
@@ -104,7 +120,7 @@ class HospitalDoctorDetailsView(APIView):
 			return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 		hospital = HospitalDoctors.objects.filter(is_verified=True,admin__is_active = True)
-		serializer = HospitalDoctorSerialzer(hospital, many=True)
+		serializer = HospitalDoctorHomeScreenSerializer(hospital, many=True)
 		return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 	
 class APIDoctorListView(APIView):
@@ -114,11 +130,11 @@ class APIDoctorListView(APIView):
 	def get(self,request,id=None,did=None):
 		if id:
 			hospitaldoctors = HospitalDoctors.objects.get(id=id,is_active=True)			
-			serializer = OnlineDoctorserializer(hospitaldoctors)
+			serializer = HospitalDoctorSerialzer(hospitaldoctors)
 			return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 		hospitaldoctors = HospitalDoctors.objects.filter(is_active=True)
-		serializer = OnlineDoctorserializer(hospitaldoctors, many=True)
+		serializer = HospitalDoctorHomeScreenSerializer(hospitaldoctors, many=True)
 		return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 class APIOnlineDoctorListView(APIView):
@@ -128,11 +144,11 @@ class APIOnlineDoctorListView(APIView):
 	def get(self,request,id=None,did=None):
 		if id:
 			hospitaldoctors = HospitalDoctors.objects.get(id=id,admin__is_active=True,is_virtual_available=True)
-			serializer = OnlineDoctorserializer(hospitaldoctors)
+			serializer = HospitalDoctorSerialzer(hospitaldoctors)
 			return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 		hospitaldoctors = HospitalDoctors.objects.filter(is_virtual_available=True,admin__is_active=True)
-		serializer = OnlineDoctorserializer(hospitaldoctors, many=True)
+		serializer = HospitalDoctorHomeScreenSerializer(hospitaldoctors, many=True)
 		return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 class APIHomevisitDoctorListView(APIView):
@@ -142,11 +158,11 @@ class APIHomevisitDoctorListView(APIView):
 	def get(self,request,id=None,did=None):
 		if id:
 			hospitaldoctors = HospitalDoctors.objects.get(id=id,admin__is_active=True,is_homevisit_available=True)			
-			serializer = OnlineDoctorserializer(hospitaldoctors)
+			serializer = HospitalDoctorSerialzer(hospitaldoctors)
 			return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 		hospitaldoctors = HospitalDoctors.objects.filter(is_homevisit_available=True,admin__is_active=True)
-		serializer = OnlineDoctorserializer(hospitaldoctors, many=True)
+		serializer = HospitalDoctorHomeScreenSerializer(hospitaldoctors, many=True)
 		return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 
@@ -168,7 +184,7 @@ class ApiLabsListAndDetailsView(APIView):
 			return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 		labs = Labs.objects.all()
-		serializer = LabsViewSerializer(labs, many=True)
+		serializer = LabHomeScreenSerializer(labs, many=True)
 		return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 """
@@ -189,7 +205,7 @@ class ApiPharmacyListAndDetailsView(APIView):
 			return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 		pharmacy = Pharmacy.objects.all()
-		serializer = PharmacysViewSerializer(pharmacy, many=True)
+		serializer = PharmaHomeScreenSerializer(pharmacy, many=True)
 		return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 """
