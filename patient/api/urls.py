@@ -14,7 +14,7 @@ urlpatterns = [
     #Doctor Apis
     path('doctorlist',views.APIDoctorListView.as_view(),name='doctorlist'),
     path('doctordetail/<id>',views.APIDoctorListView.as_view(),name='doctordetail'),
-   
+    #HomeDoctor Apis
     path('homevisitdoctorlist',views.APIHomevisitDoctorListView.as_view(),name='homevisitdoctorlist'),
     path('homevisitdetail/<id>',views.APIHomevisitDoctorListView.as_view(),name='homevisitdetail'),
     # path('doctorschedules/<id>/<did>/<sid>', views.HospitalDoctorDetailsView.as_view(),name='hospitaldoctordetail'),
