@@ -24,7 +24,7 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    {% if request.user.is_verified %}
+                    {% if request.user.is_verified == "Yes" %}
                     {% url 'manage_appointment' as manage_appointment %}
                     <li {% if request.path == manage_appointment %} class="active" {% endif %} >
                         <a href="{% url 'manage_appointment' %}">
