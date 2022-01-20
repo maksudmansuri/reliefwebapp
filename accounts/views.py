@@ -215,7 +215,7 @@ def dologin(request):
                 # request.session['logged in']=True
                 if user.user_type=="1":
                     if next:
-                        return redirect(next)
+                        return HttpResponseRedirect(next)
                     # elif user.profile_pic:
                     #     return HttpResponseRedirect(reverse('profile_picUpload'))
                     else:
@@ -223,14 +223,14 @@ def dologin(request):
                         # return HttpResponseRedirect(reverse('admin:index'))
                 elif user.user_type=="2":
                     if next:
-                        return redirect(next)
+                        return HttpResponseRedirect(next)
                     # elif user.profile_pic:
                     #     return HttpResponseRedirect(reverse('profile_picUpload'))
                     else: 
                         return HttpResponseRedirect(reverse('hospital_dashboard'))
                 elif user.user_type=="3": 
                     if next:
-                        return redirect(next)
+                        return HttpResponseRedirect(next)
                     # elif user.profile_pic:
                     #     return HttpResponseRedirect(reverse('profile_picUpload'))
                     else:
@@ -238,7 +238,7 @@ def dologin(request):
                 elif user.user_type=="4":
                     print(next)
                     if next:
-                        return redirect(next)
+                        return HttpResponseRedirect(request.POST.get('next'))
                     # elif user.profile_pic:
                     #     return HttpResponseRedirect(reverse('profile_picUpload'))
                     # print("hello",user.profile_pic,user.first_name,user.patients.address)
@@ -252,14 +252,14 @@ def dologin(request):
                         return HttpResponseRedirect(reverse('front_home'))
                 elif user.user_type=="5":
                     if next:
-                        return redirect(next)
+                        return HttpResponseRedirect(next)
                     # elif user.profile_pic:
                     #     return HttpResponseRedirect(reverse('profile_picUpload'))
                     else:
                         return HttpResponseRedirect(reverse('lab_home'))
                 elif user.user_type=="6":
                     if next:
-                        return redirect(next)
+                        return HttpResponseRedirect(next)
                     # elif user.profile_pic:
                     #     return HttpResponseRedirect(reverse('profile_picUpload'))
                     else:

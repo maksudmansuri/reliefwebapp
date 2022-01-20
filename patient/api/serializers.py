@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.fields import ReadOnlyField
 
-from accounts.models import  DoctorForHospital, HospitalDoctors, Hospitals, Labs
-from hospital.models import HospitalStaffDoctors, ServiceAndCharges
+from accounts.models import  HospitalDoctors, Hospitals, Labs, Pharmacy
+from hospital.models import ServiceAndCharges
 from patient import models
 from patient.models import Booking, LabTest, Orders, PicturesForMedicine, Slot
 
@@ -39,14 +39,14 @@ class DoctorDetailSerialzer(serializers.ModelSerializer):
 class HospitalDoctorSerialzer(serializers.ModelSerializer):
 
 	class Meta:
-		model = HospitalStaffDoctors
+		model = HospitalDoctors
 		fields = ['id','email','ssn_id','opd_charges','home_charges','emergency_charges','joindate','is_virtual_available','is_online','is_active','created_at','updated_at']
 		
-	def to_representation(self, instance):
-		response = super().to_representation(instance)
-		print(instance)
-		response['doctor_extra'] = DoctorDetailSerialzer(instance.doctor).data
-		return response
+	# def to_representation(self, instance):
+	# 	response = super().to_representation(instance)
+	# 	print(instance)
+	# 	response['doctor_extra'] = DoctorDetailSerialzer(instance.doctor).data
+	# 	return response
 
 class HospitalDoctorsViewSerializer(serializers.ModelSerializer):
 	hospitalstaffdoctors = HospitalDoctorSerialzer(many=True)	
@@ -55,11 +55,24 @@ class HospitalDoctorsViewSerializer(serializers.ModelSerializer):
 		model = Hospitals
 		fields = ['hopital_name','about','address1','address2','city','pin_code','state','country','landline','specialist','profile_pic','registration_proof','establishment_year','registration_number','alternate_mobile','firm','website','linkedin','facebook','instagram','twitter','created_at','updated_at','hospitalstaffdoctors']
 
-class OnlineDoctorserializer(serializers.ModelSerializer):
+# class DoctorsViewSerializer(serializers.ModelSerializer):
+	
+# 	class Meta:
+# 		model = HospitalStaffDoctors
+# 		fields = '__all__'
 
+class OnlineDoctorserializer(serializers.ModelSerializer):
+	
 	class Meta:
-		model = HospitalStaffDoctors
+		model = HospitalDoctors
 		fields = '__all__'
+	
+	# def to_representation(self, instance):
+	# 	response = super().to_representation(instance)
+	# 	print(instance)
+	# 	response['hospitaldetails'] = DoctorsViewSerializer(instance.hospitalstaffdoctors).data
+	# 	return response
+
 
 """
 Appointment Serializers
@@ -142,7 +155,7 @@ Pharmacy serializers
 class PharmacysViewSerializer(serializers.ModelSerializer):
 	
 	class Meta:
-		model = Labs
+		model = Pharmacy
 		fields = '__all__'
 	
 

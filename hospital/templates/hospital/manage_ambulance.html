@@ -150,7 +150,7 @@ span.a {
                                 <select class="form-select" aria-label="Default select example" name="doctor">
                                 <option value="" selected>Select Doctor With Ambulance</option>
                                 {% for doctor in doctors %}
-                                    <option value="{{doctor.id}}">{{doctor.doctor.name_title}} {{doctor.doctor.fisrt_name}} {{doctor.doctor.last_name}}</option>
+                                    <option value="{{doctor.id}}">{{doctor.name_title}} {{doctor.fisrt_name}} {{doctor.last_name}}</option>
                                 {% endfor %}
                                 </select>
                             </div>
@@ -231,7 +231,7 @@ span.a {
                                
                                     <option value="" {% if ambulance.doctor == "" %}selected{% endif %}selected>Select Doctor With Ambulance</option>
                                     {% for doctor in doctors %}
-                                        <option value="{{doctor.id}}" {% if ambulance.doctor == doctor %}selected{% endif %}>{{doctor.doctor.name_title}} {{doctor.doctor.fisrt_name}} {{doctor.doctor.last_name}}</option>
+                                        <option value="{{doctor.id}}" {% if ambulance.doctor == doctor %}selected{% endif %}>{{doctor.name_title}} {{doctor.fisrt_name}} {{doctor.last_name}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -320,8 +320,7 @@ span.a {
 {% endblock modal_fade %}
 
 {% block custom_js %}
-<script>
-    // project data table
+<script>    // project data table
     
     //submit form for add staff
     $(".submit_btn").click(function(){
@@ -343,10 +342,16 @@ span.a {
         //update staff from edit page fade
        
 
-    })
-   
-
-
-    
+    })   
+    $(document).ready(function() {
+        $('#myProjectTable')
+        .addClass( 'nowrap' )
+        .dataTable( {
+            responsive: true,
+            columnDefs: [
+                { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+    }); 
 </script>
 {% endblock custom_js %}

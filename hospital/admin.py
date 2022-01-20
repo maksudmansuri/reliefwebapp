@@ -1,12 +1,11 @@
 from django.contrib import admin
 
-from hospital.models import AmbulanceDetails, Blog, DoctorSchedule, HospitalStaffDoctorSchedual, HospitalStaffDoctors, HospitalStaffs,DepartmentPhones,Departments,RoomOrBadTypeandRates,ContactPerson,HospitalRooms,Insurances,HospitalMedias,HospitalTreatments,HospitalsPatients,HospitalServices,ServiceAndCharges, TimeSlot
+from hospital.models import AmbulanceDetails, Blog, DoctorSchedule, HospitalStaffDoctorSchedual, HospitalStaffs,DepartmentPhones,Departments,RoomOrBadTypeandRates,ContactPerson,HospitalRooms,Insurances,HospitalMedias,HospitalTreatments,HospitalsPatients,HospitalServices,ServiceAndCharges, TimeSlot
 
 # Register your models here.
  
 
 admin.site.register(HospitalStaffs)
-admin.site.register(HospitalStaffDoctors)
 admin.site.register(HospitalStaffDoctorSchedual)
 admin.site.register(Departments)
 admin.site.register(RoomOrBadTypeandRates)

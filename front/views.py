@@ -15,14 +15,14 @@ from chat.models import Notification
 from accounts.models import AdminHOD, CustomUser, HospitalDoctors, Hospitals, Labs, Patients, Pharmacy, Specailist
 from accounts.views import send_otp
 from front.models import RatingAndComments
-from hospital.models import AmbulanceDetails, Blog, DoctorSchedule, HospitalMedias, HospitalRooms, HospitalStaffDoctors, ServiceAndCharges
+from hospital.models import AmbulanceDetails, Blog, DoctorSchedule, HospitalMedias, HospitalRooms, Insurances, ServiceAndCharges
 from django.http import JsonResponse
 from django.db import transaction
 from datetime import datetime,timedelta
 from django.db.models import Avg, Max, Min, Sum
 from lab.models import HomeVisitCharges, LabSchedule, Medias
-from patient.models import ForSome, NewLabTest, OrderBooking, Temp, phoneOPTforoders
-from radmin.models import DonorRequest
+from patient.models import ForSome, NewLabTest, OrderBooking, Temp, TreatmentReliefPetient, phoneOPTforoders
+from radmin.models import DonorRequest, HospitalDisease
 # Create your views here.
   
 class FrontView(View):
@@ -40,7 +40,7 @@ class FrontView(View):
             else:    
                 rating = rating / total_cmns
             hospitals_list.append({'hospital':hospital,'rating':rating,'total_cmns':total_cmns})
-        doctors=HospitalDoctors.objects.filter(admin__is_active=True,is_verified = True,is_deactive=False,is_active=True)
+        doctors=HospitalDoctors.objects.filter(admin__is_active=True,is_verified = True,is_deactive=False)
         #Doctor with ratings
         doctor_list = []
         for doctor in doctors:
@@ -334,10 +334,13 @@ class SearchHospitalView(ListView):
             ambulances = AmbulanceDetails.objects.filter(hospital=hospital,is_active=True).count()
             total_cmns = RatingAndComments.objects.filter(HLP =hospital.admin).count()
             cmnss = RatingAndComments.objects.filter(HLP =hospital.admin)
-            rating = 0 
+            rating = 0
             for cmn in cmnss: 
                 rating = rating + cmn.rating
-            rating = rating / total_cmns
+            if total_cmns == 0:
+                rating = rating /1
+            else:    
+                rating = rating / total_cmns
             hospital_media_list.append({'hospital':hospital,'medias':medias,'amount':amount,'rooms':rooms,'ambulances':ambulances,'room_max_price':room_max_price,'room_min_price':room_min_price,'rating':rating,'total_cmns':total_cmns})
         print(hospital_media_list)        
         return hospital_media_list
@@ -424,13 +427,32 @@ class SearcCathDoctorView(ListView):
         return context
 
 """Details View Hospital"""
-   
+def UserVerified(request):
+    if request.user.patients.is_verified == 0:
+        return True
+    else:
+        return False 
+        
 class HospitalDetailsViews(DetailView):
     def get(self, request, *args, **kwargs):
         hosital_id=kwargs['id'] 
-        hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
+        if request.user.is_authenticated:
+            a = UserVerified(request)
+            if a:
+                messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
+                return HttpResponseRedirect(reverse("patient_update")) 
+        hospital = 0
+        try:
+            if request.user.user_type == "1" or request.user.user_type == "2":
+                hospital = get_object_or_404(Hospitals,id=hosital_id)
+            else:
+                hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
+        except:
+            hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
+        # else:
+        #     hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
         medias = HospitalMedias.objects.filter(is_active=True,hospital=hospital)  
-        doctors = HospitalStaffDoctors.objects.filter(is_active=True,hospital=hospital)
+        doctors = HospitalDoctors.objects.filter(is_active=True,hospital=hospital)
         A_rooms = HospitalRooms.objects.filter(hospital=hospital,is_active=True,occupied=False).count()
         # O_rooms = HospitalRooms.objects.filter(hospital=hospital,is_active=True,occupied=True).count()
         T_rooms = HospitalRooms.objects.filter(hospital=hospital,is_active=True).count()
@@ -438,46 +460,53 @@ class HospitalDetailsViews(DetailView):
         A_ambulances = AmbulanceDetails.objects.filter(hospital=hospital,is_active=True,occupied=False).count()
         T_ambulances = AmbulanceDetails.objects.filter(hospital=hospital,is_active=True).count()
 
-        cmns = RatingAndComments.objects.filter(HLP =hospital.admin)[0:5]
+        T_doctor = HospitalDoctors.objects.filter(hospital=hospital,is_active=True).count()
+
+        T_patient = OrderBooking.objects.filter(HLP__hospitals=hospital).count()
         
-        total_cmns = RatingAndComments.objects.filter(HLP =hospital.admin).count()
-        cmnss = RatingAndComments.objects.filter(HLP =hospital.admin)
+        T_diseases = HospitalDisease.objects.filter(hospital=hospital).count()
+        diseases = HospitalDisease.objects.filter(hospital=hospital)
+        
+        insurances = Insurances.objects.filter(hospital=hospital)
+        cmns = RatingAndComments.objects.filter(HLP__hospitals =hospital)[0:5]
+
+        total_cmns = RatingAndComments.objects.filter(HLP__hospitals =hospital).count()
+        cmnss = RatingAndComments.objects.filter(HLP__hospitals =hospital)
         rating = 0 
         for cmn in cmnss:
             rating = rating + cmn.rating
-
        
         if total_cmns > 0: 
             rating = rating / total_cmns 
 
         #rating for bar 
-        cmn_5 = RatingAndComments.objects.filter(HLP =hospital.admin,rating=5).count()
+        cmn_5 = RatingAndComments.objects.filter(HLP__hospitals =hospital,rating=5).count()
         cmn_5_per = 0
         if total_cmns > 0: 
             cmn_5_per = cmn_5 * 100 / total_cmns
         print(cmn_5_per)
-        cmn_4 = RatingAndComments.objects.filter(HLP =hospital.admin,rating=4).count()
+        cmn_4 = RatingAndComments.objects.filter(HLP__hospitals =hospital,rating=4).count()
         cmn_4_per = 0
         if total_cmns > 0: 
             cmn_4_per = cmn_4 * 100 / total_cmns
         print(cmn_4_per)
-        cmn_3 = RatingAndComments.objects.filter(HLP =hospital.admin,rating=3).count()
+        cmn_3 = RatingAndComments.objects.filter(HLP__hospitals =hospital,rating=3).count()
         cmn_3_per = 0
         if total_cmns > 0: 
             cmn_3_per = cmn_3 * 100 / total_cmns
         print(cmn_3_per)
-        cmn_2 = RatingAndComments.objects.filter(HLP =hospital.admin,rating=2).count()
+        cmn_2 = RatingAndComments.objects.filter(HLP__hospitals =hospital,rating=2).count()
         cmn_2_per = 0
         if total_cmns > 0: 
             cmn_2_per = cmn_2 * 100 / total_cmns
         print(cmn_2_per)
-        cmn_1 = RatingAndComments.objects.filter(HLP =hospital.admin,rating=1).count()
+        cmn_1 = RatingAndComments.objects.filter(HLP__hospitals =hospital,rating=1).count()
         cmn_1_per = 0
         if total_cmns > 0: 
             cmn_1_per = cmn_1 * 100 / total_cmns
         print(cmn_1_per)
 
-        param = {'hospital':hospital,'medias':medias,'doctors':doctors,'A_rooms':A_rooms,'T_rooms':T_rooms,'A_ambulances':A_ambulances,'T_ambulances':T_ambulances,'cmns':cmns,'total_cmns':total_cmns,'rating':rating,'cmn_5':cmn_5,'cmn_1':cmn_1,'cmn_2':cmn_2,'cmn_3':cmn_3,'cmn_4':cmn_4,'cmn_1_per':cmn_1_per,'cmn_2_per':cmn_2_per,'cmn_3_per':cmn_3_per,'cmn_4_per':cmn_4_per,'cmn_5_per':cmn_5_per,}  
+        param = {'hospital':hospital,'medias':medias,'doctors':doctors,'A_rooms':A_rooms,'T_rooms':T_rooms,'A_ambulances':A_ambulances,'T_ambulances':T_ambulances,'cmns':cmns,'total_cmns':total_cmns,'rating':rating,'cmn_5':cmn_5,'cmn_1':cmn_1,'cmn_2':cmn_2,'cmn_3':cmn_3,'cmn_4':cmn_4,'cmn_1_per':cmn_1_per,'cmn_2_per':cmn_2_per,'cmn_3_per':cmn_3_per,'cmn_4_per':cmn_4_per,'cmn_5_per':cmn_5_per,'T_doctor':T_doctor,'T_patient':T_patient,'T_diseases':T_diseases,'diseases':diseases,'insurances':insurances}  
 
         return render(request,"front/new_hospital_details.html",param)
 
@@ -486,7 +515,7 @@ class HospitalComments(views.SuccessMessageMixin,View):
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
-    def post(self,request, *args, **kwargs):  
+    def post(self,request, *args, **kwargs): 
         patient = request.user
         HLP = request.POST.get('HLP')
         pagename = request.POST.get('pagename')
@@ -494,6 +523,11 @@ class HospitalComments(views.SuccessMessageMixin,View):
         comment = request.POST.get('comment')
         hlp = get_object_or_404(CustomUser,id=HLP)
         print(patient,HLP,rating,comment)
+        if request.user.is_authenticated:
+            a = UserVerified(request)
+            if a:
+                messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
+                return HttpResponseRedirect(reverse("patient_update")) 
         ratingandcommect = RatingAndComments(patient=patient,HLP=hlp,rating=rating,comment=comment)
         ratingandcommect.save() 
         # messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!"
@@ -532,6 +566,11 @@ class DoctorsBookAppoinmentViews(View):
     def get(self, request, *args, **kwargs):
         hosital_id=kwargs['id']
         hositaldcotorid_id=kwargs['did']
+        if request.user.is_authenticated:
+            a = UserVerified(request)
+            if a:
+                messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
+                return HttpResponseRedirect(reverse("patient_update")) 
         hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
         doctor = get_object_or_404(HospitalDoctors,is_active=True,id=hositaldcotorid_id)
         if request.user.user_type == "4":
@@ -587,6 +626,11 @@ class DoctorDetailsViews(View):
         return super().dispatch(*args, **kwargs)
     def get(self, request, *args, **kwargs):
         doctor_id=kwargs['id']
+        if request.user.is_authenticated:
+            a = UserVerified(request)
+            if a:
+                messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
+                return HttpResponseRedirect(reverse("patient_update")) 
         doctor = get_object_or_404(HospitalDoctors,is_active=True,id=doctor_id)
         # if request.user.user_type == "4":
         doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,is_active=True)
@@ -670,6 +714,11 @@ class PharmacyDetailsViews(DetailView):
     def get(self, request, *args, **kwargs):
         pharmacy_id=kwargs['id']
         # if request.user.user_type == "4": 
+        if request.user.is_authenticated:
+            a = UserVerified(request)
+            if a:
+                messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
+                return HttpResponseRedirect(reverse("patient_update")) 
         pharmacy = get_object_or_404(Pharmacy,is_verified=True,is_deactive=False,id=pharmacy_id)
         medias = Medias.objects.filter(is_active=True,user=pharmacy.admin)  
         cmns = RatingAndComments.objects.filter(HLP =pharmacy.admin)[0:5]
@@ -719,6 +768,11 @@ class PharmacyDetailsViews(DetailView):
 class LabDetailsViews(DetailView):
     def get(self, request, *args, **kwargs):
         lab_id=kwargs['id'] 
+        if request.user.is_authenticated:
+            a = UserVerified(request)
+            if a:
+                messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
+                return HttpResponseRedirect(reverse("patient_update")) 
         lab = get_object_or_404(Labs,is_verified=True,is_deactive=False,id=lab_id)
         medias = Medias.objects.filter(is_active=True,user=lab.admin)  
         services = ServiceAndCharges.objects.filter(user__labs = lab,is_active = True)
@@ -773,6 +827,11 @@ class LabAppoinmentViews(View):
         return super().dispatch(*args, **kwargs)
     def get(self, request, *args, **kwargs):
         lab_id=kwargs['id'] 
+        if request.user.is_authenticated:
+            a = UserVerified(request)
+            if a:
+                messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
+                return HttpResponseRedirect(reverse("patient_update"))  
         lab = get_object_or_404(Labs,is_verified=True,is_deactive=False,id=lab_id)
         medias = Medias.objects.filter(is_active=True,user=lab.admin)  
         services = ServiceAndCharges.objects.filter(user__labs = lab,is_active = True) 
@@ -827,7 +886,11 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
             prescription = request.FILES.get('prescription')
             now = datetime.now()
             now5 = now + timedelta(minutes=5)
-            
+            if request.user.is_authenticated:
+                a = UserVerified(request)
+                if a:
+                    messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
+                    return HttpResponseRedirect(reverse("patient_update")) 
             with transaction.atomic():
                 booking = OrderBooking(patient = request.user,applied_date=date,is_applied=True,is_active=True,status="BOOKED")
                 booking.reject_within_5__lt = now            
@@ -940,6 +1003,11 @@ class InvoiceViews(View):
         id=kwargs['id'] 
         booking = get_object_or_404(OrderBooking,id=id)          
         book_for=booking.booking_for
+        if request.user.is_authenticated:
+            a = UserVerified(request)
+            if a:
+                messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
+                return HttpResponseRedirect(reverse("patient_update"))
         if book_for == "H":
             param ={'booking':booking} 
         if book_for == "L":
@@ -952,6 +1020,11 @@ class InvoiceViews(View):
 """Review delete for all"""
 def deleteReviews(request,id):
     try:
+        if request.user.is_authenticated:
+            a = UserVerified(request)
+            if a:
+                messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
+                return HttpResponseRedirect(reverse("patient_update"))
         if request.user.user_type == "4" or request.user.is_superuser:
             rev = get_object_or_404(RatingAndComments,id=id,patient=request.user)
             rev.delete()
@@ -975,6 +1048,11 @@ def deleteReviews(request,id):
 
 class BLoodDonorList(View):
     def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            a = UserVerified(request)
+            if a:
+                messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
+                return HttpResponseRedirect(reverse("patient_update"))
         last_three_month = datetime.today() - timedelta(days=90)
         patients = Patients.objects.filter(admin__is_active=True,blood_donation =True,blood_docation_date__lte = last_three_month)
         print(patients)
@@ -984,6 +1062,18 @@ class BloodRequestView(View):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+    
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            a = UserVerified(request)
+            if a:
+                messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
+                return HttpResponseRedirect(reverse("patient_update"))
+        last_three_month = datetime.today() - timedelta(days=90)
+        patients = Patients.objects.filter(admin__is_active=True,blood_donation =True,blood_docation_date__lte = last_three_month)
+        print(patients)
+        return render(request,"front/blood-donor-search.html",{'patients':patients})
+    
     def post(self, request, *args, **kwargs):
         reqestpersoned = request.user        
         id = request.POST.get('forpersoned')
@@ -998,10 +1088,17 @@ class BloodRequestView(View):
             messages.add_message(request,messages.ERROR,"Somethingwent wrong")
             return HttpResponseRedirect(reverse("search_blood_donor")) 
 
-class DonorRequestDone(DetailView):
+class DonorRequestDone(DetailView): 
     def get(self, request, *args, **kwargs):
         lab_id=kwargs['id'] 
+        if request.user.is_authenticated:
+            a = UserVerified(request)
+            if a:
+                messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
+                return HttpResponseRedirect(reverse("patient_update"))
         donorrequest = get_object_or_404(DonorRequest,id=lab_id)
         donorrequest.is_active=True
         donorrequest.save()
         return render(request,"front/donor-success.html",{"donorrequest":donorrequest})
+
+

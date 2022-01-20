@@ -22,7 +22,7 @@ from rest_framework.decorators import api_view,permission_classes,authentication
 
 from rest_framework import status,permissions
 
-from accounts.models import AdminHOD, CustomUser, DoctorForHospital, Hospitals, Labs,Patients, Pharmacy,PhoneOTP
+from accounts.models import AdminHOD, CustomUser, HospitalDoctors, Hospitals, Labs,Patients, Pharmacy,PhoneOTP
 from accounts.EmailBackEnd import EmailBackEnd
 
 from rest_framework.authentication import TokenAuthentication,SessionAuthentication, BasicAuthentication
@@ -333,7 +333,7 @@ class ProfileProperpertiesView(APIView):
 				account = Hospitals.objects.get(admin=request.user)
 				print("hospital")
 			if request.user.user_type == "3":
-				account = DoctorForHospital.objects.get(admin=request.user)
+				account = HospitalDoctors.objects.get(admin=request.user)
 				print("doctor")
 			if request.user.user_type == "4":
 				account = Patients.objects.get(admin=request.user)
@@ -374,7 +374,7 @@ class ProfileProperpertiesUpdateView(UpdateAPIView):
 			if request.user.user_type == "2":
 				account = Hospitals.objects.get(admin=request.user)
 			if request.user.user_type == "3":
-				account = DoctorForHospital.objects.get(admin=request.user)
+				account = HospitalDoctors.objects.get(admin=request.user)
 			if request.user.user_type == "4":
 				account = Patients.objects.get(admin=request.user)
 			if request.user.user_type == "5":

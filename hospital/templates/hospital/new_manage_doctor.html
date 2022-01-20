@@ -29,10 +29,10 @@
              <div class="col-md-6 col-xl-4 col-sm-12">
                  <div class="col">
                      <div class="card h-100">
-                         <img class="card-img-top" src="{{doctor.doctor.profile_pic}}" alt="" height="200" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" />
+                         <img class="card-img-top" src="{{doctor.profile_pic}}" alt="" height="200" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" />
                          <div class="card-body">
-                             <h5 class="card-title">Dr. {{doctor.doctor.fisrt_name}} {{doctor.doctor.last_name}}</h5>
-                             <p class="card-text">{{doctor.doctor.about|truncatechars:20}}</p>
+                             <h5 class="card-title">Dr. {{doctor.fisrt_name}} {{doctor.last_name}}</h5>
+                             <p class="card-text">{{doctor.about|truncatechars:20}}</p>
 
                              <div class="btn-group">
                                  <button type="button" class="btn btn-primary">Action</button>
@@ -42,9 +42,9 @@
                                  </button>
                                  <ul class="dropdown-menu border-0 shadow py-3 px-2">
                                      <li><a class="dropdown-item py-2 rounded" target="blank"
-                                             href="{% url 'doctor_details' doctor.doctor.id %}">View Schedule</a></li>
+                                             href="{% url 'doctor_details' doctor.id %}">View Profile</a></li>
                                      <li><a class="dropdown-item py-2 rounded"
-                                             href="{% url 'manage_doctorschedule' doctor.doctor.id %}">View Schedule</a></li>
+                                             href="{% url 'manage_doctorschedule' doctor.id %}">View Schedule</a></li>
                                      <li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal"
                                              data-bs-target="#editDoctor{{doctor.id}}">Edit</a></li>
                                      {% if doctor.is_active %}
@@ -138,7 +138,7 @@
                                                      <div class="col-md-4 profile-av mx-auto text-center w220">
                                                          <label for="profile_pic" class="form-label">Profile Pic</label>
                                                          <br>
-                                                         <img alt="Avatar" src="{{doctor.doctor.profile_pic}}"
+                                                         <img alt="Avatar" src="{{doctor.profile_pic}}"
                                                              onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                                                              class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
                                                      </div>
@@ -146,31 +146,31 @@
                                                          <label for="profile_pic" class="form-label">Select Profile
                                                              Picture *</label>
                                                          <input type="file" class="form-control select_media"
-                                                             name="profile_pic" value="{{doctor.doctor.profile_pic}}">
+                                                             name="profile_pic" value="{{doctor.profile_pic}}">
                                                      </div>
                                                      <div class="col-md-6">
                                                          <label for="fisrt_name" class="form-label">First Name</label>
                                                          <input type="text" class="form-control" id="fisrt_name"
-                                                             name="fisrt_name" value="{{doctor.doctor.fisrt_name}}"
+                                                             name="fisrt_name" value="{{doctor.fisrt_name}}"
                                                              required>
                                                      </div>
                                                      <div class="col-md-6">
                                                          <label for="last_name" class="form-label">Last Name</label>
                                                          <input type="text" class="form-control" id="last_name"
-                                                             name="last_name" value="{{doctor.doctor.last_name}}"
+                                                             name="last_name" value="{{doctor.last_name}}"
                                                              required>
                                                      </div>
                                                      <div class="col-md-6">
                                                          <label for="phone" class="form-label">Phone Number</label>
                                                          <input type="text" class="form-control" id="phone" name="phone"
-                                                             value="{{doctor.doctor.phone}}" required disabled>
+                                                             value="{{doctor.phone}}" required disabled>
                                                      </div>
                                                      <div class="col-md-6">
                                                          <label for="alternate_mobile" class="form-label">Alternate
                                                              Number</label>
                                                          <input type="text" class="form-control" id="alternate_mobile"
                                                              name="alternate_mobile"
-                                                             value="{{doctor.doctor.alternate_mobile}}">
+                                                             value="{{doctor.alternate_mobile}}">
                                                      </div>
                                                      <div class="col-md-6">
                                                          <label for="ssn_id" class="form-label">SSN ID </label>
@@ -180,31 +180,31 @@
                                                      <div class="col-md-6">
                                                          <label for="address" class="form-label">Address</label>
                                                          <input type="text" class="form-control" id="address"
-                                                             name="address" value="{{doctor.doctor.address}}">
+                                                             name="address" value="{{doctor.address}}">
                                                      </div>
                                                      <div class="col-md-6">
                                                          <label for="city" class="form-label">State</label>
                                                          <select onchange="print_city('state', this.selectedIndex);"
                                                              id="sts" name="state" class="form-control"
-                                                             value="{{doctor.doctor.state}}">
-                                                             {% if doctor.doctor.state %}
-                                                             <option value="{{doctor.doctor.state}}" selected>
-                                                                 {{doctor.doctor.state}}</option>
+                                                             value="{{doctor.state}}">
+                                                             {% if doctor.state %}
+                                                             <option value="{{doctor.state}}" selected>
+                                                                 {{doctor.state}}</option>
                                                              {% endif %}
                                                          </select>
                                                      </div>
                                                      <div class="col-md-6">
                                                          <label for="state" class="form-label">City</label>
                                                          <select id="state" class="form-control" name="city" required
-                                                             value="{{doctor.doctor.city}}">
-                                                             {% if doctor.doctor.city %}
-                                                             <option value="{{doctor.doctor.city}}" selected>
-                                                                 {{doctor.doctor.city}}</option>
+                                                             value="{{doctor.city}}">
+                                                             {% if doctor.city %}
+                                                             <option value="{{doctor.city}}" selected>
+                                                                 {{doctor.city}}</option>
                                                              {% endif %}
                                                          </select>
                                                          <script>
                                                              document.getElementById('sts').value =
-                                                                 "{{doctor.doctor.state}}";
+                                                                 "{{doctor.state}}";
                                                          </script>
                                                          <script language="javascript">
                                                              print_state("sts");
@@ -213,22 +213,22 @@
                                                      <div class="col-md-6">
                                                          <label for="country" class="form-label">Country</label>
                                                          <input type="text" class="form-control" id="country"
-                                                             name="country" value="{{doctor.doctor.country}}">
+                                                             name="country" value="{{doctor.country}}">
                                                      </div>
                                                      <div class="col-md-6">
                                                          <label for="zip_Code" class="form-label">Zip Code</label>
                                                          <input type="text" class="form-control" id="zip_Code"
-                                                             name="zip_Code" value="{{doctor.doctor.zip_Code}}">
+                                                             name="zip_Code" value="{{doctor.zip_Code}}">
                                                      </div>
                                                      <div class="col-md-6">
                                                          <label for="zip_Code" class="form-label">Date Of Birth</label>
                                                          <input type="date" class="form-control" id="dob" name="dob"
-                                                             value="{{doctor.doctor.dob|date:'Y-m-d'}}">
+                                                             value="{{doctor.dob|date:'Y-m-d'}}">
                                                      </div>
                                                      <div class="col-md-6">
                                                          <label for="email" class="form-label">Email Address</label>
                                                          <input type="email" class="form-control" name="email"
-                                                             value="{{doctor.doctor.admin.email}}" disabled>
+                                                             value="{{doctor.admin.email}}" disabled>
                                                      </div>
                                                      <div class="col-md-6">
                                                          <label for="joindate" class="form-label">Join Date</label>
@@ -266,7 +266,7 @@
                                                                  <div class="form-check">
                                                                      <input class="form-check-input" type="radio"
                                                                          name="gender" id="gender" value="Male"
-                                                                         {% if doctor.doctor.gender == "Male" %}checked{% endif %}>
+                                                                         {% if doctor.gender == "Male" %}checked{% endif %}>
                                                                      <label class="form-check-label" for="gender">
                                                                          Male
                                                                      </label>
@@ -276,7 +276,7 @@
                                                                  <div class="form-check">
                                                                      <input class="form-check-input" type="radio"
                                                                          name="gender" id="gender" value="Female"
-                                                                         {% if doctor.doctor.gender == "Female" %}checked{% endif %}>
+                                                                         {% if doctor.gender == "Female" %}checked{% endif %}>
                                                                      <label class="form-check-label" for="gender">
                                                                          Female
                                                                      </label>
@@ -291,7 +291,7 @@
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="is_homevisit_available" id="is_homevisit_available"
-                                                                        value="Yes" {% if doctor.doctor.is_homevisit_available == 1 %}checked{% endif %}>
+                                                                        value="Yes" {% if doctor.is_homevisit_available == 1 %}checked{% endif %}>
                                                                     <label class="form-check-label" for="is_homevisit_available">
                                                                         Yes
                                                                     </label>
@@ -301,7 +301,7 @@
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="is_homevisit_available" id="is_homevisit_available"
-                                                                        value="No" {% if doctor.doctor.is_homevisit_available == 0 %}checked{% endif %}>
+                                                                        value="No" {% if doctor.is_homevisit_available == 0 %}checked{% endif %}>
                                                                     <label class="form-check-label" for="is_homevisit_available">
                                                                         No
                                                                     </label>
@@ -316,7 +316,7 @@
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="is_virtual_available" id="is_virtual_available1"
-                                                                        value="Yes" {% if doctor.doctor.is_virtual_available == 1 %}checked{% endif %}>
+                                                                        value="Yes" {% if doctor.is_virtual_available == 1 %}checked{% endif %}>
                                                                     <label class="form-check-label" for="is_virtual_available1">
                                                                         Yes
                                                                     </label>
@@ -326,7 +326,7 @@
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="is_virtual_available" id="is_virtual_available"
-                                                                        value="No" {% if doctor.doctor.is_virtual_available == 0  %}checked{% endif %}>
+                                                                        value="No" {% if doctor.is_virtual_available == 0  %}checked{% endif %}>
                                                                     <label class="form-check-label" for="is_virtual_available">
                                                                         No
                                                                     </label>
@@ -340,11 +340,11 @@
                                                             <select class="form-select" aria-label="Default select example"
                                                                 id="degree" name="degree">
                                                                 <option value="">Please	select category</option>
-                                                                <option value="MD" {% if doctor.doctor.degree == "MD" %}selected{% endif %}>MD</option>
-                                                                <option value="MS" {% if doctor.doctor.degree == "MS" %}selected{% endif %}>MS</option>
-                                                                <option value="DNB" {% if doctor.doctor.degree == "DNB" %}selected{% endif %}>DNB</option>
-                                                                <option value="D.M" {% if doctor.doctor.degree == "D.M" %}selected{% endif %}>D.M</option>
-                                                                <option value="M.Ch" {% if doctor.doctor.degree == "M.Ch" %}selected{% endif %}>M.Ch</option>
+                                                                <option value="MD" {% if doctor.degree == "MD" %}selected{% endif %}>MD</option>
+                                                                <option value="MS" {% if doctor.degree == "MS" %}selected{% endif %}>MS</option>
+                                                                <option value="DNB" {% if doctor.degree == "DNB" %}selected{% endif %}>DNB</option>
+                                                                <option value="D.M" {% if doctor.degree == "D.M" %}selected{% endif %}>D.M</option>
+                                                                <option value="M.Ch" {% if doctor.degree == "M.Ch" %}selected{% endif %}>M.Ch</option>
                                                             </select></div> 
                                                     </div>
                                                     <div class="col-md-6">
@@ -354,7 +354,7 @@
                                                                 <option selected disabled>Specilist</option>
                                                                 {% for specailist1 in specailists %}
                                                                 <option
-                                                                    {% if specailist1 == doctor.doctor.specialist %}selected{% endif %}
+                                                                    {% if specailist1 == doctor.specialist %}selected{% endif %}
                                                                     value="{{specailist1.id}}">{{specailist1.specialist_name}}
                                                                 </option>
                                                                 {% endfor %}
@@ -363,7 +363,7 @@
                                                     <div class="col-md-12">
                                                         <label for="about" class="form-label">About</label>
                                                         <textarea class="form-control" id="about" rows="5" name="about"
-                                                            placeholder="write about  Doctor ">{{doctor.doctor.about}}</textarea>
+                                                            placeholder="write about  Doctor ">{{doctor.about}}</textarea>
            
                                                     </div>
 
@@ -373,15 +373,15 @@
                                                          <div class="row g-3 row-cols-1 row-cols-lg-3">
                                                              <div class="col"><input type="text" class="form-control"
                                                                      id="speciality" placeholder="Facebook Link"
-                                                                     name="facebook" value="{{doctor.doctor.facebook}}">
+                                                                     name="facebook" value="{{doctor.facebook}}">
                                                              </div>
                                                              <div class="col"><input type="text" class="form-control"
                                                                      id="speciality" placeholder="Instagram Link"
                                                                      name="instagram"
-                                                                     value="{{doctor.doctor.instagram}}"></div>
+                                                                     value="{{doctor.instagram}}"></div>
                                                              <div class="col"><input type="text" class="form-control"
                                                                      id="speciality" placeholder="linkedin Link"
-                                                                     name="linkedin" value="{{doctor.doctor.linkedin}}">
+                                                                     name="linkedin" value="{{doctor.linkedin}}">
                                                              </div>
                                                          </div>
 
@@ -390,7 +390,7 @@
                                          </div>
                                          <input type="hidden" id="id" name="id" value="{{doctor.id}}">
                                          <input type="hidden" id="doctorid" name="doctorid"
-                                             value="{{doctor.doctor.id}}">
+                                             value="{{doctor.id}}">
                                          <button type="submit" class="btn btn-primary mt-4">Update Doctor</button>
                                      </div>
                                  </div>
@@ -429,7 +429,7 @@
 
                                      <div class="row g-3 align-items-center media_div_row">
                                          <div class="col-md-4 profile-av mx-auto text-center w220">
-                                             <label for="profile_pic" class="form-label">Profile Pic</label>
+                                             <label for="profile_pic" class="form-label">Profile Pic </label>
                                              <br>
                                              <img alt="Avatar" style="display:none"
                                                  class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
@@ -443,19 +443,19 @@
                                                  required>
                                          </div>
                                          <div class="col-md-6">
-                                             <label for="fisrt_name" class="form-label">First Name</label>
+                                             <label for="fisrt_name" class="form-label">First Name *</label>
                                              <input type="text" class="form-control" id="fisrt_name" name="fisrt_name"
                                                  required>
                                          </div>
 
                                          <div class="col-md-6">
-                                             <label for="last_name" class="form-label">Last Name</label>
+                                             <label for="last_name" class="form-label">Last Name *</label>
                                              <input type="text" class="form-control" id="last_name" name="last_name"
                                                  required>
                                          </div>
                                          <div class="col-md-6">
-                                             <label for="phone" class="form-label">Phone Number</label>
-                                             <input type="text" class="form-control" id="phone" name="phone">
+                                             <label for="phone" class="form-label">Phone Number *</label>
+                                             <input type="text" class="form-control" id="phone" name="phone" required>
                                          </div>
                                          <div class="col-md-6">
                                              <label for="alternate_mobile" class="form-label">Alternate
@@ -465,7 +465,7 @@
                                          </div>
                                          <div class="col-md-6">
                                              <label for="ssn_id" class="form-label">SSN ID </label>
-                                             <input type="text" class="form-control" id="ssn_id" name="ssn_id">
+                                             <input type="text" class="form-control" id="ssn_id" name="ssn_id" >
                                          </div>
                                          <div class="col-md-6">
                                              <label for="address" class="form-label">Address</label>
@@ -500,15 +500,15 @@
                                              <input type="date" class="form-control" id="dob" name="dob">
                                          </div>
                                          <div class="col-md-6">
-                                             <label for="email" class="form-label">Email Address</label>
-                                             <input type="email" class="form-control" id="email" name="email">
+                                             <label for="email" class="form-label">Email Address *</label>
+                                             <input type="email" class="form-control" id="email" name="email" required>
                                          </div>
                                          <div class="col-md-6">
                                              <label for="joindate" class="form-label">Join Date</label>
                                              <input type="date" class="form-control" id="joindate" name="joindate">
                                          </div>
                                          <div class="col-md-6">
-                                             <label for="opd_charges" class="form-label">OPD Charges</label>
+                                             <label for="opd_charges" class="form-label">OPD Charges  *</label>
                                              <input type="text" class="form-control" id="opd_charges"
                                                  name="opd_charges">
                                          </div>
@@ -530,7 +530,7 @@
                                                  name="emergency_charges">
                                          </div>
                                          <div class="col-md-6">
-                                             <label for="degree" class="form-label">Degree</label>
+                                             <label for="degree" class="form-label">Degree *</label>
                                              <div class="tooltips">
                                                  <select class="form-select" aria-label="Default select example"
                                                      id="degree" name="degree">
@@ -540,7 +540,7 @@
                                                  </select></div>
                                          </div>
                                          <div class="col-md-6">
-                                             <label for="Specialist" class="form-label">Specialist</label>
+                                             <label for="Specialist" class="form-label">Specialist *</label>
                                              <div class="tooltips">
                                                  <select class="form-select" name="specialist" required>
                                                      <option selected disabled>Specilist</option>
@@ -553,7 +553,7 @@
                                                  </select></div>
                                          </div>
                                          <div class="col-md-6">
-                                             <label class="form-label">Gender</label>
+                                             <label class="form-label">Gender  *</label>
                                              <div class="row">
                                                  <div class="col-md-6">
                                                      <div class="form-check">

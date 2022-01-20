@@ -39,7 +39,16 @@ Booking {% endblock title %}
 								class="img-fluid" alt="User Image">
 						</div>
 						<div class="doc-info-cont">
-							<h4 class="doc-name">{{hospital.hopital_name|upper}}</h4>
+							<h4 class="doc-name">{{hospital.hopital_name|upper}} 
+								{% if user.is_authenticated %}
+									{% if user.user_type == "1" or user.user_type == "2" or request.user.user_type == "4" %} 
+										{% if hospital.is_verified %}
+										<button type="button" class="btn-sm btn-rounded btn-primary">Verified</button>
+										{% else %}
+										<button type="button" class="btn-sm btn-rounded btn-secondary">Not Verify</button>
+										{% endif %}
+									{% endif %}
+								{% endif %}</h4> 
 							<p class="doc-speciality">{{hospital.specialist}}</p>
 							<p class="doc-department"><img src="{{hospital.specialist.hover_icon}}" class="img-fluid"
 									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
@@ -136,6 +145,9 @@ Booking {% endblock title %}
 							<a class="nav-link" href="#doc_overview" data-bs-toggle="tab">Overview</a>
 						</li>
 						<li class="nav-item">
+							<a class="nav-link" href="#disease" data-bs-toggle="tab">Diseases</a>
+						</li>
+						<li class="nav-item">
 							<a class="nav-link active" href="#doctor_list" data-bs-toggle="tab">Doctors</a>
 						</li>
 						<li class="nav-item">
@@ -156,51 +168,158 @@ Booking {% endblock title %}
 							<div class="col-md-12 col-lg-9">
 
 								<div class="widget about-widget">
-									<h4 class="widget-title">About Me</h4>
+									<h4 class="widget-title">About Us</h4>
+									<p>{{hospital.about}}</p>
+								</div>
+								<div class="row">
+									<div class="col-12">
+										<div class="widget experience-widget">
+											<h4 class="widget-title">Insurance Accepted</h4>
+											<div class="experience-box">
+												<ul class="experience-list">
+													{% for insurance in insurances %}
+													<li>
+														<div class="experience-user">
+															<div class="before-circle"></div>
+														</div>
+														<div class="experience-content">
+															<div class="timeline-content">
+																<a class="name">{{insurance.insurance_name}} </a>
+																<span class="time">{% if insurance.insurance_type == "1"  %}Cashless {% else %}No Cashless{% endif %}</span>
+															</div>
+														</div>
+													</li>
+													{% endfor %}
+												</ul>
+											</div>
+										</div>
+									</div>
+									
+								</div>
+								<div class="row">
+									<div class="col-6">
+										<div class="widget education-widget">
+											<h4 class="widget-title">Rooms</h4>
+											<div class="experience-box">
+												<ul class="experience-list">
+													<li>
+														<div class="experience-user">
+															<div class="before-circle"></div>
+														</div>
+														<div class="experience-content">
+															<div class="timeline-content">
+																<a class="name">Total Rooms</a>
+																<span class="time">{{T_rooms}}</span>
+																<a class="name">Available Rooms</a>
+																<span class="time">{{A_rooms}}</span>
+															</div>
+														</div>
+													</li>
+
+												</ul>
+											</div>
+										</div>
+									</div>
+									<div class="col-6">
+										<div class="widget experience-widget">
+											<h4 class="widget-title">Ambulances</h4>
+											<div class="experience-box">
+												<ul class="experience-list">
+													<li>
+														<div class="experience-user">
+															<div class="before-circle"></div>
+														</div>
+														<div class="experience-content">
+															<div class="timeline-content">
+																<a class="name">Total Ambulance</a>
+																<span class="time">{{T_ambulances}}</span>
+																<a class="name">Available Ambulance</a>
+																<span class="time">{{A_ambulances}}</span>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+									
+								</div>
+								<div class="row">
+									<div class="col-6">
+										<div class="widget experience-widget">
+											<h4 class="widget-title">Staff</h4>
+											<div class="experience-box">
+												<ul class="experience-list">
+													<li>
+														<div class="experience-user">
+															<div class="before-circle"></div>
+														</div>
+														<div class="experience-content">
+															<div class="timeline-content">
+																<a class="name">Total Staff</a>
+																<span class="time">{{T_doctor}}</span>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<div class="col-6">
+										<div class="widget experience-widget">
+											<h4 class="widget-title">Patients</h4>
+											<div class="experience-box">
+												<ul class="experience-list">
+													<li>
+														<div class="experience-user">
+															<div class="before-circle"></div>
+														</div>
+														<div class="experience-content">
+															<div class="timeline-content">
+																<a class="name">Total Patients</a>
+																<span class="time">{{T_patient}}</span>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							
+							</div>
+						</div>
+					</div>
+
+					<div role="tabpanel" id="disease" class="tab-pane fade ">
+						<div class="row">
+							<div class="col-md-12 col-lg-9">
+
+								<div class="widget about-widget">
+									<h4 class="widget-title">Taken Care</h4>
 									<p>{{hospital.about}}</p>
 								</div>
 
 
 								<div class="widget education-widget">
-									<h4 class="widget-title">Rooms</h4>
+									<h4 class="widget-title">Diseases {{T_diseases}}</h4>
 									<div class="experience-box">
 										<ul class="experience-list">
+											{% for disease in diseases %}
 											<li>
 												<div class="experience-user">
 													<div class="before-circle"></div>
 												</div>
 												<div class="experience-content">
-													<div class="timeline-content">
-														<a class="name">Total Rooms</a>
-														<span class="time">{{T_rooms}}</span>
-														<a class="name">Available Rooms</a>
-														<span class="time">{{A_rooms}}</span>
+													<div class="timeline-content">														
+														<a class="name">{{disease.disease.name}}</a>
+														<span class="time">{{disease.disease.desc}}</span>														
 													</div>
 												</div>
 											</li>
+											{% endfor %}
 
-										</ul>
-									</div>
-								</div>
-
-
-								<div class="widget experience-widget">
-									<h4 class="widget-title">Ambulances</h4>
-									<div class="experience-box">
-										<ul class="experience-list">
-											<li>
-												<div class="experience-user">
-													<div class="before-circle"></div>
-												</div>
-												<div class="experience-content">
-													<div class="timeline-content">
-														<a class="name">Total Ambulance</a>
-														<span class="time">{{T_ambulances}}</span>
-														<a class="name">Available Ambulance</a>
-														<span class="time">{{A_ambulances}}</span>
-													</div>
-												</div>
-											</li>
 										</ul>
 									</div>
 								</div>
@@ -217,17 +336,17 @@ Booking {% endblock title %}
 								<div class="doctor-widget">
 									<div class="doc-info-left">
 										<div class="doctor-img">
-											<img src="{{doctor.doctor.profile_pic}}"
+											<img src="{{doctor.profile_pic}}"
 												onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
 												class="img-fluid" alt="User Image">
 										</div>
 										<div class="doc-info-cont">
-											<h4 class="doc-name">Dr. {{doctor.doctor.fisrt_name}}
-												{{doctor.doctor.last_name}}</h4>
-											<p class="doc-speciality">{{doctor.doctor.specialist}}</p>
-											<p class="doc-department"><img src="{{doctor.doctor.profile_pic}}"
+											<h4 class="doc-name">Dr. {{doctor.fisrt_name}}
+												{{doctor.last_name}}</h4>
+											<p class="doc-speciality">{{doctor.specialist}}</p>
+											<p class="doc-department"><img src="{{doctor.profile_pic}}"
 													onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
-													class="img-fluid" alt="Speciality">{{doctor.doctor.specialist}}</p>
+													class="img-fluid" alt="Speciality">{{doctor.specialist}}</p>
 													<div class="rating">
 														{% if  drating <= 5 and drating > 4 %}
 															<i class="fas fa-star filled"></i>
@@ -315,7 +434,7 @@ Booking {% endblock title %}
 										</div>
 										<div class="clinic-booking">
 											<a class="apt-btn"
-												href="{% url 'doctor_details' doctor.doctor.id %}">Book
+												href="{% url 'doctor_details' doctor.id %}">Book
 												Appointment</a>
 										</div>
 									</div>
@@ -326,7 +445,8 @@ Booking {% endblock title %}
 
 
 					</div>
-
+					
+				
 
 					<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
 						<!-- Add icon library -->
@@ -630,6 +750,8 @@ Booking {% endblock title %}
 						</div>
 
 					</div>
+
+					
 
 
 					<div role="tabpanel" id="doc_business_hours" class="tab-pane fade">

@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.urls.base import reverse
-from hospital.models import Insurances,HospitalRooms,HospitalMedias,HospitalStaffDoctors,HospitalStaffs,HospitalStaffDoctorSchedual
+from hospital.models import Insurances,HospitalRooms,HospitalMedias,HospitalStaffs,HospitalStaffDoctorSchedual
 from accounts.models import Hospitals,HospitalDoctors,HospitalPhones
 from django.contrib.auth import logout
 from django.contrib.messages.views import SuccessMessageMixin

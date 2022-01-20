@@ -236,6 +236,9 @@ class HospitalDoctors(models.Model):
     is_homevisit_available=models.BooleanField(blank=True,null=True,default=False)   
     is_online           =models.BooleanField(blank=True,null=True,default=False)   
     is_hospital_added   =models.BooleanField(blank=True,null=True,default=True) 
+    hospital           =models.ForeignKey(Hospitals, related_name="hospitalstaffdoctors", on_delete=models.CASCADE,blank=True,null=True)
+    ssn_id              =models.CharField(max_length=50,default="",blank=True,null=True)
+    joindate            =models.DateField(blank=True,null=True,default="2000-01-01") 
     is_deactive         =models.BooleanField(blank=True,null=True,default=False) 
     is_active           =models.BooleanField(blank=True,null=True,default=False) 
     created_at          =models.DateTimeField(auto_now_add=True,blank=True,null=True)
@@ -282,7 +285,6 @@ class Patients(models.Model):
         self.is_active =True
         return self.admin.phone 
         
-
 class Labs(models.Model):
     id                  =models.AutoField(primary_key=True)
     admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE,blank=True,null=True,default="")
@@ -358,16 +360,16 @@ class UserPayments(models.Model):
     created_at          =models.DateTimeField(auto_now_add=True)
     updated_at          =models.DateTimeField(auto_now_add=True)
 
-class DoctorForHospital(models.Model):
-    id                  =models.AutoField(primary_key=True)
-    hospital            =models.ForeignKey(Hospitals, on_delete=models.CASCADE)
-    doctor              =models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE)
-    created_at          =models.DateTimeField(auto_now_add=True)
-    updated_at          =models.DateTimeField(auto_now_add=True)
-    objects             =models.Manager()
+# class DoctorForHospital(models.Model):
+#     id                  =models.AutoField(primary_key=True)
+#     hospital            =models.ForeignKey(Hospitals, on_delete=models.CASCADE)
+#     doctor              =models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE)
+#     created_at          =models.DateTimeField(auto_now_add=True)
+#     updated_at          =models.DateTimeField(auto_now_add=True)
+#     objects             =models.Manager()
      
-    def __str__(self):
-        return self.hospital.hospital_name
+#     def __str__(self):
+#         return self.hospital.hospital_name
 
 class OPDTime(models.Model):
     id                      =           models.AutoField(primary_key=True)

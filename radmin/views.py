@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from patient.models import Booking, LabTest, OrderBooking, Orders, PicturesForMedicine, Slot, TreatmentReliefPetient, patientFile
 from django.core.files.storage import FileSystemStorage
 from django.http.response import HttpResponse, HttpResponseBase, HttpResponseRedirect, JsonResponse
-from hospital.models import ContactPerson, HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, HospitalsPatients, Insurances, ServiceAndCharges, TimeSlot
+from hospital.models import ContactPerson, HospitalMedias, HospitalStaffDoctorSchedual, HospitalsPatients, Insurances, ServiceAndCharges, TimeSlot
 from accounts.models import CustomUser, HospitalDoctors, HospitalPhones, Hospitals, Labs, OPDTime, Patients, Pharmacy, Specailist
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,UpdateView
@@ -855,7 +855,7 @@ class HospitalDetailsViews(DetailView):
     def get(self, request, *args, **kwargs):
         hosital_id=kwargs['id']
         hospital = get_object_or_404(Hospitals,admin__is_active=True,is_verified=True,is_deactive=False,id=hosital_id)
-        doctors = HospitalStaffDoctors.objects.filter(is_active=True,hospital=hospital)
+        doctors = HospitalDoctors.objects.filter(is_active=True,hospital=hospital)
         hospitalservice = ServiceAndCharges.objects.filter(user=hospital.admin)
         hospitalstaffdoctor_list = []
         for hospitalstaffdoctor in doctors:
@@ -876,7 +876,7 @@ class DoctorsBookAppoinmentViews(SuccessMessageMixin,View):
         hosital_id=kwargs['id']
         hositaldcotorid_id=kwargs['did']
         hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
-        hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,is_active=True,id=hositaldcotorid_id)
+        hospitalstaffdoctor = get_object_or_404(HospitalDoctors,is_active=True,id=hositaldcotorid_id)
         hospitalservice = ServiceAndCharges.objects.filter(user=hospital.admin)
       
         
@@ -1000,6 +1000,7 @@ class TimeSlotView(SuccessMessageMixin,CreateView):
         timeslots_30s = TimeSlot.objects.filter(schedule_type="30")
         timeslots_45s = TimeSlot.objects.filter(schedule_type="45")
         timeslots_60s = TimeSlot.objects.filter(schedule_type="60")
+        print(timeslots_15s,timeslots_30s,timeslots_45s,timeslots_60s)
         param={'timeslots_15s':timeslots_15s,'timeslots_30s':timeslots_30s,'timeslots_45s':timeslots_45s,'timeslots_60s':timeslots_60s}
         return render(request,"radmin/time-slot.html",param)
  

@@ -39,7 +39,7 @@
                                 <td>PT00{{hos_patient.id}}</td>
                                 <td>
                                 {% comment %} <img src="assets/images/xs/avatar3.jpg" class="avatar  rounded-circle me-2" alt="profile-image"> {% endcomment %}
-                                <span>{{hos_patient.admin.name_title}} {{hos_patient.fisrt_name}} {{hos_patient.last_name}}</span></td>
+                                <span><a href="{% url 'relief_patient_profile' hos_patient.id %}" tooltip="true" title="View Profile">{{hos_patient.admin.name_title}} {{hos_patient.fisrt_name}} {{hos_patient.last_name}}</a></span></td>
                                 <td>{{hos_patient.admin.phone}}</td>
                                 <td>{{hos_patient.city}}</td>
                                 <td>{{hos_patient.bloodgroup}}

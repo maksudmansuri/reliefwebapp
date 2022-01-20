@@ -38,20 +38,20 @@
                         <div class="card teacher-card ">
                             <div class="card-body d-flex flex-column">
                                 <div class="profile-av mx-auto text-center w220">
-                                    <img src="{{doctor.doctor.profile_pic}}" alt="" class="avatar xl rounded-circle img-thumbnail shadow-sm">
+                                    <img src="{{doctor.profile_pic}}" alt="" class="avatar xl rounded-circle img-thumbnail shadow-sm">
                                     <div class="about-info d-flex align-items-center mt-3 justify-content-center">
                                         <div class="followers rounded-circle me-3">
-                                            <a href="{{doctor.doctor.facebook}}">
+                                            <a href="{{doctor.facebook}}">
                                                 <i class="bi bi-facebook fs-5 text-blue"></i>
                                             </a>
                                         </div>
                                         <div class="own-video rounded-circle me-3">
-                                            <a href="{{doctor.doctor.instagram}}">
+                                            <a href="{{doctor.instagram}}">
                                                 <i class="bi bi-instagram fs-5 text-danger"></i>
                                             </a>
                                         </div>
                                         <div class="star rounded-circle ">
-                                            <a href="{{doctor.doctor.linkedin}}">
+                                            <a href="{{doctor.linkedin}}">
                                                 <i class="bi bi-linkedin fs-5 text-blue"></i>
                                             </a>
                                         </div>
@@ -60,8 +60,8 @@
                                 </div>
                                 
                                 <div class="teacher-info  w-100 text-center mt-3">
-                                    <h6  class="mb-2 mt-2  fw-bold d-block fs-6 muted">{{doctor.doctor.title_name}}Dr. {{doctor.doctor.fisrt_name}} {{doctor.doctor.last_name}}</h6>
-                                    <span class="light-info-bg py-2 px-2 rounded-1 d-inline-block fw-bold small-11 mb-0 mt-1">{{doctor.doctor.specialist}}</span>
+                                    <h6  class="mb-2 mt-2  fw-bold d-block fs-6 muted">{{doctor.title_name}}Dr. {{doctor.fisrt_name}} {{doctor.last_name}}</h6>
+                                    <span class="light-info-bg py-2 px-2 rounded-1 d-inline-block fw-bold small-11 mb-0 mt-1">{{doctor.specialist}}</span>
                                     <div class="btn-group">
                                             <button type="button" class="btn btn-primary">Action</button>
                                             <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
@@ -331,30 +331,30 @@
                                                         <div class="col-md-4 profile-av mx-auto text-center w220">
                                                             <label for="profile_pic" class="form-label">Profile Pic</label>
                                                                <br> 
-                                                            <img alt="Avatar" src="{{doctor.doctor.profile_pic}}" style="width:70%;display" class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
+                                                            <img alt="Avatar" src="{{doctor.profile_pic}}" style="width:70%;display" class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
                                                             
                                                                
                                                         </div>
                                                         <div class="col-md-8">
                                                             <label for="profile_pic" class="form-label">Select Profile Picture *</label>
-                                                            <input type="file" class="form-control select_media" name="profile_pic" value="{{doctor.doctor.profile_pic}}" required>
+                                                            <input type="file" class="form-control select_media" name="profile_pic" value="{{doctor.profile_pic}}" required>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="fisrt_name" class="form-label">First Name</label>
-                                                            <input type="text" class="form-control" id="fisrt_name" name="fisrt_name" value="{{doctor.doctor.fisrt_name}}" required>
+                                                            <input type="text" class="form-control" id="fisrt_name" name="fisrt_name" value="{{doctor.fisrt_name}}" required>
                                                         </div>
 
                                                         <div class="col-md-6">
                                                             <label for="last_name" class="form-label">Last Name</label>
-                                                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{doctor.doctor.last_name}}" required>
+                                                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{doctor.last_name}}" required>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="phone" class="form-label">Phone Number</label>
-                                                            <input type="text" class="form-control" id="phone" name="phone" value="{{doctor.doctor.phone}}" required>
+                                                            <input type="text" class="form-control" id="phone" name="phone" value="{{doctor.phone}}" required>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="alternate_mobile" class="form-label">Alternate Number</label>
-                                                            <input type="text" class="form-control" id="alternate_mobile" name="alternate_mobile" value="{{doctor.doctor.alternate_mobile}}" >
+                                                            <input type="text" class="form-control" id="alternate_mobile" name="alternate_mobile" value="{{doctor.alternate_mobile}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="ssn_id" class="form-label">SSN ID </label>
@@ -362,27 +362,27 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="address" class="form-label">Address</label>
-                                                            <input type="text" class="form-control" id="address" name="address" value="{{doctor.doctor.address}}" >
+                                                            <input type="text" class="form-control" id="address" name="address" value="{{doctor.address}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="city" class="form-label">City</label>
-                                                            <input type="text" class="form-control" id="city" name="city" value="{{doctor.doctor.city}}" >
+                                                            <input type="text" class="form-control" id="city" name="city" value="{{doctor.city}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="state" class="form-label">State</label>
-                                                            <input type="text" class="form-control" id="state" name="state" value="{{doctor.doctor.state}}" >
+                                                            <input type="text" class="form-control" id="state" name="state" value="{{doctor.state}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="country" class="form-label">Country</label>
-                                                            <input type="text" class="form-control" id="country" name="country" value="{{doctor.doctor.country}}" >
+                                                            <input type="text" class="form-control" id="country" name="country" value="{{doctor.country}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="zip_Code" class="form-label">Zip Code</label>
-                                                            <input type="text" class="form-control" id="zip_Code" name="zip_Code" value="{{doctor.doctor.zip_Code}}" >
+                                                            <input type="text" class="form-control" id="zip_Code" name="zip_Code" value="{{doctor.zip_Code}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="zip_Code" class="form-label">Date Of Birth</label>
-                                                            <input type="date" class="form-control" id="dob" name="dob" value="{{doctor.doctor.dob|date:'Y-m-d'}}" >
+                                                            <input type="date" class="form-control" id="dob" name="dob" value="{{doctor.dob|date:'Y-m-d'}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="email" class="form-label">Email Address</label>
@@ -407,7 +407,7 @@
                                                         {% comment %} <div class="col-md-6">
                                                             <label for="degree1" class="form-label">Degree</label>
                                                             <div class="tooltips">
-                                                            <select class="form-select" aria-label="Default select example" id="degree1" name="degree1" value={{doctor.doctor.degree}}>
+                                                            <select class="form-select" aria-label="Default select example" id="degree1" name="degree1" value={{doctor.degree}}>
                                                                 <option value="" selected="selected" disabled>Please select degree</option>
                                                                
                                                             </select></div>
@@ -424,7 +424,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="radio" name="gender" id="gender" value="Male" {% if doctor.doctor.gender == "Male" %}checked{% endif %} >
+                                                                        <input class="form-check-input" type="radio" name="gender" id="gender" value="Male" {% if doctor.gender == "Male" %}checked{% endif %} >
                                                                         <label class="form-check-label" for="gender">
                                                                         Male
                                                                         </label>
@@ -432,7 +432,7 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="radio" name="gender" id="gender" value="Female" {% if doctor.doctor.gender == "Female" %}checked{% endif %}>
+                                                                        <input class="form-check-input" type="radio" name="gender" id="gender" value="Female" {% if doctor.gender == "Female" %}checked{% endif %}>
                                                                         <label class="form-check-label" for="gender">
                                                                         Female
                                                                         </label>
@@ -468,16 +468,16 @@
                                                         <div class="col-md-12">
                                                             <label for="speciality" class="form-label">Social link</label>
                                                             <div class="row g-3 row-cols-1 row-cols-lg-3">
-                                                                <div class="col"><input type="text" class="form-control" id="speciality"  placeholder="Facebook Link" name="facebook" value="{{doctor.doctor.facebook}}"></div>
-                                                                <div class="col"><input type="text" class="form-control" id="speciality"  placeholder="Instagram Link" name="instagram" value="{{doctor.doctor.instagram}}"></div>
-                                                                <div class="col"><input type="text" class="form-control" id="speciality"  placeholder="linkedin Link" name="linkedin" value="{{doctor.doctor.linkedin}}"></div>
+                                                                <div class="col"><input type="text" class="form-control" id="speciality"  placeholder="Facebook Link" name="facebook" value="{{doctor.facebook}}"></div>
+                                                                <div class="col"><input type="text" class="form-control" id="speciality"  placeholder="Instagram Link" name="instagram" value="{{doctor.instagram}}"></div>
+                                                                <div class="col"><input type="text" class="form-control" id="speciality"  placeholder="linkedin Link" name="linkedin" value="{{doctor.linkedin}}"></div>
                                                             </div>
                                                             
                                                         </div>
                                                     </div>
                                                     </div>
                                                     <input type="hidden" id="id" name="id" value="{{doctor.id}}">
-                                                    <input type="hidden" id="doctorid" name="doctorid" value="{{doctor.doctor.id}}">
+                                                    <input type="hidden" id="doctorid" name="doctorid" value="{{doctor.id}}">
                                                     <button type="submit" class="btn btn-primary mt-4">Update Doctor</button>
                                                 </form>
                                             </div>
@@ -638,7 +638,7 @@
                 <div class="modal-content">
                     <div class="modal-header">             
                             
-                                <h3 class="modal-title h4" id="exampleModalXlLabel">Dr. {{ doctor.doctor.fisrt_name }} {{doctor.doctor.last_name}}'S Schedule</h3>
+                                <h3 class="modal-title h4" id="exampleModalXlLabel">Dr. {{ doctor.fisrt_name }} {{doctor.last_name}}'S Schedule</h3>
                                 <div class="col-auto d-flex w-sm-100">
                                     <button type="button" class="btn btn-primary btn-set-task w-sm-100" style="margin-right: 80px;" data-bs-toggle="modal" data-bs-target="#depadd{{doctor.id}}"><i class="icofont-plus-circle me-2 fs-6"></i>Add Schedule</button>
 

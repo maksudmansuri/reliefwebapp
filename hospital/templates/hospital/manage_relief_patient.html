@@ -40,7 +40,7 @@
                         <tbody>
                         {% for book  in treatmentreliefpetient %}
                             <tr>
-                                <td> PT00{{book.patient.id}}</td>
+                                <td> PT00{{book.id}}</td>
                                 <td>
                                 {% comment %} <img src="assets/images/xs/avatar3.jpg" class="avatar  rounded-circle me-2" alt="profile-image"> {% endcomment %}
                                 <span><a href="{% url 'relief_patient_profile' book.id %}" tooltip="true" title="View Profile">{{book.booking.patient.name_title}} {{book.patient.fisrt_name}} {{book.patient.last_name}}</a></span></td>

@@ -11,8 +11,8 @@ from django.http import request
 from django.db.models.base import Model
 from django.contrib.auth.models import User
 from django.utils.translation import deactivate
-from hospital.models import HospitalRooms, HospitalServices, HospitalStaffDoctors, ServiceAndCharges
-from accounts.models import CustomUser, Hospitals, Labs, Patients, Pharmacy
+from hospital.models import HospitalRooms, HospitalServices, ServiceAndCharges
+from accounts.models import CustomUser, HospitalDoctors, Hospitals, Labs, Patients, Pharmacy
 from django.db import models
 from asgiref.sync import async_to_sync,sync_to_async
 import uuid
@@ -88,7 +88,7 @@ class OrderBooking(models.Model):
     parent                  =           models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
     patient                 =           models.ForeignKey(CustomUser,related_name="patient", on_delete=models.CASCADE)
     for_whom                =           models.ForeignKey(ForSome, on_delete=models.CASCADE,null=True,blank=True)
-    hospitalstaffdoctor     =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE,null=True,blank=True)
+    hospitalstaffdoctor     =           models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE,null=True,blank=True)
     HLP                     =           models.ForeignKey(CustomUser,related_name="merchant", on_delete=models.CASCADE,null=True,blank=True)
     booking_type            =           models.CharField(default="",blank=True,null=True,max_length=64)#homevisit,emergency,online,test,medicine,opd,rebooking -> checkout
     # BOOKING_FOR_CHOICE      =           ((1,"Hospital"),(2,"Laboratory"),(3,"Pharmacy"))
@@ -157,7 +157,7 @@ class Booking(models.Model):
     id                      =           models.AutoField(primary_key=True)
     patient                 =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     for_whom                =           models.ForeignKey(ForSome, on_delete=models.CASCADE,null=True,blank=True)
-    hospitalstaffdoctor     =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE,null=True,blank=True)
+    hospitalstaffdoctor     =           models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE,null=True,blank=True)
     amount                  =           models.FloatField()
     hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE,null=True,blank=True)
     service                 =           models.ForeignKey(ServiceAndCharges, on_delete=models.CASCADE,null=True,blank=True)
@@ -495,7 +495,7 @@ class patientFile(models.Model):
     treatmentreliefpetient  =           models.ForeignKey(TreatmentReliefPetient, on_delete=models.CASCADE)
     booking                 =           models.ForeignKey(OrderBooking, on_delete=models.CASCADE,null=True)
     patient                 =           models.ForeignKey(Patients, on_delete=models.CASCADE,null=True) #delete after not in use
-    hospitaldoctors         =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE,null=True) #delete after not in use
+    hospitaldoctors         =           models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE,null=True) #delete after not in use
     amount_paid             =           models.FloatField(default=0) #delete after not in use
     file                    =           models.FileField(upload_to="patients/documents/file",blank=True,null=True,default="")
     # file_date               =           models.DateField(blank=True,null=True)

@@ -14,14 +14,14 @@
                         <div class="col-md-12 col-lg-4">
                             <div class="dash-widget dct-border-rht">
                                 <div class="circle-bar circle-bar1">
-                                    <div class="circle-graph1" data-percent="75">
+                                    <div class="circle-graph1" data-percent="100">
                                         <img src="{% static 'newstatic/assets/img/icon-01.png' %}" class="img-fluid"
                                             alt="patient">
                                     </div>
                                 </div>
                                 <div class="dash-widget-info">
-                                    <h6>Total Patient</h6>
-                                    <h3>1500</h3>
+                                    <h6>Total Appointments</h6>
+                                    <h3>{{totalbookings}}</h3>
                                     <p class="text-muted">Till Today</p>
                                 </div>
                             </div>
@@ -29,30 +29,30 @@
                         <div class="col-md-12 col-lg-4">
                             <div class="dash-widget dct-border-rht">
                                 <div class="circle-bar circle-bar2">
-                                    <div class="circle-graph2" data-percent="65">
+                                    <div class="circle-graph2" data-percent="100">
                                         <img src="{% static 'newstatic/assets/img/icon-02.png' %}" class="img-fluid"
                                             alt="Patient">
                                     </div>
                                 </div>
                                 <div class="dash-widget-info">
-                                    <h6>Today Patient</h6>
-                                    <h3>160</h3>
-                                    <p class="text-muted">06, Nov 2019</p>
+                                    <h6>Today Appointments</h6>
+                                    <h3>{{todaybookings}}</h3>
+                                    <p class="text-muted">{% now "DATE_FORMAT" %}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-12 col-lg-4">
                             <div class="dash-widget">
                                 <div class="circle-bar circle-bar3">
-                                    <div class="circle-graph3" data-percent="50">
+                                    <div class="circle-graph3" data-percent="100">
                                         <img src="{% static 'newstatic/assets/img/icon-03.png' %}" class="img-fluid"
                                             alt="Patient">
                                     </div>
                                 </div>
                                 <div class="dash-widget-info">
-                                    <h6>Appoinments</h6>
-                                    <h3>85</h3>
-                                    <p class="text-muted">06, Apr 2019</p>
+                                    <h6>Payments</h6>
+                                    <h3>&#x20B9;{{todaypayments}}</h3>
+                                    <p class="text-muted">{% now "DATE_FORMAT" %}</p>
                                 </div>
                             </div>
                         </div>
@@ -61,6 +61,7 @@
             </div>
         </div>
     </div> 
+    {% if request.user.is_verified %}
     <div class="row">
         <div class="col-md-12">
             <h4 class="mb-4">Patient Appoinment</h4>
@@ -172,10 +173,10 @@
 
 
                     <div class="tab-pane" id="today-appointments">
-                        <div class="card card-table mb-0">
+                        <div class="card mb-0">
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table id="patient-table1" class="table table-hover table-center mb-0" style="width: 100%;" >
+                                    <table id="patient-table1" class="table table-hover align-middle mb-0" style="width: 100%;" >
                                         <thead>
                                             <tr>
                                                 <th>Appt ID</th>
@@ -263,6 +264,13 @@
             </div>
         </div>
     </div>
+    {% else %}
+    {% if request.user.is_applied %}
+    <h1> WAIT FOR SOME TIME UNTILL WE ARE VERIFY YOUR DETAILS. YOUR DASHBOARD AUTOMATICALLY CHANGE ONCE WE VERIFY YOU</h1>
+    {% else %}
+    <h1> Fill of your all detail</h1>
+    {% endif %}
+    {% endif %}
 </div>
 {% endblock content %}
 

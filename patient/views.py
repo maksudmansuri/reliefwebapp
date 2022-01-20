@@ -12,14 +12,14 @@ from front.models import RatingAndComments
 from lab.models import LabSchedule, Medias
 from django.views.generic.base import View
 # from requests.models import Response
-from hospital.models import DoctorSchedule, HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, ServiceAndCharges
+from hospital.models import DoctorSchedule, HospitalMedias, HospitalStaffDoctorSchedual, ServiceAndCharges
 from patient import models
 import patient
 from patient.models import Booking, ForSome, MediacalRecords, NewLabTest, OrderBooking, Orders, LabTest, PicturesForMedicine, Temp, Slot, patientFile, phoneOPTforoders
 from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
-from accounts.models import CustomUser, DoctorForHospital, HospitalPhones, Hospitals, Labs, OPDTime, Patients, Pharmacy
+from accounts.models import CustomUser, HospitalDoctors, HospitalPhones, Hospitals, Labs, OPDTime, Patients, Pharmacy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.list import ListView
@@ -280,26 +280,7 @@ class HospitalListViews(ListView):
     #         hospital_media_list.append({'hospital':hospital,'medias':medias})
     #     param = {'hospital_media_list':hospital_media_list}  
     #     return render(request,"patient/hospital_list.html",param)
-     
-class HospitalDetailsViews(DetailView):
-    def get(self, request, *args, **kwargs):
-        hosital_id=kwargs['id']
-        hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
-        doctors = HospitalStaffDoctors.objects.filter(is_active=True,hospital=hospital)
-        hospitalservice = ServiceAndCharges.objects.filter(user=hospital.admin)
-        hospitalstaffdoctor_list = []
-        for hospitalstaffdoctor in doctors:
-            hospitalstaffdoctorschedual = HospitalStaffDoctorSchedual.objects.filter(hospitalstaffdoctor=hospitalstaffdoctor)
-            opd_time = []
-            for dcsh in hospitalstaffdoctorschedual:
-                if dcsh.work == "OPD":
-                    start_time = dcsh.start_time
-                    end_time = dcsh.end_time
-                opd_time.append({'start_time':start_time,'end_time':end_time})
-            hospitalstaffdoctor_list.append({'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalstaffdoctorschedual':hospitalstaffdoctorschedual})
-        param = {'hospital':hospital,'hospitalstaffdoctor_list':hospitalstaffdoctor_list,'hospitalservice':hospitalservice}  
-        return render(request,"patient/hospital_details.html",param)
- 
+
 
 """"  
 History for Hospital Booking
@@ -355,7 +336,7 @@ class BookAnAppointmentViews(SuccessMessageMixin,View):
             forsome = get_object_or_404(ForSome,id=someone)
             booking.for_whom=forsome
         if where == "hospital":
-            hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
+            hospitalstaffdoctor = get_object_or_404(HospitalDoctors,id=doctorid)
             doctorschedule = get_object_or_404(DoctorSchedule,id=timeslot,doctor=hospitalstaffdoctor)
             doctorschedule.is_booked =True
             doctorschedule.save()
@@ -946,7 +927,7 @@ class HomeVisitDoctor(CreateView):
         hospital_id= kwargs['id']
         hositaldcotorid_id= kwargs['did']
         hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hospital_id)
-        hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,is_active=True,id=hositaldcotorid_id)
+        hospitalstaffdoctor = get_object_or_404(HospitalDoctors,is_active=True,id=hositaldcotorid_id)
         someones = ForSome.objects.filter(patient=request.user.patients)
         hospitalservice = ServiceAndCharges.objects.filter(user=hospital.admin)
         param = {'someones':someones,'hospital':hospital,'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalservice':hospitalservice}
@@ -956,7 +937,7 @@ def BookanAppointmentForHomeVisit(request):
    if request.method == "POST":
        if request.method == "POST":
             doctorid = request.POST.get('doctorid') 
-            hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
+            hospitalstaffdoctor = get_object_or_404(HospitalDoctors,id=doctorid)
             serviceid = request.POST.get('serviceid')
             someone = request.POST.get('someone')
             

@@ -71,7 +71,7 @@ urlpatterns = [
     path('doc_manage_doctorschedule/<id>',views.DoctorScheduleCreateView.as_view(),name="doc_manage_doctorschedule"),
     
     path('doc_delete_doctorschedule/<str:id>/<did>',views.deleteTimeSlot,name="doc_delete_doctorschedule"),
-    path('doc_update_doctorschedule/<id>/<sid>',views.updateDoctorSchedual,name="doc_update_doctorschedule"),
+    # path('doc_update_doctorschedule/<id>/<sid>',views.updateDoctorSchedual,name="doc_update_doctorschedule"),
 
     #active deactive staff
     # path('active_staff/<id>',views.activeStaff,name="active_staff"),
@@ -87,14 +87,14 @@ urlpatterns = [
     # path('delete_room/<id>',views.deletedoctorRoom,name="delete_room"),
     # path('occupied_room',views.OccupiedRoom,name="occupied_room"),
     #active deactive delete Doctor 
-    path('doc_active_doctor/<id>',views.activeDoctor,name="doc_active_doctor"),
-    path('doc_deactive_doctor/<id>',views.deactiveDoctor,name="doc_deactive_doctor"),
-    path('doc_delete_doctor/<id>',views.deleteDoctor,name="doc_delete_doctor"),
+    # path('doc_active_doctor/<id>',views.activeDoctor,name="doc_active_doctor"),
+    # path('doc_deactive_doctor/<id>',views.deactiveDoctor,name="doc_deactive_doctor"),
+    # path('doc_delete_doctor/<id>',views.deleteDoctor,name="doc_delete_doctor"),
     #add media delete
     # path('doc_manage_gallery',views.manageGalleryView.as_view(),name="doc_manage_gallery"),
     # path('doc_delete_gallery/<id>',views.deleteGallery,name="doc_delete_gallery"),
     #active deactive delete Doctor Schedual  
-    path('doc_delete_doctorschedual/<id>/<sid>',views.deleteDoctorschedual,name="doc_delete_doctorschedual"),
+    # path('doc_delete_doctorschedual/<id>/<sid>',views.deleteDoctorschedual,name="doc_delete_doctorschedual"),
     # path('add_staff',views.addStaffView.as_view(),name="add_staff"),
     #delete price add price
     # path('add_price',views.PriceCreate,name="add_price"),

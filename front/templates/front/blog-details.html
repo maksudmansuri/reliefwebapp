@@ -44,8 +44,8 @@
 											<li>
 												<div class="post-author">
 													<a href="doctor-profile.html"><img
-															src="{{blog.doctor.doctor.profile_pic}}"
-															alt="Post Author"> <span>Dr. {{blog.doctor.doctor.fisrt_name}} {{blog.doctor.doctor.last_name}}</span></a>
+															src="{{blog.doctor.profile_pic}}"
+															alt="Post Author"> <span>Dr. {{blog.doctor.fisrt_name}} {{blog.doctor.last_name}}</span></a>
 												</div>
 											</li>
 											<li><i class="far fa-calendar"></i>{{blog.created_at|date:'d M Y'}}</li>
@@ -81,12 +81,12 @@
 										<div class="about-author-img">
 											<div class="author-img-wrap">
 												<a href="doctor-profile.html"><img class="img-fluid rounded-circle"
-														alt="" src="{{blog.doctor.doctor.profile_pic}}"></a>
+														alt="" src="{{blog.doctor.profile_pic}}"></a>
 											</div>
 										</div>
 										<div class="author-details">
-											<a href="doctor-profile.html" class="blog-author-name">Dr. {{blog.doctor.doctor.fisrt_name}} {{blog.doctor.doctor.last_name}}</a>
-											<p class="mb-0">{{blog.doctor.doctor.about}}</p>
+											<a href="doctor-profile.html" class="blog-author-name">Dr. {{blog.doctor.fisrt_name}} {{blog.doctor.last_name}}</a>
+											<p class="mb-0">{{blog.doctor.about}}</p>
 										</div>
 									</div>
 								</div>

@@ -7,7 +7,7 @@ from rest_framework.serializers import (
 	CharField,
 )
 import accounts
-from accounts.models import CustomUser,Hospitals,DoctorForHospital,HospitalDoctors,Patients,Labs,Pharmacy
+from accounts.models import CustomUser,Hospitals,HospitalDoctors,Patients,Labs,Pharmacy
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
@@ -57,7 +57,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 			patient.admin = account
 			patient.save()
 		if user_type == 3:
-			patient = DoctorForHospital()
+			patient = HospitalDoctors()
 			patient.admin = account
 			patient.is_hospital_added = False
 			patient.save()
@@ -141,7 +141,7 @@ class PHProfilePropertiesSerializer(serializers.ModelSerializer):
 class DProfilePropertiesSerializer(serializers.ModelSerializer):
 
 	class Meta:
-		model = DoctorForHospital
+		model = HospitalDoctors
 		fields = "__all__"
 
 

@@ -32,22 +32,22 @@ Booking {% endblock title %}
 				<div class="row">
 					<div class="col-12">		
 						
-						{% if doctor.hospitalstaffdoctors %}
+						{% if doctor.is_hospital_added %}
 						<div class="card">
 							<div class="card-body">
 								<div class="doctor-widget">
 									<div class="doc-info-left">
 										<div class="doctor-img">
-											<img src="{{doctor.hospitalstaffdoctors.hospital.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
+											<img src="{{doctor.hospital.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
 												alt="User Image">
 										</div>
 										<div class="doc-info-cont">
-											<h4 class="doc-name">{{doctor.hospitalstaffdoctors.hospital.hopital_name}}</h4>
-											<p class="doc-speciality">{{doctor.hospitalstaffdoctors.hospital.specialist}}</p>
-											<p class="doc-department"><img src="{{doctor.hospitalstaffdoctors.hospital.specialist.hover_icon}}"
+											<h4 class="doc-name">{{doctor.hospital.hopital_name}}</h4>
+											<p class="doc-speciality">{{doctor.hospital.specialist}}</p>
+											<p class="doc-department"><img src="{{doctor.hospital.specialist.hover_icon}}"
 													class="img-fluid" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Speciality">Dentist</p>													
 											<div class="clinic-details">
-												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{doctor.hospitalstaffdoctors.hospital.city}}, {{doctor.hospitalstaffdoctors.hospital.state}} - <a
+												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{doctor.hospital.city}}, {{doctor.hospital.state}} - <a
 														href="javascript:void(0);">Get Directions</a></p>
 												
 											</div>
@@ -78,7 +78,7 @@ Booking {% endblock title %}
 											</p>
 											
 											<h5 class="doc-department"><img
-													src="{{doctor.specialist.specialist_icon}}" class="img-fluid"
+													src="{{doctor.hospital.specialist.hover_icon}}" class="img-fluid"
 													alt="Speciality" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">{{doctor.specialist}}</h5>
 													<div class="rating">
 														{% if rating <= 5 and rating > 4 %}

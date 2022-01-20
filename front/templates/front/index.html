@@ -260,7 +260,7 @@ Booking{% endblock title %}
 										<div class="content-info">
 											<ul class="available-info">
 												<li>
-													<i class="fas fa-map-marker-alt"></i>{{doctor.doctor.city|title}} , {{doctor.doctor.country|title}} 
+													<i class="fas fa-map-marker-alt"></i>{{doctor.doctor.idcity|title}} , {{doctor.doctor.idcountry|title}} 
 												</li>
 												<li>
 													{% comment %} <i class="far fa-clock"></i> 450 Consultations {% endcomment %}
@@ -621,8 +621,8 @@ Booking{% endblock title %}
 									<br>
 									<div class="post-author">
 										<a href="{% url 'blog_details' blog.id %}">
-											<img src="{{blog.doctor.doctor.profile_pic}} " alt="Post Author">
-											<span>{{blog.doctor.doctor.fisrt_name}} {{blog.doctor.doctor.last_name}}</span>
+											<img src="{{blog.doctor.profile_pic}} " alt="Post Author">
+											<span>{{blog.doctor.fisrt_name}} {{blog.doctor.last_name}}</span>
 										</a>
 									</div>
 									<p class="date-cart">{{blog.updated_at|date:"d"}} <span>{{blog.updated_at|date:"M Y"}}</span></p>

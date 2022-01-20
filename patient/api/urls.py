@@ -11,6 +11,9 @@ urlpatterns = [
 
     path('onlinedoctorlist',views.APIOnlineDoctorListView.as_view(),name='onlinedoctorlist'),
     path('onlinedoctordetail/<id>',views.APIOnlineDoctorListView.as_view(),name='onlinedoctordetail'),
+  
+    path('doctorlist',views.APIDoctorListView.as_view(),name='doctorlist'),
+    path('doctordetail/<id>',views.APIDoctorListView.as_view(),name='doctordetail'),
    
     path('homevisitdoctorlist',views.APIHomevisitDoctorListView.as_view(),name='homevisitdoctorlist'),
     path('homevisitdetail/<id>',views.APIHomevisitDoctorListView.as_view(),name='homevisitdetail'),

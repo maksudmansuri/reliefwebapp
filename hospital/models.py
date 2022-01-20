@@ -23,28 +23,6 @@ class TimeSlot(models.Model):
     def __str__(self):
         return str(self.schedule)
 
-class HospitalStaffDoctors(models.Model):
-    id                  =models.AutoField(primary_key=True)
-    email               =models.EmailField(default="", max_length=254,blank=True,null=True)
-    doctor              =models.OneToOneField(HospitalDoctors, on_delete=models.CASCADE)
-    hospital            =models.ForeignKey(Hospitals, related_name="hospitalstaffdoctors", on_delete=models.CASCADE)
-    ssn_id              =models.CharField(max_length=50,default="",blank=True,null=True)
-    opd_charges         =models.FloatField(default=0.0,blank=True,null=True)
-    home_charges        =models.FloatField(default=0.0,blank=True,null=True)
-    emergency_charges    =models.FloatField(default=0.0,blank=True,null=True)
-    online_charges    =models.FloatField(default=0.0,blank=True,null=True)
-    joindate            =models.DateField(blank=True,null=True,default="") 
-    is_virtual_available=models.BooleanField(blank=True,null=True,default=False)   
-    is_homevisit_available=models.BooleanField(blank=True,null=True,default=False)   
-    is_online           =models.BooleanField(blank=True,null=True,default=False)   
-    is_active           =models.BooleanField(blank=True,null=True,default=False) 
-    created_at          =models.DateTimeField(auto_now=True)
-    updated_at          =models.DateTimeField(auto_now=True)
-    objects             =models.Manager()
-    
-    def __str__(self):
-        return self.doctor.fisrt_name + " " + self.doctor.last_name
-
 class DoctorSchedule(models.Model):
     id                  =models.AutoField(primary_key=True)
     hospital            =models.ForeignKey(Hospitals,on_delete=models.CASCADE,default="",blank=True,null=True)
@@ -83,7 +61,7 @@ class HospitalStaffs(models.Model):
 class HospitalStaffDoctorSchedual(models.Model):
     id                           =models.AutoField(primary_key=True)
     hospital                     =models.ForeignKey(Hospitals, on_delete=models.CASCADE)
-    hospitalstaffdoctor          =models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE)
+    hospitalstaffdoctor          =models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE)
     # SHIFT_CHOICE                 =(("Morning","Morning"),("Noon","Noon"),("Evening","Evening"),("All-Day","All-Day"))
     # DAY_CHOICE                   =(("YES","YES"),("NO","NO"))
     # shift                        =models.CharField(choices=SHIFT_CHOICE, max_length=50,default="",blank=True,null=True)
@@ -108,7 +86,7 @@ class HospitalStaffDoctorSchedual(models.Model):
 class Departments(models.Model):
     id                  =models.AutoField(primary_key=True)
     hospital            =models.ForeignKey(Hospitals,on_delete=models.CASCADE,default="")
-    hospital_staff_doctor=models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE)
+    hospital_staff_doctor=models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE)
     department_head     =models.CharField(max_length=256,blank=True,null=True,default="")
     department_name     =models.CharField(max_length=256,blank=True,null=True,default="")
     mobile              =models.CharField(max_length=256,blank=True,null=True,default="")
@@ -294,7 +272,7 @@ class AmbulanceDetails(models.Model):
     drive_name              =           models.CharField(max_length=500,blank=True,null=True,default="")
     phone_regex             =           RegexValidator( regex = r'^\+?1?\d{9,10}$', message ="Phone number must be entered in the format +919999999999. Up to 10 digits allowed.")
     drive_number            =            models.CharField('Phone',validators =[phone_regex], max_length=10, unique = True)                                          
-    doctor                  =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE,blank=True,null=True)
+    doctor                  =           models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE,blank=True,null=True)
     vehicle_type            =           models.CharField(max_length=500,blank=True,null=True,default="")
     vehicle_number          =           models.CharField(max_length=500,blank=True,null=True,default="")
     charge                  =           models.FloatField(blank=True,null=True,default=0.0)
@@ -311,7 +289,7 @@ class AmbulanceDetails(models.Model):
 class Blog(models.Model):
     id                      =           models.AutoField(primary_key=True)
     hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE)
-    doctor                  =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE,blank=True,null=True)
+    doctor                  =           models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE,blank=True,null=True)
     blog_title              =           models.CharField(max_length=500,blank=True,null=True,default="")
     blog_content            =           models.TextField(max_length=5000,blank=True,null=True,default="")
     blog_image              =           models.FileField(upload_to="hospital/blog/images",blank=True,null=True,default="")

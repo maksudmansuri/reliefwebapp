@@ -8,7 +8,8 @@
                 <div class="profile-det-info">
                     <h3>{{request.user.hospitals.hopital_name|upper}}</h3>
                     <div class="patient-details">
-                        <h5 class="mb-0">{{request.user.hospitals.hopital_name|upper}}</h5>
+                        {% comment %} <h5 class="mb-0">{{request.user.hospitals.hopital_name|upper}}</h5><br> {% endcomment %}
+                       <h5 class="mb-3"> Commission Rate : {{request.user.share|upper}} %</h5>
                     </div>
                 </div>
             </div>
@@ -23,12 +24,15 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    {% comment %} <li>
-                        <a href="{% url 'hospital_dashboard' %}">
+                    {% if request.user.is_verified %}
+                    {% url 'manage_appointment' as manage_appointment %}
+                    <li {% if request.path == manage_appointment %} class="active" {% endif %} >
+                        <a href="{% url 'manage_appointment' %}">
                             <i class="fas fa-calendar-check"></i>
                             <span>Appointments</span>
                         </a>
-                    </li> {% endcomment %}
+                    </li>
+
                     {% comment %} <li>
                         <a href="{% url 'hospital_dashboard' %}">
                             <i class="fas fa-calendar-check"></i>
@@ -71,6 +75,7 @@
                             <span>Ambulance</span>
                         </a>
                     </li>
+                    
                     {% url 'manage_gallery' as manage_gallery %}
                     <li {% if request.path == manage_gallery %} class="active" {% endif %} >
                         <a href="{% url 'manage_gallery' %}">
@@ -78,7 +83,7 @@
                             <span>Gallery</span>
                         </a>
                     </li>
-                    {% url 'list_blog' as list_blog %}
+                    {% comment %} {% url 'list_blog' as list_blog %}
                     {% url 'add_blog' as add_blog %}
                     {% url 'edit_blog' as edit_blog %}
                     <li {% if request.path == list_blog %} class="active" {% endif %} {% if request.path == add_blog %} class="active" {% endif %} {% if request.path == edit_blog %} class="active" {% endif %} >
@@ -86,7 +91,7 @@
                             <i class="fas fa-blog"></i>
                             <span>Blogs</span>
                         </a>
-                    </li>
+                    </li> {% endcomment %}
                     {% url 'manage_doctor' as manage_doctor %}
                     <li {% if request.path == manage_doctor %} class="active" {% endif %} >
                         <a href="{% url 'manage_doctor' %}">
@@ -94,6 +99,7 @@
                             <span>Doctors</span>
                         </a>
                     </li>
+                   
                     <li>
                         <a href="#">
                             <i class="fas fa-file-invoice"></i>
@@ -107,14 +113,14 @@
                             <i class="fas fa-star"></i>
                             <span>Reviews</span>
                         </a>
-                    </li>
-                    <li>
+                    </li> {% endif %}
+                    {% comment %} <li>
                         <a href="#">
                             <i class="fas fa-comments"></i>
                             <span>Message</span>
                             <small class="unread-msg">23</small>
                         </a>
-                    </li>
+                    </li> {% endcomment %}
                     
                 </ul>
             </nav>

@@ -20,8 +20,8 @@
                                     </div>
                                 </div>
                                 <div class="dash-widget-info">
-                                    <h6>Total Patient</h6>
-                                    <h3>1500</h3>
+                                    <h6>Total Appointments</h6>
+                                    <h3>{{totalbookings}}</h3>
                                     <p class="text-muted">Till Today</p>
                                 </div>
                             </div>
@@ -35,9 +35,9 @@
                                     </div>
                                 </div>
                                 <div class="dash-widget-info">
-                                    <h6>Today Patient</h6>
-                                    <h3>160</h3>
-                                    <p class="text-muted">06, Nov 2019</p>
+                                    <h6>Today Appointments</h6>
+                                    <h3>{{todaybookings}}</h3>
+                                    <p class="text-muted">{% now "DATE_FORMAT" %}</p>
                                 </div>
                             </div>
                         </div>
@@ -50,9 +50,9 @@
                                     </div>
                                 </div>
                                 <div class="dash-widget-info">
-                                    <h6>Appoinments</h6>
-                                    <h3>85</h3>
-                                    <p class="text-muted">06, Apr 2019</p>
+                                    <h6>Total Payments</h6>
+                                    <h3>&#x20B9;{{todaypayments}}</h3>
+                                    <p class="text-muted">{% now "DATE_FORMAT" %}</p>
                                 </div>
                             </div>
                         </div>
