@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'coreapi',
     'rest_framework_swagger',
     'django_filters',
+    'storages',
 
 ]
 
@@ -208,15 +209,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 
-MEDIA_URL = "media/"
-MEDIA_ROOT=os.path.join(BASE_DIR,"media")
-
-STATIC_URL = 'static/'
-STATIC_ROOT=os.path.join(BASE_DIR,"static")
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),      
-]
 
 
 
@@ -240,3 +232,27 @@ EMAIL_PORT = 587
 
 REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema'} 
 django_heroku.settings(locals())
+# USE_S3 = os.getenv('USE_S3') == 'TRUE'
+# if USE_S3:
+AWS_ACCESS_KEY_ID = 'AKIAYKYQ6HVHRNSQMVWQ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'uniqueupgradebooking'
+# AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_S3_REGION_NAME = 'us-east-1'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+PUBLIC_MEDIA_LOCATION = 'media'
+MEDIA_URL = f'https://uniqueupgradebooking.s3.amazonaws.com/{PUBLIC_MEDIA_LOCATION}/'
+# AWS_S3_VERIFY = True
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage' 
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage' 
+# else:    
+MEDIA_URL = "/media/"
+MEDIA_ROOT=os.path.join(BASE_DIR,"media")
+
+#     STATIC_URL = '/static/'
+#     STATIC_ROOT=os.path.join(BASE_DIR,"static")
+
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "staticfiles"),      
+# ]
