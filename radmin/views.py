@@ -59,6 +59,8 @@ class AddHospitalSpecialistView(SuccessMessageMixin,CreateView):
         filename1=fs.save(specialist_icon.name,specialist_icon)
         profile_pic_url=fs.url(filename1)
         fs1=FileSystemStorage()
+        ret = specialist_icon.UploadImage(specialist_icon)
+        print(ret)
         filename2=fs1.save(hover_icon.name,hover_icon)
         hover_icon_url=fs1.url(filename2)
         try:
