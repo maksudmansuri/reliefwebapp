@@ -858,6 +858,8 @@ def CheckoutViews(request):
     temp= Temp.objects.get(user=request.user)
     order = get_object_or_404(OrderBooking,order_id=temp.order_id)   
     book_for=order.booking_for
+    if book_for == "D":
+        param ={'booking':order}
     if book_for == "H":
         param ={'booking':order}
     if book_for == "L":

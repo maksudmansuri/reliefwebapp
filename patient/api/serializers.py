@@ -18,6 +18,10 @@ class HomeScreenSerializer(serializers.ModelSerializer):
 		model = Specailist
 		fields = ['pk','specialist_name','hover_icon','specialist_icon']
 
+class InsideScreenSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Specailist
+		fields = ['specialist_name']
 
 class ratingSerilizers(serializers.ModelSerializer):
 	class Meta:
@@ -28,12 +32,26 @@ class HospitalHomeScreenSerializer(serializers.ModelSerializer):
 	comment_to = ratingSerilizers
 	class Meta:
 		model = Hospitals
-		fields = ['pk','hopital_name','address1','address2','city','pin_code','state','specialist','profile_pic']
+		fields = ['pk','hopital_name','address1','address2','city','pin_code','state','profile_pic']
+	
+	def to_representation(self, instance):
+		response = super().to_representation(instance)
+		print(instance)
+		response['specialist'] = InsideScreenSerializer(instance.specialist).data
+		return response
+
+
 
 class HospitalDoctorHomeScreenSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = HospitalDoctors
-		fields = ['pk','fisrt_name','last_name','address','city','pin_code','state','specialist','profile_pic','degree','gender','is_virtual_available','is_online']
+		fields = ['pk','fisrt_name','last_name','address','city','pin_code','state','profile_pic','degree','gender','is_virtual_available','is_online']
+
+	def to_representation(self, instance):
+		response = super().to_representation(instance)
+		print(instance)
+		response['specialist'] = InsideScreenSerializer(instance.specialist).data
+		return response
 	
 class LabHomeScreenSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -43,7 +61,7 @@ class LabHomeScreenSerializer(serializers.ModelSerializer):
 class PharmaHomeScreenSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Pharmacy
-		fields = ['pk','pharmacy_name','address','city','pin_code','state','specialist','profile_pic']
+		fields = ['pk','pharmacy_name','address','city','pin_code','state','profile_pic']
 
 
 

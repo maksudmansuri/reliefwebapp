@@ -44,8 +44,8 @@
 										class="avatar-img rounded-circle" id="currentPhoto1" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 								</div>
 								<div class="user-text">
-									<h6>{{request.user.hospitals.hopital_name|upper}}</h6>
-									<p class="text-muted mb-0">Hospital</p>
+									<h6>Dr. {{request.user.first_name|upper}} {{request.user.last_name|upper}}</h6>
+									<p class="text-muted mb-0">Doctor</p>
 								</div>
 							</div>
 							<a class="dropdown-item" href="{% url 'doctor_dashboard' %}">Dashboard</a>

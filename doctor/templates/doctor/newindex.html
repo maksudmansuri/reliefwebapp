@@ -14,7 +14,7 @@
                         <div class="col-md-12 col-lg-4">
                             <div class="dash-widget dct-border-rht">
                                 <div class="circle-bar circle-bar1">
-                                    <div class="circle-graph1" data-percent="75">
+                                    <div class="circle-graph1" data-percent="100">
                                         <img src="{% static 'newstatic/assets/img/icon-01.png' %}" class="img-fluid"
                                             alt="patient">
                                     </div>
@@ -29,7 +29,7 @@
                         <div class="col-md-12 col-lg-4">
                             <div class="dash-widget dct-border-rht">
                                 <div class="circle-bar circle-bar2">
-                                    <div class="circle-graph2" data-percent="65">
+                                    <div class="circle-graph2" data-percent="100">
                                         <img src="{% static 'newstatic/assets/img/icon-02.png' %}" class="img-fluid"
                                             alt="Patient">
                                     </div>
@@ -44,7 +44,7 @@
                         <div class="col-md-12 col-lg-4">
                             <div class="dash-widget">
                                 <div class="circle-bar circle-bar3">
-                                    <div class="circle-graph3" data-percent="50">
+                                    <div class="circle-graph3" data-percent="100">
                                         <img src="{% static 'newstatic/assets/img/icon-03.png' %}" class="img-fluid"
                                             alt="Patient">
                                     </div>
@@ -61,6 +61,7 @@
             </div>
         </div>
     </div> 
+    {% if user.hospitaldoctors.is_verified %}
     <div class="row">
         <div class="col-md-12">
             <h4 class="mb-4">Patient Appoinment</h4>
@@ -92,8 +93,7 @@
                                             <tr>
                                                 <th>Appt ID</th>
                                                 <th>Patient Name</th>
-                                                <th>Doctor Name</th>
-                                                <th>Appt Date</th>
+                                                <th>Appt Date</th>                                                
                                                 <th>Type</th>
                                                 <th class="text-center">Amount</th>
                                                 <th>Action</th>
@@ -121,19 +121,7 @@
                                                             <span>#PT00{{booking.patient.patients.id}}</span></a>
                                                     </h2>
                                                 </td>
-                                                <td>
-                                                    <h2 class="table-avatar">
-                                                        <a href="doctor-profile.html" class="avatar avatar-sm me-2"><img
-                                                                class="avatar-img rounded-circle"
-                                                                src="{{booking.hospitalstaffdoctor.doctor.profile_pic}}"
-                                                                onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
-                                                                alt="User Image"></a>
-                                                        <a href="patient-profile.html">{{booking.hospitalstaffdoctor.doctor.name_title|title }}
-                                                            {{booking.hospitalstaffdoctor.doctor.fisrt_name|title }}
-                                                            {{booking.hospitalstaffdoctor.doctor.last_name|title }}
-                                                            <span>#DT00{{booking.hospitalstaffdoctor.id}}</span></a>
-                                                    </h2>
-                                                </td>
+                                               
                                                 <td>{{booking.applied_date}} <span
                                                         class="d-block text-info">{{booking.applied_time|time:"H i a"}}</span>
                                                 </td>
@@ -172,7 +160,7 @@
 
 
                     <div class="tab-pane" id="today-appointments">
-                        <div class="card card-table mb-0">
+                        <div class="card  mb-0">
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table id="patient-table1" class="table table-hover table-center mb-0" style="width: 100%;" >
@@ -238,12 +226,12 @@
                                                             </a>
                                                         {% endif %}
                                                         {% if booking.is_applied %}                            
-                                                            <a href="{% url 'accept_apt' booking.id %}"
+                                                            <a href="{% url 'doc_accept_apt' booking.id %}"
                                                                 class="btn btn-sm bg-success-light">
                                                                 <i class="fas fa-check"></i> Accept
                                                             </a>
                                                         {% endif %}
-                                                        <a href="{% url 'reject_apt' booking.id %}"
+                                                        <a href="{% url 'doc_reject_apt' booking.id %}"
                                                             class="btn btn-sm bg-danger-light">
                                                             <i class="fas fa-times"></i> Cancel
                                                         </a>
@@ -263,6 +251,11 @@
             </div>
         </div>
     </div>
+    {% elif user.hospitaldoctors.is_appiled %}
+    <h3> WAIT FOR SOME TIME UNTILL WE ARE VERIFY YOUR DETAILS. YOUR DASHBOARD AUTOMATICALLY CHANGE ONCE WE will VERIFY DETAILS.</h3>
+    {% else %}
+    <h1> Fill of your all detail <a href="{% url 'doctor_update' %}">Profile Update</a></h1>
+    {% endif %}
 </div>
 {% endblock content %}
 
@@ -364,7 +357,7 @@
                     </li>
                 </ul>
             </br>
-                <form action="{% url 'accept_otp' booking.id %}" method ="post">
+                <form action="{% url 'doc_accept_otp' booking.id %}" method ="post">
                     {% csrf_token %}
                         <div class="col-md-12">
                             <label class="form-label">Enter 4 Digit OTP Number *</label>

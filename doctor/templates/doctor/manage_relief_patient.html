@@ -43,13 +43,13 @@
                                 <td> PT00{{book.id}}</td>
                                 <td>
                                 {% comment %} <img src="assets/images/xs/avatar3.jpg" class="avatar  rounded-circle me-2" alt="profile-image"> {% endcomment %}
-                                <span><a href="{% url 'relief_patient_profile' book.id %}" tooltip="true" title="View Profile">{{book.booking.patient.name_title}} {{book.patient.fisrt_name}} {{book.patient.last_name}}</a></span></td>
+                                <span><a href="{% url 'doc_relief_patient_profile' book.id %}" tooltip="true" title="View Profile">{{book.booking.patient.name_title}} {{book.patient.fisrt_name}} {{book.patient.last_name}}</a></span></td>
                                 <td>{{book.patient.dob}}</td>
                                 <td>{{book.patient.bloodgroup}}</td>
                                 <td>{{book.patient.gender}}</td>
                                 <td><h6><span class="badge {% if book.status == "CHECKEDUP" %}bg-primary{% endif %}{% if  book.status == "ADMITED" %}bg-info{% endif %}{% if  book.status == "DISCHARGED" %}bg-success{% endif %}">{{book.status}}</span></td></h6>
                                 <td>
-                                    <a href="{% url 'delete__relief_hospital_patient' book.id %}"
+                                    <a href="{% url 'doc_delete__relief_doctor_patient' book.id %}"
                                     class="btn btn-outline-danger">
                                     <i class="far fa-trash-alt"></i>
                                     </a>

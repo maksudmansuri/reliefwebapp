@@ -39,13 +39,15 @@
 						<div class="blog grid-blog">
 							<div class="blog-image">
 								<a href="{% url 'blog_details' blog.id %}"><img class="img-fluid"
-										src="{{blog.blog_image}}" alt="Post Image" height="100" width="100"/></a>
+										src="{{blog.blog_image}}" 
+										onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Post Image" height="100" width="100"/></a>
 							</div>
 							<div class="blog-content">
 								<ul class="entry-meta meta-item">
 									<li>
 										<div class="post-author">
-											<a href="doctor-profile.html"><img src="{{blog.doctor.profile_pic}}"
+											<a href="doctor-profile.html"><img src="{{blog.doctor.profile_pic}}" 
+												onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
 													alt="Post Author">
 												<span>Dr. {{blog.doctor.fisrt_name}}
 													{{blog.doctor.last_name}}</span></a>

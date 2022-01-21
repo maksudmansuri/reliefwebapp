@@ -61,7 +61,7 @@
             </div>
         </div>
     </div> 
-    {% if request.user.is_verified %}
+    {% if request.user.hospitals.is_verified %}
     <div class="row">
         <div class="col-md-12">
             <h4 class="mb-4">Patient Appoinment</h4>
@@ -265,12 +265,12 @@
         </div>
     </div>
     {% else %}
-    {% if request.user.is_applied %}
+    {% elif request.user.hospitals.is_appiled %}
     <h1> WAIT FOR SOME TIME UNTILL WE ARE VERIFY YOUR DETAILS. YOUR DASHBOARD AUTOMATICALLY CHANGE ONCE WE VERIFY YOU</h1>
     {% else %}
-    <h1> Fill of your all detail</h1>
+    <h1> Fill of your all detail <a href="{% url 'hospital_update' %}">Profile Update</a></h1>
     {% endif %}
-    {% endif %}
+   
 </div>
 {% endblock content %}
 

@@ -26,7 +26,7 @@ class TimeSlot(models.Model):
 class DoctorSchedule(models.Model):
     id                  =models.AutoField(primary_key=True)
     hospital            =models.ForeignKey(Hospitals,on_delete=models.CASCADE,default="",blank=True,null=True)
-    doctor              =models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE)
+    doctor              =models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE,blank=True,null=True)
     timeslot            =models.ForeignKey(TimeSlot, on_delete=models.CASCADE,blank=True,null=True,default="")
     scheduleDate        = models.DateField(auto_now=False, auto_now_add=False,blank=True,null=True)
     is_active           =models.BooleanField(blank=True,null=True,default=False)
@@ -288,8 +288,8 @@ class AmbulanceDetails(models.Model):
     
 class Blog(models.Model):
     id                      =           models.AutoField(primary_key=True)
-    hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE)
-    doctor                  =           models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE,blank=True,null=True)
+    hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE,blank=True,null=True)
+    doctor                  =           models.ForeignKey(HospitalDoctors,related_name="hospitaldoctors_blogs", on_delete=models.CASCADE,blank=True,null=True)
     blog_title              =           models.CharField(max_length=500,blank=True,null=True,default="")
     blog_content            =           models.TextField(max_length=5000,blank=True,null=True,default="")
     blog_image              =           models.FileField(upload_to="hospital/blog/images",blank=True,null=True,default="")

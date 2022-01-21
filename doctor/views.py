@@ -7,7 +7,6 @@ from django.http.request import HttpRequest
 from accounts import models
 import accounts
 from chat.models import Notification
-import doctor
 from front.models import RatingAndComments
 from patient.models import Booking, LabTest, OrderBooking, Orders, Slot, TreatmentReliefPetient, patientFile, phoneOPTforoders
 from django.db.models.query_utils import Q
@@ -27,6 +26,8 @@ from django.urls import reverse
 from datetime import datetime, timedelta
 import pytz
 from django.core.paginator import Paginator
+
+from radmin.models import Disease, HospitalDisease
 IST = pytz.timezone('Asia/Kolkata')
 
 # Create your views here. 
@@ -42,28 +43,18 @@ def OccupiedRoom(request):
 
 class doctordDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
-        # try: 
-        hospital = HospitalDoctors.objects.get(admin=request.user.id)
-        showtime = datetime.now(tz=IST).date()
-        print(showtime)
-        # bookings = OrderBooking.objects.filter(HLP=hospital.admin,is_taken=False,is_otp_verified=False,is_active=True,is_cancelled = False,is_rejected = False)
-        # bookings_now = OrderBooking.objects.filter(HLP=hospital.admin,is_taken=False,is_otp_verified=False,is_active=True,is_cancelled = False,applied_date=showtime,is_rejected = False)
+        try: 
+            hospital = HospitalDoctors.objects.get(admin=request.user.id)
+            showtime = datetime.now(tz=IST).date()
+            print(showtime)
+            bookings = OrderBooking.objects.filter(HLP=hospital.admin,is_taken=False,is_otp_verified=False,is_active=True,is_cancelled = False,is_rejected = False)
+            bookings_now = OrderBooking.objects.filter(HLP=hospital.admin,is_taken=False,is_otp_verified=False,is_active=True,is_cancelled = False,applied_date=showtime,is_rejected = False)
 
-        # if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.profile_pic and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile and contacts:
-            # contacts = HospitalPhones.objects.filter(hospital=hospital)
-            # insurances = Insurances.objects.filter(hospital=hospital)
-        # rooms = HospitalRooms.objects.filter(is_active=True,hospital=request.user.hospitals)
-        # param = {'bookings':bookings,'bookings_now':bookings_now}
-        print("INside doctor dashboard")
-        return render(request,"doctor/newindex.html")
-        
-        # else:
-            # messages.add_message(request,messages.ERROR,"Some detail still Missing !")
-            # param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
-            # return render(request,"hospital/hospital_update.html",param)
-        # except Exception as e:
-        #     return HttpResponse(e)
- 
+            param = {'bookings':bookings,'bookings_now':bookings_now}
+            return render(request,"doctor/newindex.html",param)        
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,e)
+            return render(request,"doctor/newindex.html")
 def AcceptAPT(request,id):
     try:
         apt = get_object_or_404(OrderBooking,id=id,is_cancelled=False,is_active=True)
@@ -277,84 +268,6 @@ class doctorUpdateViews(SuccessMessageMixin,UpdateView):
         messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
         return HttpResponseRedirect(reverse("hospital_update"))
 
-class manageDoctorView(SuccessMessageMixin,CreateView):
-    def get(self, request, *args, **kwargs):
-        try: 
-            hospital=Hospitals.objects.get(admin=request.user)
-            doctors = HospitalDoctors.objects.filter(hospital=hospital)
-            is_virtual_available_check = HospitalDoctors.objects.filter(is_virtual_available=True,hospital=hospital,is_active=True).count()
-            paginator = Paginator(doctors, 6) # Show 25 contacts per page.
-            page_number = request.GET.get('page')
-            page_obj = paginator.get_page(page_number)
-        except Exception as e:
-            messages.add_message(request,messages.ERROR,"user not available")
-            return HttpResponseRedirect(reverse("manage_doctor"))        
-        param={'hospital':hospital,'doctors':doctors,'is_virtual_available_check':is_virtual_available_check,'page_obj':page_obj}
-        return render(request,"hospital/new_manage_doctor.html",param)        
-
-    def post(self, request, *args, **kwargs):
-        #for CustomUSer creation
-        first_name = request.POST.get("fisrt_name")
-        last_name = request.POST.get("last_name")
-        name_title = request.POST.get("name_title")
-        username = first_name + last_name
-        user_type = 3
-        email = request.POST.get("email")
-        phone = request.POST.get("phone")
-        profile_pic = request.FILES.get("profile_pic")
-        # for HospitalDoctor user Creation
-        address = request.POST.get("address")
-        city = request.POST.get("city")
-        state = request.POST.get("state")
-        ssn_id = request.POST.get("ssn_id")
-        country = request.POST.get("country")
-        pin_code = request.POST.get("pin_code")
-        degree = request.POST.get("degree")
-        specialist = request.POST.get("specialist")
-        dob = request.POST.get("dob")
-        alternate_mobile = request.POST.get("alternate_mobile")
-        gender = request.POST.get("gender")
-        # for Hospital staff user creation
-        joindate = request.POST.get("joindate")
-        opd_charges = request.POST.get("opd_charges")
-        home_charges = request.POST.get("home_charges")
-        online_charges = request.POST.get("online_charges")
-        emergency_charges = request.POST.get("emergency_charges")
-        is_active = request.POST.get("is_active")
-        is_virtual = request.POST.get("is_virtual_available")
-        print(is_virtual)
-        is_virtual_available = False
-        if is_virtual == "Yes":
-            is_virtual_available = True
-        facebook = request.POST.get("facebook")
-        instagram = request.POST.get("instagram")
-        linkedin = request.POST.get("linkedin")
-        active = False
-        if is_active == "on":
-            active= True
-        
-        print(profile_pic)
-        profile_pic_url = ""
-        if profile_pic:
-            fs=FileSystemStorage()
-            filename=fs.save(profile_pic.name,profile_pic)
-            media_url=fs.url(filename)
-            profile_pic_url = media_url
-        print(profile_pic_url)
-        hospital=Hospitals.objects.get(admin=request.user)
-
-        doctor = HospitalDoctors(fisrt_name=first_name,last_name=last_name,address=address,city=city,state=state,country=country,pin_code=pin_code,phone=phone,degree=degree,dob=dob,alternate_mobile=alternate_mobile,profile_pic=profile_pic_url,gender=gender,facebook=facebook,instagram=instagram,linkedin=linkedin,specialist=specialist)
-        doctor.save()
-       
-        # staffdoctor= HospitalStaffDoctors(doctor=doctor,hospital=hospital,joindate=joindate,is_active=active,ssn_id=ssn_id,is_virtual_available=is_virtual_available,email=email,emergency_charges=emergency_charges,home_charges=home_charges,online_charges=online_charges,opd_charges=opd_charges)
-        # staffdoctor.is_active=True
-        # staffdoctor.save()
-       
-        # except:
-        #     messages.add_message(request,messages.ERROR,"Connection Error Try after some time")
-        #     return HttpResponseRedirect(reverse("manage_staff"))
-        return HttpResponseRedirect(reverse("manage_doctor"))
-
 
 
 """
@@ -534,48 +447,6 @@ def deleteDoctorPatient(request,id):
     messages.add_message(request,messages.SUCCESS,"Successfully Delete")
     return HttpResponseRedirect(reverse("doc_manage_patient"))
 
-class managePricesView(SuccessMessageMixin,CreateView):
-    def get(self, request, *args, **kwargs):
-        try:
-            hospital=get_object_or_404(Hospitals,admin=request.user)
-            services = ServiceAndCharges.objects.filter(user=request.user,is_active=True)
-        except Exception as e:
-            messages.add_message(request,messages.ERROR,"user not available")
-            return HttpResponseRedirect(reverse("manage_price"))        
-        param={'hospital':hospital,'services':services}
-        return render(request,"hospital/service_and_prices.html",param)        
-
-    def post(self, request, *args, **kwargs):
-        if request.method == "POST":
-            service_name = request.POST.get("service_name")
-            service_charge = request.POST.get("service_charge")
-            hospital=get_object_or_404(Hospitals,admin=request.user)
-
-            service = ServiceAndCharges(user=request.user,service_name=service_name,service_charge=service_charge,is_active =True)
-            service.save()
-            messages.add_message(request,messages.SUCCESS,"Successfully Added")     
-        return HttpResponseRedirect(reverse("manage_price"))
-
-def updateServicePrice(request):
-    if request.method == "POST":
-        service_name = request.POST.get("service_name")
-        id = request.POST.get("id")
-        service_charge = request.POST.get("service_charge")
-        hospital=get_object_or_404(Hospitals,admin=request.user)  
-        service =get_object_or_404(ServiceAndCharges,id=id,user=request.user)
-        service.service_name=service_name
-        service.service_charge=service_charge
-        service.save()
-        messages.add_message(request,messages.SUCCESS,"Successfully Update")
-    return HttpResponseRedirect(reverse("manage_price"))
-
-def deleteServicePrice(request,id):
-    service = service =get_object_or_404(ServiceAndCharges,id=id)
-    service.is_active = False
-    service.save()
-    messages.add_message(request,messages.SUCCESS,"Successfully Delete")
-    return HttpResponseRedirect(reverse("manage_price"))
-
 class manageAppointmentView(SuccessMessageMixin,View):
     def get(self, request, *args, **kwargs):
         try:
@@ -716,7 +587,7 @@ class manageTreatmentViews(SuccessMessageMixin,DetailView):
             messages.add_message(request,messages.ERROR,"user not available")
             return HttpResponseRedirect(reverse("manage_relief_patient"))        
         param={'hospital':hospital,'treatmentreliefpetient':treatmentreliefpetient}
-        return render(request,"hospital/manage_treatment.html",param)        
+        return render(request,"doctor/manage_treatment.html",param)        
 
     def post(self, request, *args, **kwargs):
         id = request.POST.get('a_id')        
@@ -735,20 +606,20 @@ class ReliefPatientViewsProfile(SuccessMessageMixin,DetailView):
      def get(self, request, *args, **kwargs):
         try:
             id = kwargs['id']
-            hospital=Hospitals.objects.get(admin=request.user)
+            hospitaldoctors=HospitalDoctors.objects.get(admin=request.user)
             treatmentreliefpetient = TreatmentReliefPetient.objects.get(is_active=True,id=id)
             oldbooking = TreatmentReliefPetient.objects.filter(is_active=True,patient=treatmentreliefpetient.patient)
-            hospitaldoctors = HospitalDoctors.objects.filter(hospital=hospital,is_active=True)
-            serviceandcharges = ServiceAndCharges.objects.filter(user=hospital.admin)
+            # hospitaldoctors = HospitalDoctors.objects.filter(hospital=hospital,is_active=True)
+            # serviceandcharges = ServiceAndCharges.objects.filter(user=hospital.admin)
             patientfiles = patientFile.objects.filter(treatmentreliefpetient=treatmentreliefpetient) 
-            slot = Slot.objects.filter(patient=treatmentreliefpetient.patient.admin) # yet not required
-            labtests =LabTest.objects.filter(slot__patient=treatmentreliefpetient.patient.admin,is_active=True,slot__send_to_doctor=True)
-            print(labtests)
+            # slot = Slot.objects.filter(patient=treatmentreliefpetient.patient.admin) # yet not required
+            # labtests =LabTest.objects.filter(slot__patient=treatmentreliefpetient.patient.admin,is_active=True,slot__send_to_doctor=True)
+            # print(labtests)
         except Exception as e:
             messages.add_message(request,messages.ERROR,e)
-            return HttpResponseRedirect(reverse("manage_relief_patient"))        
-        param={'hospital':hospital,'treatmentreliefpetient':treatmentreliefpetient,'oldbooking':oldbooking,'hospitaldoctors':hospitaldoctors,'serviceandcharges':serviceandcharges,'patientfiles':patientfiles,'labtests':labtests}
-        return render(request,"hospital/patient_profile.html",param)        
+            return HttpResponseRedirect(reverse("doc_manage_relief_patient"))        
+        param={'treatmentreliefpetient':treatmentreliefpetient,'oldbooking':oldbooking,'hospitaldoctors':hospitaldoctors,'patientfiles':patientfiles}
+        return render(request,"doctor/patient_profile.html",param)        
  
 def ReliefPatientViewsFiles(request,id):
     if request.method == "POST":
@@ -772,7 +643,7 @@ def ReliefPatientViewsFiles(request,id):
             patientfile.save()
             treatmentreliefpetient.next_date=next_date
             treatmentreliefpetient.save()
-            return HttpResponseRedirect(reverse("relief_patient_profile",kwargs={'id':treatmentreliefpetient.id}))
+            return HttpResponseRedirect(reverse("doc_relief_patient_profile",kwargs={'id':treatmentreliefpetient.id}))
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")
             return HttpResponseRedirect(reverse("relief_patient_profile",kwargs={'id':treatmentreliefpetient.id}))
@@ -781,13 +652,12 @@ def ReliefPatientViewsFiles(request,id):
 class manageReliefPatientViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
         try:
-            hospital=HospitalDoctors.objects.get(admin=request.user)
-            treatmentreliefpetient = TreatmentReliefPetient.objects.filter(is_active=True,booking__is_taken=True,booking__HLP=hospital.admin)
-            print(treatmentreliefpetient)
+            doctor=HospitalDoctors.objects.get(admin=request.user)
+            treatmentreliefpetient = TreatmentReliefPetient.objects.filter(is_active=True,booking__is_taken=True,booking__hospitalstaffdoctor=doctor)
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")
-            return HttpResponseRedirect(reverse("manage_relief_patient"))        
-        param={'hospital':hospital,'treatmentreliefpetient':treatmentreliefpetient}
+            return HttpResponseRedirect(reverse("doc_manage_relief_patient"))        
+        param={'doctor':doctor,'treatmentreliefpetient':treatmentreliefpetient}
         return render(request,"doctor/manage_relief_patient.html",param)        
 
     def post(self, request, *args, **kwargs):
@@ -801,7 +671,7 @@ class manageReliefPatientViews(SuccessMessageMixin,ListView):
             # return HttpResponse(e)
        
         print("Appoinment update saved")      
-        return HttpResponseRedirect(reverse("manage_relief_patient"))
+        return HttpResponseRedirect(reverse("doc_manage_relief_patient"))
 
 def deleteReliefDoctorPatient(request,id):
     patient = TreatmentReliefPetient.objects.get(id=id)
@@ -815,8 +685,7 @@ def deleteReliefDoctorPatient(request,id):
 """"NEW DOCTORS SLOT IN BOX"""
 class DoctorScheduleCreateView(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):
-        doctor_id = kwargs['id']
-        doctor = get_object_or_404(HospitalDoctors,id=doctor_id)
+        doctor = request.user.hospitaldoctors
         dates = DoctorSchedule.objects.filter(doctor=doctor).values('scheduleDate','id')
         schedule_dates ={item['scheduleDate'] for item in dates}
         schedule_dates_list = []
@@ -837,65 +706,67 @@ class DoctorScheduleCreateView(SuccessMessageMixin,CreateView):
 
         param = {'timeslots_15s':timeslots_15s,'timeslots_30s':timeslots_30s,'timeslots_45s':timeslots_45s,'timeslots_60s':timeslots_60s,'doctor':doctor,'schedule_dates_list':schedule_dates_list}
        
-        return render(request,'hospital/view-doctor-schedule.html',param)
+        return render(request,'doctor/view-doctor-schedule.html',param)
     
     def post(self, request, *args, **kwargs):
         timeslot_list = request.POST.getlist('timeslot[]')
         scheduleDate = request.POST.get('scheduleDate')
-        doctor_id = request.POST.get('doctor_id') 
-        doctor = get_object_or_404(HospitalDoctors,id=doctor_id)
-        doctorschedules = DoctorSchedule.objects.filter(doctor = doctor)
-        for doctorschedule in doctorschedules:
-            print(doctorschedule.scheduleDate)
-            print(scheduleDate)
-            if str(doctorschedule.scheduleDate) == str(scheduleDate):
-                messages.add_message(request,messages.ERROR,"Already Booked date please delete if you want to change")
-                return HttpResponseRedirect(reverse("manage_doctorschedule",kwargs={'id':doctor.id}))
-        is_active =True
-        for timeslot in timeslot_list:
-            timeslot_obj = get_object_or_404(TimeSlot,id=timeslot)
-            doctorschedule = DoctorSchedule(scheduleDate=scheduleDate,doctor=doctor,is_active=is_active,timeslot=timeslot_obj,hospital=request.user.hospitals)
-            doctorschedule.save()
+        days = request.POST.get('days')
+
+        doctor = get_object_or_404(HospitalDoctors,admin=request.user)
+        for x in range(int(days)):
+            newdate = datetime.strptime(scheduleDate,"%Y-%m-%d") + timedelta(days=int(x))
+            doctorschedules = DoctorSchedule.objects.filter(doctor = doctor)
+            for doctorschedule in doctorschedules:
+                print(doctorschedule.scheduleDate)
+                print(newdate.date())
+                if doctorschedule.scheduleDate == newdate.date():
+                    messages.add_message(request,messages.ERROR,"Already Booked date please delete if you want to change")
+                    return HttpResponseRedirect(reverse("doc_manage_doctorschedule"))
+            is_active =True
+            for timeslot in timeslot_list:
+                timeslot_obj = get_object_or_404(TimeSlot,id=timeslot)
+                doctorschedule = DoctorSchedule(scheduleDate=newdate,doctor=doctor,is_active=is_active,timeslot=timeslot_obj)
+                doctorschedule.save()
         messages.add_message(request,messages.SUCCESS,"Suucessfully Created")
-        return HttpResponseRedirect(reverse("manage_doctorschedule",kwargs={'id':doctor.id}))
+        return HttpResponseRedirect(reverse("doc_manage_doctorschedule"))
  
-def deleteTimeSlot(request,id,did):
-    doctor = get_object_or_404(HospitalDoctors,id=did)
+def deleteTimeSlot(request,id):
+    doctor = request.user.hospitaldoctors
     date1 = DoctorSchedule.objects.get(doctor=doctor,id=id)
     dates = DoctorSchedule.objects.filter(doctor=doctor,scheduleDate=date1.scheduleDate)
     for date in dates:
         date.delete()
     messages.add_message(request,messages.SUCCESS,"Sucessfully Deleted")
-    return HttpResponseRedirect(reverse("manage_doctorschedule",kwargs={'id':doctor.id}))
+    return HttpResponseRedirect(reverse("doc_manage_doctorschedule"))
 
 """ Blog """
 
 class addBlogView(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):        
-        blogs = Blog.objects.all()
-        hospital=Hospitals.objects.get(admin=request.user) 
-        doctors = HospitalDoctors.objects.filter(hospital=hospital)
-        param={'blogs':blogs,'doctors':doctors}
-        return render(request,"hospital/add-blog.html",param)  
+        # hospital=Hospitals.objects.get(admin=request.user) 
+        doctor = request.user.hospitaldoctors
+        blogs = Blog.objects.filter(doctor=doctor)
+        param={'blogs':blogs,'doctors':doctor}
+        return render(request,"doctor/add-blog.html",param)  
 
     def post(self, request, *args, **kwargs):
         blog_title = request.POST.get('blog_title')         
         content = request.POST.get('content')
         blog_image = request.FILES.get('blog_image')
-        doctor = request.POST.get('doctor')
-        # try:
-        hospital=Hospitals.objects.get(admin=request.user) 
-        doctor = get_object_or_404(HospitalDoctors,id=doctor)
-        blog = Blog(blog_title=blog_title,blog_content=content,hospital=hospital,doctor=doctor)
-        if blog_image:
-            fs=FileSystemStorage()
-            filename1=fs.save(blog_image.name,blog_image)
-            blog_image_url=fs.url(filename1)
-            blog.blog_image=blog_image_url
-        blog.save()
-        # except Exception as e:
-            # messages.add_message(request,messages.ERROR,"Something Wrong with connnections")
-            # return HttpResponseRedirect(reverse("add_blog"))
+        doctor = request.user.hospitaldoctors
+        try:        
+            blog = Blog(blog_title=blog_title,blog_content=content,doctor=doctor)
+            if blog_image:
+                fs=FileSystemStorage()
+                filename1=fs.save(blog_image.name,blog_image)
+                blog_image_url=fs.url(filename1)
+                blog.blog_image=blog_image_url
+            blog.save()
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"Something Wrong with connnections")
+            messages.add_message(request,messages.ERROR,e)
+            return HttpResponseRedirect(reverse("add_blog"))
         return HttpResponseRedirect(reverse("list_blog"))
  
 class EditBlogUpdateView(SuccessMessageMixin,UpdateView):
@@ -903,57 +774,32 @@ class EditBlogUpdateView(SuccessMessageMixin,UpdateView):
         print("no error till here i am at editblogupdateview")
         id=kwargs['id']        
         blog =get_object_or_404(Blog,id=id)
-        hospital=Hospitals.objects.get(admin=request.user) 
-        doctors = HospitalDoctors.objects.filter(hospital=hospital)
-        param={'blog':blog,'doctors':doctors}
-        return render(request,"hospital/edit-blog.html",param)  
+        # hospital=Hospitals.objects.get() 
+        doctor = HospitalDoctors.objects.get(admin=request.user)
+        param={'blog':blog,'doctor':doctor}
+        return render(request,"doctor/edit-blog.html",param)  
     
     def post(self, request, *args, **kwargs):
         id=kwargs['id']   
         blog_title = request.POST.get('blog_title')         
         content = request.POST.get('content')
         blog_image = request.FILES.get('blog_image')
-        doctor = request.POST.get('doctor')
-        # try:
-        doctor = get_object_or_404(HospitalDoctors,id=doctor)
-        blog =get_object_or_404(Blog,id=id)
-        blog.blog_title=blog_title
-        blog.blog_content=content
-        blog.doctor=doctor
-        if blog_image:
-            fs=FileSystemStorage()
-            filename1=fs.save(blog_image.name,blog_image)
-            blog_image_url=fs.url(filename1)
-            blog.blog_image=blog_image_url
-        blog.save()
-        # except Exception as e:
-            # messages.add_message(request,messages.ERROR,"Something Wrong with connnections")
-            # return HttpResponseRedirect(reverse("add_blog"))
-        return HttpResponseRedirect(reverse("list_blog"))
-
-    def post(self, request, *args, **kwargs):
-        id=kwargs['id']
-        blog_title = request.POST.get('blog_title')         
-        content = request.POST.get('content')
-        blog_image = request.FILES.get('blog_image')
-        doctor = request.POST.get('doctor')
+        # doctor = request.POST.get('doctor')
         try:
-            hospital=Hospitals.objects.get(admin=request.user) 
-            doctor = get_object_or_404(HospitalDoctors,id=doctor)
-            blog = get_object_or_404(Blog,id=id)
+            doctor = get_object_or_404(HospitalDoctors,admin=request.user)
+            blog =get_object_or_404(Blog,id=id)
             blog.blog_title=blog_title
             blog.blog_content=content
+            blog.doctor=doctor
             if blog_image:
                 fs=FileSystemStorage()
                 filename1=fs.save(blog_image.name,blog_image)
                 blog_image_url=fs.url(filename1)
                 blog.blog_image=blog_image_url
-            blog.hospital=hospital
-            blog.doctor=doctor
             blog.save()
+   
         except Exception as e:
             messages.add_message(request,messages.ERROR,"Something Wrong with connnections")
-            return HttpResponseRedirect(reverse("add_blog"))
         return HttpResponseRedirect(reverse("list_blog"))
  
 def activeBlog(request,id): 
@@ -972,7 +818,7 @@ def inactiveBlog(request,id):
 
 class blogListView(ListView):
     model = Blog
-    template_name = "hospital/blog.html"
+    template_name = "doctor/blog.html"
 
 class ReviewsList(ListView):
     model = RatingAndComments 
@@ -990,4 +836,31 @@ class ReviewsList(ListView):
             rating = rating / total_cmns
         context["total_reviews"] = total_cmns
         return context
+
+"""Manage Disease Add and Update Listout"""
+class manageDiseaseView(SuccessMessageMixin,CreateView):
+    def get(self, request, *args, **kwargs):  
+        doctor = get_object_or_404(HospitalDoctors,admin=request.user)        
+        hos_diseases = HospitalDisease.objects.filter(doctor=doctor)
+        diseases = Disease.objects.filter(is_active=True)
+        param={'diseases':diseases,'hos_diseases':hos_diseases}
+        return render(request,"doctor/add-disease.html",param)  
+
+    def post(self, request, *args, **kwargs):
+        name_list = request.POST.getlist('name []') 
+        try:
+            doctor = get_object_or_404(HospitalDoctors,admin=request.user)
+            hos_des_dl = HospitalDisease.objects.filter(doctor=doctor)
+            for hos in hos_des_dl:
+                hos.delete()      
+            for name in name_list:
+                ds = get_object_or_404(Disease,id=name)
+                hospitaldiseas = HospitalDisease(doctor=doctor,disease = ds)
+                hospitaldiseas.save()
+            messages.add_message(request,messages.SUCCESS,"Successfully Added")
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"Something Wrong with connnections")
+            return HttpResponseRedirect(reverse("doc_manage_disease"))
+        return HttpResponseRedirect(reverse("doc_manage_disease"))
+
 

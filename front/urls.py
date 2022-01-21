@@ -26,7 +26,7 @@ urlpatterns = [
     
     path('delete_reviews/<id>',views.deleteReviews,name="delete_reviews"),
 
-    path('bookappoinment/<id>/<did>', views.DoctorsBookAppoinmentViews.as_view(), name="bookappoinment"),
+    path('bookappoinment/<id>', views.DoctorsBookAppoinmentViews.as_view(), name="bookappoinment"),
     #Profile Labs
     path('lab_details/<id>', views.LabDetailsViews.as_view(), name="lab_details"),
     path('lab_bookappoinment/<id>', views.LabAppoinmentViews.as_view(), name="lab_bookappoinment"),

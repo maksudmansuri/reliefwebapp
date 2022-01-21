@@ -81,7 +81,8 @@ Booking{% endblock title %}
 						{% for hospital in hospitals %}
 							<div class="profile-widget">
 								<a href="{% url 'hospital_details' hospital.hospital.id %}">
-									<img src="{{hospital.hospital.profile_pic}}" alt="" />
+									<img src="{{hospital.hospital.profile_pic}}" alt="" 
+									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" />
 								</a>
 								<div class="pro-content">
 									<div class="row row-sm">
@@ -193,7 +194,8 @@ Booking{% endblock title %}
 						{% for doctor in doctors %}
 							<div class="profile-widget">
 								<a href="{% url 'doctor_details' doctor.doctor.id %}">
-									<img src="{{doctor.doctor.profile_pic}}" alt="" />
+									<img src="{{doctor.doctor.profile_pic}}" alt="" 
+									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"/>
 								</a>
 								<div class="pro-content">
 									<div class="row row-sm">
@@ -305,7 +307,8 @@ Booking{% endblock title %}
 						{% for lab in labs %}
 							<div class="profile-widget">
 								<a href="{% url 'lab_details' lab.lab.id %}">
-									<img src="{{lab.lab.profile_pic}}" alt="" />
+									<img src="{{lab.lab.profile_pic}}" alt="" 
+									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" />
 								</a>
 								<div class="pro-content">
 									<div class="row row-sm">
@@ -417,7 +420,8 @@ Booking{% endblock title %}
 						{% for pharmacy in pharmacys %}
 							<div class="profile-widget">
 								<a href="{% url 'new_pharmacy_details' pharmacy.pharmacy.id %}">
-									<img src="{{pharmacy.pharmacy.profile_pic}}" alt="" />
+									<img src="{{pharmacy.pharmacy.profile_pic}}" alt="" 
+									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" />
 								</a>
 								<div class="pro-content">
 									<div class="row row-sm">
@@ -612,7 +616,8 @@ Booking{% endblock title %}
 						<div class="blog-wrapper">
 							<div class="wrap-image">
 								<a href="{% url 'blog_details' blog.id %}">
-									<img src="{{blog.blog_image}}" height="200" alt="" />
+									<img src="{{blog.blog_image}}" height="200" alt=""  
+									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"/>
 								</a>
 							</div>
 							<div class="wrap-content">
@@ -621,7 +626,8 @@ Booking{% endblock title %}
 									<br>
 									<div class="post-author">
 										<a href="{% url 'blog_details' blog.id %}">
-											<img src="{{blog.doctor.profile_pic}} " alt="Post Author">
+											<img src="{{blog.doctor.profile_pic}} " alt="Post Author" 
+											onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 											<span>{{blog.doctor.fisrt_name}} {{blog.doctor.last_name}}</span>
 										</a>
 									</div>
@@ -656,15 +662,18 @@ Booking{% endblock title %}
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-lg-4 col-md-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" alt="Card image cap" width="200" height="200" src="{% static 'newstatic/assets/img/teams/founder.jpeg' %}">
+					<div class="col-lg-4 col-md-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" alt="Card image cap" width="200" height="200" src="{% static 'newstatic/assets/img/teams/founder.jpeg' %}" 
+						onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 						<h4> <b>Kunj Patel</b> </h4>
 						<p class="mb-0">CEO, CTO and Founder</p>
 					</div>
-					<div class="col-lg-4 col-md-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="{% static 'newstatic/assets/img/teams/co-founder.jpeg'%}" alt="Card image cap" width="200" height="200">
+					<div class="col-lg-4 col-md-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="{% static 'newstatic/assets/img/teams/co-founder.jpeg'%}" alt="Card image cap" width="200" height="200" 
+						onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 						<h4> <b>Abhishek Singh</b> </h4>
 						<p class="mb-0">COO and Co-Founder</p>
 					</div>
-					<div class="col-lg-4 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="{% static 'newstatic/assets/img/teams/bdm.jpeg'%}" width="200" height="200">
+					<div class="col-lg-4 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="{% static 'newstatic/assets/img/teams/bdm.jpeg'%}" width="200" height="200" 
+						onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 						<h4> <b>Meet Patel</b> </h4>
 						<p class="mb-0">BDM</p>
 					</div>

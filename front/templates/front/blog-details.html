@@ -34,7 +34,8 @@
 						<div class="blog-view">
 							<div class="blog blog-single-post">
 								<div class="blog-image">
-									<a href="javascript:void(0);"><img alt="" src="/media/{{blog.blog_image}}"
+									<a href="javascript:void(0);"><img alt="" src="/media/{{blog.blog_image}}" 
+										onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
 											class="img-fluid"></a>
 								</div>
 								<h3 class="blog-title">{{blog.blog_title}}</h3>
@@ -43,8 +44,9 @@
 										<ul>
 											<li>
 												<div class="post-author">
-													<a href="doctor-profile.html"><img
-															src="{{blog.doctor.profile_pic}}"
+													<a href="{% url 'doctor_details' blog.doctor.id%}"><img
+															src="{{blog.doctor.profile_pic}}" 
+															onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
 															alt="Post Author"> <span>Dr. {{blog.doctor.fisrt_name}} {{blog.doctor.last_name}}</span></a>
 												</div>
 											</li>
@@ -80,7 +82,8 @@
 									<div class="about-author">
 										<div class="about-author-img">
 											<div class="author-img-wrap">
-												<a href="doctor-profile.html"><img class="img-fluid rounded-circle"
+												<a href="{% url 'doctor_details' blog.doctor.id %}"><img class="img-fluid rounded-circle" 
+													onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
 														alt="" src="{{blog.doctor.profile_pic}}"></a>
 											</div>
 										</div>
@@ -247,7 +250,8 @@
 									<li>
 										<div class="post-thumb">
 											<a href="{% url 'blog_details' blog.id %}">
-												<img class="img-fluid" src="/media/{{blog.blog_image}}" alt="">
+												<img class="img-fluid" src="/media/{{blog.blog_image}}" alt="" 
+												onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 											</a>
 										</div>
 										<div class="post-info">

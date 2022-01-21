@@ -191,7 +191,8 @@ Booking{% endblock title %}
 															<li>
 																<a href="{{media.media_content}}"
 																	data-fancybox="gallery">
-																	<img src="{{media.media_content}}" alt="Feature">
+																	<img src="{{media.media_content}}" alt="Feature" 
+																	onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 																</a>
 															</li>
 															{% comment %} {% elif media.media_type == "2" %}

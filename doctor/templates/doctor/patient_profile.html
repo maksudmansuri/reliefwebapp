@@ -1,4 +1,4 @@
-{% extends 'hospital/blank-page.html' %} 
+{% extends './blank-page.html' %} 
 {% load static %} 
 {% block title %} Relief Patient List {% endblock title %}
 
@@ -77,7 +77,7 @@
                                             <span class="text-end float-end small"> {{patientfile.created_at}}</span>
                                             <h6 class="fw-bold mt-4 pt-4 mb-4">{{patientfile.file_purpose}}</h6>
                                             <div class="d-flex align-items-center">
-                                                <img src="{{patientfile.hospitaldoctors.doctor.profile_pic}}" class="avatar   rounded-circle me-2" alt="profile-image">
+                                                <img src="{{patientfile.hospitaldoctors.profile_pic}}" class="avatar   rounded-circle me-2" alt="profile-image">
                                                 <span class="ms-1 small">{{patientfile.hospitaldoctors}}</span>
                                             </div>
                                         </div>
@@ -130,12 +130,12 @@
                                             <td>APT00{{book.booking.id}}</td>
                                             <td>
                                             {% comment %} <img src="assets/images/xs/avatar3.jpg" class="avatar  rounded-circle me-2" alt="profile-image"> {% endcomment %}
-                                            <span><a href="{% url 'relief_patient_profile' book.id %}">{{book.booking.applied_date}} {{book.booking.applied_time}}</a></span></td>
+                                            <span><a href="{% url 'doc_relief_patient_profile' book.id %}">{{book.booking.applied_date}} {{book.booking.applied_time}}</a></span></td>
                                             <td>{{book.amount_paid}}</td>
                                             <td><h6><span class="badge {% if book.status == "CHECKEDUP" %}bg-primary{% endif %}{% if  book.status == "ADMITED" %}bg-info{% endif %}{% if  book.status == "DISCHARGED" %}bg-success{% endif %}">{{book.status}}</span></td></h6>
                                             <td>
                                             
-                                                <a href="{% url 'delete__relief_hospital_patient' book.id %}"
+                                                <a href="{% url 'doc_delete__relief_doctor_patient' book.id %}"
                                                 class="btn btn-sm bg-danger-light">
                                                 <i class="far fa-trash-alt"></i>
                                            
@@ -167,7 +167,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="deadline-form">
-                        <form action="{% url 'relief_patient_files' treatmentreliefpetient.id %}" method="post" enctype="multipart/form-data" id="docform">
+                        <form action="{% url 'doc_relief_patient_files' treatmentreliefpetient.id %}" method="post" enctype="multipart/form-data" id="docform">
                         {% csrf_token %}
                             <div class="row g-3 mb-3">
                               <div class="col-sm-12">

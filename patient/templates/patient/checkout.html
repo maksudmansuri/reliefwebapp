@@ -117,11 +117,12 @@ Booking {% endblock title %}
 							<div class="card-header">
 								<h4 class="card-title">Booking Summary</h4>
 							</div> 
-							{% if booking.booking_for == "H" %}
+							{% if booking.booking_for == "H" or booking.booking_for == "D" %}
 								<div class="card-body">
+									{% if booking.booking_for == "H"%}
 									<h4 class="card-title">Hospital Details</h4>
 									<div class="booking-doc-info">
-										<a href="doctor-profile.html" class="booking-doc-img">
+										<a href="{% url 'hospitla_details' booking.hospitalstaffdoctor.hospital.id %}" class="booking-doc-img">
 											<img src="{{booking.hospitalstaffdoctor.hospital.profile_pic}}" alt="User Image">
 										</a>
 										<div class="booking-info">
@@ -140,14 +141,15 @@ Booking {% endblock title %}
 											</div>
 										</div>
 									</div>
+									{% endif %}
 								</br>
 									<h5 class="card-title">Doctor Details</h5>
 									<div class="booking-doc-info">
-										<a href="doctor-profile.html" class="booking-doc-img">
-											<img src="{{booking.hospitalstaffdoctor.doctor.profile_pic}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+										<a href="{% url 'doctor_details' booking.hospitalstaffdoctor.id %}" class="booking-doc-img">
+											<img src="{{booking.hospitalstaffdoctor.profile_pic}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 										</a>
 										<div class="booking-info">
-											<h4><a href="doctor-profile.html">Dr. {{booking.hospitalstaffdoctor.doctor.fisrt_name}} {{booking.hospitalstaffdoctor.doctor.last_name}}</a></h4>
+											<h4><a href="{% url 'doctor_details' booking.hospitalstaffdoctor.id %}">Dr. {{booking.hospitalstaffdoctor.fisrt_name}} {{booking.hospitalstaffdoctor.last_name}}</a></h4>
 											{% comment %} <div class="rating">
 												<i class="fas fa-star filled"></i>
 												<i class="fas fa-star filled"></i>
@@ -157,7 +159,7 @@ Booking {% endblock title %}
 												<span class="d-inline-block average-rating">35</span>
 											</div> {% endcomment %}
 											<div class="clinic-details">
-												<p class="doc-location"><i class="fas fa-address-card"></i> {{booking.hospitalstaffdoctor.doctor.specialist}}
+												<p class="doc-location"><i class="fas fa-address-card"></i> {{booking.hospitalstaffdoctor.specialist}}
 												</p>
 											</div>
 										</div>
@@ -166,7 +168,7 @@ Booking {% endblock title %}
 									<h5 class="card-title">Patient Details</h5>
 									<div class="booking-doc-info">
 										{% if booking.for_whom %}
-										<a href="doctor-profile.html" class="booking-doc-img">
+										<a href="{% url '' %}" class="booking-doc-img">
 											<img src="{{booking.for_whom.profile_pic}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 										</a>
 										<div class="booking-info">

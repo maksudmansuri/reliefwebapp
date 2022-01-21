@@ -1,4 +1,4 @@
-{% extends 'hospital/blank-page.html' %}
+{% extends './blank-page.html' %}
 {% load static %}
 {% block title %} Doctor View {% endblock title %}
 
@@ -7,7 +7,7 @@
 {% block content %}
 <div class="col-md-7 col-lg-8 col-xl-9">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12"> 
             <div class="card">
                 <div class="card-body">
                     <div class="booking-doc-info">
@@ -27,7 +27,7 @@
                                 <i class="fas fa-star"></i>
                                 <span class="d-inline-block average-rating">35</span>
                             </div> {% endcomment %}
-                            <p class="text-muted mb-0"><i class="far fa-id-card"></i> {{doctor.ssn_id}}</p>
+                            <p class="text-muted mb-0"><i class="far fa-id-card"></i> DT00{{doctor.id}}</p>
                             <p class="text-muted mb-0"><i class="fas fa-user-tag"></i> {{doctor.specialist}}</p>
                         </div>
                     </div>
@@ -66,15 +66,16 @@
                                         <tbody>
                                             {% for schedule_date in schedule_dates_list %}
                                             <tr>
-                                                <td>{{schedule_date.sch_Dat}}
+                                                <td>{{schedule_date.sch_Dat|date:'d-m-Y'}}
                                                 </td>
                                                 <td class="text-end">
                                                     <div class="table-action">
-
+                                                        
                                                         <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#EditSchedule{{schedule_date.sch_Dat|date:'dmy'}}"
                                                             class="btn btn-sm bg-success-light">
                                                             <i class="fas fa-edit"></i> View
                                                         </a>
+                                                       
                                                         <a href="{% url 'delete_doctorschedule' schedule_date.scd_type.id doctor.id %}"
                                                             class="btn btn-sm bg-danger-light">
                                                             <i class="fas fa-times"></i> Delete
@@ -275,7 +276,7 @@
                                                         <span>Date:</span>
             
                                                         <div class="me-3">
-                                                            <input type="date" class="form-control" name="scheduleDate" id="schedule_date" value={% now "DATE_FORMAT" %} min="{{erliestDate|date}}">
+                                                            <input type="date" class="form-control" name="scheduleDate" id="schedule_date" min="{{erliestDate|date}}">
                                                             <input type="hidden" name="doctor_id"  value="{{doctor.id}}">
                                                         </div>
                                                         {% comment %} <div class="search-time-mobile">
@@ -290,16 +291,37 @@
                                         </div>
             
                                     </div>
+                                   
                                     <div class="row">
                                         <div class="col-lg-4">
                                             <div class="form-group">
                                                 <label>Timing Slot Duration</label>
                                                 <select class="select form-control select2-hidden-accessible" id="dropBox">
-                                                    <option>-</option>
+                                                    <option>Select Time Duration</option>
                                                     <option value="1" >15 mins</option>
                                                     <option value="2">30 mins</option>
                                                     <option value="3">45 mins</option>
                                                     <option value="4">1 Hour</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label>For how Many days</label>
+                                                <select class="select form-control select2-hidden-accessible" id="days" name="days">
+                                                    <option>Repeat for</option>
+                                                    <option value="1" >1 day</option>
+                                                    <option value="2">2 days</option>
+                                                    <option value="3">3 days</option>
+                                                    <option value="4">4 days</option>
+                                                    <option value="5">5 days</option>
+                                                    <option value="6">6 days</option>
+                                                    <option value="7">7 days</option>
+                                                    <option value="10">10 days</option>
+                                                    <option value="15">15 days</option>
+                                                    <option value="30">30 days</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -329,7 +351,8 @@
 	{% comment %} var today = new Date().toISOString().split('T')[0]; {% endcomment %}
 	var today = new Date().toISOString().split('T')[0];
 	document.getElementsByName("scheduleDate")[0].setAttribute('min', today);
-
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate()+1);
 </script>
 <script>   
 	

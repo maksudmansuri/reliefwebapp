@@ -567,16 +567,16 @@ class DoctorsBookAppoinmentViews(View):
         return super().dispatch(*args, **kwargs)
     def get(self, request, *args, **kwargs):
         hosital_id=kwargs['id']
-        hositaldcotorid_id=kwargs['did']
+        # hositaldcotorid_id=kwargs['did']
         if request.user.is_authenticated:
             a = UserVerified(request)
             if a:
                 messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
                 return HttpResponseRedirect(reverse("patient_update")) 
-        hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
-        doctor = get_object_or_404(HospitalDoctors,is_active=True,id=hositaldcotorid_id)
+        # hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
+        doctor = get_object_or_404(HospitalDoctors,is_active=True,id=hosital_id)
         if request.user.user_type == "4":
-            doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,hospital=hospital)
+            doctorschedules = DoctorSchedule.objects.filter(doctor=doctor)
             forsome = ForSome.objects.filter(patient = request.user.patients) 
             total_cmns = RatingAndComments.objects.filter(HLP =doctor.admin).count()
             cmnss = RatingAndComments.objects.filter(HLP =doctor.admin)
@@ -589,7 +589,7 @@ class DoctorsBookAppoinmentViews(View):
                 rating = rating / total_cmns        
 
             token =False
-            param = {'hospital':hospital,'doctor':doctor,'doctorschedules':doctorschedules,'token':token,'someones':forsome,'rating':rating,'total_cmns':total_cmns}  
+            param = {'doctor':doctor,'doctorschedules':doctorschedules,'token':token,'someones':forsome,'rating':rating,'total_cmns':total_cmns}  
             return render(request,"front/booking.html",param)
         else:
             messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
@@ -599,12 +599,11 @@ class DoctorsBookAppoinmentViews(View):
         doc_id = request.POST.get('doc_id')        
         date = request.POST.get('scheduleDate')
         if doc_id is None or date is None:
-            doc_id=kwargs['did'] 
+            doc_id=kwargs['id'] 
         doctor = get_object_or_404(HospitalDoctors,is_active=True,id=doc_id)
         doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,scheduleDate=date)
         if request.user.user_type == "4":
             forsome = ForSome.objects.filter(patient = request.user.patients) 
-            print(date,doctor,doctorschedules)
             total_cmns = RatingAndComments.objects.filter(HLP =doctor.admin).count()
             cmnss = RatingAndComments.objects.filter(HLP =doctor.admin)
             rating = 0
@@ -709,7 +708,7 @@ class DoctorDetailsViews(View):
             return render(request,"front/booking.html",param)
         else:
             messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
-            return HttpResponseRedirect(reverse("bookappoinment",kwargs={'id':doctor.hospital.id,'did':doctor.id}))
+            return HttpResponseRedirect(reverse("bookappoinment",kwargs={'id':doctor.id}))
 
 """Pharmacy Details"""
 class PharmacyDetailsViews(DetailView):
@@ -908,8 +907,12 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
                 doctorschedule.save()
                 booking.applied_time=doctorschedule.timeslot.schedule
                 booking.hospitalstaffdoctor=hospitalstaffdoctor
-                booking.HLP=hospitalstaffdoctor.hospital.admin
-                booking.booking_for="H"
+                if request.user.user_type == "2":
+                    booking.HLP=hospitalstaffdoctor.hospital.admin
+                    booking.booking_for="H"
+                else:
+                    booking.HLP=hospitalstaffdoctor.admin
+                    booking.booking_for="D"
                 booking.booking_type=booking_type           
                 if booking_type == "EMERGENCY": 
                     booking.amount=hospitalstaffdoctor.emergency_charges
@@ -919,6 +922,7 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
                     booking.amount=hospitalstaffdoctor.online_charges
                 if booking_type == "HOMEVISIT":
                     booking.amount=hospitalstaffdoctor.home_charges           
+                  
             
             if where == "lab": 
                 booking.booking_for="L"
@@ -964,8 +968,9 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
             print("tc check below")
             print(tc)
             if tc > 0:
-                temp = Temp.objects.get(user=request.user)
-                temp.delete()
+                temp = Temp.objects.filter(user=request.user)
+                for tmp in temp:
+                    tmp.delete()
             temp =  Temp(user=request.user,order_id=booking.order_id)
             temp.save() 
             

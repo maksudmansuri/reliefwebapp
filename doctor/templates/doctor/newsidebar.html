@@ -23,12 +23,14 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    {% comment %} <li>
-                        <a href="{% url 'hospital_dashboard' %}">
+                    {% if request.user.hospitaldoctors.is_verified %}
+                    {% url 'manage_appointment' as manage_appointment %}
+                    <li {% if request.path == manage_appointment %} class="active" {% endif %} >
+                        <a href="{% url 'manage_appointment' %}">
                             <i class="fas fa-calendar-check"></i>
                             <span>Appointments</span>
                         </a>
-                    </li> {% endcomment %}
+                    </li>
                     {% comment %} <li>
                         <a href="{% url 'hospital_dashboard' %}">
                             <i class="fas fa-calendar-check"></i>
@@ -51,7 +53,14 @@
                         </a>
                     </li>                  
                     
-                    
+                    {% url 'doc_manage_disease' as doc_manage_disease %}
+                    <li {% if request.path == doc_manage_disease %} class="active" {% endif %} >
+                        <a href="{% url 'doc_manage_disease' %}">
+                            <i class="fas fa-procedures"></i>
+                            <span>Diseases</span>
+                        </a>
+                    </li>
+
                     {% url 'list_blog' as list_blog %}
                     {% url 'add_blog' as add_blog %}
                     {% url 'edit_blog' as edit_blog %}
@@ -76,6 +85,13 @@
                             <span>Reviews</span>
                         </a>
                     </li>
+                    {% url 'doc_manage_doctorschedule' as doc_manage_doctorschedule %}
+                    <li {% if request.path == doc_manage_doctorschedule %} class="active" {% endif %} >
+                        <a href="{% url 'doc_manage_doctorschedule' %}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Schedules</span>
+                        </a>
+                    </li>{% endif %}
                     {% comment %} <li>
                         <a href="#">
                             <i class="fas fa-comments"></i>
