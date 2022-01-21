@@ -58,8 +58,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'django_filters',
     'storages',
-    's3direct',
-
+   
 ]
 
 MIDDLEWARE = [

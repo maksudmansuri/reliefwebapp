@@ -1,5 +1,6 @@
 from datetime import datetime
 import pytz
+from accounts.awsredirect import image
 
 from front.models import RatingAndComments
 IST = pytz.timezone('Asia/Kolkata')
@@ -59,7 +60,7 @@ class AddHospitalSpecialistView(SuccessMessageMixin,CreateView):
         filename1=fs.save(specialist_icon.name,specialist_icon)
         profile_pic_url=fs.url(filename1)
         fs1=FileSystemStorage()
-        ret = specialist_icon.UploadImage(specialist_icon)
+        ret = image.UploadImage(specialist_icon)
         print(ret)
         filename2=fs1.save(hover_icon.name,hover_icon)
         hover_icon_url=fs1.url(filename2)
