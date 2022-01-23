@@ -123,7 +123,7 @@ Booking {% endblock title %}
 									<h4 class="card-title">Hospital Details</h4>
 									<div class="booking-doc-info">
 										<a href="{% url 'hospitla_details' booking.hospitalstaffdoctor.hospital.id %}" class="booking-doc-img">
-											<img src="{{booking.hospitalstaffdoctor.hospital.profile_pic.url}}" alt="User Image">
+											<img src="{{booking.hospitalstaffdoctor.hospital.get_photo_url}}" alt="User Image">
 										</a>
 										<div class="booking-info">
 											<h4><a href="doctor-profile.html">Dr. {{booking.hospitalstaffdoctor.hospital.hopital_name}}</a></h4>
@@ -146,7 +146,7 @@ Booking {% endblock title %}
 									<h5 class="card-title">Doctor Details</h5>
 									<div class="booking-doc-info">
 										<a href="{% url 'doctor_details' booking.hospitalstaffdoctor.id %}" class="booking-doc-img">
-											<img src="{{booking.hospitalstaffdoctor.profile_pic.url}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+											<img src="{{booking.hospitalstaffdoctor.get_photo_url}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 										</a>
 										<div class="booking-info">
 											<h4><a href="{% url 'doctor_details' booking.hospitalstaffdoctor.id %}">Dr. {{booking.hospitalstaffdoctor.fisrt_name}} {{booking.hospitalstaffdoctor.last_name}}</a></h4>
@@ -169,7 +169,7 @@ Booking {% endblock title %}
 									<div class="booking-doc-info">
 										{% if booking.for_whom %}
 										<a href="{% url '' %}" class="booking-doc-img">
-											<img src="{{booking.for_whom.profile_pic.url}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+											<img src="{{booking.for_whom.get_photo_url}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 										</a>
 										<div class="booking-info">
 											<h6><a href="doctor-profile.html">{{booking.for_whom.name_title}}. {{booking.for_whom.fisrt_name}} {{booking.for_whom.last_name}}</a></h6>
@@ -180,7 +180,7 @@ Booking {% endblock title %}
 										</div>
 										{% else %}									
 										<a href="doctor-profile.html" class="booking-doc-img">
-											<img src="{{booking.patient.patients.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
+											<img src="{{booking.patient.patients.get_photo_url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
 										</a>
 										<div class="booking-info">
 											<h6><a href="doctor-profile.html">{{booking.patient.name_title}} {{booking.patient.patients.fisrt_name}} {{booking.patient.patients.last_name}}</a></h6>
@@ -216,7 +216,7 @@ Booking {% endblock title %}
 									<h4 class="card-title">Lab Details</h4>
 									<div class="booking-doc-info">
 										<a class="booking-doc-img">
-											<img src="{{booking.HLP.profile_pic.url}}" alt="User Image">
+											<img src="{{booking.HLP.get_photo_url}}" alt="User Image">
 										</a>
 										<div class="booking-info">
 											<h4><a href="doctor-profile.html">{{booking.HLP.labs.lab_name}}</a></h4>
@@ -239,7 +239,7 @@ Booking {% endblock title %}
 									<div class="booking-doc-info">
 										{% if booking.for_whom %}
 										<a href="doctor-profile.html" class="booking-doc-img">
-											<img src="{{booking.for_whom.profile_pic.url}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+											<img src="{{booking.for_whom.get_photo_url}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 										</a>
 										<div class="booking-info">
 											<h6><a href="doctor-profile.html">{{booking.for_whom.name_title}}. {{booking.for_whom.fisrt_name}} {{booking.for_whom.last_name}}</a></h6>
@@ -250,7 +250,7 @@ Booking {% endblock title %}
 										</div>
 										{% else %}									
 										<a href="doctor-profile.html" class="booking-doc-img">
-											<img src="{{booking.patient.patients.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
+											<img src="{{booking.patient.patients.get_photo_url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
 										</a>
 										<div class="booking-info">
 											<h6><a href="doctor-profile.html">{{booking.patient.name_title}} {{booking.patient.patients.fisrt_name}} {{booking.patient.patients.last_name}}</a></h6>
@@ -298,7 +298,7 @@ Booking {% endblock title %}
 									<h4 class="card-title">Pharmacy Details</h4>
 									<div class="booking-doc-info">
 										<a href="doctor-profile.html" class="booking-doc-img">
-											<img src="{{booking.HLP.profile_pic.url}}" alt="User Image">
+											<img src="{{booking.HLP.get_photo_url}}" alt="User Image">
 										</a>
 										<div class="booking-info">
 											<h4><a href="doctor-profile.html">{{booking.HLP.pharmacy.pharmacy_name}}</a></h4>
@@ -322,7 +322,7 @@ Booking {% endblock title %}
 									<div class="booking-doc-info">
 										{% if booking.for_whom %}
 										<a href="doctor-profile.html" class="booking-doc-img">
-											<img src="{{booking.for_whom.profile_pic.url}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+											<img src="{{booking.for_whom.get_photo_url}}" alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 										</a>
 										<div class="booking-info">
 											<h6><a href="doctor-profile.html">{{booking.for_whom.name_title}}. {{booking.for_whom.fisrt_name}} {{booking.for_whom.last_name}}</a></h6>
@@ -333,7 +333,7 @@ Booking {% endblock title %}
 										</div>
 										{% else %}									
 										<a href="doctor-profile.html" class="booking-doc-img">
-											<img src="{{booking.patient.patients.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
+											<img src="{{booking.patient.patients.get_photo_url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
 										</a>
 										<div class="booking-info">
 											<h6><a href="doctor-profile.html">{{booking.patient.name_title}} {{booking.patient.patients.fisrt_name}} {{booking.patient.patients.last_name}}</a></h6>

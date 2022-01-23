@@ -19,7 +19,7 @@
 					<div class="form-group">
 						<div class="change-avatar media_div_row">
 							<div class="profile-img">
-								<img src="{{hospital.profile_pic.url}}" alt="User Image"
+								<img src="{{hospital.get_photo_url}}" alt="User Image"
 									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
 									class="img_preview">
 							</div>
@@ -335,8 +335,8 @@
 					</div>
 					<div class="col-12 col-md-6">
 						<label for="formFileMultiple" class="form-label">Document Upload (Registration Proof) </label>
-						<input class="form-control" type="file" id="registration_proof.url" name="registration_proof"
-							placeholder="Hospital Documents" value="{{hospital.registration_proof.url}}" multiple>
+						<input class="form-control" type="file" id="get_registration_proof_url" name="registration_proof"
+							placeholder="Hospital Documents" value="{{hospital.get_registration_proof_url}}" multiple>
 					</div>
 					<div class="col-12 col-md-6">
 						<label class="form-label">Trust OR Private *</label>

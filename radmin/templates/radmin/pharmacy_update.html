@@ -44,13 +44,13 @@
                             <div class="card-body">                                
                                 <div class="row g-3 align-items-center media_div_row">
                                     <div class="col-md-3 profile-av mx-auto text-center w220">
-                                        <label for="profile_pic.url" class="form-label">Upload Pharmacy Logo</label>
+                                        <label for="get_photo_url" class="form-label">Upload Pharmacy Logo</label>
                                             <br> 
-                                        <img alt="Avatar" src="{{pharmacy.profile_pic.url}}" {% if pharmacy.profile_pic.url %}style="width:70%;"{% else %} style="width:70%;display:none" {% endif %}class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
+                                        <img alt="Avatar" src="{{pharmacy.get_photo_url}}" {% if pharmacy.get_photo_url %}style="width:70%;"{% else %} style="width:70%;display:none" {% endif %}class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
                                     </div>
                                     
                                     <div class="col-md-3">
-                                        <label for="profile_pic.url" class="form-label">Select Pharmacy Logo *</label>
+                                        <label for="get_photo_url" class="form-label">Select Pharmacy Logo *</label>
                                         <input type="file" class="form-control select_media" name="profile_pic">
                                     </div>
                                     <div class="col-md-6">
@@ -116,7 +116,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="formFileMultiple" class="form-label">Document Upload (Registration Proof) </label>
-                                        <input class="form-control" type="file" id="registration_proof.url" name="registration_proof" placeholder="pharmacy Documents" value="{{pharmacy.registration_proof.url}}" multiple>
+                                        <input class="form-control" type="file" id="get_registration_proof_url" name="registration_proof" placeholder="pharmacy Documents" value="{{pharmacy.get_registration_proof_url}}" multiple>
                                     </div>                                        
                                     <div class="col-md-12">
                                             <label for="speciality" class="form-label">Social link</label>

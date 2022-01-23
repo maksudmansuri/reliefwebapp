@@ -112,7 +112,7 @@
                                                         <a href="patient-profile.html"
                                                             class="avatar avatar-sm me-2"><img
                                                                 class="avatar-img rounded-circle"
-                                                                src="{{booking.patient.profile_pic.url}}"
+                                                                src="{{booking.patient.get_photo_url}}"
                                                                 onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                                                                 alt="User Image"></a>
                                                         <a href="patient-profile.html">{{booking.patient.name_title|title }}
@@ -188,7 +188,7 @@
                                                         <a href="patient-profile.html"
                                                             class="avatar avatar-sm me-2"><img
                                                                 class="avatar-img rounded-circle"
-                                                                src="{{booking.patient.profile_pic.url}}"
+                                                                src="{{booking.patient.get_photo_url}}"
                                                                 onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                                                                 alt="User Image"></a>
                                                         <a href="patient-profile.html">{{booking.patient.name_title|title }}
@@ -201,7 +201,7 @@
                                                     <h2 class="table-avatar">
                                                         <a href="doctor-profile.html" class="avatar avatar-sm me-2"><img
                                                                 class="avatar-img rounded-circle"
-                                                                src="{{booking.hospitalstaffdoctor.doctor.profile_pic.url}}"
+                                                                src="{{booking.hospitalstaffdoctor.doctor.get_photo_url}}"
                                                                 onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                                                                 alt="User Image"></a>
                                                         <a href="patient-profile.html">{{booking.hospitalstaffdoctor.doctor.name_title|title }}

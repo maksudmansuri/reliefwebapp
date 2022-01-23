@@ -100,7 +100,7 @@
 												{% endif %}
 												{% if review.patient.user_type == "4" %} 
 													<h2 class="table-avatar">
-													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.patient.patients.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
+													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.patient.patients.get_photo_url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
 													<a href="patient-profile.html">{{review.patient.patients.first_name}}
 														{{review.patient.patients.last_name}} <span>#PT00{{review.patient.patients.id}}</span></a>
 													</h2>

@@ -102,6 +102,13 @@ class CustomUser(AbstractBaseUser):
 
     def has_module_perms(self,app_label):
         return True    
+
+    @property
+    def get_photo_url(self):
+        if self.profile_pic and hasattr(self.profile_pic, 'url'):
+            return self.profile_pic.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
  
 class PhoneOTP(models.Model):
     
@@ -134,6 +141,20 @@ class Specailist(models.Model):
     
     def __str__(self):
         return self.specialist_name
+
+    @property
+    def get_specialist_icon_url(self):
+        if self.specialist_icon and hasattr(self.specialist_icon, 'url'):
+            return self.specialist_icon.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+    
+    @property
+    def get_hover_icon_url(self):
+        if self.hover_icon and hasattr(self.hover_icon, 'url'):
+            return self.hover_icon.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
 
 # class LabSpecailist(models.Model):
 #     id                  =models.AutoField(primary_key=True)
@@ -194,6 +215,20 @@ class Hospitals(models.Model):
     
     def __str__(self):
         return self.admin.username 
+    
+    @property
+    def get_photo_url(self):
+        if self.profile_pic and hasattr(self.profile_pic, 'url'):
+            return self.profile_pic.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+    
+    @property
+    def get_registration_proof_url(self):
+        if self.registration_proof and hasattr(self.registration_proof, 'url'):
+            return self.registration_proof.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
 
 class HospitalPhones(models.Model):
     id                  =models.AutoField(primary_key=True)
@@ -248,6 +283,19 @@ class HospitalDoctors(models.Model):
     def __str__(self):
         return self.fisrt_name +" "+ self.last_name
 
+    @property
+    def get_photo_url(self):
+        if self.profile_pic and hasattr(self.profile_pic, 'url'):
+            return self.profile_pic.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+    
+    # @property
+    # def get_registration_proof_url(self):
+    #     if self.registration_proof and hasattr(self.registration_proof, 'url'):
+    #         return self.registration_proof.url
+    #     else:
+    #         return "/static/newstatic/assets/img/icons/male.png"
 
 class Patients(models.Model):
     id                  =models.AutoField(primary_key=True)
@@ -284,6 +332,21 @@ class Patients(models.Model):
     def __str__(self):
         self.is_active =True
         return self.admin.phone 
+    
+    @property
+    def get_photo_url(self):
+        if self.profile_pic and hasattr(self.profile_pic, 'url'):
+            return self.profile_pic.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+    
+    @property
+    def get_ID_proof_url(self):
+        if self.ID_proof and hasattr(self.ID_proof, 'url'):
+            return self.ID_proof.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+
         
 class Labs(models.Model):
     id                  =models.AutoField(primary_key=True)
@@ -317,6 +380,20 @@ class Labs(models.Model):
     
     def __str__(self):
         return self.lab_name  
+    
+    @property
+    def get_photo_url(self):
+        if self.profile_pic and hasattr(self.profile_pic, 'url'):
+            return self.hover_icon.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+    
+    @property
+    def get_registration_proof_url(self):
+        if self.registration_proof and hasattr(self.registration_proof, 'url'):
+            return self.registration_proof.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
 
 class Pharmacy(models.Model):
     id                  =models.AutoField(primary_key=True)
@@ -350,6 +427,20 @@ class Pharmacy(models.Model):
     
     def __str__(self):
         return self.pharmacy_name  
+    
+    @property
+    def get_photo_url(self):
+        if self.profile_pic and hasattr(self.profile_pic, 'url'):
+            return self.hover_icon.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+    
+    @property
+    def get_registration_proof_url(self):
+        if self.registration_proof and hasattr(self.registration_proof, 'url'):
+            return self.registration_proof.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
 
 class UserPayments(models.Model):
     id                  =models.AutoField(primary_key=True)

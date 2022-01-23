@@ -50,6 +50,20 @@ class ForSome(models.Model):
     def __str__(self): 
         return self.fisrt_name +" "+ self.last_name
 
+    @property
+    def get_photo_url(self):
+        if self.profile_pic and hasattr(self.profile_pic, 'url'):
+            return self.profile_pic.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+    
+    @property
+    def get_ID_proof_url(self):
+        if self.ID_proof and hasattr(self.ID_proof, 'url'):
+            return self.ID_proof.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+
 class MediacalRecords(models.Model):
     id                      =           models.AutoField(primary_key=True)
     patient                 =           models.ForeignKey(Patients,on_delete=models.CASCADE)
@@ -62,6 +76,13 @@ class MediacalRecords(models.Model):
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
+
+    @property
+    def get_prescription_url(self):
+        if self.prescription and hasattr(self.prescription, 'url'):
+            return self.prescription.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
 
 class AmountCalculation(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -140,6 +161,32 @@ class OrderBooking(models.Model):
 
     class Meta: 
         ordering = ['-updated_at']
+    
+    @property
+    def get_report_url(self):
+        if self.report and hasattr(self.report, 'url'):
+            return self.report.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+
+    @property
+    def get_invoice_url(self):
+        if self.invoice and hasattr(self.invoice, 'url'):
+            return self.invoice.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+    @property
+    def get_prescription_url(self):
+        if self.prescription and hasattr(self.prescription, 'url'):
+            return self.prescription.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+    @property
+    def get_store_invoice_url(self):
+        if self.store_invoice and hasattr(self.store_invoice, 'url'):
+            return self.store_invoice.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
 
 class NewLabTest(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -333,6 +380,13 @@ class Slot(models.Model):
 
     class Meta:
         ordering = ['-updated_at']
+    
+    @property
+    def get_report_url(self):
+        if self.report and hasattr(self.report, 'url'):
+            return self.report.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
 
     @staticmethod
     def give_slot_details(id):
@@ -413,6 +467,20 @@ class PicturesForMedicine(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+    
+    @property
+    def get_prescription_url(self):
+        if self.prescription and hasattr(self.prescription, 'url'):
+            return self.prescription.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+
+    @property
+    def get_store_invoice_url(self):
+        if self.store_invoice and hasattr(self.store_invoice, 'url'):
+            return self.store_invoice.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
 
     @staticmethod
     def give_picture_details(id):
@@ -509,6 +577,13 @@ class patientFile(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+    
+    @property
+    def get_file_url(self):
+        if self.file and hasattr(self.file, 'url'):
+            return self.file.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
 
 class PatientSymptons(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -560,6 +635,13 @@ class PatientBottelAndInjections(models.Model):
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
+
+    @property
+    def get_BI_content_url(self):
+        if self.BI_content and hasattr(self.BI_content, 'url'):
+            return self.BI_content.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
 
 class Temp(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -646,6 +728,13 @@ class Invoice(models.Model):
     is_active               =           models.BooleanField(default=False)
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
+
+    @property
+    def get_invoicepdf_url(self):
+        if self.invoicepdf and hasattr(self.invoicepdf, 'url'):
+            return self.invoicepdf.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
 
 class MerchantAccounts(models.Model):
     id =  models.AutoField(primary_key=True)

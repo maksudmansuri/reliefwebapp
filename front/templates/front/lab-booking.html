@@ -33,7 +33,7 @@ Booking {% endblock title %}
                                 <div class="doctor-widget">
                                     <div class="doc-info-left">
                                         <div class="doctor-img">
-                                            <img src="{{lab.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid" 
+                                            <img src="{{lab.get_photo_url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid" 
 											onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                                                 alt="User Image">
                                         </div>
@@ -57,8 +57,8 @@ Booking {% endblock title %}
                                                 {% for media in medias %}
                                                 {% if media.media_type == "1" %}
                                                     <li>
-                                                        <a href="{{media.media_content}}" data-fancybox="gallery">
-                                                            <img src="{{media.media_content}}" alt="Feature">
+                                                        <a href="{{media.get_media_content_url}}" data-fancybox="gallery">
+                                                            <img src="{{media.get_media_content_url}}" alt="Feature">
                                                         </a>
                                                     </li>
                                                 {% endif %}

@@ -2,8 +2,6 @@ from pyexpat import model
 from django.db import models
 
 from accounts.models import CustomUser, HospitalDoctors, Hospitals
-import doctor
-
 
 class Country(models.Model):
     id = models.AutoField(primary_key=True)
@@ -47,6 +45,13 @@ class Disease(models.Model):
     created_at                   =models.DateTimeField(auto_now=True)
     updated_at                   =models.DateTimeField(auto_now=True)
     objects                      =models.Manager()
+
+    @property
+    def get_d_icon_url(self):
+        if self.d_icon and hasattr(self.d_icon, 'url'):
+            return self.d_icon.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
 
 class HospitalDisease(models.Model):
     id =            models.AutoField(primary_key=True)

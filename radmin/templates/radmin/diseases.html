@@ -40,7 +40,7 @@
                                         <span class="fw-bold">{{disease.id}}</span>
                                     </td>
                                     <td>
-                                        <img class="avatar rounded-circle" src="{{disease.d_icon}}" alt="">
+                                        <img class="avatar rounded-circle" src="{{disease.get_d_icon_url}}" alt="">
                                         <span class="fw-bold ms-1">{{disease.name|title}}</span>
                                     </td>
                                     <td>
@@ -97,7 +97,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <label for="deptwo" class="form-label">Icon *</label>
-                                <input type="file" class="form-control" name="d_icon" required>
+                                <input type="file" class="form-control" name="get_d_icon_url" required>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -138,8 +138,8 @@
                             </div>
                             <div class="col-sm-12">
                                 <label for="deptwo" class="form-label">Icon</label><br>
-                                <span class="form-label">{{disease.d_icon}}</span>
-                                <input type="file" class="form-control" name="d_icon" >
+                                <span class="form-label">{{disease.get_d_icon_url}}</span>
+                                <input type="file" class="form-control" name="get_d_icon_url" >
                             </div>
                         </div>
                         <div class="modal-footer">

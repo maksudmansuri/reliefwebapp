@@ -69,7 +69,7 @@
 																		<a href="{% url 'hospital_details' booking.hospitalstaffdoctor.hospital.id %}"
 																			class="avatar avatar-sm me-2">
 																			<img class="avatar-img rounded-circle"
-																				src="{{booking.hospitalstaffdoctor.hospital.profile_pic.url}}"
+																				src="{{booking.hospitalstaffdoctor.hospital.get_photo_url}}"
 																				alt="User Image">
 																		</a>
 																		<a href="doctor-profile.html">{{booking.hospitalstaffdoctor.hospital.hopital_name}}
@@ -131,7 +131,7 @@
 																		<a href="#"
 																			class="avatar avatar-sm me-2">
 																			<img class="avatar-img rounded-circle"
-																				src="{{labbooks.labbook.HLP.profile_pic.url}}"
+																				src="{{labbooks.labbook.HLP.get_photo_url}}"
 																				alt="User Image">
 																		</a>
 																		<a href="doctor-profile.html">{{labbooks.labbook.HLP.labs.lab_name}}
@@ -142,7 +142,7 @@
 																	{{labbooks.labbook.applied_time}}
 																		</span></td>
 																<td>{{labbooks.labbook.created_at|date:'M d Y'}}</td>
-																<td>{% if labbooks.labbook.report %}<a href="{{labbooks.labbook.report}}"
+																<td>{% if labbooks.labbook.report %}<a href="{{labbooks.labbook.get_report_url}}"
 																	title="Download attachment"
 																	class="btn btn-primary btn-sm"> <i
 																		class="fa fa-download" download></i></a>{% else %}NA{% endif %}</td>
@@ -199,7 +199,7 @@
 																		<a href="#"
 																			class="avatar avatar-sm me-2">
 																			<img class="avatar-img rounded-circle"
-																				src="{{pharmacy.HLP.profile_pic.url}}"
+																				src="{{pharmacy.HLP.get_photo_url}}"
 																				alt="User Image">
 																		</a>
 																		<a href="#">{{pharmacy.HLP.pharmacy.pharmacy_name}}
@@ -211,9 +211,9 @@
 																
 																<td>
 																	<h2 class="table-avatar clinic-gallery">
-																		<a href="{{pharmacy.prescription}}" class="avatar avatar-sm me-2"
+																		<a href="{{pharmacy.get_prescription_url}}" class="avatar avatar-sm me-2"
 																					data-fancybox="gallery">
-																					<img src="{{pharmacy.prescription}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Feature">
+																					<img src="{{pharmacy.get_prescription_url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Feature">
 																				</a>
 																			</h2>
 																</td>
@@ -232,7 +232,7 @@
 																	<div class="table-action">
 																		{% if pharmacy.store_invoice_uploaded %}
 																			{% if pharmacy.store_invoice %} 
-																				<a type="button" class="btn btn-sm bg-primary-light" href="{{pharmacy.store_invoice}}" download data-bs-placement="top" title="Invoice From Store" ><i class="fas fa-download"></i></a>
+																				<a type="button" class="btn btn-sm bg-primary-light" href="{{pharmacy.get_store_invoice_url}}" download data-bs-placement="top" title="Invoice From Store" ><i class="fas fa-download"></i></a>
 																			{% else %}
 																				Error	
 																			{% endif %}

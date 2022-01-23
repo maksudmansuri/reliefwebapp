@@ -46,7 +46,7 @@ span.a {
                                 <tr>
                                     <td>
                                     <a type="button" data-bs-toggle="modal" data-bs-target="#ambulancedetail{{ambulance.id}}">
-                                        <img src="{{ambulance.profile_pic.url}}" class="avatar sm rounded-circle me-2" alt="">
+                                        <img src="{{ambulance.get_photo_url}}" class="avatar sm rounded-circle me-2" alt="">
                                     {% if ambulance.is_active %}
                                         <span class="fw-bold a">{{ambulance.vehicle_number}}</span>
                                     {% else %}                                  
@@ -278,7 +278,7 @@ span.a {
                         <ul class="list-group list-group-custom">
                             <li class="list-group-item">
                                 <span class="badge bg-primary me-2">Photo</span>
-                                <img class="avatar rounded-circle" src="{{ambulance.profile_pic.url}}" alt="">
+                                <img class="avatar rounded-circle" src="{{ambulance.get_photo_url}}" alt="">
                             </li>
                             <li class="list-group-item">
                                 <span class="badge bg-primary me-2">Vahicle Type</span>

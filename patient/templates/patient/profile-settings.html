@@ -18,7 +18,7 @@
 								<div class="form-group">
 									<div class="change-avatar media_div_row">
 										<div class="profile-img">
-											<img src="{{request.user.profile_pic.url}}"  onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image" class="img_preview">
+											<img src="{{request.user.get_photo_url}}"  onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image" class="img_preview">
 										</div>
 										<div class="upload-img ">
 											<div class="change-photo-btn">

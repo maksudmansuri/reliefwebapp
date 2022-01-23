@@ -68,7 +68,7 @@
 												<span class="fw-bold">HP00{{hospital.id}}</span>
 											</td>
 											<td>
-												<img class="avatar rounded-circle" src="{{hospital.profile_pic.url}}"
+												<img class="avatar rounded-circle" src="{{hospital.get_photo_url}}"
 													alt="">
 												<span class="fw-bold ms-1">{{hospital.hopital_name|upper}}</span>
 											</td>
@@ -174,7 +174,7 @@
 												<span class="fw-bold">DT00{{doctor.id}}</span>
 											</td>
 											<td>
-												<img class="avatar rounded-circle" src="{{doctor.profile_pic.url}}" alt=""
+												<img class="avatar rounded-circle" src="{{doctor.get_photo_url}}" alt=""
 													onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 												<span class="fw-bold ms-1">{{doctor.admin.name_title}}
 													{{doctor.fisrt_name}} {{doctor.last_name}}</span>
@@ -279,7 +279,7 @@
 												<span class="fw-bold">LB00{{hospital.id}}</span>
 											</td>
 											<td>
-												<img class="avatar rounded-circle" src="{{hospital.profile_pic.url}}"
+												<img class="avatar rounded-circle" src="{{hospital.get_photo_url}}"
 													alt="">
 												<span class="fw-bold ms-1">{{hospital.lab_name|upper}}</span>
 											</td>
@@ -390,7 +390,7 @@
 												<span class="fw-bold">PH00{{hospital.id}}</span>
 											</td>
 											<td>
-												<img class="avatar rounded-circle" src="{{hospital.profile_pic.url}}"
+												<img class="avatar rounded-circle" src="{{hospital.get_photo_url}}"
 													alt="">
 												<span class="fw-bold ms-1">{{hospital.pharmacy_name}}</span>
 											</td>
@@ -502,7 +502,7 @@
 											</td>
 											<td>
 												<img class="avatar rounded-circle"
-													src="{{hospital.patient.profile_pic.url}}" alt=""
+													src="{{hospital.patient.get_photo_url}}" alt=""
 													onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 												<span class="fw-bold ms-1">{{hospital.patient.admin.name_title}}
 													{{hospital.patient.fisrt_name}}
@@ -580,7 +580,7 @@
 												<span class="fw-bold">{{forloop.counter}}</span>
 											</td>
 											<td>
-												<img class="avatar rounded-circle" src="{{hospital.profile_pic.url}}"
+												<img class="avatar rounded-circle" src="{{hospital.get_photo_url}}"
 													alt="">
 												<span class="fw-bold ms-1">{{hospital.pharmacy_name}}</span>
 											</td>

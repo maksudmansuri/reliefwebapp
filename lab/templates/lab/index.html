@@ -110,7 +110,7 @@
                                                         <a href="patient-profile.html"
                                                         class="avatar avatar-sm me-2"><img
                                                         class="avatar-img rounded-circle"
-                                                        src="{{booking.booking.patient.profile_pic.url}}"
+                                                        src="{{booking.booking.patient.get_photo_url}}"
                                                         onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                                                         alt="User Image"></a>
                                                         <a href="patient-profile.html">{{booking.booking.patient.name_title|title }}
@@ -151,7 +151,7 @@
                                                         {% if booking.booking.is_report_uploaded %}
                                                             <a type="button" class="btn btn-outline-secondary" id="uploadreport" data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{booking.booking.id}}"  data-bs-placement="top" title="Upload Report"  ><i class="fas fa-upload"></i><a>
                                                             
-                                                            <a type="button" class="btn btn-outline-secondary" href="{{booking.booking.report}}" download data-bs-placement="top" title="Download Uploaded Report" ><i class="fas fa-download"></i></a>
+                                                            <a type="button" class="btn btn-outline-secondary" href="{{booking.booking.get_report_url}}" download data-bs-placement="top" title="Download Uploaded Report" ><i class="fas fa-download"></i></a>
 
                                                             <a type="button" class="btn btn-outline-secondary" href="{% url 'delete_lab_appointment' booking.booking.id %}" title="Download Uploaded Report" ><i class="fas fa-trash"></i></a>
                                                         
@@ -202,7 +202,7 @@
                                                         <a href="patient-profile.html"
                                                             class="avatar avatar-sm me-2"><img
                                                                 class="avatar-img rounded-circle"
-                                                                src="{{booking.booking.patient.profile_pic.url}}"
+                                                                src="{{booking.booking.patient.get_photo_url}}"
                                                                 onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                                                                 alt="User Image"></a>
                                                         <a href="patient-profile.html">{{booking.booking.patient.name_title|title }}
@@ -245,7 +245,7 @@
                                                         {% if booking.booking.is_report_uploaded %}
                                                             <a type="button" class="btn btn-outline-secondary" id="uploadreport" data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{booking.booking.id}}"  data-bs-placement="top" title="Upload Report"  ><i class="fas fa-upload"></i><a>
                                                             
-                                                            <a type="button" class="btn btn-outline-secondary" href="{{booking.booking.report}}" download data-bs-placement="top" title="Download Uploaded Report" ><i class="fas fa-download"></i></a>
+                                                            <a type="button" class="btn btn-outline-secondary" href="{{booking.booking.get_report_url}}" download data-bs-placement="top" title="Download Uploaded Report" ><i class="fas fa-download"></i></a>
 
                                                             <a type="button" class="btn btn-outline-secondary" href="{% url 'delete_lab_appointment' booking.booking.id %}" download data-bs-placement="top" title="Download Uploaded Report" ><i class="fas fa-trash"></i></a>
                                                         

@@ -43,7 +43,7 @@
                                                         <a href="#"
                                                             class="avatar avatar-sm me-2"><img
                                                             class="img-fluid"
-                                                                src="{{booking.patient.profile_pic.url}}"
+                                                                src="{{booking.patient.get_photo_url}}"
                                                                 onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                                                                 alt="User Image"></a>
                                                         <a href="#">{{booking.patient.name_title|title }}
@@ -54,13 +54,13 @@
                                                 </td>
                                                 <td>
                                                     <h2 class="table-avatar clinic-gallery">
-                                                        <a href="{{booking.prescription}}" class="avatar avatar-sm me-2"
+                                                        <a href="{{booking.get_prescription_url}}" class="avatar avatar-sm me-2"
 																	data-fancybox="gallery">
-																	<img src="{{booking.prescription}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Feature">
+																	<img src="{{booking.get_prescription_url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Feature">
 																</a>
                                                         {% comment %} <a href="#"><img
                                                                 class="avatar-img rounded-circle img-fluid"
-                                                                src="{{booking.prescription}}"
+                                                                src="{{booking.get_prescription_url}}"
                                                                 onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                                                                 alt="User Image"></a> {% endcomment %}
                                                     </h2>
@@ -92,7 +92,7 @@
                                                         <a type="button" class="btn btn-outline-secondary" id="uploadreport"data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{booking.id}}" data-bs-placement="top" title="Upload Invoice" ><i class="fas fa-upload"></i> Invoice<a>
                                                     {% endif %} 
                                                     {% if  booking.is_otp_verified %}                                                        
-                                                        <a type="button" class="btn btn-outline-secondary" href="{{booking.store_invoice}}" download data-bs-placement="top" title="Download Uploaded Report" ><i class="fas fa-download"></i></a>
+                                                        <a type="button" class="btn btn-outline-secondary" href="{{booking.get_store_invoice_url}}" download data-bs-placement="top" title="Download Uploaded Report" ><i class="fas fa-download"></i></a>
 
                                                         <a type="button" class="btn btn-outline-danger" href="{% url 'ph_reject_apt' booking.id %}" title="Download Uploaded Report" ><i class="fas fa-trash"></i></a>
                                                     

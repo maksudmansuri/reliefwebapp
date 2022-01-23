@@ -68,7 +68,7 @@
 															</span></td>
 													<td>{{file.symptoms}}</td>
 													<td>
-														<a href="{{file.prescription}}"
+														<a href="{{file.get_prescription_url}}"
 															title="Download attachment"
 															class="btn btn-primary btn-sm"> <i
 																class="fa fa-download" download></i></a>
@@ -122,7 +122,7 @@
 															<a href="doctor-profile.html"
 																class="avatar avatar-sm me-2">
 																<img class="avatar-img rounded-circle"
-																	src="{{relief_file.hospitaldoctors.doctor.profile_pic.url}}"
+																	src="{{relief_file.hospitaldoctors.doctor.get_photo_url}}"
 																	onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
 																	alt="User Image">
 															</a>

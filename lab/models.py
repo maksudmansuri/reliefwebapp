@@ -36,6 +36,13 @@ class Medias(models.Model):
     updated_at              =           models.DateTimeField(auto_now_add=True)
     objects                 =           models.Manager()
 
+    @property
+    def get_media_content_url(self):
+        if self.media_content and hasattr(self.media_content, 'url'):
+            return self.media_content.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+
 class HomeVisitCharges(models.Model):
     id                      =           models.AutoField(primary_key=True)
     lab                     =           models.ForeignKey(Labs, on_delete=models.CASCADE)

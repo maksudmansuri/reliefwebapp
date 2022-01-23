@@ -90,7 +90,7 @@
                                            <a type="button" class="btn btn-outline-secondary" id="uploadreport" data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{book.booking.id}}"  data-bs-placement="top" title="Upload Report"  ><i class="icofont-upload-alt text-danger"></i><a> {% endif %} 
                                            <a type="button" class="btn btn-outline-secondary deleterow" id="deleteroom"  {% if book.booking.report or book.booking.status == "rejected"%} href="{% url 'delete_lab_appointment' book.booking.id %}" disabled {% endif %}><i class="icofont-ui-delete text-danger"></i><a>
                                            {% if book.booking.report %} 
-                                           <a type="button" class="btn btn-outline-secondary deleterow" href="{{book.booking.report}}" download data-bs-placement="top" title="Download Uploaded Report" ><i class="icofont-download text-primary"></i></a>{% endif %}
+                                           <a type="button" class="btn btn-outline-secondary deleterow" href="{{book.booking.get_report_url}}" download data-bs-placement="top" title="Download Uploaded Report" ><i class="icofont-download text-primary"></i></a>{% endif %}
                                            
                                         </div>
                                     </td>
@@ -199,7 +199,7 @@
 </script>
 <script>
     Filevalidation = () => {
-        const fi = document.getElementById('report');
+        const fi = document.getElementById('get_report_url');
         // Check if any file is selected.
         if (fi.files.length > 0) {
             console.log("fi.files.item.size")
@@ -211,7 +211,7 @@
                 if (file >= 10240) {
                     alert(
                       "File too Big, please select a file less than 10mb");
-                      document.getElementById('report').value = "" 
+                      document.getElementById('get_report_url').value = "" 
                 }else {
                     document.getElementById('size').innerHTML = '<b>'
                     + file + '</b> KB';

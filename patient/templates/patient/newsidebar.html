@@ -4,7 +4,7 @@
 		<div class="widget-profile pro-widget-content">
 			<div class="profile-info-widget">
 				<a href="#" class="booking-doc-img">
-					<img src="{{request.user.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
+					<img src="{{request.user.get_photo_url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image">
 				</a>
 				<div class="profile-det-info">
 					<h3>{{user.name_title}} {{user.first_name}} {{user.last_name}}</h3>

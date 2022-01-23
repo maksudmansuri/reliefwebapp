@@ -37,7 +37,7 @@
 											<h3>Profile Picture</h3>
 											<div class="profile-pic-upload media_div_row">
 												<div class="cam-col ">
-													<img src= "{% if user.profile_pic.url %}{{user.profile_pic.url}}{% else %}{% static 'newstatic/assets/img/icons/camera.svg'%}{% endif %}" id="prof-avatar" alt=""
+													<img src= "{% if user.get_photo_url %}{{user.get_photo_url}}{% else %}{% static 'newstatic/assets/img/icons/camera.svg'%}{% endif %}" id="prof-avatar" alt=""
 														class="img-fluid img_preview">
 												</div>
 												<span>Upload Profile Picture</span>

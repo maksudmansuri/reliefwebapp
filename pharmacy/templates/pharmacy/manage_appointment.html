@@ -60,7 +60,7 @@
                                         <span class="fw-bold ms-1"  >{{book.patient.admin.name_title}} {{book.patient.first_name}} {{book.patient.last_name}}</span>
                                     </td>
                                     <td>  {% if book.prescription %}
-                                          <a type="button" href="{{book.prescription}}" download><img src="{{book.prescription}}" style="width:100%;height:70%;" class="hover-shadow cursor"></a>{% endif %}
+                                          <a type="button" href="{{book.get_prescription_url}}" download><img src="{{book.get_prescription_url}}" style="width:100%;height:70%;" class="hover-shadow cursor"></a>{% endif %}
                                            
                                                                                                                     
                                     </td>                                   
@@ -92,7 +92,7 @@
 
                                            <a type="button" class="btn btn-outline-secondary deleterow" id="deleteroom"  {% if book.store_invoice or book.status == "rejected" %} href="{% url 'delete_pharmacy_appointment' book.id %}" disabled {% endif %}><i class="icofont-ui-delete text-danger"></i><a>
                                            {% if book.store_invoice %} 
-                                           <a type="button" class="btn btn-outline-secondary deleterow" href="{{book.store_invoice}}" download data-bs-placement="top" title="Download your Invoice" ><i class="icofont-download text-primary"></i></a>{% endif %}
+                                           <a type="button" class="btn btn-outline-secondary deleterow" href="{{book.get_store_invoice_url}}" download data-bs-placement="top" title="Download your Invoice" ><i class="icofont-download text-primary"></i></a>{% endif %}
                                            
                                         </div>
                                     </td>

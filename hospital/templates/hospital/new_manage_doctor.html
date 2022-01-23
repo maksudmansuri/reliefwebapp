@@ -29,7 +29,7 @@
              <div class="col-md-6 col-xl-4 col-sm-12">
                  <div class="col">
                      <div class="card h-100">
-                         <img class="card-img-top" src="{{doctor.profile_pic.url}}" alt="" height="200" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" />
+                         <img class="card-img-top" src="{{doctor.get_photo_url}}" alt="" height="200" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" />
                          <div class="card-body">
                              <h5 class="card-title">Dr. {{doctor.fisrt_name}} {{doctor.last_name}}</h5>
                              <p class="card-text">{{doctor.about|truncatechars:20}}</p>
@@ -136,17 +136,17 @@
                                              <form>
                                                  <div class="row g-3 align-items-center media_div_row">
                                                      <div class="col-md-4 profile-av mx-auto text-center w220">
-                                                         <label for="profile_pic.url" class="form-label">Profile Pic</label>
+                                                         <label for="get_photo_url" class="form-label">Profile Pic</label>
                                                          <br>
-                                                         <img alt="Avatar" src="{{doctor.profile_pic.url}}"
+                                                         <img alt="Avatar" src="{{doctor.get_photo_url}}"
                                                              onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                                                              class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
                                                      </div>
                                                      <div class="col-md-8">
-                                                         <label for="profile_pic.url" class="form-label">Select Profile
+                                                         <label for="get_photo_url" class="form-label">Select Profile
                                                              Picture *</label>
                                                          <input type="file" class="form-control select_media"
-                                                             name="profile_pic" value="{{doctor.profile_pic.url}}">
+                                                             name="profile_pic" value="{{doctor.get_photo_url}}">
                                                      </div>
                                                      <div class="col-md-6">
                                                          <label for="fisrt_name" class="form-label">First Name</label>
@@ -429,7 +429,7 @@
 
                                      <div class="row g-3 align-items-center media_div_row">
                                          <div class="col-md-4 profile-av mx-auto text-center w220">
-                                             <label for="profile_pic.url" class="form-label">Profile Pic </label>
+                                             <label for="get_photo_url" class="form-label">Profile Pic </label>
                                              <br>
                                              <img alt="Avatar" style="display:none"
                                                  class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
@@ -437,7 +437,7 @@
 
                                          </div>
                                          <div class="col-md-8">
-                                             <label for="profile_pic.url" class="form-label">Select Profile
+                                             <label for="get_photo_url" class="form-label">Select Profile
                                                  Picture *</label>
                                              <input type="file" class="form-control select_media" name="profile_pic"
                                                  required>

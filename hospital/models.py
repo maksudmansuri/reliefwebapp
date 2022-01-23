@@ -188,6 +188,13 @@ class HospitalMedias(models.Model):
 
     def __str__(self):
         return self.hospital.hopital_name
+    
+    @property
+    def get_media_content_url(self):
+        if self.media_content and hasattr(self.media_content, 'url'):
+            return self.media_content.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
 
 class HospitalTreatments(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -239,6 +246,14 @@ class HospitalsPatients(models.Model):
     
     def __str__(self): 
         return self.fisrt_name +" "+ self.last_name
+    
+    @property
+    def get_ID_proof_url(self):
+        if self.ID_proof and hasattr(self.ID_proof, 'url'):
+            return self.ID_proof.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+
 
 class HospitalServices(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -286,6 +301,13 @@ class AmbulanceDetails(models.Model):
     def __str__(self): 
         return self.vehicle_number
     
+    @property
+    def get_photo_url(self):
+        if self.profile_pic and hasattr(self.profile_pic, 'url'):
+            return self.profile_pic.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
+    
 class Blog(models.Model):
     id                      =           models.AutoField(primary_key=True)
     hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE,blank=True,null=True)
@@ -300,6 +322,13 @@ class Blog(models.Model):
      
     def __str__(self): 
         return self.blog_title
+    
+    @property
+    def get_blog_image_url(self):
+        if self.blog_image and hasattr(self.blog_image, 'url'):
+            return self.blog_image.url
+        else:
+            return "/static/newstatic/assets/img/icons/male.png"
     
     class Meta:
         ordering = ['created_at']

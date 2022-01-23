@@ -29,9 +29,9 @@
 						<div class="blog-image">
 							{% if hospitalmedia.media_type == "1" %}
 							<img class="img-fluid" style="width:220;height:200px;"
-									src="{{hospitalmedia.media_content}}" alt="Post Image">
+									src="{{hospitalmedia.get_media_content_url}}" alt="Post Image">
 							{% elif hospitalmedia.media_type == "2" %}
-								<video class="img-fluid" style="width:220;height:200px;" controls src="{{hospitalmedia.media_content}}" alt="Post Image">
+								<video class="img-fluid" style="width:220;height:200px;" controls src="{{hospitalmedia.get_media_content_url}}" alt="Post Image">
 							{% endif %}
 						</div>
 						<div class="blog-content">
@@ -106,7 +106,7 @@
                 </div>
                 <div class="col-md-12">
                     <label for="formFileMultiple" class="form-label"> File Upload</label>
-                    <input class="form-control" type="file" id="media_content" name="media_content[]" multiple="" required="">
+                    <input class="form-control" type="file" id="get_media_content_url" name="get_media_content_url[]" multiple="" required="">
                 </div>
                 <div class="col-md-12">
                     <label for="formFileMultiple" class="form-label">Description</label>
@@ -166,7 +166,7 @@ $('#mediaform').submit(function(event){
 
     var formData = {
         'media_type': $('input[name=media_type[]').val(),
-        'media_content[]': $('input[name=media_content[]]').val(),
+        'get_media_content_url[]': $('input[name=get_media_content_url[]]').val(),
         'media_desc': $('input[name=media_desc]').val(),
         'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
     };

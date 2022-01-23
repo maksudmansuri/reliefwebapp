@@ -20,7 +20,7 @@
                     <div class="card-body d-flex teacher-fulldeatil flex-column">
                         <div class="profile-teacher text-center w220 mx-auto">
                             <a href="#">
-                                <img src="{{treatmentreliefpetient.patient.profile_pic.url}}" alt="" class="avatar xl rounded-circle img-thumbnail shadow-sm" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+                                <img src="{{treatmentreliefpetient.patient.get_photo_url}}" alt="" class="avatar xl rounded-circle img-thumbnail shadow-sm" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
                             </a>
                             <div class="about-info d-flex align-items-center mt-3 justify-content-center flex-column">
                                 <span class="text-muted small">Patient ID : PT00{{treatmentreliefpetient.patient.id}}</span>
@@ -77,7 +77,7 @@
                                     <span class="text-end float-end small"> {{patientfile.created_at}}</span>
                                     <h6 class="fw-bold mt-4 pt-4 mb-4">{{patientfile.file_purpose}}</h6>
                                     <div class="d-flex align-items-center">
-                                        <img src="{{patientfile.hospitaldoctors.doctor.profile_pic.url}}" class="avatar   rounded-circle me-2" alt="profile-image">
+                                        <img src="{{patientfile.hospitaldoctors.doctor.get_photo_url}}" class="avatar   rounded-circle me-2" alt="profile-image">
                                         <span class="ms-1 small">{{patientfile.hospitaldoctors}}</span>
                                     </div>
                                 </div>
@@ -96,12 +96,12 @@
                             <div class="col">
                                 <div class="patientinfo-file shadow-sm p-3">
                                     <div class="patient-did p-2">
-                                        <a type="button" href="{{labtest.slot.report}}" download><i class="icofont-download text-primary fs-4 text-white"></i></a>
+                                        <a type="button" href="{{labtest.slot.get_report_url}}" download><i class="icofont-download text-primary fs-4 text-white"></i></a>
                                     </div>
                                     <span class="text-end float-end small">{{labtest.slot.taken_date}}</span>
                                     <h6 class="fw-bold mt-4 pt-4 mb-4">{{labtest.service}}</h6>
                                     <div class="d-flex align-items-center">
-                                        <img src="{{labtest.lab.profile_pic.url}}" class="avatar   rounded-circle me-2" alt="profile-image">
+                                        <img src="{{labtest.lab.get_photo_url}}" class="avatar   rounded-circle me-2" alt="profile-image">
                                         <span class="ms-1 small">{{labtest.lab}}</span>
                                     </div>
                                 </div>

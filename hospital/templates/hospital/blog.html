@@ -27,7 +27,7 @@
 
 		<div class="col">
 			<div class="card h-100">
-				<img class="card-img-top" src="{{blog.blog_image.url}}" height="200" alt="" />
+				<img class="card-img-top" src="{{blog.get_blog_image_url.url}}" height="200" alt="" />
 				<div class="card-body">
 					<h5 class="card-title">{{blog.blog_title|upper|truncatechars:20}}</h5>
 					<p class="card-text">{{blog.blog_content|safe|truncatechars:10}}</p>
@@ -124,7 +124,7 @@
 											<div class="service-upload">
 												<i class="fas fa-cloud-upload-alt"></i>
 												<span>Upload Blog Images *</span>
-												<input type="file" name="blog_image" id="blog_image"
+												<input type="file" name="get_blog_image_url" id="get_blog_image_url"
 													accept="image/jpeg, image/png, image/gif,">
 											</div>
 											<div id="uploadPreview">

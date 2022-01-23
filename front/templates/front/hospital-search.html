@@ -127,7 +127,7 @@ Booking{% endblock title %}
 											<div class="doc-info-left">
 												<div class="doctor-img">
 													<a href="#">
-														<img src="{{hospital.hospital.admin.profile_pic.url}}" class="img-fluid"
+														<img src="{{hospital.hospital.admin.get_photo_url}}" class="img-fluid"
 															alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 													</a>
 												</div>
@@ -189,17 +189,17 @@ Booking{% endblock title %}
 														{% for media in hospital.medias %}
 															{% if media.media_type == "1" %}
 															<li>
-																<a href="{{media.media_content}}"
+																<a href="{{media.get_media_content_url}}"
 																	data-fancybox="gallery">
-																	<img src="{{media.media_content}}" alt="Feature" 
+																	<img src="{{media.get_media_content_url}}" alt="Feature" 
 																	onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 																</a>
 															</li>
 															{% comment %} {% elif media.media_type == "2" %}
 															<li>
-																<a href="{{media.media_content}}"
+																<a href="{{media.get_media_content_url}}"
 																	data-fancybox="gallery">
-																	<video style="width:40px;height:30px;" controls src="{{media.media_content}}" alt="Feature">
+																	<video style="width:40px;height:30px;" controls src="{{media.get_media_content_url}}" alt="Feature">
 																</a>
 															</li>{% endcomment %}
 															{% endif %} 

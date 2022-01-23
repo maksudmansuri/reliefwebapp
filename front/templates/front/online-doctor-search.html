@@ -127,7 +127,7 @@ Booking{% endblock title %}
 											<div class="doc-info-left">
 												<div class="doctor-img">
 													<a href="#">
-														<img src="{{ doctor.doctor.profile_pic.url}}" class="img-fluid" 
+														<img src="{{ doctor.doctor.get_photo_url}}" class="img-fluid" 
 														onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
 															alt="User Image">
 													</a>
@@ -136,7 +136,7 @@ Booking{% endblock title %}
 													<h4 class="doc-name"><a href="#">Dr. {{ doctor.doctor.fisrt_name}} {{ doctor.doctor.last_name}}</a></h4>
 													<p class="doc-speciality">{{ doctor.doctor.degree|upper}}</p>   
 													{% if  doctor.doctor.hospitalstaffdoctors %}                                                
-                                                    <p class="doc-department"><img src="{{ doctor.doctor.hospitalstaffdoctors.hospital.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid" alt="Speciality">{{ doctor.doctor.hospitalstaffdoctors.hospital.hopital_name|upper}}</p>{% endif %}
+                                                    <p class="doc-department"><img src="{{ doctor.doctor.hospitalstaffdoctors.hospital.get_photo_url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid" alt="Speciality">{{ doctor.doctor.hospitalstaffdoctors.hospital.hopital_name|upper}}</p>{% endif %}
 													{% comment %} <p class="doc-speciality">{{hospital.hospital.specialist}}
 													</p> {% endcomment %}
 													<h5 class="doc-department"><img

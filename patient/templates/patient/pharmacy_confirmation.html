@@ -41,7 +41,7 @@ a.disabled {
   </br><h5><span  id="amount_status">Invoice Not Uploaded yet</span><span id="amount_payable"></span>
       <a type="button" class="btn btn-primary disabled" href="{% url 'payformedicine' picturesformedicine.id %}" id="payment_status">Pay Now</a>
       {% if picturesformedicine.store_invoice %}
-      <a type="button" class="btn btn-outline-secondary" href="{{picturesformedicine.store_invoice}}" download="" data-bs-placement="top" title="Download your Invoice"><i class="icofont-download text-primary"></i> Download Invoice</a>{% endif %}
+      <a type="button" class="btn btn-outline-secondary" href="{{picturesformedicine.get_store_invoice_url}}" download="" data-bs-placement="top" title="Download your Invoice"><i class="icofont-download text-primary"></i> Download Invoice</a>{% endif %}
 </div>
 {% endblock content %}
 
@@ -68,7 +68,7 @@ a.disabled {
     var data = JSON.parse(e.data)
     console.log(data.payload.status)
     var amount_payable = data.payload.amount
-    var invoice_payable = data.payload.invoice
+    var invoice_payable = data.payload.get_invoice_url
     if(data.payload.amount_paid == "0" && invoice_payable != "" ){
       var amount_payable_js = document.querySelector('#amount_payable')
       amount_payable_js.innerHTML = amount_payable

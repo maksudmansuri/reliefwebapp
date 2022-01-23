@@ -47,7 +47,7 @@
 												<h2 class="table-avatar">
 													<span class="avatar avatar-sm me-2">
 														<img class="avatar-img rounded-circle"
-															src="{{forsome.profile_pic.url}}"
+															src="{{forsome.get_photo_url}}"
 															alt="User Image">
 													</span>
 													{{forsome.fisrt_name}} {{forsome.last_name}}
@@ -195,12 +195,12 @@
 												<div class="form-group">
 													<div class="change-avatar media_div_row profile-info-widget ">
 														<div class="profile-img booking-doc-img" >
-															<img src="{{forsome.profile_pic.url}}" class="img_preview" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+															<img src="{{forsome.get_photo_url}}" class="img_preview" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 														</div>
 														<div class="upload-img ">
 															<div class="change-photo-btn">
 																<span><i class="fa fa-upload"></i> Upload Photo *</span>
-																<input type="file" class="upload select_media" name="profile_pic"  value="{{forsome.profile_pic.url}}"> 
+																<input type="file" class="upload select_media" name="profile_pic"  value="{{forsome.get_photo_url}}"> 
 															</div>
 															<small class="form-text text-muted">Allowed JPG, GIF or PNG. Max
 																size of 2MB</small>
@@ -263,7 +263,7 @@
 											<div class="col-md-6">
 												<label for="formFileMultiple" class="form-label">ID Proof Upload </label>
 												<input class="form-control" type="file" id="formFileMultiple"
-													name="ID_proof" value="{{forsome.ID_proof}}">
+													name="ID_proof" value="{{forsome.get_ID_proof_url}}">
 											</div>
 											<div class="col-md-6">
 												<label class="form-label">Gender </label>
