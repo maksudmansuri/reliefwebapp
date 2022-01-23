@@ -384,7 +384,7 @@ class Labs(models.Model):
     @property
     def get_photo_url(self):
         if self.profile_pic and hasattr(self.profile_pic, 'url'):
-            return self.hover_icon.url
+            return self.profile_pic.url
         else:
             return "/static/newstatic/assets/img/icons/male.png"
     
@@ -431,7 +431,7 @@ class Pharmacy(models.Model):
     @property
     def get_photo_url(self):
         if self.profile_pic and hasattr(self.profile_pic, 'url'):
-            return self.hover_icon.url
+            return self.profile_pic.url
         else:
             return "/static/newstatic/assets/img/icons/male.png"
     
