@@ -110,7 +110,7 @@
                                                         <a href="#"
                                                             class="avatar avatar-sm me-2"><img
                                                             class="img-fluid"
-                                                                src="{{booking.patient.profile_pic}}"
+                                                                src="{{booking.patient.profile_pic.url}}"
                                                                 onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                                                                 alt="User Image"></a>
                                                         <a href="#">{{booking.patient.name_title|title }}
@@ -211,7 +211,7 @@
                                                         <a href="patient-profile.html"
                                                             class="avatar avatar-sm me-2"><img
                                                                 class="avatar-img rounded-circle"
-                                                                src="{{booking.patient.profile_pic}}"
+                                                                src="{{booking.patient.profile_pic.url}}"
                                                                 onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                                                                 alt="User Image"></a>
                                                         <a href="patient-profile.html">{{booking.patient.name_title|title }}

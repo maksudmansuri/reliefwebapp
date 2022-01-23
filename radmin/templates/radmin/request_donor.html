@@ -108,7 +108,7 @@
                   <td>
                     <h2 class="table-avatar">
                       <a href="{% url 'admin_relief_patient_profile' donorr.reqestpersoned.patients.id %}" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle"
-                          src="{{donorr.reqestpersoned.profile_pic}}"
+                          src="{{donorr.reqestpersoned.profile_pic.url}}"
                           onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                           alt="User Image"></a>
                       <a href="{% url 'admin_relief_patient_profile' donorr.reqestpersoned.patients.id %}">
@@ -119,7 +119,7 @@
                   <td>
                     <h2 class="table-avatar">
                       <a href="{% url 'admin_relief_patient_profile' donorr.forpersoned.patients.id %}" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle"
-                          src="{{donorr.forpersoned.profile_pic}}"
+                          src="{{donorr.forpersoned.profile_pic.url}}"
                           onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                           alt="User Image"></a>
                       <a href="{% url 'admin_relief_patient_profile' donorr.forpersoned.patients.id %}">

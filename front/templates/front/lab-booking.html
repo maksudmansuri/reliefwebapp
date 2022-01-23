@@ -33,7 +33,7 @@ Booking {% endblock title %}
                                 <div class="doctor-widget">
                                     <div class="doc-info-left">
                                         <div class="doctor-img">
-                                            <img src="{{lab.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid" 
+                                            <img src="{{lab.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid" 
 											onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
                                                 alt="User Image">
                                         </div>

@@ -30,7 +30,7 @@
                                                     
                                     <li class="py-2 mb-1 border-bottom nav-item">
                                         <a href="javascript:void(0);" class="d-flex nav-link">
-                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic.url}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
                                             <div class="flex-fill ms-2">
                                                 <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">{{notification.from_user.patients.fisrt_name}} {{notification.from_user.patients.last_name}}</span> <small>{{notification.updated_at|naturaltime}}</small></p>
                                                 <span class="">Appointment For {{notification.booking.booking_type}} <span class="badge bg-success1">Booked</span></span>
@@ -42,7 +42,7 @@
                                     {% if notification.booking %}
                                     <li class="py-2 mb-1 border-bottom">
                                         <a href="{% url 'booking_confirmation' notification.booking.id %}" class="d-flex">
-                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic.url}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
                                             <div class="flex-fill ms-2">
                                                 <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">Hospital {{notification.from_user.hospitals.hopital_name}}</span> <small>{{notification.updated_at|naturaltime}}</small></p>
                                                 <span class="">Appointment No. {{notification.booking.id}} has been  <span class="badge {% if notification.booking.status == "rejected" %}bg-danger {% elif notification.booking.status == "accepted" %}bg-success{% elif notification.booking.status == "taken" %}bg-primary {% endif %} ">{{notification.booking.status}}</span> </span>
@@ -52,7 +52,7 @@
                                     {% elif notification.slot %}
                                     <li class="py-2 mb-1 border-bottom">
                                         <a href="{% url 'lab_confirmation' notification.slot.id %}" class="d-flex">
-                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic.url}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
                                             <div class="flex-fill ms-2">
                                                 <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold"> Lab {{notification.from_user.labs.lab_name}}</span> <small>{{notification.updated_at|naturaltime}}</small></p>
                                                 <span class="">Appointment No. {{notification.slot.id}} has been  <span class="badge {% if notification.slot.status == "rejected" %}bg-danger {% elif notification.slot.status == "accepted" %}bg-success{% elif notification.slot.status == "taken" %}bg-primary {% endif %} ">{{notification.slot.status}}</span> </span>
@@ -62,7 +62,7 @@
                                     {% elif notification.picturesmedicine %}
                                     <li class="py-2 mb-1 border-bottom">
                                         <a href="{% url 'pharmacy_confirmation' notification.picturesmedicine.id %}" class="d-flex">
-                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic.url}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
                                             <div class="flex-fill ms-2">
                                                 <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">Pharmacy {{notification.from_user.pharmacy.pharmacy_name}}</span> <small>{{notification.updated_at|naturaltime}}</small></p>
                                                 <span class="">Appointment No. {{notification.picturesmedicine.id}} has been  <span class="badge {% if notification.picturesmedicine.status == "rejected" %}bg-danger {% elif notification.picturesmedicine.status == "accepted" or notification.picturesmedicine.status == "Amount Uploded" %}bg-success{% elif notification.picturesmedicine.status == "taken" %}bg-primary {% endif %} ">{{notification.picturesmedicine.status}}</span> </span>
@@ -74,7 +74,7 @@
                                 {% if notification.to_user.user_type == "5" %}
                                     <li class="py-2 mb-1 border-bottom">
                                         <a href="javascript:void(0);" class="d-flex">
-                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic.url}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
                                             <div class="flex-fill ms-2">
                                                 <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">{{notification.from_user.patients.fisrt_name}} {{notification.from_user.patients.last_name}}</span> <small>{{notification.updated_at|naturaltime}}</small></p>
                                                 <span class="">Appointment For {{notification.booking.booking_type}} <span class="badge bg-success">Booked</span></span>
@@ -86,7 +86,7 @@
                                 {% if notification.to_user.user_type == "6" %}
                                     <li class="py-2 mb-1 border-bottom">
                                         <a href="{% url 'view_pharmacy_appointment' %}" class="d-flex">
-                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic.url}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
                                             <div class="flex-fill ms-2">
                                                 <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">{{notification.from_user.patients.fisrt_name}} {{notification.from_user.patients.last_name}}</span> <small>{{notification.updated_at|naturaltime}}</small></p>
                                                 <span class="">Appointment No. {{notification.picturesmedicine.id}} has been  <span class="badge {% if notification.picturesmedicine.status == "rejected" %}bg-danger {% elif notification.picturesmedicine.status == "accepted" or notification.picturesmedicine.status == "booked" %}bg-success{% elif notification.picturesmedicine.status == "taken" or notification.picturesmedicine.status == "Amount Uploded" or notification.picturesmedicine.status == "Amount Paid" %}bg-primary {% endif %} ">{{notification.picturesmedicine.status}}</span> </span>

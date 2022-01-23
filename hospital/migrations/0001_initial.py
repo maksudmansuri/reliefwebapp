@@ -267,7 +267,7 @@ class Migration(migrations.Migration):
             name='AmbulanceDetails',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('profile_pic', models.FileField(blank=True, default='', null=True, upload_to='hospital/services/images')),
+                ('profile_pic.url', models.FileField(blank=True, default='', null=True, upload_to='hospital/services/images')),
                 ('drive_name', models.CharField(blank=True, default='', max_length=500, null=True)),
                 ('drive_number', models.CharField(max_length=10, unique=True, validators=[django.core.validators.RegexValidator(message='Phone number must be entered in the format +919999999999. Up to 10 digits allowed.', regex='^\\+?1?\\d{9,10}$')], verbose_name='Phone')),
                 ('vehicle_type', models.CharField(blank=True, default='', max_length=500, null=True)),

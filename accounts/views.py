@@ -2,7 +2,6 @@
 from decimal import Context
 from typing import Counter
 from django.contrib.messages import views
-from django.core.files.storage import FileSystemStorage
 from django.db.models.signals import post_delete
 from django.http import request, response
 from django.http.response import HttpResponseRedirect
@@ -409,13 +408,10 @@ class PatientSingupStep1(UpdateView):
         user_id=kwargs['user_id']
         user = get_object_or_404(CustomUser,id=user_id)
         profile_pic = request.FILES.get("profile_pic")
-        if profile_pic:
-            fs=FileSystemStorage()
-            filename1=fs.save(profile_pic.name,profile_pic)
-            profile_pic_url=fs.url(filename1)
-            user.profile_pic=profile_pic_url
+        if profile_pic:           
+            user.profile_pic=profile_pic
             user.save()
-            user.patients.profile_pic=profile_pic_url
+            user.patients.profile_pic=profile_pic
             user.patients.save()
         else:
             messages.add_message(request,messages.SUCCESS,"Profile ppictureic not uploaded")

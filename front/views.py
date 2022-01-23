@@ -2,7 +2,6 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import views
 from django.core import paginator
-from django.core.files.storage import FileSystemStorage
 from django.db.models.base import Model
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -948,10 +947,7 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
 
             if where == "pharma":
                 if prescription:
-                    fs=FileSystemStorage()
-                    filename1=fs.save(prescription.name,prescription)
-                    prescription_url=fs.url(filename1)
-                    booking.prescription = prescription_url
+                    booking.prescription = prescription
                 pharmacy =get_object_or_404(Pharmacy,id=doctorid)
                 booking.HLP=pharmacy.admin
                 booking.booking_for="P"

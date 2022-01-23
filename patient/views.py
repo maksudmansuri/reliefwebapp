@@ -25,7 +25,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.list import ListView
 from django.contrib import messages
 from django.urls.base import resolve, reverse
-from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.utils.encoding import force_bytes,force_str,DjangoUnicodeDecodeError
@@ -174,11 +173,8 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
         user.patients.fisrt_name=fisrt_name
         user.patients.last_name=last_name
         if profile_pic:
-            fs=FileSystemStorage()
-            filename1=fs.save(profile_pic.name,profile_pic)
-            profile_pic_url=fs.url(filename1)
-            user.patients.profile_pic=profile_pic_url
-            user.profile_pic = profile_pic_url
+            user.patients.profile_pic=profile_pic
+            user.profile_pic = profile_pic
         user.patients.alternate_mobile=alternate_mobile
         user.patients.address=address
         user.patients.city=city
@@ -223,10 +219,7 @@ class RecordsViews(SuccessMessageMixin,CreateView):
             for_whom1 = ForSome.objects.get(id=for_whom)
             addmedical.for_whom=for_whom1
         if prescription:
-            fs=FileSystemStorage()
-            filename1=fs.save(prescription.name,prescription)
-            prescription_url=fs.url(filename1)
-            addmedical.prescription=prescription_url
+            addmedical.prescription=prescription
         addmedical.save()
         print(addmedical)
         messages.add_message(request,messages.SUCCESS,"Madical Record Created successfully !")
@@ -636,24 +629,23 @@ class UploadPresPhotoViews(SuccessMessageMixin,View):
         
         if request.method == "POST": 
             prescription = request.FILES.get('prescription')
-            if prescription:
-                fs=FileSystemStorage()
-                filename1=fs.save(prescription.name,prescription)
-                profile_pic_url=fs.url(filename1)
-            print(prescription)
+          
             date = request.POST.get('date')
             pharmacyid = request.POST.get('pharmacyid')
             add_note = request.POST.get('add_note')
             pharmacy = get_object_or_404(Pharmacy,id=pharmacyid)
             time = request.POST.get('time') 
             print(time,date,pharmacy,pharmacyid,prescription)
-            picturesformedicine = PicturesForMedicine(patient = request.user,pharmacy=pharmacy,prescription=profile_pic_url,applied_date=date,applied_time=time,is_applied=True,is_active=True,add_note=add_note,status="booked") 
-            picturesformedicine.save()
-            service = get_object_or_404(ServiceAndCharges,id=13)
-            print("booking saved")
-            order = Orders(patient=request.user,service=service,booking_for=3,bookingandlabtest=picturesformedicine.id,status=1,)
-            order.save()
-            print("order")
+            try:
+                picturesformedicine = PicturesForMedicine(patient = request.user,pharmacy=pharmacy,prescription=prescription,applied_date=date,applied_time=time,is_applied=True,is_active=True,add_note=add_note,status="booked")
+
+                picturesformedicine.save()
+                service = get_object_or_404(ServiceAndCharges,id=13)
+                print("booking saved")
+                order = Orders(patient=request.user,service=service,booking_for=3,bookingandlabtest=picturesformedicine.id,status=1,)
+                order.save()
+            except Exception as e:
+                HttpResponse(e)
             tc = 0
             try:
                 tc = Temp.objects.filter(user=request.user).count()
@@ -763,15 +755,9 @@ class AddSomeoneAsPatient(SuccessMessageMixin,CreateView):
                     patient=get_object_or_404(Patients,admin=request.user)
                     someone = ForSome(patient=patient,name_title=name_title,fisrt_name=fisrt_name,last_name=last_name,address=address,city=city,state=state,country=country,pin_code=pin_code,age=age,phone=phone,add_notes=add_notes,gender=gender,is_active=True,email=email,bloodgroup=bloodgroup,relationship=relationship)
                     if profile_pic:
-                        fs=FileSystemStorage()
-                        filename=fs.save(profile_pic.name,profile_pic)
-                        media_url=fs.url(filename)
-                        someone.profile_pic = media_url
+                        someone.profile_pic = profile_pic
                     if ID_proof:
-                        fs1=FileSystemStorage()
-                        filename=fs1.save(ID_proof.name,ID_proof)
-                        id_media_url=fs1.url(filename)
-                        someone.ID_proof = id_media_url   
+                        someone.ID_proof = ID_proof   
                     someone.save()            
                     messages.add_message(request,messages.SUCCESS,"Successfully Added")
                     if page_name == "BOOKING":
@@ -807,20 +793,14 @@ class AddSomeoneAsPatient(SuccessMessageMixin,CreateView):
                     someone.age=age
                     someone.phone=phone
                     if ID_proof:
-                        fs1=FileSystemStorage()
-                        filename=fs1.save(ID_proof.name,ID_proof)
-                        id_media_url=fs1.url(filename)
-                        someone.ID_proof = id_media_url
+                        someone.ID_proof = ID_proof
                     someone.add_notes=add_notes
                     someone.gender=gender
                     someone.is_active=True
                     someone.email=email
                     someone.bloodgroup=bloodgroup
                     if profile_pic:
-                        fs=FileSystemStorage()
-                        filename=fs.save(profile_pic.name,profile_pic)
-                        media_url=fs.url(filename)
-                        someone.profile_pic= media_url
+                        someone.profile_pic= profile_pic
                     someone.relationship=relationship
                     someone.save()            
                     messages.add_message(request,messages.SUCCESS,"Successfully updated")

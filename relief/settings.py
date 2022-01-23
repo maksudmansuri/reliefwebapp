@@ -16,8 +16,8 @@ import django_heroku
 import dj_database_url 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-# BASE_DIR = Path(__file__).resolve().parent.parent
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'django_filters',
     'storages',
-   
+
 ]
 
 MIDDLEWARE = [
@@ -230,29 +230,58 @@ EMAIL_HOST_USER = 'intellecttec@gmail.com'
 EMAIL_HOST_PASSWORD ="bzsgrxiakqlxfqjz"
 EMAIL_PORT = 587
 
+STATIC_URL = '/static/'
+MEDIA_URL = '/images/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
+
+MEDIA_ROOT = BASE_DIR / 'static/images'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema'} 
 django_heroku.settings(locals())
 # USE_S3 = os.getenv('USE_S3') == 'TRUE'
 # if USE_S3:
-AWS_ACCESS_KEY_ID = 'AKIAYKYQ6HVHRNSQMVWQ'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = 'AKIAYKYQ6HVHTWX4OPWG'
+AWS_SECRET_ACCESS_KEY = '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'
 AWS_STORAGE_BUCKET_NAME = 'uniqueupgradebooking'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_QUERYSTRING_AUTH = False
+# AWS_S3_ENDPOINT_URL = 'https://uniqueupgradebooking.s3.amazonaws.com'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 # AWS_S3_SIGNATURE_VERSION = 's3v4'
-AWS_S3_REGION_NAME = 'us-east-1'
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
-PUBLIC_MEDIA_LOCATION = 'media'
-MEDIA_URL = f'https://uniqueupgradebooking.s3.amazonaws.com/{PUBLIC_MEDIA_LOCATION}/'
+# AWS_S3_REGION_NAME = 'us-east-1'
+# AWS_S3_FILE_OVERWRITE = False
+# AWS_DEFAULT_ACL = None
+AWS_LOCATION='static'
+# AWS_QUERYSTRING_AUTH = False
+# AWS_MEDIA_LOCATION='media'
+
+# PUBLIC_MEDIA_LOCATION = 'media'
+# MEDIA_ROOT = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN,AWS_MEDIA_LOCATION)
 # AWS_S3_VERIFY = True
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage' 
+DEFAULT_FILE_STORAGE = 'relief.storage.MediaStore' 
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage' 
 # else:    
-MEDIA_URL = "/media/"
-MEDIA_ROOT=os.path.join(BASE_DIR,"media")
+# MEDIA_URL = "/media/"
 
-STATIC_URL = '/static/'
-STATIC_ROOT=os.path.join(BASE_DIR,"static")
+# MEDIA_ROOT=os.path.join(BASE_DIR,"media")
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "staticfiles"),      
-]
+STATIC_ROOT = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN,AWS_LOCATION)
+# STATIC_ROOT=os.path.join(BASE_DIR,"static")
+# STATIC_URL='/static/'
+# print(STATIC_ROOT)
+# print(STATIC_URL)
+# print(MEDIA_ROOT)
+# print(MEDIA_URL)
+
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "staticfiles"),      
+# ]
+# print(STATICFILES_DIRS)
+
+

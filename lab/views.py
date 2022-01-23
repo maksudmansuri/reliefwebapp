@@ -4,7 +4,6 @@ from front.models import RatingAndComments
 from patient.models import LabTest, NewLabTest, OrderBooking, Orders, Slot, TreatmentReliefPetient, phoneOPTforoders
 from lab.models import HomeVisitCharges, LabSchedule, Medias
 from hospital.models import DoctorSchedule, ServiceAndCharges, TimeSlot
-from django.core.files.storage import FileSystemStorage
 from accounts.models import CustomUser, Labs, OPDTime
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http.response import HttpResponse, HttpResponseRedirect
@@ -124,12 +123,8 @@ def UploadReportViews(request,id):
     print("out side if")
     booking = get_object_or_404(OrderBooking,id=id)
     if report:
-        print("inside if")
-        fs=FileSystemStorage()
-        filename1=fs.save(report.name,report)
-        report_url=fs.url(filename1)
-        booking.report=report_url
-        status = "TAKEN"
+        booking.report=report
+        booking.status = "TAKEN"
         booking.is_report_uploaded =True
         booking.is_otp_verified = False
         booking.desc = desc
@@ -262,18 +257,12 @@ class LabUpdateViews(SuccessMessageMixin,UpdateView):
             lab.landline=landline
 
             if profile_pic:
-                fs=FileSystemStorage()
-                filename1=fs.save(profile_pic.name,profile_pic)
-                profile_pic_url=fs.url(filename1)
-                lab.profile_pic=profile_pic_url
-                lab.admin.profile_pic=profile_pic_url
+                lab.profile_pic=profile_pic
+                lab.admin.profile_pic=profile_pic
 
             print(registration_proof)
             if registration_proof:
-                fs=FileSystemStorage()
-                filename=fs.save(registration_proof.name,registration_proof)
-                registration_proof_url=fs.url(filename)
-                lab.registration_proof=registration_proof_url
+               lab.registration_proof=registration_proof
             lab.establishment_year=establishment_year
             lab.alternate_mobile=alternate_mobile
             lab.website=website
@@ -461,10 +450,7 @@ class ManageMainGalleryView(SuccessMessageMixin,CreateView):
         
         i=0
         for media_content in media_content_list:
-            fs=FileSystemStorage()
-            filename=fs.save(media_content.name,media_content)
-            media_url=fs.url(filename)
-            hospital_media = Medias(user=user,media_type=media_type_list,media_desc=media_desc_list,media_content=media_url)
+            hospital_media = Medias(user=user,media_type=media_type_list,media_desc=media_desc_list,media_content=media_content)
             hospital_media.is_active=True
             hospital_media.save() 
             i=i+1  

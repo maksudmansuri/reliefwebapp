@@ -7,16 +7,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %} {% endblock title %} </title>
-    <link rel="icon" href="{% static '/radmin/assets/favicon.ico' %}" type="image/x-icon"> <!-- Favicon-->
+    <link rel="icon" href="{% static 'radmin/assets/favicon.ico' %}" type="image/x-icon"> <!-- Favicon-->
     <!-- plugin css file  -->
-    <link rel="stylesheet" href="{% static '/radmin/assets/plugin/datatables/responsive.dataTables.min.css' %}
+    <link rel="stylesheet" href="{% static 'radmin/assets/plugin/datatables/responsive.dataTables.min.css' %}
     ">
        <!-- Plugin css file  -->
-    <link rel="stylesheet" href="{% static '/radmin/assets/plugin/owlcarousel/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'radmin/assets/plugin/owlcarousel/owl.carousel.min.css' %}">
     
-    <link rel="stylesheet" href="{% static '/radmin/assets/plugin/datatables/dataTables.bootstrap5.min.css'  %}">
+    <link rel="stylesheet" href="{% static 'radmin/assets/plugin/datatables/dataTables.bootstrap5.min.css'  %}">
     <!-- project css file  -->
-    <link rel="stylesheet" href="{% static '/radmin/assets/css/ihealth.style.min.css'  %}">
+    <link rel="stylesheet" href="{% static 'radmin/assets/css/ihealth.style.min.css'  %}">
 
     {% block custom_css %}{% endblock custom_css %}
 </head>
@@ -63,22 +63,22 @@
 </div>
 
 <!-- Jquery Core Js -->
-<script src="{% static '/radmin/assets/bundles/libscripts.bundle.js'%}"></script>
+<script src="{% static 'radmin/assets/bundles/libscripts.bundle.js'%}"></script>
 
 <!-- Plugin Js -->
-<script src="{% static '/radmin/assets/bundles/apexcharts.bundle.js'%}"></script>
-<script src="{% static '/radmin/assets/plugin/jqueryuicalandar/jquery-ui.min.js'%}"></script>
-<script src="{% static '/radmin/assets/plugin/owlcarousel/owl.carousel.js'%}"></script>
-<script src="{% static '/radmin/assets/bundles/dataTables.bundle.js'%}"></script>      
+<script src="{% static 'radmin/assets/bundles/apexcharts.bundle.js'%}"></script>
+<script src="{% static 'radmin/assets/plugin/jqueryuicalandar/jquery-ui.min.js'%}"></script>
+<script src="{% static 'radmin/assets/plugin/owlcarousel/owl.carousel.js'%}"></script>
+<script src="{% static 'radmin/assets/bundles/dataTables.bundle.js'%}"></script>      
 
 <!-- Jquery Page Js -->
-<script src="{% static '/radmin/js/template.js'%}"></script>
-<script src="{% static '/radmin/js/page/index.js'%}"></script>
-<script src="{% static '/radmin/js/page/virtual.js'%}"></script>
+<script src="{% static 'radmin/js/template.js'%}"></script>
+<script src="{% static 'radmin/js/page/index.js'%}"></script>
+<script src="{% static 'radmin/js/page/virtual.js'%}"></script>
 <!-- For infinite paginaion or scrolling-->
 
-<script src="{% static '/radmin/jsjquery.waypoints.min.js'%}"></script>
-<script src="{% static '/radmin/js/infinite.min.js'%}"></script>
+<script src="{% static 'radmin/jsjquery.waypoints.min.js'%}"></script>
+<script src="{% static 'radmin/js/infinite.min.js'%}"></script>
 
 <!--Time format change am pm to 24 hours-->
 
@@ -93,7 +93,7 @@
           ]
       });
  </script>
-<script src="{% static '/radmin/js/jquery.timeago.js'%}" type="text/javascript"></script>
+<script src="{% static 'radmin/js/jquery.timeago.js'%}" type="text/javascript"></script>
 
 <script>
     var user = '{{request.user.id}}'

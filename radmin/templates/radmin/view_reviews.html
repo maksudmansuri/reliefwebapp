@@ -100,7 +100,7 @@
 												{% endif %}
 												{% if review.patient.user_type == "4" %} 
 													<h2 class="table-avatar">
-													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.patient.patients.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
+													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.patient.patients.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
 													<a href="patient-profile.html">{{review.patient.patients.first_name}}
 														{{review.patient.patients.last_name}} <span>#PT00{{review.patient.patients.id}}</span></a>
 													</h2>
@@ -116,21 +116,21 @@
 											<td>
 												{% if review.HLP.user_type == "2" %}
 												<h2 class="table-avatar">
-													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.HLP.hospitals.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
+													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.HLP.hospitals.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
 													<a href="#">
 														{{review.HLP.hospitals.hopital_name}}<span>#HP00{{review.HLP.hospitals.id}}</span></a>
 												</h2>
 												{% endif %}
 												{% if review.HLP.user_type == "3" %}
 												<h2 class="table-avatar">
-													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.HLP.hospitaldoctors.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
+													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.HLP.hospitaldoctors.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
 													<a href="#">
 														{{review.HLP.hospitaldoctors.fisrt_name}} {{review.HLP.hospitaldoctors.last_name}}<span>#DT00{{review.HLP.hospitaldoctors.id}}</span></a>
 												</h2>													
 												{% endif %}
 												{% if review.HLP.user_type == "4" %} 
 													<h2 class="table-avatar">
-													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.HLP.patients.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
+													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.HLP.patients.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
 													<a href="#">{{review.HLP.patients.first_name}}
 														{{review.HLP.patients.last_name}} <span>#PT00{{review.HLP.patients.id}}</span></a>
 													</h2>
@@ -138,7 +138,7 @@
 												{% endif %} 
 												{% if review.HLP.user_type == "5" %}
 												<h2 class="table-avatar">
-													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.HLP.labs.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
+													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.HLP.labs.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
 													<a href="#">
 														{{review.HLP.labs.lab_name}}<span>#LB00{{review.HLP.labs.id}}</span></a>
 												</h2>
@@ -146,7 +146,7 @@
 												{% endif %}
 												{% if review.HLP.user_type == "6" %}
 												<h2 class="table-avatar">
-													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.HLP.pharmacy.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
+													<a href="#" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" src="{{review.HLP.pharmacy.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="User Image"></a>
 													<a href="#">
 														{{review.HLP.pharmacy.pharmacy_name}}<span>#PH00{{review.HLP.pharmacy.id}}</span></a>
 												</h2>

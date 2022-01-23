@@ -81,7 +81,7 @@ Booking{% endblock title %}
 						{% for hospital in hospitals %}
 							<div class="profile-widget">
 								<a href="{% url 'hospital_details' hospital.hospital.id %}">
-									<img src="{{hospital.hospital.profile_pic}}" alt="" 
+									<img src="{{hospital.hospital.profile_pic.url}}" alt="" 
 									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" />
 								</a>
 								<div class="pro-content">
@@ -194,7 +194,7 @@ Booking{% endblock title %}
 						{% for doctor in doctors %}
 							<div class="profile-widget">
 								<a href="{% url 'doctor_details' doctor.doctor.id %}">
-									<img src="{{doctor.doctor.profile_pic}}" alt="" 
+									<img src="{{doctor.doctor.profile_pic.url}}" alt="" 
 									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"/>
 								</a>
 								<div class="pro-content">
@@ -307,7 +307,7 @@ Booking{% endblock title %}
 						{% for lab in labs %}
 							<div class="profile-widget">
 								<a href="{% url 'lab_details' lab.lab.id %}">
-									<img src="{{lab.lab.profile_pic}}" alt="" 
+									<img src="{{lab.lab.profile_pic.url}}" alt="" 
 									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" />
 								</a>
 								<div class="pro-content">
@@ -420,7 +420,7 @@ Booking{% endblock title %}
 						{% for pharmacy in pharmacys %}
 							<div class="profile-widget">
 								<a href="{% url 'new_pharmacy_details' pharmacy.pharmacy.id %}">
-									<img src="{{pharmacy.pharmacy.profile_pic}}" alt="" 
+									<img src="{{pharmacy.pharmacy.profile_pic.url}}" alt="" 
 									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" />
 								</a>
 								<div class="pro-content">
@@ -616,7 +616,7 @@ Booking{% endblock title %}
 						<div class="blog-wrapper">
 							<div class="wrap-image">
 								<a href="{% url 'blog_details' blog.id %}">
-									<img src="{{blog.blog_image}}" height="200" alt=""  
+									<img src="{{blog.blog_image.url}}" height="200" alt=""  
 									onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"/>
 								</a>
 							</div>
@@ -626,7 +626,7 @@ Booking{% endblock title %}
 									<br>
 									<div class="post-author">
 										<a href="{% url 'blog_details' blog.id %}">
-											<img src="{{blog.doctor.profile_pic}} " alt="Post Author" 
+											<img src="{{blog.doctor.profile_pic.url}} " alt="Post Author" 
 											onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 											<span>{{blog.doctor.fisrt_name}} {{blog.doctor.last_name}}</span>
 										</a>

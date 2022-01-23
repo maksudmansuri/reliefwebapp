@@ -53,13 +53,13 @@
                                     <div class="card-body">                                 
                                         <div class="row g-3 align-items-center media_div_row">
                                             <div class="col-md-6 profile-av mx-auto text-center w220">
-                                                <label for="profile_pic" class="form-label">Upload Profile Pic</label>
+                                                <label for="profile_pic.url" class="form-label">Upload Profile Pic</label>
                                                     <br> 
-                                                <img alt="Avatar" src="{{patient.profile_pic}}"  onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" {% if patient.profile_pic %}style="width:70%;"{% else %} style="width:70%;display:none" {% endif %}class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
+                                                <img alt="Avatar" src="{{patient.profile_pic.url}}"  onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" {% if patient.profile_pic.url %}style="width:70%;"{% else %} style="width:70%;display:none" {% endif %}class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
                                             </div>
                                              
                                              <div class="col-md-8">
-                                                <label for="profile_pic" class="form-label">Select Profile Pic *</label>
+                                                <label for="profile_pic.url" class="form-label">Select Profile Pic *</label>
                                                 <input type="file" class="form-control select_media" name="profile_pic">
                                             </div>
                                             <div class="col-md-2">

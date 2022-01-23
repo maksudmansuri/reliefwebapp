@@ -38,7 +38,7 @@ Booking {% endblock title %}
 								<div class="doctor-widget">
 									<div class="doc-info-left">
 										<div class="doctor-img">
-											<img src="{{doctor.hospital.profile_pic}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
+											<img src="{{doctor.hospital.profile_pic.url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
 												alt="User Image">
 										</div>
 										<div class="doc-info-cont">
@@ -68,7 +68,7 @@ Booking {% endblock title %}
 									<div class="doc-info-left">
 										<div class="doctor-img">
 											<a href="#">
-												<img src="{{doctor.profile_pic}}" class="img-fluid"
+												<img src="{{doctor.profile_pic.url}}" class="img-fluid"
 													alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 											</a>
 										</div>
@@ -423,7 +423,7 @@ Booking {% endblock title %}
 												<li>
 													<div class="comment">
 														<img class="avatar avatar-sm rounded-circle" alt="User Image"
-															src="{{cmn.patient.patients.profile_pic}}"
+															src="{{cmn.patient.patients.profile_pic.url}}"
 															onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 														<div class="comment-body">
 															<div class="meta-data">

@@ -38,7 +38,7 @@
                         <div class="card teacher-card ">
                             <div class="card-body d-flex flex-column">
                                 <div class="profile-av mx-auto text-center w220">
-                                    <img src="{{doctor.profile_pic}}" alt="" class="avatar xl rounded-circle img-thumbnail shadow-sm">
+                                    <img src="{{doctor.profile_pic.url}}" alt="" class="avatar xl rounded-circle img-thumbnail shadow-sm">
                                     <div class="about-info d-flex align-items-center mt-3 justify-content-center">
                                         <div class="followers rounded-circle me-3">
                                             <a href="{{doctor.facebook}}">
@@ -122,14 +122,14 @@
                                                 <form>
                                                     <div class="row g-3 align-items-center media_div_row">
                                                         <div class="col-md-4 profile-av mx-auto text-center w220">
-                                                            <label for="profile_pic" class="form-label">Profile Pic</label>
+                                                            <label for="profile_pic.url" class="form-label">Profile Pic</label>
                                                                <br> 
                                                             <img alt="Avatar" style="width:70%;display:none" class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
                                                             
                                                                
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <label for="profile_pic" class="form-label">Select Profile Picture *</label>
+                                                            <label for="profile_pic.url" class="form-label">Select Profile Picture *</label>
                                                             <input type="file" class="form-control select_media" name="profile_pic" required>
                                                         </div>
                                                         <div class="col-md-6">
@@ -329,15 +329,15 @@
                                                 <form>
                                                     <div class="row g-3 align-items-center media_div_row">
                                                         <div class="col-md-4 profile-av mx-auto text-center w220">
-                                                            <label for="profile_pic" class="form-label">Profile Pic</label>
+                                                            <label for="profile_pic.url" class="form-label">Profile Pic</label>
                                                                <br> 
-                                                            <img alt="Avatar" src="{{doctor.profile_pic}}" style="width:70%;display" class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
+                                                            <img alt="Avatar" src="{{doctor.profile_pic.url}}" style="width:70%;display" class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
                                                             
                                                                
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <label for="profile_pic" class="form-label">Select Profile Picture *</label>
-                                                            <input type="file" class="form-control select_media" name="profile_pic" value="{{doctor.profile_pic}}" required>
+                                                            <label for="profile_pic.url" class="form-label">Select Profile Picture *</label>
+                                                            <input type="file" class="form-control select_media" name="profile_pic" value="{{doctor.profile_pic.url}}" required>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="fisrt_name" class="form-label">First Name</label>

@@ -3,8 +3,6 @@ from chat.models import Notification
 from front.models import RatingAndComments
 from lab.models import Medias
 from patient.models import OrderBooking, Orders, PicturesForMedicine, phoneOPTforoders
-from django.core.files.storage import FileSystemStorage
-import pharmacy
 from django.http.response import HttpResponse, HttpResponseRedirect
 from accounts.models import CustomUser, OPDTime, Pharmacy
 from django.contrib.messages.views import SuccessMessageMixin
@@ -126,12 +124,8 @@ def UploadReportViews(request,id):
     print("out side if")
     booking = get_object_or_404(OrderBooking,id=id)
     if report:
-        print("inside if")
-        fs=FileSystemStorage()
-        filename1=fs.save(report.name,report)
-        report_url=fs.url(filename1)
-        booking.report=report_url
-        status = "TAKEN"
+        booking.report=report
+        booking.status = "TAKEN"
         booking.is_report_uploaded =True
         booking.is_otp_verified = False
         booking.desc = desc
@@ -264,18 +258,12 @@ class PharmacyUpdateViews(SuccessMessageMixin,UpdateView):
             pharmacy.landline=landline
 
             if profile_pic:
-                fs=FileSystemStorage()
-                filename1=fs.save(profile_pic.name,profile_pic)
-                profile_pic_url=fs.url(filename1)
-                pharmacy.profile_pic=profile_pic_url
-                pharmacy.admin.profile_pic=profile_pic_url
+                pharmacy.profile_pic=profile_pic
+                pharmacy.admin.profile_pic=profile_pic
 
             print(registration_proof)
             if registration_proof:
-                fs=FileSystemStorage()
-                filename=fs.save(registration_proof.name,registration_proof)
-                registration_proof_url=fs.url(filename)
-                pharmacy.registration_proof=registration_proof_url
+                pharmacy.registration_proof=registration_proof
             pharmacy.establishment_year=establishment_year
             pharmacy.alternate_mobile=alternate_mobile
             pharmacy.website=website
@@ -414,11 +402,7 @@ def UpdloadInvoicePharmacy(request,id):
     try:
         booking = get_object_or_404(OrderBooking,id=id)
         if store_invoice:
-            print()
-            fs=FileSystemStorage()
-            filename1=fs.save(store_invoice.name,store_invoice)
-            report_url=fs.url(filename1)
-            booking.store_invoice=report_url
+            booking.store_invoice=store_invoice
             booking.amount=amount
             booking.status="AMOUNT_UPLOADED"
             booking.add_note = desc
@@ -470,10 +454,7 @@ class ManageMainGalleryView(SuccessMessageMixin,CreateView):
         
         i=0
         for media_content in media_content_list:
-            fs=FileSystemStorage()
-            filename=fs.save(media_content.name,media_content)
-            media_url=fs.url(filename)
-            hospital_media = Medias(user=user,media_type=media_type_list,media_desc=media_desc_list,media_content=media_url)
+            hospital_media = Medias(user=user,media_type=media_type_list,media_desc=media_desc_list,media_content=media_content)
             hospital_media.is_active=True
             hospital_media.save() 
             i=i+1  

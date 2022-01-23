@@ -42,7 +42,7 @@ class Disease(models.Model):
     id =            models.AutoField(primary_key=True)
     name =          models.CharField(max_length=50,null=True,blank=True,default="")
     desc =              models.CharField(max_length=50,null=True,blank=True,default="")
-    d_icon                 =models.FileField(max_length=500,null=True,default="")
+    d_icon                 =models.ImageField(max_length=500,null=True,default="")
     is_active           =models.BooleanField(blank=True,null=True,default=False)
     created_at                   =models.DateTimeField(auto_now=True)
     updated_at                   =models.DateTimeField(auto_now=True)

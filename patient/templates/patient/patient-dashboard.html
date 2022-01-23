@@ -69,7 +69,7 @@
 																		<a href="{% url 'hospital_details' booking.hospitalstaffdoctor.hospital.id %}"
 																			class="avatar avatar-sm me-2">
 																			<img class="avatar-img rounded-circle"
-																				src="{{booking.hospitalstaffdoctor.hospital.profile_pic}}"
+																				src="{{booking.hospitalstaffdoctor.hospital.profile_pic.url}}"
 																				alt="User Image">
 																		</a>
 																		<a href="doctor-profile.html">{{booking.hospitalstaffdoctor.hospital.hopital_name}}
@@ -131,7 +131,7 @@
 																		<a href="#"
 																			class="avatar avatar-sm me-2">
 																			<img class="avatar-img rounded-circle"
-																				src="{{labbooks.labbook.HLP.profile_pic}}"
+																				src="{{labbooks.labbook.HLP.profile_pic.url}}"
 																				alt="User Image">
 																		</a>
 																		<a href="doctor-profile.html">{{labbooks.labbook.HLP.labs.lab_name}}
@@ -199,7 +199,7 @@
 																		<a href="#"
 																			class="avatar avatar-sm me-2">
 																			<img class="avatar-img rounded-circle"
-																				src="{{pharmacy.HLP.profile_pic}}"
+																				src="{{pharmacy.HLP.profile_pic.url}}"
 																				alt="User Image">
 																		</a>
 																		<a href="#">{{pharmacy.HLP.pharmacy.pharmacy_name}}

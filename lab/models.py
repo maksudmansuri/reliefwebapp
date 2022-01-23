@@ -28,7 +28,7 @@ class Medias(models.Model):
     user                    =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     media_type              =           models.CharField(max_length=255,blank=True,null=True,default="")
     media_type_choice       =           ((1,"Image"),(2,"Video"))
-    media_content           =           models.FileField(choices=media_type_choice,blank=True,null=True,default="")
+    media_content           =           models.ImageField(choices=media_type_choice,blank=True,null=True,default="")
     media_desc              =           models.CharField(max_length=255,blank=True,null=True,default="")
     is_active               =           models.BooleanField(default=False)     
     is_default              =           models.BooleanField(default=False)     

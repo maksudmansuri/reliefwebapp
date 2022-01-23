@@ -56,13 +56,13 @@
                                     <div class="card-body">                                 
                                         <div class="row g-3 align-items-center media_div_row">
                                             <div class="col-md-4 profile-av mx-auto text-center w220">
-                                                <label for="profile_pic" class="form-label">Upload Hospital Logo</label>
+                                                <label for="profile_pic.url" class="form-label">Upload Hospital Logo</label>
                                                     <br> 
-                                                <img alt="Avatar" src="{{hospital.profile_pic}}" id="currentPhoto" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" {% if hospital.profile_pic %}style="width:70%;"{% else %} style="width:70%;display:none" {% endif %}class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
+                                                <img alt="Avatar" src="{{hospital.profile_pic.url}}" id="currentPhoto" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" {% if hospital.profile_pic.url %}style="width:70%;"{% else %} style="width:70%;display:none" {% endif %}class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
                                             </div>
                                             
                                              <div class="col-md-6">
-                                                <label for="profile_pic" class="form-label">Select Hospital Logo *</label>
+                                                <label for="profile_pic.url" class="form-label">Select Hospital Logo *</label>
                                                 <input type="file" class="form-control select_media" name="profile_pic">
                                             </div>
                                             <div class="col-md-6">
@@ -120,7 +120,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="formFileMultiple" class="form-label">Document Upload (Registration Proof) </label>
-                                                <input class="form-control" type="file" id="registration_proof" name="registration_proof" placeholder="Hospital Documents" value="{{hospital.registration_proof}}" multiple >
+                                                <input class="form-control" type="file" id="registration_proof.url" name="registration_proof" placeholder="Hospital Documents" value="{{hospital.registration_proof.url}}" multiple >
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Trust OR Private *</label>

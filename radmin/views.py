@@ -7,7 +7,6 @@ IST = pytz.timezone('Asia/Kolkata')
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from patient.models import Booking, LabTest, OrderBooking, Orders, PicturesForMedicine, Slot, TreatmentReliefPetient, patientFile
-from django.core.files.storage import FileSystemStorage
 from django.http.response import HttpResponse, HttpResponseBase, HttpResponseRedirect, JsonResponse
 from hospital.models import ContactPerson, HospitalMedias, HospitalStaffDoctorSchedual, HospitalsPatients, Insurances, ServiceAndCharges, TimeSlot
 from accounts.models import CustomUser, HospitalDoctors, HospitalPhones, Hospitals, Labs, OPDTime, Patients, Pharmacy, Specailist
@@ -55,17 +54,13 @@ class AddHospitalSpecialistView(SuccessMessageMixin,CreateView):
         specialist_name=request.POST.get("specialist_name")
         specialist_icon=request.FILES.get("specialist_icon")
         hover_icon=request.FILES.get("hover_icon")
-       
-        fs=FileSystemStorage()
-        filename1=fs.save(specialist_icon.name,specialist_icon)
-        profile_pic_url=fs.url(filename1)
-        fs1=FileSystemStorage()
-        ret = image.UploadImage(specialist_icon)
-        print(ret)
-        filename2=fs1.save(hover_icon.name,hover_icon)
-        hover_icon_url=fs1.url(filename2)
         try:
-            specailist = Specailist(specialist_name=specialist_name,specialist_icon=profile_pic_url,hover_icon=hover_icon_url)
+            print(specialist_icon,hover_icon)
+            specailist = Specailist.objects.create(specialist_name=specialist_name)
+            if specialist_icon:
+                specailist.specialist_icon=specialist_icon
+            if hover_icon:
+                specailist.hover_icon=hover_icon           
             specailist.save()
         except Exception as e:
             messages.add_message(request,messages.ERROR,e)
@@ -81,16 +76,11 @@ def updateHospitalSpecialist(request,id):
     try: 
         specailist = get_object_or_404(Specailist,id=id)
         specailist.specialist_name=specialist_name
-        if specialist_icon:
-            fs=FileSystemStorage()
-            filename1=fs.save(specialist_icon.name,specialist_icon)
-            profile_pic_url=fs.url(filename1)
-            specailist.specialist_icon=profile_pic_url
+     
+        if specialist_icon:  
+            specailist.specialist_icon=specialist_icon
         if hover_icon:
-            fs1=FileSystemStorage()
-            filename2=fs1.save(hover_icon.name,hover_icon)
-            hover_icon_url=fs1.url(filename2)
-            specailist.hover_icon=hover_icon_url
+            specailist.hover_icon=hover_icon
         specailist.save()
     except Exception as e:
         messages.add_message(request,messages.ERROR,e)
@@ -215,18 +205,12 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
                 hospital.specialist=specialist1
 
             if profile_pic:
-                fs=FileSystemStorage()
-                filename1=fs.save(profile_pic.name,profile_pic)
-                profile_pic_url=fs.url(filename1)
-                hospital.profile_pic=profile_pic_url
-                hospital.admin.profile_pic=profile_pic_url
+                hospital.profile_pic=profile_pic
+                hospital.admin.profile_pic=profile_pic
 
             print(registration_proof)
             if registration_proof:
-                fs=FileSystemStorage()
-                filename=fs.save(registration_proof.name,registration_proof)
-                registration_proof_url=fs.url(filename)
-                hospital.registration_proof=registration_proof_url
+                hospital.registration_proof=registration_proof
                 
             hospital.establishment_year=establishment_year
             hospital.alternate_mobile=alternate_mobile
@@ -423,18 +407,12 @@ class LabUpdateViews(SuccessMessageMixin,View):
             lab.landline=landline
 
             if profile_pic:
-                fs=FileSystemStorage()
-                filename1=fs.save(profile_pic.name,profile_pic)
-                profile_pic_url=fs.url(filename1)
-                lab.profile_pic=profile_pic_url
-                lab.admin.profile_pic=profile_pic_url
+                lab.profile_pic=profile_pic
+                lab.admin.profile_pic=profile_pic
 
             print(registration_proof)
             if registration_proof:
-                fs=FileSystemStorage()
-                filename=fs.save(registration_proof.name,registration_proof)
-                registration_proof_url=fs.url(filename)
-                lab.registration_proof=registration_proof_url
+                lab.registration_proof=registration_proof
             lab.establishment_year=establishment_year
             lab.alternate_mobile=alternate_mobile
             lab.website=website
@@ -540,11 +518,8 @@ class DoctorUpdateViews(SuccessMessageMixin,View):
                 specialist1 = get_object_or_404(Specailist,id=specialist)
                 hospital.specialist=specialist1
             if profile_pic:
-                fs=FileSystemStorage()
-                filename1=fs.save(profile_pic.name,profile_pic)
-                profile_pic_url=fs.url(filename1)
-                hospital.profile_pic=profile_pic_url
-                hospital.admin.profile_pic=profile_pic_url    
+                hospital.profile_pic=profile_pic
+                hospital.admin.profile_pic=profile_pic    
                 
             hospital.degree=degree
             hospital.alternate_mobile=alternate_mobile
@@ -738,20 +713,13 @@ class PharmacyUpdateViews(SuccessMessageMixin,UpdateView):
             pharmacy.state=state
             pharmacy.country=country
             pharmacy.landline=landline
-
             if profile_pic:
-                fs=FileSystemStorage()
-                filename1=fs.save(profile_pic.name,profile_pic)
-                profile_pic_url=fs.url(filename1)
-                pharmacy.profile_pic=profile_pic_url
-                pharmacy.admin.profile_pic=profile_pic_url
+                pharmacy.profile_pic=profile_pic
+                pharmacy.admin.profile_pic=profile_pic
 
             print(registration_proof)
             if registration_proof:
-                fs=FileSystemStorage()
-                filename=fs.save(registration_proof.name,registration_proof)
-                registration_proof_url=fs.url(filename)
-                pharmacy.registration_proof=registration_proof_url
+                pharmacy.registration_proof=registration_proof
             pharmacy.establishment_year=establishment_year
             pharmacy.alternate_mobile=alternate_mobile
             pharmacy.website=website
@@ -1122,12 +1090,12 @@ class DiseaseListView(SuccessMessageMixin,CreateView):
         desc=request.POST.get("desc")
         d_icon=request.FILES.get("d_icon")
         print(desc)
-        if d_icon:
-            fs=FileSystemStorage()
-            filename1=fs.save(d_icon.name,d_icon)
-            profile_pic_url=fs.url(filename1)
+        
+
         try:
-            disease = Disease(name=name,d_icon=profile_pic_url,desc=desc,is_active=True)
+            disease = Disease(name=name,desc=desc,is_active=True)
+            if d_icon:
+               disease.d_icon=d_icon
             disease.save()
         except Exception as e:
             messages.add_message(request,messages.ERROR,e)
@@ -1144,10 +1112,7 @@ def updateDisease(request,id):
         disease.name=name
         disease.desc=desc
         if d_icon:
-            fs=FileSystemStorage()
-            filename1=fs.save(d_icon.name,d_icon)
-            profile_pic_url=fs.url(filename1)
-            disease.d_icon=profile_pic_url      
+            disease.d_icon=d_icon      
         disease.save()
     except Exception as e:
         messages.add_message(request,messages.ERROR,e)

@@ -19,7 +19,6 @@ from accounts import views
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.files.storage import FileSystemStorage
 from hospital.models import AmbulanceDetails, Blog, ContactPerson, DepartmentPhones, Departments, DoctorSchedule, HospitalMedias, HospitalRooms, HospitalServices, HospitalStaffDoctorSchedual, HospitalStaffs, HospitalsPatients, Insurances, RoomOrBadTypeandRates, ServiceAndCharges, TimeSlot
 from accounts.models import CustomUser,HospitalDoctors, HospitalPhones, Hospitals, OPDTime, Patients, Specailist
 from django.urls import reverse
@@ -223,11 +222,8 @@ class doctorUpdateViews(SuccessMessageMixin,UpdateView):
                 hospital.specialist=specialist1
 
             if profile_pic:
-                fs=FileSystemStorage()
-                filename1=fs.save(profile_pic.name,profile_pic)
-                profile_pic_url=fs.url(filename1)
-                hospital.profile_pic=profile_pic_url
-                hospital.admin.profile_pic=profile_pic_url    
+                hospital.profile_pic=profile_pic
+                hospital.admin.profile_pic=profile_pic    
                 
             hospital.degree=degree
             hospital.alternate_mobile=alternate_mobile
@@ -311,10 +307,7 @@ class managePatientView(SuccessMessageMixin,CreateView):
         # for Hospital staff user creation
 
         if ID_proof:
-            fs=FileSystemStorage()
-            filename=fs.save(ID_proof.name,ID_proof)
-            media_url=fs.url(filename)
-            ID_proof_url = media_url
+            ID_proof_url = ID_proof
 
         p=CustomUser.objects.filter(phone=phone).count()
         e=CustomUser.objects.filter(email=email).count()
@@ -341,11 +334,8 @@ class managePatientView(SuccessMessageMixin,CreateView):
         account.is_active = True
         account.save()
         if profile_pic:
-            fs=FileSystemStorage()
-            filename1=fs.save(profile_pic.name,profile_pic)
-            profile_pic_url=fs.url(filename1)
-            account.profile_pic=profile_pic_url
-            account.patients.profile_pic=profile_pic_url        
+            account.profile_pic=profile_pic
+            account.patients.profile_pic=profile_pic        
         account.name_title = name_title
         account.first_name = first_name
         account.last_name = last_name
@@ -400,10 +390,7 @@ def updatePatientView(request):
         # for Hospital staff user creation
 
         if ID_proof:
-            fs=FileSystemStorage()
-            filename=fs.save(ID_proof.name,ID_proof)
-            media_url=fs.url(filename)
-            ID_proof_url = media_url
+            ID_proof_url = ID_proof
            
         doctor=HospitalDoctors.objects.get(admin=request.user)     
         """
@@ -636,10 +623,7 @@ def ReliefPatientViewsFiles(request,id):
         try:
             patientfile = patientFile(treatmentreliefpetient=treatmentreliefpetient,patient=treatmentreliefpetient.patient,booking=treatmentreliefpetient.booking ,hospitaldoctors=treatmentreliefpetient.booking.hospitalstaffdoctor,file_addnote=file_addnote,is_active=is_active)
             if file:
-                fs=FileSystemStorage()
-                filename1=fs.save(file.name,file)
-                profile_pic_url=fs.url(filename1)
-                patientfile.file=profile_pic_url
+                patientfile.file=file
             patientfile.save()
             treatmentreliefpetient.next_date=next_date
             treatmentreliefpetient.save()
@@ -758,10 +742,7 @@ class addBlogView(SuccessMessageMixin,CreateView):
         try:        
             blog = Blog(blog_title=blog_title,blog_content=content,doctor=doctor)
             if blog_image:
-                fs=FileSystemStorage()
-                filename1=fs.save(blog_image.name,blog_image)
-                blog_image_url=fs.url(filename1)
-                blog.blog_image=blog_image_url
+                blog.blog_image=blog_image
             blog.save()
         except Exception as e:
             messages.add_message(request,messages.ERROR,"Something Wrong with connnections")
@@ -792,10 +773,7 @@ class EditBlogUpdateView(SuccessMessageMixin,UpdateView):
             blog.blog_content=content
             blog.doctor=doctor
             if blog_image:
-                fs=FileSystemStorage()
-                filename1=fs.save(blog_image.name,blog_image)
-                blog_image_url=fs.url(filename1)
-                blog.blog_image=blog_image_url
+                blog.blog_image=blog_image
             blog.save()
    
         except Exception as e:

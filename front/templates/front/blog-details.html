@@ -34,7 +34,7 @@
 						<div class="blog-view">
 							<div class="blog blog-single-post">
 								<div class="blog-image">
-									<a href="javascript:void(0);"><img alt="" src="/media/{{blog.blog_image}}" 
+									<a href="javascript:void(0);"><img alt="" src="/media/{{blog.blog_image.url}}" 
 										onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
 											class="img-fluid"></a>
 								</div>
@@ -45,7 +45,7 @@
 											<li>
 												<div class="post-author">
 													<a href="{% url 'doctor_details' blog.doctor.id%}"><img
-															src="{{blog.doctor.profile_pic}}" 
+															src="{{blog.doctor.profile_pic.url}}" 
 															onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
 															alt="Post Author"> <span>Dr. {{blog.doctor.fisrt_name}} {{blog.doctor.last_name}}</span></a>
 												</div>
@@ -84,7 +84,7 @@
 											<div class="author-img-wrap">
 												<a href="{% url 'doctor_details' blog.doctor.id %}"><img class="img-fluid rounded-circle" 
 													onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
-														alt="" src="{{blog.doctor.profile_pic}}"></a>
+														alt="" src="{{blog.doctor.profile_pic.url}}"></a>
 											</div>
 										</div>
 										<div class="author-details">
@@ -250,7 +250,7 @@
 									<li>
 										<div class="post-thumb">
 											<a href="{% url 'blog_details' blog.id %}">
-												<img class="img-fluid" src="/media/{{blog.blog_image}}" alt="" 
+												<img class="img-fluid" src="/media/{{blog.blog_image.url}}" alt="" 
 												onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 											</a>
 										</div>
