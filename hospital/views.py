@@ -7,9 +7,7 @@ from django.http.request import HttpRequest
 from accounts import models
 from chat.models import Notification
 from front.models import RatingAndComments
-
 from patient.models import Booking, LabTest, OrderBooking, Orders, Slot, TreatmentReliefPetient, patientFile, phoneOPTforoders
-from django.db.models.query_utils import Q
 from django.urls.base import reverse
 from hospital import urls
 from django.contrib import messages
@@ -28,7 +26,7 @@ from django.core.paginator import Paginator
 
 from radmin.models import Disease, HospitalDisease
 IST = pytz.timezone('Asia/Kolkata')
-
+from django.db.models import Q
 # Create your views here. 
 def OccupiedRoom(request):
     id= request.POST.get('a_id')
@@ -44,17 +42,38 @@ class hospitaldDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
         try: 
             hospital = Hospitals.objects.get(admin=request.user.id)
-            showtime = datetime.now(tz=IST).date()
-            print(showtime)
-            bookings = OrderBooking.objects.filter(HLP=hospital.admin,is_taken=False,is_otp_verified=False,is_active=True,is_cancelled = False,is_rejected = False)
-            bookings_now = OrderBooking.objects.filter(HLP=hospital.admin,is_taken=False,is_otp_verified=False,is_active=True,is_cancelled = False,applied_date=showtime,is_rejected = False)
+            showdate = datetime.now(tz=IST).date()
+            showtime = datetime.now(tz=IST).time()
+             # deactivating all old appoinments
+            old_appointments = OrderBooking.objects.filter(applied_date__lt=showdate)
+            for apt in old_appointments:
+                if apt.is_taken == False and apt.is_otp_verified == False and apt.is_active == True and apt.is_cancelled == False and apt.is_rejected == False:
+                    apt.is_active = False
+                    apt.status = "NO RESPONSE FROM YOU"
+                    apt.is_refund_now == True
+                    apt.save()
+             #Deactivate today appointmnet
+            today_old_apt = OrderBooking.objects.filter(applied_date=showdate).filter(applied_time__lt=showtime)
+            for apt in today_old_apt:
+                if apt.is_taken == False and apt.is_otp_verified == False and apt.is_active == True and apt.is_cancelled == False and apt.is_rejected == False:
+                    apt.is_active = False
+                    apt.status = "NO RESPONSE FROM YOU"
+                    apt.is_refund_now == True
+                    apt.save()
+            bookings = OrderBooking.objects.filter(HLP=hospital.admin,is_taken=False,is_otp_verified=False,is_cancelled = False,is_rejected = False).order_by('applied_time')
+
+            upcoming_bookings = OrderBooking.objects.filter(HLP=hospital.admin,is_taken=False,is_otp_verified=False,is_active=True,is_cancelled = False,is_rejected = False).filter(applied_date__gte=showdate).order_by('applied_date')
+# filter(applied_time__gte = showtime)
+            bookings_now = OrderBooking.objects.filter(HLP=hospital.admin,is_taken=False,is_otp_verified=False,is_cancelled = False,applied_date=showdate,is_rejected = False).order_by('applied_date')
             contacts = HospitalPhones.objects.filter(hospital=hospital)
             insurances = Insurances.objects.filter(hospital=hospital)
             rooms = HospitalRooms.objects.filter(is_active=True,hospital=request.user.hospitals)
             specailists = Specailist.objects.all()
 
+       
+
             if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.profile_pic and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile:              
-                param = {'bookings':bookings,'bookings_now':bookings_now}
+                param = {'bookings':bookings,'bookings_now':bookings_now,'upcoming_bookings':upcoming_bookings}
                 return render(request,"hospital/newindex.html",param)
             
             else:
@@ -325,16 +344,14 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
         hospital = None
         # contacts = None
         # insurances = None
-        # try:
-        hospital = Hospitals.objects.get(admin=request.user.id)
-        contacts = HospitalPhones.objects.filter(hospital=hospital)
-        insurances = Insurances.objects.filter(hospital=hospital)
-        opdtime=OPDTime.objects.get(user=request.user)
-        specailists = Specailist.objects.all()
-        print("hello")
-        print(specailists)
-        # except Exception as e:
-            # return None
+        try:
+            hospital = Hospitals.objects.get(admin=request.user.id)
+            contacts = HospitalPhones.objects.filter(hospital=hospital)
+            insurances = Insurances.objects.filter(hospital=hospital)
+            opdtime=OPDTime.objects.get(user=request.user)
+            specailists = Specailist.objects.all()
+        except Exception as e:
+            return HttpResponse(e)
         param={'hospital':hospital,'insurances':insurances,'contacts':contacts,'opdtime':opdtime,'specailists':specailists}
         return render(request,"hospital/doctor-profile-settings.html",param) 
     
@@ -502,7 +519,7 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
 
         messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
         return HttpResponseRedirect(reverse("hospital_update"))
-
+#Try except done till here
 class manageStaffView(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):
         try:

@@ -5,7 +5,7 @@ from rest_framework.fields import ReadOnlyField
 
 from accounts.models import  HospitalDoctors, Hospitals, Labs, Pharmacy, Specailist
 from front.models import RatingAndComments
-from hospital.models import AmbulanceDetails, HospitalMedias, HospitalRooms, ServiceAndCharges
+from hospital.models import AmbulanceDetails, DoctorSchedule, HospitalMedias, HospitalRooms, ServiceAndCharges, TimeSlot
 from patient import models
 from patient.models import Booking, LabTest, OrderBooking, Orders, PicturesForMedicine, Slot
 from radmin.models import Disease, HospitalDisease
@@ -40,8 +40,6 @@ class HospitalHomeScreenSerializer(serializers.ModelSerializer):
 		response['specialist'] = InsideScreenSerializer(instance.specialist).data
 		return response
 
-
-
 class HospitalDoctorHomeScreenSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = HospitalDoctors
@@ -64,40 +62,110 @@ class PharmaHomeScreenSerializer(serializers.ModelSerializer):
 		fields = ['pk','pharmacy_name','address','city','pin_code','state','profile_pic']
 
 
-
-
 """ALl OLD Serializers"""
 class SpecialistHosSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Specailist
 		fields = "__all__"
 
+class TimeSlotSerializer(serializers.ModelSerializer):
+
+	class Meta:
+		model = TimeSlot
+		fields = ['pk','schedule']
+
+class DoctorSchedulesSerializer(serializers.ModelSerializer):
+
+	class Meta:
+		model = DoctorSchedule
+		fields = ['pk','scheduleDate','is_active','is_booked']
+	
+	def to_representation(self, instance):
+		response = super().to_representation(instance)
+		print(instance)
+		response['timeslot'] = TimeSlotSerializer(instance.timeslot).data
+		# response['hospital'] = HospitalsSerializer(instance.hospital).data
+		return response
+
+class HospitalDoctorSerialzer(serializers.ModelSerializer):
+	# schedules = DoctorSchedulesSerializer(many=True)
+	class Meta:
+		model = HospitalDoctors
+		fields = ['pk','fisrt_name','last_name','profile_pic','degree','gender','is_virtual_available','is_online']
+		
+	def to_representation(self, instance):
+		response = super().to_representation(instance)
+		print(instance)
+		response['specialist'] = InsideScreenSerializer(instance.specialist).data
+		# response['hospital'] = HospitalsSerializer(instance.hospital).data
+		return response
+
 class MediaHospitalSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = HospitalMedias
-		fields = "__all__"
+		fields = ['pk','media_type','media_content','media_desc']
+
+class RoomsPriceSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = HospitalRooms
+		fields = ['pk','rooms_price']
 
 class RoomsHospitalSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = HospitalRooms
-		fields = "__all__"
+		fields = ['pk','room_no']
+
+		def to_representation(self, instance):
+			response = super().to_representation(instance)
+			print(instance)
+			response['room'] = RoomsPriceSerializer(instance.disease).data
+			return response
 
 class OrderHospitalSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = OrderBooking
 		fields = "__all__"
 
+class DiseaseSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Disease
+		fields = ['pk','name','d_icon']
+
 class DiseaseHospitalSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = HospitalDisease
-		fields = "__all__"
+		fields = ['pk']
+
+		def to_representation(self, instance):
+			response = super().to_representation(instance)
+			print(instance)
+			response['disease'] = DiseaseSerializer(instance.disease).data
+			return response
 
 class ambulanceHospitalSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = AmbulanceDetails
-		fields = "__all__"
+		fields = ['pk','vehicle_type']
+
+class HospitalDoctorsViewSerializer(serializers.ModelSerializer):
+	hospitalstaffdoctors = HospitalDoctorSerialzer(many=True)	
+	hospitalmedia = MediaHospitalSerializer(many=True)
+	hospitalrooms = RoomsHospitalSerializer(many=True)
+	hospitaldisease = DiseaseHospitalSerializer(many=True)	
+	hospitalambulance = ambulanceHospitalSerializer(many=True)
+
+	class Meta:
+		model = Hospitals
+		fields = ['hopital_name','about','address1','address2','city','pin_code','state','country','landline','profile_pic','establishment_year','registration_number','alternate_mobile','website','hospitalstaffdoctors','hospitalmedia','hospitalrooms','hospitaldisease','hospitalambulance']
 
 
+		def to_representation(self, instance):
+			response = super().to_representation(instance)
+			print(instance)
+			response['specialist'] = InsideScreenSerializer(instance.specialist).data
+			return response
+			
+""""hospital deatl end"""			
 class HospitalsSerializer(serializers.ModelSerializer):
 
 	# username = serializers.SerializerMethodField('get_username_from_staffs')
@@ -130,35 +198,7 @@ class DoctorDetailSerialzer(serializers.ModelSerializer):
 		model = HospitalDoctors
 		fields = "__all__"	
 
-class HospitalDoctorSerialzer(serializers.ModelSerializer):
-	doctorbooking = OrderHospitalSerializer(many=True)	
-	class Meta:
-		model = HospitalDoctors
-		fields ="__all__"
-		
-	def to_representation(self, instance):
-		response = super().to_representation(instance)
-		print(instance)
-		response['specialist'] = SpecialistHosSerializer(instance.specialist).data
-		response['hospital'] = HospitalsSerializer(instance.hospital).data
-		return response
 
-class HospitalDoctorsViewSerializer(serializers.ModelSerializer):
-	hospitalstaffdoctors = HospitalDoctorSerialzer(many=True)	
-	hospitalmedia = MediaHospitalSerializer(many=True)
-	hospitalrooms = RoomsHospitalSerializer(many=True)
-	hospitaldisease = DiseaseHospitalSerializer(many=True)	
-	hospitalambulance = ambulanceHospitalSerializer(many=True)
-
-	class Meta:
-		model = Hospitals
-		fields = ['hopital_name','about','address1','address2','city','pin_code','state','country','landline','profile_pic','registration_proof','establishment_year','registration_number','alternate_mobile','firm','website','linkedin','facebook','instagram','twitter','created_at','updated_at','hospitalstaffdoctors','hospitalmedia','hospitalrooms','hospitaldisease','hospitalambulance']
-
-		def to_representation(self, instance):
-			response = super().to_representation(instance)
-			print(instance)
-			response['specialist'] = SpecialistSerializer(instance.specialist).data
-			return response
 
 # class DoctorsViewSerializer(serializers.ModelSerializer):
 	

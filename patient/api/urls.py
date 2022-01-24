@@ -15,7 +15,7 @@ urlpatterns = [
 
     #Hospital's APIs     
     re_path('hospitalslist/', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalslist'),
-    path('hospitalslist/<id>', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalsdetials'),
+    path('hospitalsdetail/<id>', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalsdetials'),
     #Doctorhosptial Apis
     # path('hospitaldoctordetail/<id>/<did>', views.HospitalDoctorDetailsView.as_view(),name='hospitaldoctordetail'),
     #Online Doctor Apis

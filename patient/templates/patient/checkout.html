@@ -122,7 +122,7 @@ Booking {% endblock title %}
 									{% if booking.booking_for == "H"%}
 									<h4 class="card-title">Hospital Details</h4>
 									<div class="booking-doc-info">
-										<a href="{% url 'hospitla_details' booking.hospitalstaffdoctor.hospital.id %}" class="booking-doc-img">
+										<a href="{% url 'hospital_details' booking.hospitalstaffdoctor.hospital.id %}" class="booking-doc-img">
 											<img src="{{booking.hospitalstaffdoctor.hospital.get_photo_url}}" alt="User Image">
 										</a>
 										<div class="booking-info">

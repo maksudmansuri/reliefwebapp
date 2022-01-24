@@ -57,7 +57,8 @@ class HospitalDisease(models.Model):
     id =            models.AutoField(primary_key=True)
     hospital            =models.ForeignKey(Hospitals,related_name="hospitaldisease", on_delete=models.DO_NOTHING,blank=True,null=True,default="")
     doctor            =models.ForeignKey(HospitalDoctors,related_name="hospitaldoctors_disease", on_delete=models.DO_NOTHING,blank=True,null=True,default="")
-    disease                 =models.ForeignKey(Disease, on_delete=models.DO_NOTHING,blank=True,null=True,default="")
+    disease                 =models.ForeignKey(Disease,on_delete=models.CASCADE,blank=True,null=True,default="")
     created_at                   =models.DateTimeField(auto_now=True)
     updated_at                   =models.DateTimeField(auto_now=True)
     objects                      =models.Manager()
+

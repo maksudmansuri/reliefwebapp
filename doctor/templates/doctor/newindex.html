@@ -69,12 +69,16 @@
                
                 <ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#upcoming-appointments" data-bs-toggle="tab">Upcoming</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#today-appointments" data-bs-toggle="tab">Today</a>
+                        <a class="nav-link active" href="#today-appointments" data-bs-toggle="tab">Today</a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="#upcoming-appointments" data-bs-toggle="tab">Upcoming</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#all-appointments" data-bs-toggle="tab">All</a>
+                    </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" onclick = "refesh()"><i class="fas fa-sync-alt"></i></a>
                     </li>
@@ -84,86 +88,11 @@
 
                 <div class="tab-content">
 
-                    <div class="tab-pane show active" id="upcoming-appointments">
-                        <div class="card mb-3">
+                    <div class="tab-pane show active" id="today-appointments">
+                        <div class="card mb-0">
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table id="patient-table" class="table table-hover align-middle mb-0" style="width: 100%;">
-                                        <thead>
-                                            <tr>
-                                                <th>Appt ID</th>
-                                                <th>Patient Name</th>
-                                                <th>Appt Date</th>                                                
-                                                <th>Type</th>
-                                                <th class="text-center">Amount</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for booking in bookings %}
-                                            <tr>
-                                                <td>
-                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#appt_details{{booking.id}}" tooltip="true" title="view Appoinment">
-                                                        #APT00{{booking.id}}
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <h2 class="table-avatar">
-                                                        <a href="patient-profile.html"
-                                                            class="avatar avatar-sm me-2"><img
-                                                                class="avatar-img rounded-circle"
-                                                                src="{{booking.patient.get_photo_url}}"
-                                                                onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
-                                                                alt="User Image"></a>
-                                                        <a href="patient-profile.html">{{booking.patient.name_title|title }}
-                                                            {{booking.patient.patients.fisrt_name|title }}
-                                                            {{booking.patient.patients.last_name|title }}
-                                                            <span>#PT00{{booking.patient.patients.id}}</span></a>
-                                                    </h2>
-                                                </td>
-                                               
-                                                <td>{{booking.applied_date}} <span
-                                                        class="d-block text-info">{{booking.applied_time|time:"H i a"}}</span>
-                                                </td>
-  
-                                                <td>{{booking.booking_type}}</td>
-                                                <td class="text-center">&#x20B9; {{booking.amount}}</td>
-                                                <td class="text-end">
-                                                    <div class="table-action">
-                                                        {% if booking.is_accepted %}
-                                                            <a data-bs-toggle="modal" data-bs-target="#appt_otp{{booking.id}}" tooltip="true" title="Enter OTP"
-                                                            class="btn btn-sm bg-primary-light">
-                                                            <i class="fas fa-check"></i> Verify
-                                                            </a>
-                                                        {% endif %}
-                                                        {% if booking.is_applied %}                            
-                                                            <a href="{% url 'accept_apt' booking.id %}"
-                                                                class="btn btn-sm bg-success-light">
-                                                                <i class="fas fa-check"></i> Accept
-                                                            </a>
-                                                        {% endif %}
-                                                        <a href="{% url 'reject_apt' booking.id %}"
-                                                            class="btn btn-sm bg-danger-light">
-                                                            <i class="fas fa-times"></i> Cancel
-                                                        </a>
-                                                        
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="tab-pane" id="today-appointments">
-                        <div class="card  mb-0">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table id="patient-table1" class="table table-hover table-center mb-0" style="width: 100%;" >
+                                    <table id="patient-table1" class="table table-hover align-middle mb-0" style="width: 100%;" >
                                         <thead>
                                             <tr>
                                                 <th>Appt ID</th>
@@ -226,12 +155,12 @@
                                                             </a>
                                                         {% endif %}
                                                         {% if booking.is_applied %}                            
-                                                            <a href="{% url 'doc_accept_apt' booking.id %}"
+                                                            <a href="{% url 'accept_apt' booking.id %}"
                                                                 class="btn btn-sm bg-success-light">
                                                                 <i class="fas fa-check"></i> Accept
                                                             </a>
                                                         {% endif %}
-                                                        <a href="{% url 'doc_reject_apt' booking.id %}"
+                                                        <a href="{% url 'reject_apt' booking.id %}"
                                                             class="btn btn-sm bg-danger-light">
                                                             <i class="fas fa-times"></i> Cancel
                                                         </a>
@@ -246,6 +175,195 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="tab-pane " id="upcoming-appointments">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="patient-table" class="table table-hover align-middle mb-0" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>Appt ID</th>
+                                                <th>Patient Name</th>
+                                                <th>Doctor Name</th>
+                                                <th>Appt Date</th>
+                                                <th>Type</th>
+                                                <th class="text-center">Amount</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for booking in upcoming_bookings %}
+                                            <tr> 
+                                                <td>
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#appt_details{{booking.id}}" tooltip="true" title="view Appoinment">
+                                                        #APT00{{booking.id}}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <h2 class="table-avatar">
+                                                        <a href="patient-profile.html"
+                                                            class="avatar avatar-sm me-2"><img
+                                                                class="avatar-img rounded-circle"
+                                                                src="{{booking.patient.get_photo_url}}"
+                                                                onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+                                                                alt="User Image"></a>
+                                                        <a href="patient-profile.html">{{booking.patient.name_title|title }}
+                                                            {{booking.patient.patients.fisrt_name|title }}
+                                                            {{booking.patient.patients.last_name|title }}
+                                                            <span>#PT00{{booking.patient.patients.id}}</span></a>
+                                                    </h2>
+                                                </td>
+                                                <td>
+                                                    <h2 class="table-avatar">
+                                                        <a href="doctor-profile.html" class="avatar avatar-sm me-2"><img
+                                                                class="avatar-img rounded-circle"
+                                                                src="{{booking.hospitalstaffdoctor.doctor.get_photo_url}}"
+                                                                onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+                                                                alt="User Image"></a>
+                                                        <a href="patient-profile.html">{{booking.hospitalstaffdoctor.doctor.name_title|title }}
+                                                            {{booking.hospitalstaffdoctor.doctor.fisrt_name|title }}
+                                                            {{booking.hospitalstaffdoctor.doctor.last_name|title }}
+                                                            <span>#DT00{{booking.hospitalstaffdoctor.id}}</span></a>
+                                                    </h2>
+                                                </td>
+                                                <td>{{booking.applied_date}} <span
+                                                        class="d-block text-info">{{booking.applied_time|time:"H i a"}}</span>
+                                                </td>
+  
+                                                <td>{{booking.booking_type}}</td>
+                                                <td class="text-center">&#x20B9; {{booking.amount}} </td>
+                                                <td class="text-end">
+                                                    <div class="table-action">
+                                                        {% if booking.is_active %}
+                                                            {% if booking.is_accepted %}
+                                                                <a data-bs-toggle="modal" data-bs-target="#appt_otp{{booking.id}}" tooltip="true" title="Enter OTP"
+                                                                class="btn btn-sm bg-primary-light">
+                                                                <i class="fas fa-check"></i> Verify
+                                                                </a>
+                                                            {% endif %}
+                                                            {% if booking.is_applied %}                            
+                                                                <a href="{% url 'accept_apt' booking.id %}"
+                                                                    class="btn btn-sm bg-success-light">
+                                                                    <i class="fas fa-check"></i> Accept
+                                                                </a>
+                                                            {% endif %}
+                                                        
+                                                        <a href="{% url 'reject_apt' booking.id %}"
+                                                            class="btn btn-sm bg-danger-light">
+                                                            <i class="fas fa-times"></i> Cancel
+                                                        </a>
+                                                        {% else %}
+                                                        <a>
+                                                            {{booking.status}}
+                                                        </a>
+                                                        {% endif %}
+                                                        
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                  
+
+                    <div class="tab-pane " id="all-appointments">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="patient-table2" class="table table-hover align-middle mb-0" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>Appt ID</th>
+                                                <th>Patient Name</th>
+                                                <th>Doctor Name</th>
+                                                <th>Appt Date</th>
+                                                <th>Type</th>
+                                                <th class="text-center">Amount</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for booking in bookings %}
+                                            <tr>
+                                                <td>
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#appt_details{{booking.id}}" tooltip="true" title="view Appoinment">
+                                                        #APT00{{booking.id}}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <h2 class="table-avatar">
+                                                        <a href="patient-profile.html"
+                                                            class="avatar avatar-sm me-2"><img
+                                                                class="avatar-img rounded-circle"
+                                                                src="{{booking.patient.get_photo_url}}"
+                                                                onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+                                                                alt="User Image"></a>
+                                                        <a href="patient-profile.html">{{booking.patient.name_title|title }}
+                                                            {{booking.patient.patients.fisrt_name|title }}
+                                                            {{booking.patient.patients.last_name|title }}
+                                                            <span>#PT00{{booking.patient.patients.id}}</span></a>
+                                                    </h2>
+                                                </td>
+                                                <td>
+                                                    <h2 class="table-avatar">
+                                                        <a href="doctor-profile.html" class="avatar avatar-sm me-2"><img
+                                                                class="avatar-img rounded-circle"
+                                                                src="{{booking.hospitalstaffdoctor.doctor.get_photo_url}}"
+                                                                onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+                                                                alt="User Image"></a>
+                                                        <a href="patient-profile.html">{{booking.hospitalstaffdoctor.doctor.name_title|title }}
+                                                            {{booking.hospitalstaffdoctor.doctor.fisrt_name|title }}
+                                                            {{booking.hospitalstaffdoctor.doctor.last_name|title }}
+                                                            <span>#DT00{{booking.hospitalstaffdoctor.id}}</span></a>
+                                                    </h2>
+                                                </td>
+                                                <td>{{booking.applied_date}} <span
+                                                        class="d-block text-info">{{booking.applied_time|time:"H i a"}}</span>
+                                                </td>
+  
+                                                <td>{{booking.booking_type}}</td>
+                                                <td class="text-center">&#x20B9; {{booking.amount}}</td>
+                                                <td class="text-end">
+                                                    <div class="table-action">
+                                                       
+                                                        {% if booking.is_active %}
+                                                            {% if booking.is_accepted %}
+                                                                <a data-bs-toggle="modal" data-bs-target="#appt_otp{{booking.id}}" tooltip="true" title="Enter OTP"
+                                                                class="btn btn-sm bg-primary-light">
+                                                                <i class="fas fa-check"></i> Verify
+                                                                </a>
+                                                            {% endif %}
+                                                            {% if booking.is_applied %}                            
+                                                                <a href="{% url 'accept_apt' booking.id %}"
+                                                                    class="btn btn-sm bg-success-light">
+                                                                    <i class="fas fa-check"></i> Accept
+                                                                </a>
+                                                            {% endif %}
+                                                            <a href="{% url 'reject_apt' booking.id %}"
+                                                                class="btn btn-sm bg-danger-light">
+                                                                <i class="fas fa-times"></i> Cancel
+                                                            </a>
+                                                        {% else %}
+                                                        <a>
+                                                            {{booking.status}}
+                                                        </a>
+                                                        {% endif %}
+                                                        
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                 </div>
             </div>
@@ -390,6 +508,14 @@
             ]
         });
         $('#patient-table1')
+        .addClass( 'nowrap' )
+        .dataTable( {
+            responsive: true,
+            columnDefs: [
+            { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+        $('#patient-table2')
         .addClass( 'nowrap' )
         .dataTable( {
             responsive: true,

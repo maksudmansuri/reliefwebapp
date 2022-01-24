@@ -12,7 +12,6 @@ from django.urls.base import reverse_lazy, translate_url
 from django.views.generic.base import RedirectView, TemplateResponseMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
-
 from accounts import profilePic
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
@@ -25,12 +24,10 @@ from django.utils.encoding import force_bytes,force_str,DjangoUnicodeDecodeError
 from django.core.mail import EmailMessage, message
 from django.conf import settings
 from .utils import generate_token
-import base64
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import date, datetime, timedelta
 import random
 import http.client
-import ast
 conn = http.client.HTTPConnection("2factor.in")
 # Create your views here.
 
@@ -40,7 +37,6 @@ def send_otp(phone):
         return key
     else:
         return False
-
     
 # This class returns the string needed to generate the key
 class generateKey:
@@ -605,7 +601,6 @@ class PharmacySingup(SuccessMessageMixin,CreateView):
             messages.add_message(self.request,messages.ERROR,e) 
             return HttpResponseRedirect(reverse("pharmacysingup",kwargs={'form':form}))
 
-
 def adminSingup(request):
     if request.method=="POST":
         username = request.POST.get('username')
@@ -677,11 +672,14 @@ def adminSingup(request):
 def activate(request,uidb64,token):
     try:
         uid=force_str(urlsafe_base64_decode(uidb64))
-        print(uid)
         user=CustomUser.objects.get(pk=uid) 
     except:
         user=None
+    print(uid)
+    print(user)
+    print(token)
     if user is not None and generate_token.check_token(user,token):
+        print("inside if")
         if user.is_Mobile_Verified:
             user.is_active=True
         user.is_Email_Verified=True

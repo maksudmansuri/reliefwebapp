@@ -24,7 +24,7 @@
 								data-bs-toggle="tab">Hospital</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link active" href="#pat_doctor"
+							<a class="nav-link" href="#pat_doctor"
 								data-bs-toggle="tab">Doctors </a>
 						</li>
 						<li class="nav-item">
@@ -62,11 +62,14 @@
                                                AP00{{hospital.id}}
                                             </td>
                                             <td>
-                                                <img class="avatar rounded-circle" src="{{hospital.patient.patients.get_photo_url}}" alt="">												
-                                                <span class="fw-bold ms-1">{{hospital.patient.patients|upper}}</span>
+                                               <a href="{% url 'admin_relief_patient_profile' hospital.patient.patients.id %}"> <img class="avatar rounded-circle" src="{{hospital.patient.patients.get_photo_url}}" alt="">												
+                                                <span class="fw-bold ms-1">{{hospital.patient.patients|upper}}</span></a>
                                             </td>
-                                            <td>
-                                                {{hospital.HLP.hospitals.hopital_name|upper}}
+                                            <td><a href="{% url 'hospital_details' hospital.HLP.hospitals.id %}">
+                                                <img class="avatar rounded-circle" src="{{hospital.HLP.hospitals.get_photo_url}}"
+													alt="">
+												<span class="fw-bold ms-1">{{hospital.HLP.hospitals.hopital_name|upper}}</span></a>
+                                               
                                             </td>
                                             <td>
                                                  {{hospital.amount}}
@@ -90,10 +93,9 @@
                                                         <span class="visually-hidden">Toggle Dropdown</span>
                                                     </button>
                                                     <ul class="dropdown-menu border-0 shadow py-3 px-2">
-                                                        <li><a class="dropdown-item py-2 rounded" href="#">View</a></li>
-                                                        <li><a class="dropdown-item py-2 rounded" href="{% url 'labs_delete_admin' hospital.id %}">Delete</a></li>
+                                                        <li><a class="dropdown-item py-2 rounded" href="{% url 'invoice' hospital.id %}">View</a></li>
+                                                        {% comment %} <li><a class="dropdown-item py-2 rounded" href="{% url 'labs_delete_admin' hospital.id %}">Delete</a></li> {% endcomment %}
                                                         <li><hr class="dropdown-divider"></li>
-                                                        <li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
                                                     </ul>
                                                 </div></td><!-- /btn-group -->
                                             
@@ -105,15 +107,15 @@
                         </div>
 					</div>
 
-					<div id="pat_doctor" class="tab-pane fade">
+					<div id="pat_doctor" class="tab-pane">
                         <div class="card mb-3">
                             <div class="card-body">
-                                <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
+                                <table id="myProjectTable10" class="table table-hover align-middle mb-0" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th>#</th>
                                             <th>Patient Name</th> 
-                                            <th>Hospital Name</th>    
+                                            <th>Doctor Name</th>    
                                             <th>Amount</th> 
                                             <th>Status</th>   
                                             <th>Actions</th>  
@@ -125,18 +127,21 @@
                                             <td> 
                                                AP00{{hospital.id}}
                                             </td>
-                                            <td>
-                                                <img class="avatar rounded-circle" src="{{hospital.patient.patients.get_photo_url}}" alt="">												
-                                                <span class="fw-bold ms-1">{{hospital.patient.patients|upper}}</span>
+                                            <td> <a href="{% url 'admin_relief_patient_profile' hospital.patient.patients.id %}">
+                                                <img class="avatar rounded-circle" src="{{hospital.patient.patients.get_photo_url}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">												
+                                                <span class="fw-bold ms-1">{{hospital.patient.patients|upper}}</span></a>
                                             </td>
-                                            <td>
-                                                {{hospital.HLP.hospitaldoctors.fisrt_name|upper}} {{hospital.HLP.hospitaldoctors.last_name|upper}}
+                                            <td><a href="{% url 'doctor_details' hospital.hospitalstaffdoctor.id %}">
+                                                <img class="avatar rounded-circle" src="{{hospital.hospitalstaffdoctor.get_photo_url}}" alt="" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+                                                <span class="fw-bold ms-1">
+                                                    
+                                                Dr.{{hospital.hospitalstaffdoctor.fisrt_name|upper}} {{hospital.hospitalstaffdoctor.last_name|upper}}</span></a>
                                             </td>
                                             <td>
                                                  {{hospital.amount}}
                                             </td>
                                            
-                                            </td>
+                                            
                                             {% comment %} <td>
                                                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                                                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}"><i class="icofont-edit text-success"></i></button>
@@ -154,10 +159,10 @@
                                                         <span class="visually-hidden">Toggle Dropdown</span>
                                                     </button>
                                                     <ul class="dropdown-menu border-0 shadow py-3 px-2">
-                                                        <li><a class="dropdown-item py-2 rounded" href="#">View</a></li>
-                                                        <li><a class="dropdown-item py-2 rounded" href="{% url 'labs_delete_admin' hospital.id %}">Delete</a></li>
-                                                        <li><hr class="dropdown-divider"></li>
-                                                        <li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
+                                                        <li><a class="dropdown-item py-2 rounded" href="{% url 'invoice' hospital.id %}">View</a></li>
+                                                        {% comment %} <li><a class="dropdown-item py-2 rounded" href="{% url 'labs_delete_admin' hospital.id %}">Delete</a></li>{% endcomment %}
+                                                        <li><hr class="dropdown-divider"></li> 
+                                                        {% comment %} <li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li> {% endcomment %}
                                                     </ul>
                                                 </div></td><!-- /btn-group -->
                                             
@@ -169,7 +174,7 @@
                         </div>
 					</div>
 
-					<div class="tab-pane fade" id="pat_prescriptions">
+					<div class="tab-pane" id="pat_prescriptions">
                         <div class="card mb-3">
                             <div class="card-body">
                                 <table id="myProjectTable1" class="table table-hover align-middle mb-0" style="width:100%">
@@ -233,7 +238,7 @@
                         </div>
 					</div>
 
-					<div id="pat_medical_records" class="tab-pane fade">
+					<div id="pat_medical_records" class="tab-pane">
                         <div class="card mb-3">
                             <div class="card-body">
                                 <table id="myProjectTable2" class="table table-hover align-middle mb-0" style="width:100%">
@@ -333,6 +338,25 @@
         } );
     });
     $(document).ready(function() {
+        $('#myProjectTable10')
+        .addClass( 'nowrap10' )
+        .dataTable( {
+            responsive: true,
+            columnDefs: [
+                { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+        $('.deleterow10').on('click',function(){
+        var tablename = $(this).closest('table').DataTable();  
+        tablename
+            .row( $(this)
+            .parents('tr') )
+            .remove()
+            .draw();
+
+        } );
+    });
+    $(document).ready(function() {
         $('#myProjectTable1')
         .addClass( 'nowrap' )
         .dataTable( {
@@ -352,6 +376,7 @@
         } );
     });
     $(document).ready(function() {
+       
         $('#myProjectTable2')
         .addClass( 'nowrap' )
         .dataTable( {

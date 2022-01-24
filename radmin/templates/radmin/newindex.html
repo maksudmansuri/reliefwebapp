@@ -36,9 +36,9 @@
 					<li class="nav-item">
 						<a class="nav-link" href="#patient" data-bs-toggle="tab">Patient {{cpatient}}</a>
 					</li>
-					<li class="nav-item">
+					{% comment %} <li class="nav-item">
 						<a class="nav-link" href="#accident" data-bs-toggle="tab">Accident {{caccidents}}</a>
-					</li>
+					</li> {% endcomment %}
 				</ul>
 			</nav>
 
@@ -151,7 +151,7 @@
 					</div>
 				</div>
 
-				<div id="doctor" class="tab-pane fade">
+				<div id="doctor" class="tab-pane">
 					<div class="card mb-0">
 						<div class="card-body">
 							<div class="table-responsive">
@@ -256,7 +256,7 @@
 					</div>
 				</div>
 
-				<div class="tab-pane fade" id="pat_prescriptions">
+				<div class="tab-pane" id="pat_prescriptions">
 					<div class="card mb-3">
 						<div class="card-body">
 							<div class="table-responsive">
@@ -367,7 +367,7 @@
 					</div>
 				</div>
 
-				<div id="pat_medical_records" class="tab-pane fade">
+				<div id="pat_medical_records" class="tab-pane">
 					<div class="card mb-3">
 						<div class="card-body">
 							<div class="table-responsive">

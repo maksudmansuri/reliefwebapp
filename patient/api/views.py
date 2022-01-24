@@ -33,7 +33,7 @@ class HomeScreenView(ListAPIView):
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = (IsAuthenticated,)
 	queryset = Specailist.objects.all().order_by('updated_at')
-	# pagination_class = StandardResultsSetPagination
+	pagination_class = StandardResultsSetPagination
 	
 	def get(self, request, format=None, **kwargs):
 		spc = Specailist.objects.all().order_by('updated_at')[:10]
@@ -65,19 +65,10 @@ class specialistViewSets(viewsets.ModelViewSet):
 	pagination_class = StandardResultsSetPagination
 	serializer_class = HomeScreenSerializer
 
-class ApiHospitalListView(ListAPIView):
-	queryset = Hospitals.objects.all()
-	serializer_class = HospitalsSerializer
-	authentication_classes = (TokenAuthentication,)
-	permission_classes = (IsAuthenticated,)
-	pagination_class = StandardResultsSetPagination
-	filter_backends = (SearchFilter,OrderingFilter)
-	search_fields = ('hopital_name','specialist','city')
-
 class ApiHospitalListAndDetailsView(ListAPIView):
 	permission_classes = (IsAuthenticated,)
 	authentication_classes = (TokenAuthentication,)
-	pagination_class = PageNumberPagination
+	pagination_class = StandardResultsSetPagination
 	filter_backends = [SearchFilter,OrderingFilter]
 	filter_fields = (
         'specialist',
@@ -100,7 +91,7 @@ class ApiHospitalListAndDetailsView(ListAPIView):
 		# print(request.data['id'])		
 		if id:
 			hospital = get_object_or_404(Hospitals,id = id,is_verified = True,admin__is_active = True)
-			serializer = HospitalHomeScreenSerializer(hospital)
+			serializer = HospitalDoctorsViewSerializer(hospital)
 			print(serializer.data)
 			return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
@@ -111,7 +102,7 @@ class ApiHospitalListAndDetailsView(ListAPIView):
 class HospitalDoctorDetailsView(APIView):
 	permission_classes = (IsAuthenticated,)
 	authentication_classes = (TokenAuthentication,)
-
+	pagination_class = StandardResultsSetPagination
 
 	def get(self,request,id=None,did=None):
 		if id or did:
@@ -126,7 +117,7 @@ class HospitalDoctorDetailsView(APIView):
 class APIDoctorListView(APIView):
 	permission_classes = (IsAuthenticated,)
 	authentication_classes = (TokenAuthentication,)
-
+	pagination_class = StandardResultsSetPagination
 	def get(self,request,id=None,did=None):
 		if id:
 			hospitaldoctors = HospitalDoctors.objects.get(id=id,is_active=True)			
@@ -140,7 +131,7 @@ class APIDoctorListView(APIView):
 class APIOnlineDoctorListView(APIView):
 	permission_classes = (IsAuthenticated,)
 	authentication_classes = (TokenAuthentication,)
-
+	pagination_class = StandardResultsSetPagination
 	def get(self,request,id=None,did=None):
 		if id:
 			hospitaldoctors = HospitalDoctors.objects.get(id=id,admin__is_active=True,is_virtual_available=True)
@@ -154,7 +145,7 @@ class APIOnlineDoctorListView(APIView):
 class APIHomevisitDoctorListView(APIView):
 	permission_classes = (IsAuthenticated,)
 	authentication_classes = (TokenAuthentication,)
-
+	pagination_class = StandardResultsSetPagination
 	def get(self,request,id=None,did=None):
 		if id:
 			hospitaldoctors = HospitalDoctors.objects.get(id=id,admin__is_active=True,is_homevisit_available=True)			
@@ -173,7 +164,7 @@ LAbs Views
 class ApiLabsListAndDetailsView(APIView):
 	permission_classes = (IsAuthenticated,)
 	authentication_classes = (TokenAuthentication,)
-	pagination_class = PageNumberPagination
+	pagination_class = StandardResultsSetPagination
 	filter_backends = (SearchFilter,OrderingFilter)
 	search_fields = ('lab_name','specialist','city')
 
@@ -194,7 +185,7 @@ Pharmacy Views
 class ApiPharmacyListAndDetailsView(APIView):
 	permission_classes = (IsAuthenticated,)
 	authentication_classes = (TokenAuthentication,)
-	pagination_class = PageNumberPagination
+	pagination_class = StandardResultsSetPagination
 	filter_backends = (SearchFilter,OrderingFilter)
 	search_fields = ('lab_name','specialist','city')
 
@@ -214,7 +205,7 @@ Appointment Views
 class AppointmentListView(APIView):
 	permission_classes = (IsAuthenticated,)
 	authentication_classes = (TokenAuthentication,)
-
+	pagination_class = StandardResultsSetPagination
 	def get(self,request,id=None):
 		if id:
 			order = Orders.objects.get(id=id)			

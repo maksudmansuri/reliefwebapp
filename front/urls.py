@@ -43,6 +43,7 @@ urlpatterns = [
 
     #payment process
     path('invoice/<id>', views.InvoiceViews.as_view(), name="invoice"),
+    path('invoice_pdf/<id>', views.pdfgenerator, name="invoice_pdf"),
     
     
     # path('blood_donor_list', views.BLoodDonorList.as_view(), name="blood_donor_list"),

@@ -1,7 +1,6 @@
 {% extends 'front/blank-page.html' %}
 {% load mathfilters %}
 {% load static %}
-{% load mathfilters %}
 {% block title %} Relief Pro - Invoice for APT00{{booking.id}} | Hospital,Labs and Pharmacy Online Booking | Emergency
 Booking {% endblock title %}
 
@@ -32,6 +31,18 @@ Booking {% endblock title %}
 					<div class="col-lg-8 offset-lg-2">
 						<div class="invoice-content">
 							<div class="invoice-item">
+								<div class="row"><div class="col-md-9"></div>
+									<div class="col-md-1">
+										<div class="invoice-logo">
+											<a onclick="window.print();"><i class="fas fa-print"></i>Print</a>
+										</div>
+									</div>
+									<div class="col-md-1">
+										<div class="invoice-logo">
+											<a href="{% url 'invoice_pdf' booking.id %}"><i class="fas fa-file-download"></i>Download
+										</div>
+									</div>
+								</div>
 								<div class="row">
 									<div class="col-md-6">
 										<div class="invoice-logo">

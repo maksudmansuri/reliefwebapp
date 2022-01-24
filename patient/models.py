@@ -131,6 +131,7 @@ class OrderBooking(models.Model):
     is_taken                =           models.BooleanField(default=False,blank=True,null=True)
     is_rejected             =           models.BooleanField(default=False,blank=True,null=True)
     is_cancelled            =           models.BooleanField(default=False)
+    is_refund_now            =           models.BooleanField(default=False)
  
     reject_within_5         =           models.DateTimeField(default=datetime.datetime(2021,1,1),blank=True, null=True)
  
@@ -160,7 +161,7 @@ class OrderBooking(models.Model):
     objects                 =           models.Manager()
 
     class Meta: 
-        ordering = ['-updated_at']
+        ordering = ['-applied_date']
     
     @property
     def get_report_url(self):

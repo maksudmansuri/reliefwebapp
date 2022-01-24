@@ -26,7 +26,7 @@ class TimeSlot(models.Model):
 class DoctorSchedule(models.Model):
     id                  =models.AutoField(primary_key=True)
     hospital            =models.ForeignKey(Hospitals,on_delete=models.CASCADE,default="",blank=True,null=True)
-    doctor              =models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE,blank=True,null=True)
+    doctor              =models.ForeignKey(HospitalDoctors,related_name="schedule", on_delete=models.CASCADE,blank=True,null=True)
     timeslot            =models.ForeignKey(TimeSlot, on_delete=models.CASCADE,blank=True,null=True,default="")
     scheduleDate        = models.DateField(auto_now=False, auto_now_add=False,blank=True,null=True)
     is_active           =models.BooleanField(blank=True,null=True,default=False)

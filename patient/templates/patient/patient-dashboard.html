@@ -1,394 +1,421 @@
-
-{% extends 'patient/newbase.html' %} 
+{% extends 'patient/newbase.html' %}
 {% load static %}
 {% block title %} :: Relief Pro:: Dashboard {% endblock title %}
 
 {% block custom_css %}{% endblock custom_css %}
- 
+
 {% block content %}
-	
-	
-
-					<div class="col-md-7 col-lg-8 col-xl-9">
-						
-						<div class="card">
-						<div class="card-header d-flex justify-content-between border-bottom flex-wrap">
-										<h4 class="card-title">Appointments</h4>
-										<div class="col-auto d-flex w-sm-100">
-											<button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;" onclick = "refesh()"><i class="fas fa-sync-alt"></i></button>
-										</div> 
-									</div>
-							<div class="card-body pt-0">
-
-								<nav class="user-tabs mb-4">
-									<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
-										<li class="nav-item">
-											<a class="nav-link active" href="#pat_appointments"
-												data-bs-toggle="tab">Hospital</a>
-										</li>
-										<li class="nav-item">
-											<a class="nav-link" href="#pat_prescriptions"
-												data-bs-toggle="tab">Laboratory</a>
-										</li>
-										<li class="nav-item">
-											<a class="nav-link" href="#pat_medical_records" data-bs-toggle="tab"><span
-													class="med-records">Pharmacy</span></a>
-										</li>
-										<li class="nav-item">
-											<a class="nav-link" href="#pat_billing" data-bs-toggle="tab">Emergency</a>
-										</li>
-									</ul>
-								</nav>
 
 
-								<div class="tab-content pt-0">
 
-									<div id="pat_appointments" class="tab-pane fade show active">
-										<div class="card card-table mb-0">
-											<div class="card-body">
-												<div class="table-responsive">
-													<table  id="patient-table" class="table table-hover align-middle mb-0" style="width: 100%;">
-														<thead>
-															<tr>
-																<th>APPT ID</th>
-																<th>Hospital</th>
-																<th>Appt Date</th>
-																<th>Booking Date</th>
-																<th>Amount</th>
-																
-																<th>Status</th>
-																<th></th>
-															</tr>
-														</thead>
-														<tbody>
-														{% for booking in booked %}
-															<tr>
-																<td>APT00{{booking.id}}</td>
-																<td>
-																	<h2 class="table-avatar">
-																		<a href="{% url 'hospital_details' booking.hospitalstaffdoctor.hospital.id %}"
-																			class="avatar avatar-sm me-2">
-																			<img class="avatar-img rounded-circle"
-																				src="{{booking.hospitalstaffdoctor.hospital.get_photo_url}}"
-																				alt="User Image">
-																		</a>
-																		<a href="doctor-profile.html">{{booking.hospitalstaffdoctor.hospital.hopital_name}}
-																			<span>{{booking.hospital.specialist}}</span></a>
-																	</h2>
-																</td>
-																<td>{{booking.applied_date}} <span class="d-block text-info">{{booking.applied_time}}
-																		</span></td>
-																<td>{{booking.created_at|date}}</td>
-																<td>{{booking.amount}}</td>
-															
-																<td><span class="badge rounded-pill bg-{% if booking.is_rejected %}danger{% elif booking.is_cancelled %}danger{% else %}success{% endif %}-light">{{booking.status}}</span>
-																</td>
-																<td class="text-end">
-																	<div class="table-action">
-																		<a href="{% url 'invoice' booking.id %}"
-																			class="btn btn-sm bg-primary-light">
-																			<i class="fas fa-print"></i> Print
-																		</a>
-																		<a href="#"
-																			class="btn btn-sm bg-info-light">
-																			<i class="far fa-eye"></i> View
-																		</a>
-																	</div>
-																</td>
-															</tr>
-														{% endfor %}
-															
-														</tbody>
-													</table>
+<div class="col-md-7 col-lg-8 col-xl-9">
+
+	<div class="card">
+		<div class="card-header d-flex justify-content-between border-bottom flex-wrap">
+			<h4 class="card-title">Appointments</h4>
+			<div class="col-auto d-flex w-sm-100">
+				<button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;"
+					onclick="refesh()"><i class="fas fa-sync-alt"></i></button>
+			</div>
+		</div>
+		<div class="card-body pt-0">
+
+			<nav class="user-tabs mb-4">
+				<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+					<li class="nav-item">
+						<a class="nav-link active" href="#pat_appointments" data-bs-toggle="tab">Hospital</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#pat_prescriptions" data-bs-toggle="tab">Laboratory</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#pat_medical_records" data-bs-toggle="tab"><span
+								class="med-records">Pharmacy</span></a>
+					</li>
+					{% comment %} <li class="nav-item">
+						<a class="nav-link" href="#pat_billing" data-bs-toggle="tab">Emergency</a>
+					</li> {% endcomment %}
+				</ul>
+			</nav>
+
+
+			<div class="tab-content pt-0">
+
+				<div id="pat_appointments" class="tab-pane fade show active">
+					<div class="card card-table mb-0">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table id="patient-table" class="table table-hover align-middle mb-0"
+									style="width: 100%;">
+									<thead>
+										<tr>
+											<th>APPT ID</th>
+											<th>Doctors</th>
+											<th>Appt Date</th>
+											<th>Booking Date</th>
+											<th>Amount</th>
+											<th>Status</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for booking in booked %}
+										<tr>
+											<td>APT00{{booking.id}}</td>
+											<td>
+												{% if booking.booking_for == "H" %}
+												<h2 class="table-avatar">
+													<a href="{% url 'hospital_details' booking.hospitalstaffdoctor.hospital.id %}"
+														class="avatar avatar-sm me-2">
+														<img class="avatar-img rounded-circle"
+															src="{{booking.hospitalstaffdoctor.hospital.get_photo_url}}"
+															alt="User Image">
+													</a>
+													<a href="{% url 'hospital_details' booking.hospitalstaffdoctor.hospital.id %}">{{booking.hospitalstaffdoctor.hospital.hopital_name}}
+														<span>{{booking.hospitalstaffdoctor}}</span></a>
+												</h2>
+												{% endif %}
+												{% if booking.booking_for == "D" %}
+												<h2 class="table-avatar">
+													<a href="{% url 'doctor_details' booking.hospitalstaffdoctor.id %}"
+														class="avatar avatar-sm me-2">
+														<img class="avatar-img rounded-circle"
+															src="{{booking.hospitalstaffdoctor.get_photo_url}}"
+															alt="User Image">
+													</a>
+													<a href="{% url 'doctor_details' booking.hospitalstaffdoctor.id %}">{{booking.hospitalstaffdoctor}}
+														<span>{{booking.hospitalstaffdoctor.specialist}}</span></a>
+												</h2>
+												{% endif %}
+											</td>
+											<td>{{booking.applied_date}} <span
+													class="d-block text-info">{{booking.applied_time}}
+												</span></td>
+											<td>{{booking.created_at|date}}</td>
+											<td>{{booking.amount}}</td>
+
+											<td><span
+													class="badge rounded-pill bg-{% if booking.is_rejected %}danger{% elif booking.is_cancelled %}danger{% else %}success{% endif %}-light">{{booking.status}}</span>
+											</td>
+											<td class="text-end">
+												<div class="table-action">
+													<a href="{% url 'invoice' booking.id %}"
+														class="btn btn-sm bg-primary-light">
+														<i class="fas fa-print"></i> Print
+													</a>
+													<a href="#" class="btn btn-sm bg-info-light">
+														<i class="far fa-eye"></i> View
+													</a>
 												</div>
-											</div>
-										</div>
-									</div>
+											</td>
+										</tr>
+										{% endfor %}
 
-
-									<div class="tab-pane fade" id="pat_prescriptions">
-										<div class="card card-table mb-0">
-											<div class="card-body">
-												<div class="table-responsive">
-													<table  id="patient-table1" class="table table-hover align-middle mb-0" style="width: 100%;">
-														<thead>
-															<tr>
-																<th>APPT ID</th>
-																<th>Labs</th>
-																<th>Appt Date</th>
-																<th>Booking Date</th>
-																<th>Report</th>
-																<th>Amount</th>																
-																<th>Status</th>
-																<th></th>
-															</tr> 
-														</thead>
-														<tbody> 
-														{% for labbooks in booking_labtest_list %}
-															<tr><td>APT00{{labbooks.labbook.id}}</td>
-																<td> 
-																	<h2 class="table-avatar">
-																		<a href="#"
-																			class="avatar avatar-sm me-2">
-																			<img class="avatar-img rounded-circle"
-																				src="{{labbooks.labbook.HLP.get_photo_url}}"
-																				alt="User Image">
-																		</a>
-																		<a href="doctor-profile.html">{{labbooks.labbook.HLP.labs.lab_name}}
-																			<span></span></a>
-																	</h2>
-																</td>
-																<td>	{{labbooks.labbook.applied_date}}  <span class="d-block text-info">
-																	{{labbooks.labbook.applied_time}}
-																		</span></td>
-																<td>{{labbooks.labbook.created_at|date:'M d Y'}}</td>
-																<td>{% if labbooks.labbook.report %}<a href="{{labbooks.labbook.get_report_url}}"
-																	title="Download attachment"
-																	class="btn btn-primary btn-sm"> <i
-																		class="fa fa-download" download></i></a>{% else %}NA{% endif %}</td>
-																<td>{{labbooks.labbook.amount}}</td>
-																
-																<td><span class="badge rounded-pill bg-{% if labbooks.labbook.is_rejected %}danger{% elif labbooks.labbook.is_cancelled %}danger{% else %}success{% endif %}-light">{{labbooks.labbook.status}}</span>
-																</td>
-																<td class="text-end"> 
-																	<div class="table-action">
-																		<a href="{% url 'invoice' labbooks.labbook.id %}"
-																			class="btn btn-sm bg-primary-light">
-																			<i class="fas fa-print"></i> Print
-																		</a>
-																		<a href="#"
-																			class="btn btn-sm bg-info-light">
-																			<i class="far fa-eye"></i> View
-																		</a>
-																	</div>
-																</td>
-															</tr>
-														{% endfor %}
-															
-														</tbody>
-													</table>
-												</div>
-											</div>
-										</div>
-									</div>
-
- 
-									<div id="pat_medical_records" class="tab-pane fade">
-										<div class="card card-table mb-0">
-											<div class="card-body">
-												<div class="table-responsive">
-													<table class="table table-hover table-center mb-0">
-														<thead>
-														<tr>	<th>APPT ID</th>
-																<th>Pharmacy</th>
-																<th>Appt Date</th>
-																<th>Prescription</th>
-																
-																<th>Booking Date</th>
-																<th>Amount</th>
-																
-																<th>Status</th>
-																<th></th>
-															</tr>
-														</thead>
-														<tbody>
-														{% for pharmacy in phamacybooking %}
-															<tr><td>APT00{{pharmacy.id}}</td>
-																<td>
-																	<h2 class="table-avatar">
-																		<a href="#"
-																			class="avatar avatar-sm me-2">
-																			<img class="avatar-img rounded-circle"
-																				src="{{pharmacy.HLP.get_photo_url}}"
-																				alt="User Image">
-																		</a>
-																		<a href="#">{{pharmacy.HLP.pharmacy.pharmacy_name}}
-																			<span></span></a>
-																	</h2>
-																</td>
-																<td>{{pharmacy.applied_date}} <span class="d-block text-info">{{pharmacy.applied_time}}
-																		</span></td>
-																
-																<td>
-																	<h2 class="table-avatar clinic-gallery">
-																		<a href="{{pharmacy.get_prescription_url}}" class="avatar avatar-sm me-2"
-																					data-fancybox="gallery">
-																					<img src="{{pharmacy.get_prescription_url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Feature">
-																				</a>
-																			</h2>
-																</td>
-																<td>{{pharmacy.created_at|date:'M d Y'}}<span class="d-block text-info">{{pharmacy.created_at|date:"h i a"}}
-																</span></td>
-																<td>{{pharmacy.amount}}</td>
-																
-																<td> 
-																	{% if pharmacy.store_invoice_uploaded %}
-																		<a href="{% url 'checkout' %}" class="btn btn-sm bg-primary-light" >Pay</a>
-																	{% else %}
-																		<span class="badge rounded-pill bg-{% if pharmacy.is_rejected %}danger{% elif pharmacy.is_cancelled %}danger{% else %}success{% endif %}-light">{{pharmacy.status}}</span>
-																	{% endif %} 
-																</td>
-																<td class="text-end">
-																	<div class="table-action">
-																		{% if pharmacy.store_invoice_uploaded %}
-																			{% if pharmacy.store_invoice %} 
-																				<a type="button" class="btn btn-sm bg-primary-light" href="{{pharmacy.get_store_invoice_url}}" download data-bs-placement="top" title="Invoice From Store" ><i class="fas fa-download"></i></a>
-																			{% else %}
-																				Error	
-																			{% endif %}
-																		
-																		{% endif %}
-																		{% if is_amount_paid %}
-																		<a href="{% url 'invoice' pharmacy.id %}"
-																			class="btn btn-sm bg-primary-light">
-																			<i class="fas fa-print" title="Booking Information"></i> Print
-																		</a>
-																		{% endif %}
-																		<a href="#"
-																			class="btn btn-sm bg-info-light">
-																			<i class="far fa-eye" title="View YOu booking Information"> </i> View
-																		</a>
-																	</div>
-																</td>
-															</tr>
-														{% endfor %}
-															
-														</tbody>
-													</table>
-												</div>
-											</div>
-										</div>
-									</div>
-
-
-									<div id="pat_billing" class="tab-pane fade">
-										<div class="card card-table mb-0">
-											<div class="card-body">
-												<div class="table-responsive">
-													<table class="table table-hover table-center mb-0">
-														<thead>
-															<tr>
-																<th>Invoice No</th>
-																<th>Doctor</th>
-																<th>Amount</th>
-																<th>Paid On</th>
-																<th></th>
-															</tr>
-														</thead>
-														<tbody>
-														
-														</tbody>
-													</table>
-												</div>
-											</div>
-										</div>
-									</div>
-
-								</div>
-
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
-			 	
-		
+				</div>
+
+
+				<div class="tab-pane fade" id="pat_prescriptions">
+					<div class="card card-table mb-0">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table id="patient-table1" class="table table-hover align-middle mb-0"
+									style="width: 100%;">
+									<thead>
+										<tr>
+											<th>APPT ID</th>
+											<th>Labs</th>
+											<th>Appt Date</th>
+											<th>Booking Date</th>
+											<th>Report</th>
+											<th>Amount</th>
+											<th>Status</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for labbooks in booking_labtest_list %}
+										<tr>
+											<td>APT00{{labbooks.labbook.id}}</td>
+											<td>
+												<h2 class="table-avatar">
+													<a href="#" class="avatar avatar-sm me-2">
+														<img class="avatar-img rounded-circle"
+															src="{{labbooks.labbook.HLP.get_photo_url}}"
+															alt="User Image">
+													</a>
+													<a href="doctor-profile.html">{{labbooks.labbook.HLP.labs.lab_name}}
+														<span></span></a>
+												</h2>
+											</td>
+											<td> {{labbooks.labbook.applied_date}} <span class="d-block text-info">
+													{{labbooks.labbook.applied_time}}
+												</span></td>
+											<td>{{labbooks.labbook.created_at|date:'M d Y'}}</td>
+											<td>{% if labbooks.labbook.report %}<a
+													href="{{labbooks.labbook.get_report_url}}"
+													title="Download attachment" class="btn btn-primary btn-sm"> <i
+														class="fa fa-download" download></i></a>{% else %}NA{% endif %}
+											</td>
+											<td>{{labbooks.labbook.amount}}</td>
+
+											<td><span
+													class="badge rounded-pill bg-{% if labbooks.labbook.is_rejected %}danger{% elif labbooks.labbook.is_cancelled %}danger{% else %}success{% endif %}-light">{{labbooks.labbook.status}}</span>
+											</td>
+											<td class="text-end">
+												<div class="table-action">
+													<a href="{% url 'invoice' labbooks.labbook.id %}"
+														class="btn btn-sm bg-primary-light">
+														<i class="fas fa-print"></i> Print
+													</a>
+													<a href="#" class="btn btn-sm bg-info-light">
+														<i class="far fa-eye"></i> View
+													</a>
+												</div>
+											</td>
+										</tr>
+										{% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div id="pat_medical_records" class="tab-pane fade">
+					<div class="card card-table mb-0">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-hover table-center mb-0">
+									<thead>
+										<tr>
+											<th>APPT ID</th>
+											<th>Pharmacy</th>
+											<th>Appt Date</th>
+											<th>Prescription</th>
+
+											<th>Booking Date</th>
+											<th>Amount</th>
+
+											<th>Status</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for pharmacy in phamacybooking %}
+										<tr>
+											<td>APT00{{pharmacy.id}}</td>
+											<td>
+												<h2 class="table-avatar">
+													<a href="#" class="avatar avatar-sm me-2">
+														<img class="avatar-img rounded-circle"
+															src="{{pharmacy.HLP.get_photo_url}}" alt="User Image">
+													</a>
+													<a href="#">{{pharmacy.HLP.pharmacy.pharmacy_name}}
+														<span></span></a>
+												</h2>
+											</td>
+											<td>{{pharmacy.applied_date}} <span
+													class="d-block text-info">{{pharmacy.applied_time}}
+												</span></td>
+
+											<td>
+												<h2 class="table-avatar clinic-gallery">
+													<a href="{{pharmacy.get_prescription_url}}"
+														class="avatar avatar-sm me-2" data-fancybox="gallery">
+														<img src="{{pharmacy.get_prescription_url}}"
+															onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+															alt="Feature">
+													</a>
+												</h2>
+											</td>
+											<td>{{pharmacy.created_at|date:'M d Y'}}<span
+													class="d-block text-info">{{pharmacy.created_at|date:"h i a"}}
+												</span></td>
+											<td>{{pharmacy.amount}}</td>
+
+											<td>
+												{% if pharmacy.store_invoice_uploaded %}
+												<a href="{% url 'checkout' %}"
+													class="btn btn-sm bg-primary-light">Pay</a>
+												{% else %}
+												<span
+													class="badge rounded-pill bg-{% if pharmacy.is_rejected %}danger{% elif pharmacy.is_cancelled %}danger{% else %}success{% endif %}-light">{{pharmacy.status}}</span>
+												{% endif %}
+											</td>
+											<td class="text-end">
+												<div class="table-action">
+													{% if pharmacy.store_invoice_uploaded %}
+													{% if pharmacy.store_invoice %}
+													<a type="button" class="btn btn-sm bg-primary-light"
+														href="{{pharmacy.get_store_invoice_url}}" download
+														data-bs-placement="top" title="Invoice From Store"><i
+															class="fas fa-download"></i></a>
+													{% else %}
+													Error
+													{% endif %}
+
+													{% endif %}
+													{% if is_amount_paid %}
+													<a href="{% url 'invoice' pharmacy.id %}"
+														class="btn btn-sm bg-primary-light">
+														<i class="fas fa-print" title="Booking Information"></i> Print
+													</a>
+													{% endif %}
+													<a href="#" class="btn btn-sm bg-info-light">
+														<i class="far fa-eye" title="View YOu booking Information"> </i>
+														View
+													</a>
+												</div>
+											</td>
+										</tr>
+										{% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div id="pat_billing" class="tab-pane fade">
+					<div class="card card-table mb-0">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-hover table-center mb-0">
+									<thead>
+										<tr>
+											<th>Invoice No</th>
+											<th>Doctor</th>
+											<th>Amount</th>
+											<th>Paid On</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
 {% endblock content %}
 
- {% block modal_fade %}
-       
-	
-	<div class="modal fade custom-modal show" id="graph1">
-		<div class="modal-dialog modal-dialog-centered modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">BMI Status</h5>
-					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div id="bmi-status"></div>
-				</div>
+{% block modal_fade %}
+
+
+<div class="modal fade custom-modal show" id="graph1">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">BMI Status</h5>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div id="bmi-status"></div>
 			</div>
 		</div>
 	</div>
+</div>
 
 
-	<div class="modal fade custom-modal show" id="graph2">
-		<div class="modal-dialog modal-dialog-centered modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Heart Rate Status</h5>
-					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div id="heartrate-status"></div>
-				</div>
+<div class="modal fade custom-modal show" id="graph2">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Heart Rate Status</h5>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div id="heartrate-status"></div>
 			</div>
 		</div>
 	</div>
+</div>
 
 
-	<div class="modal fade custom-modal show" id="graph3">
-		<div class="modal-dialog modal-dialog-centered modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">FBC Status</h5>
-					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div id="fbc-status"></div>
-				</div>
+<div class="modal fade custom-modal show" id="graph3">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">FBC Status</h5>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div id="fbc-status"></div>
 			</div>
 		</div>
 	</div>
+</div>
 
 
-	<div class="modal fade custom-modal show" id="graph4">
-		<div class="modal-dialog modal-dialog-centered modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Weight Status</h5>
-					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div id="weight-status"></div>
-				</div>
+<div class="modal fade custom-modal show" id="graph4">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Weight Status</h5>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div id="weight-status"></div>
 			</div>
 		</div>
 	</div>
+</div>
 
- {% endblock modal_fade %}
+{% endblock modal_fade %}
 {% block custom_js %}
 
 <script>
-    $(document).ready(function() {
-        $('#patient-table')
-        .addClass( 'nowrap' )
-        .dataTable( {
-            responsive: true,
-            columnDefs: [
-            { targets: [-1, -3], className: 'dt-body-right' }
-            ]
-        });
-        $('#patient-table1')
-        .addClass( 'nowrap' )
-        .dataTable( {
-            responsive: true,
-            columnDefs: [
-            { targets: [-1, -3], className: 'dt-body-right' }
-            ]
-        });
-    });
-    function refesh(){
+	$(document).ready(function () {
+		$('#patient-table')
+			.addClass('nowrap')
+			.dataTable({
+				responsive: true,
+				columnDefs: [{
+					targets: [-1, -3],
+					className: 'dt-body-right'
+				}]
+			});
+		$('#patient-table1')
+			.addClass('nowrap')
+			.dataTable({
+				responsive: true,
+				columnDefs: [{
+					targets: [-1, -3],
+					className: 'dt-body-right'
+				}]
+			});
+	});
+
+	function refesh() {
 		//  $("#mydiv").load(location.href + " #mydiv");
 		//  $( "#mydiv" ).load(window.location.href);
-		  location.reload();
-	  }
+		location.reload();
+	}
 </script>
 {% endblock custom_js %}

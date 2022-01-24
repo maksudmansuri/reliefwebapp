@@ -1,18 +1,25 @@
-import json
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import views
 from django.core import paginator
 from django.db.models.base import Model
 from django.http.response import HttpResponse, HttpResponseRedirect
+from django.http import FileResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
 from django.shortcuts import get_object_or_404, render
 from django.urls.base import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import View,ListView,DetailView
 from django.contrib import messages
 from django.db.models import Q
+import pytz
 from chat.models import Notification
 from accounts.models import AdminHOD, CustomUser, HospitalDoctors, Hospitals, Labs, Patients, Pharmacy, Specailist
 from accounts.views import send_otp
+from relief import settings
+IST = pytz.timezone('Asia/Kolkata')
 from front.models import RatingAndComments
 from hospital.models import AmbulanceDetails, Blog, DoctorSchedule, HospitalMedias, HospitalRooms, Insurances, ServiceAndCharges
 from django.http import JsonResponse
@@ -22,6 +29,12 @@ from django.db.models import Avg, Max, Min, Sum
 from lab.models import HomeVisitCharges, LabSchedule, Medias
 from patient.models import ForSome, NewLabTest, OrderBooking, Temp, TreatmentReliefPetient, phoneOPTforoders
 from radmin.models import DonorRequest, HospitalDisease
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
+from django.utils.encoding import force_bytes,force_str,DjangoUnicodeDecodeError
+from django.core.mail import EmailMessage, message
+
 # Create your views here.
   
 class FrontView(View):
@@ -575,7 +588,9 @@ class DoctorsBookAppoinmentViews(View):
         # hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
         doctor = get_object_or_404(HospitalDoctors,is_active=True,id=hosital_id)
         if request.user.user_type == "4":
-            doctorschedules = DoctorSchedule.objects.filter(doctor=doctor)
+            showdate = datetime.now(tz=IST).date()
+            showtime = datetime.now(tz=IST).time()
+            doctorschedules = DoctorSchedule.objects.filter(doctor=doctor).filter(showdate__gte=showdate)
             forsome = ForSome.objects.filter(patient = request.user.patients) 
             total_cmns = RatingAndComments.objects.filter(HLP =doctor.admin).count()
             cmnss = RatingAndComments.objects.filter(HLP =doctor.admin)
@@ -600,7 +615,13 @@ class DoctorsBookAppoinmentViews(View):
         if doc_id is None or date is None:
             doc_id=kwargs['id'] 
         doctor = get_object_or_404(HospitalDoctors,is_active=True,id=doc_id)
-        doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,scheduleDate=date)
+        showdate = datetime.now(tz=IST).date()
+        showtime = datetime.now(tz=IST).time()
+        print(date,showdate)
+        if date == showdate:
+            doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,scheduleDate=date).filter(showtime__gte=showtime)
+        else:
+            doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,scheduleDate=date)
         if request.user.user_type == "4":
             forsome = ForSome.objects.filter(patient = request.user.patients) 
             total_cmns = RatingAndComments.objects.filter(HLP =doctor.admin).count()
@@ -631,6 +652,8 @@ class DoctorDetailsViews(View):
             if a:
                 messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
                 return HttpResponseRedirect(reverse("patient_update")) 
+        showdate = datetime.now(tz=IST).date()
+        showtime = datetime.now(tz=IST).time()
         doctor = get_object_or_404(HospitalDoctors,is_active=True,id=doctor_id)
         # if request.user.user_type == "4":
         doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,is_active=True)
@@ -689,10 +712,15 @@ class DoctorDetailsViews(View):
         if doc_id is None or date is None:
             doc_id=kwargs['did'] 
         doctor = get_object_or_404(HospitalDoctors,is_active=True,id=doc_id)
-        doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,scheduleDate=date)
+        showdate = datetime.now(tz=IST).date()
+        showtime = datetime.now(tz=IST).time()
+        print(showdate,date)
+        if str(date) == str(showdate):
+            doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,scheduleDate=date).filter(timeslot__schedule__gte=showtime)
+        else:
+            doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,scheduleDate=date)
         if request.user.user_type == "4":
             forsome = ForSome.objects.filter(patient = request.user.patients) 
-            print(date,doctor,doctorschedules)
             total_cmns = RatingAndComments.objects.filter(HLP =doctor.admin).count()
             cmnss = RatingAndComments.objects.filter(HLP =doctor.admin)
             rating = 0
@@ -864,6 +892,34 @@ class LabAppoinmentViews(View):
             messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
             return HttpResponseRedirect(reverse("front_home"))
 
+"""PDF generator"""
+def pdfgenerator(request,id):
+    #File/PDF generate code---Create ByteStream buffer
+    buf = io.BytesIO()
+    c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
+    #create a text object
+    textobj = c.beginText()
+    textobj.setTextOrigin(inch, inch)
+    textobj.setFont("Helvetica",14)
+    # Add lines of text
+    lines = [
+        "This is line one",
+        "This is line two",
+        "This is line three",
+    ] 
+    #Loop 
+    for line in lines:
+        textobj.textLine(line)
+    #finish up
+    c.drawText(textobj)
+    c.showPage()
+    c.save()
+    buf.seek(0)
+    # response = HttpResponse(content_type='application/pdf') 
+    # response['Content-Disposition'] = 'attachment; filename="1.pdf"'
+    # return response
+    return FileResponse(buf,as_attachment=True,filename="invoice.pdf")
+
 """Appointment booking"""
 
 class BookAnAppointmentViews(views.SuccessMessageMixin,View):
@@ -906,10 +962,11 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
                 doctorschedule.save()
                 booking.applied_time=doctorschedule.timeslot.schedule
                 booking.hospitalstaffdoctor=hospitalstaffdoctor
-                if request.user.user_type == "2":
+                try:
+                # if hospitalstaffdoctor.hospital.admin.user_type == "2":
                     booking.HLP=hospitalstaffdoctor.hospital.admin
                     booking.booking_for="H"
-                else:
+                except:               
                     booking.HLP=hospitalstaffdoctor.admin
                     booking.booking_for="D"
                 booking.booking_type=booking_type           
@@ -922,7 +979,6 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
                 if booking_type == "HOMEVISIT":
                     booking.amount=hospitalstaffdoctor.home_charges           
                   
-            
             if where == "lab": 
                 booking.booking_for="L"
                 lab = get_object_or_404(Labs,id=doctorid)
@@ -955,6 +1011,8 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
                 booking.applied_time=timeslot
                 booking.is_amount_paid = False
                 booking.add_note = add_note
+            # booking.invoice = pdfgenerator()
+            # print(booking.invoice)
             booking.save()
             tc = 0
             try:
@@ -968,15 +1026,9 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
                 for tmp in temp:
                     tmp.delete()
             temp =  Temp(user=request.user,order_id=booking.order_id)
-            temp.save() 
-            
-            print(booking.reject_within_5__lt)
-            print(booking.reject_within_5)
-    
-            print("booking saved")
+            temp.save()            
             mobile= request.user.phone
             key = send_otp(mobile)
-            print(key)
             if key: 
                 obj = phoneOPTforoders(order_id=booking,user=request.user,otp=key)
                 obj.save()
@@ -987,7 +1039,27 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
                     # data = res.read()
                     # data=data.decode("utf-8")
                     # data=ast.literal_eval(data)
-                    # print(data) 
+                    # print(data)
+                # current_site=get_current_site(request) #fetch domain    
+                # email_subject='Active your Account',
+                # message=render_to_string('accounts/order.html',
+                # {
+                #     'Order_id':booking.id,
+                #     'domain':current_site.domain,
+
+                # } #convert Link into string/message
+                # )
+                # print(message)
+                # email_message=EmailMessage(
+                #     email_subject, 
+                #     message,
+                #     settings.EMAIL_HOST_USER,
+                #     [booking.patient.email]
+                # )#compose email
+                # email_message.attach(attach.name, attach.read(), attach.content_type)
+                # print(email_message)
+                # email_message.send() #send Email
+                # messages.add_message(request,messages.SUCCESS,"Sucessfully Singup Please Verify Your Account Email")
             if booking.booking_for == "P":
                 return render(request,"front/amount_confirmation.html")            
             else:            
@@ -1002,16 +1074,21 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
         #     return JsonResponse({'message' : 'Error','status': False})
 
 class InvoiceViews(View):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
     def get(self, request, *args, **kwargs):
         id=kwargs['id'] 
         booking = get_object_or_404(OrderBooking,id=id)          
         book_for=booking.booking_for
+        param = {}
         if request.user.is_authenticated:
             a = UserVerified(request)
             if a:
                 messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
                 return HttpResponseRedirect(reverse("patient_update"))
-        if book_for == "H":
+        if book_for == "H" or book_for == "D":
             param ={'booking':booking} 
         if book_for == "L":
             services = NewLabTest.objects.filter(booking=booking)

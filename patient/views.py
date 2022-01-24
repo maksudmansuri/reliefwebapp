@@ -104,7 +104,7 @@ Personal Details of Patients
 class patientdDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
         try:
-            booked = OrderBooking.objects.filter(patient = request.user,booking_for = "H")
+            booked = OrderBooking.objects.filter(patient = request.user)
             labbooks = OrderBooking.objects.filter(patient = request.user,booking_for = "L")
             booking_labtest_list =[]
             for labbook in labbooks:            

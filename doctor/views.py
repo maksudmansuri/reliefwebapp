@@ -42,18 +42,49 @@ def OccupiedRoom(request):
 
 class doctordDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
-        try: 
-            hospital = HospitalDoctors.objects.get(admin=request.user.id)
-            showtime = datetime.now(tz=IST).date()
-            print(showtime)
-            bookings = OrderBooking.objects.filter(HLP=hospital.admin,is_taken=False,is_otp_verified=False,is_active=True,is_cancelled = False,is_rejected = False)
-            bookings_now = OrderBooking.objects.filter(HLP=hospital.admin,is_taken=False,is_otp_verified=False,is_active=True,is_cancelled = False,applied_date=showtime,is_rejected = False)
+        # try: 
+        # deactivating all old appoinments
+        doctor = HospitalDoctors.objects.get(admin=request.user.id)
+        showdate = datetime.now(tz=IST).date()
+        showtime = datetime.now(tz=IST).time()
+        old_appointments = OrderBooking.objects.filter(applied_date__lt=showdate)      
+        for apt in old_appointments:
+            if apt.is_taken == False and apt.is_otp_verified == False and apt.is_active == True and apt.is_cancelled == False and apt.is_rejected == False:
+                apt.is_active = False
+                apt.status = "NO RESPONSE FROM YOU"
+                apt.is_refund_now == True
+                apt.save()
+        #Deactivate today appointmnet
+        today_old_apt = OrderBooking.objects.filter(applied_date=showdate).filter(applied_time__lt=showtime)
+        for apt in today_old_apt:
+            if apt.is_taken == False and apt.is_otp_verified == False and apt.is_active == True and apt.is_cancelled == False and apt.is_rejected == False:
+                apt.is_active = False
+                apt.status = "NO RESPONSE FROM YOU"
+                apt.is_refund_now == True
+                apt.save()
+       
+        if doctor.hospital:
+            bookings = OrderBooking.objects.filter(hospitalstaffdoctor=doctor,HLP=doctor.hospital.admin,is_taken=False,is_otp_verified=False,is_cancelled = False,is_rejected = False).order_by('applied_time')
 
-            param = {'bookings':bookings,'bookings_now':bookings_now}
-            return render(request,"doctor/newindex.html",param)        
-        except Exception as e:
-            messages.add_message(request,messages.ERROR,e)
-            return render(request,"doctor/newindex.html")
+            upcoming_bookings = OrderBooking.objects.filter(hospitalstaffdoctor=doctor,HLP=doctor.hospital.admin,is_taken=False,is_otp_verified=False,is_cancelled = False,is_rejected = False).filter(applied_date__gte=showdate).order_by('applied_date')
+
+            bookings_now = OrderBooking.objects.filter(hospitalstaffdoctor=doctor,HLP=doctor.hospital.admin,is_taken=False,is_otp_verified=False,is_active=True,is_cancelled = False,applied_date=showdate,is_rejected = False).order_by('applied_date')
+        else:
+            bookings = OrderBooking.objects.filter(HLP=doctor.admin,is_taken=False,is_otp_verified=False,is_cancelled = False,is_rejected = False).order_by('applied_time')
+
+            upcoming_bookings = OrderBooking.objects.filter(HLP=doctor.admin,is_taken=False,is_otp_verified=False,is_cancelled = False,is_rejected = False).filter(applied_date__gte=showdate).order_by('applied_date')
+
+            bookings_now = OrderBooking.objects.filter(HLP=doctor.admin,is_taken=False,is_otp_verified=False,is_cancelled = False,applied_date=showdate,is_rejected = False).order_by('applied_date')
+            print(bookings)
+            print(upcoming_bookings)
+            print(bookings_now)
+        
+
+        param = {'bookings':bookings,'bookings_now':bookings_now,'upcoming_bookings':upcoming_bookings}
+        return render(request,"doctor/newindex.html",param)        
+        # except Exception as e:
+        #     messages.add_message(request,messages.ERROR,e)
+        #     return render(request,"doctor/newindex.html")
 def AcceptAPT(request,id):
     try:
         apt = get_object_or_404(OrderBooking,id=id,is_cancelled=False,is_active=True)
