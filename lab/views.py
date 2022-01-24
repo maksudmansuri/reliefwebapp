@@ -434,8 +434,8 @@ def deleteServicesViews(request,id):
 class ManageMainGalleryView(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):
         try:
-            user= get_object_or_404(CustomUser,id=request.user.id)
-            medias = Medias.objects.filter(user=user)
+            lab= get_object_or_404(lab,admin=request.user)
+            medias = Medias.objects.filter(lab=lab)
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")
             return HttpResponseRedirect(reverse("manage_main_gallery"))        
@@ -446,11 +446,11 @@ class ManageMainGalleryView(SuccessMessageMixin,CreateView):
         media_type_list = request.POST.get('media_type')        
         media_content_list = request.FILES.getlist('media_content[]')        
         media_desc_list = request.POST.get('media_desc') 
-        user= get_object_or_404(CustomUser,id=request.user.id)
+        user= get_object_or_404(Labs,admin=request.user)
         
         i=0
         for media_content in media_content_list:
-            hospital_media = Medias(user=user,media_type=media_type_list,media_desc=media_desc_list,media_content=media_content)
+            hospital_media = Medias(lab=user,media_type=media_type_list,media_desc=media_desc_list,media_content=media_content)
             hospital_media.is_active=True
             hospital_media.save() 
             i=i+1  

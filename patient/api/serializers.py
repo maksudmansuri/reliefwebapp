@@ -63,10 +63,6 @@ class PharmaHomeScreenSerializer(serializers.ModelSerializer):
 
 
 """ALl OLD Serializers"""
-class SpecialistHosSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Specailist
-		fields = "__all__"
 
 class TimeSlotSerializer(serializers.ModelSerializer):
 
@@ -166,61 +162,12 @@ class HospitalDoctorsViewSerializer(serializers.ModelSerializer):
 			response['specialist'] = InsideScreenSerializer(instance.specialist).data
 			return response
 			
-""""hospital deatl end"""			
-class HospitalsSerializer(serializers.ModelSerializer):
-
-	# username = serializers.SerializerMethodField('get_username_from_staffs')
-	# product_image = serializers.SerializerMethodField('validate_product_image_url')
-
-	class Meta: 
-		model = Hospitals
-		fields ="__all__"
-
-	def to_representation(self, instance):
-		response = super().to_representation(instance)
-		print(instance)
-		response['specialist'] = SpecialistHosSerializer(instance.specialist).data
-		return response
-
-	# def get_username_from_staffs(self,Product):
-	# 	username = Hospitals.admin
-	# 	return username
-
-	def validate_product_image_url(self, Product):
-		crs_imge = Hospitals.admin.profile_pic
-		new_url = crs_imge.url
-		if "?" in new_url:
-			new_url = crs_imge.url[:crs_imge.url.rfind("?")]
-		return new_url
-
+""""hospital deatl end"""	
 class DoctorDetailSerialzer(serializers.ModelSerializer):
 
 	class Meta:
 		model = HospitalDoctors
 		fields = "__all__"	
-
-
-
-# class DoctorsViewSerializer(serializers.ModelSerializer):
-	
-# 	class Meta:
-# 		model = HospitalStaffDoctors
-# 		fields = '__all__'
-
-class OnlineDoctorserializer(serializers.ModelSerializer):
-	
-	class Meta:
-		model = HospitalDoctors
-		fields = '__all__'
-	
-	def to_representation(self, instance):
-		response = super().to_representation(instance)
-		print(instance)
-		response['specialist'] = SpecialistHosSerializer(instance.specialist).data
-		response['hospital'] = HospitalsSerializer(instance.hospital).data
-		return response
-
-
 """
 Appointment Serializers
 """
@@ -291,10 +238,10 @@ Labs serializers
 """
 
 class LabsViewSerializer(serializers.ModelSerializer):
-	
+	hospitalmedia = MediaHospitalSerializer(many=True)
 	class Meta:
 		model = Labs
-		fields = '__all__'
+		fields = ['lab_name','about','address','pin_code','city','state','profile_pic','establishment_year','labmedia']
 	
 """
 Pharmacy serializers

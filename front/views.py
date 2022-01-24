@@ -263,7 +263,7 @@ class SearchLabView(ListView):
         
         lab_list = []
         for lab in labs:
-            medias = Medias.objects.filter(is_active=True,user=lab.admin)
+            medias = Medias.objects.filter(is_active=True,lab=lab)
             services = ServiceAndCharges.objects.filter(user__labs = lab,is_active = True)
             
             total_cmns = RatingAndComments.objects.filter(HLP =lab.admin).count()
@@ -301,7 +301,7 @@ class SearchPharmacyView(ListView):
         
         pharma_list = []
         for pharma in pharmacy:
-            medias = Medias.objects.filter(is_active=True,user=pharma.admin)
+            medias = Medias.objects.filter(is_active=True,pharmacy=pharma)
             total_cmns = RatingAndComments.objects.filter(HLP =pharma.admin).count()
             cmnss = RatingAndComments.objects.filter(HLP =pharma.admin)
             rating = 0
@@ -568,7 +568,7 @@ class CommentView(View):
         
         pharma_list = []
         for pharma in pharmacy:
-            medias = Medias.objects.filter(user=pharma.admin)
+            medias = Medias.objects.filter(pharmacy=pharma)
             pharma_list.append({'pharma':pharma,'medias':medias})       
         return pharma_list
 
@@ -748,7 +748,7 @@ class PharmacyDetailsViews(DetailView):
                 messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
                 return HttpResponseRedirect(reverse("patient_update")) 
         pharmacy = get_object_or_404(Pharmacy,is_verified=True,is_deactive=False,id=pharmacy_id)
-        medias = Medias.objects.filter(is_active=True,user=pharmacy.admin)  
+        medias = Medias.objects.filter(is_active=True,pharmacy=pharmacy)  
         cmns = RatingAndComments.objects.filter(HLP =pharmacy.admin)[0:5]
     
         total_cmns = RatingAndComments.objects.filter(HLP =pharmacy.admin).count()
@@ -802,7 +802,7 @@ class LabDetailsViews(DetailView):
                 messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
                 return HttpResponseRedirect(reverse("patient_update")) 
         lab = get_object_or_404(Labs,is_verified=True,is_deactive=False,id=lab_id)
-        medias = Medias.objects.filter(is_active=True,user=lab.admin)  
+        medias = Medias.objects.filter(is_active=True,lab=lab)  
         services = ServiceAndCharges.objects.filter(user__labs = lab,is_active = True)
         total_services = ServiceAndCharges.objects.filter(user__labs = lab,is_active = True).count()
 
@@ -861,7 +861,7 @@ class LabAppoinmentViews(View):
                 messages.add_message(request,messages.ERROR,"PLEASE COMPLETE YOUR PROFILE FIRST")
                 return HttpResponseRedirect(reverse("patient_update"))  
         lab = get_object_or_404(Labs,is_verified=True,is_deactive=False,id=lab_id)
-        medias = Medias.objects.filter(is_active=True,user=lab.admin)  
+        medias = Medias.objects.filter(is_active=True,lab=lab)  
         services = ServiceAndCharges.objects.filter(user__labs = lab,is_active = True) 
         if request.user.user_type == "4":
             doctorschedules = LabSchedule.objects.filter(lab=lab)
@@ -879,7 +879,7 @@ class LabAppoinmentViews(View):
         lab_id=kwargs['id']
         if request.user.user_type == "4":
             lab = get_object_or_404(Labs,is_verified=True,is_deactive=False,id=lab_id)
-            medias = Medias.objects.filter(is_active=True,user=lab.admin)  
+            medias = Medias.objects.filter(is_active=True,lab=lab)  
             services = ServiceAndCharges.objects.filter(user__labs = lab,is_active = True) 
             doctorschedules = LabSchedule.objects.filter(lab=lab,scheduleDate=date)
             print(doctorschedules)       

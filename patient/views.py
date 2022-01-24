@@ -576,7 +576,7 @@ class LabListViews(ListView):
         labs = Labs.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True)
         lab_media_list = []
         for lab in labs:
-            medias = Medias.objects.filter(is_active=True,user=lab.admin)           
+            medias = Medias.objects.filter(is_active=True,lab=lab)           
             lab_media_list.append({'lab':lab,'medias':medias})
         print(lab_media_list)
         param = {'lab_media_list':lab_media_list}  

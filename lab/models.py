@@ -1,5 +1,5 @@
 from django.db.models.fields import AutoField
-from accounts.models import CustomUser, Labs
+from accounts.models import CustomUser, Labs, Pharmacy
 from django.db import models
 
 from hospital.models import TimeSlot
@@ -25,7 +25,8 @@ class LabSchedule(models.Model):
 
 class Medias(models.Model):
     id                      =           models.AutoField(primary_key=True)
-    user                    =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    lab                    =           models.ForeignKey(Labs, on_delete=models.CASCADE,blank=True,null=True,default="")
+    pharmacy                    =           models.ForeignKey(Pharmacy, on_delete=models.CASCADE,blank=True,null=True,default="")
     media_type              =           models.CharField(max_length=255,blank=True,null=True,default="")
     media_type_choice       =           ((1,"Image"),(2,"Video"))
     media_content           =           models.ImageField(choices=media_type_choice,blank=True,null=True,default="")
