@@ -6,6 +6,8 @@ from . import views
 
 router = routers.SimpleRouter()
 router.register(r'specialist', views.specialistViewSets)
+router.register(r'hospitalslist', views.ApiHospitalListAndDetailsView)
+router.register(r'doctors', views.HospitalDoctorDetailsView)
 # router.register(r'delivery-cost', views.DeliveryCostViewSet)
 urlpatterns = [
     path('', include((router.urls, 'relief.patient.api'))),
@@ -14,16 +16,16 @@ urlpatterns = [
     path('homescreen/', views.HomeScreenView.as_view(),name='homescreen'),
 
     #Hospital's APIs     
-    re_path('hospitalslist/', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalslist'),
-    path('hospitalsdetail/<id>', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalsdetials'),
+    # re_path('hospitalslist/', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalslist'),
+    # path('hospitalsdetail/<id>', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalsdetials'),
     #Doctorhosptial Apis
     # path('hospitaldoctordetail/<id>/<did>', views.HospitalDoctorDetailsView.as_view(),name='hospitaldoctordetail'),
     #Online Doctor Apis
-    path('onlinedoctors/',views.APIOnlineDoctorListView.as_view(),name='onlinedoctorlist'),
-    path('onlinedoctors/<id>',views.APIOnlineDoctorListView.as_view(),name='onlinedoctordetail'),
+    # path('onlinedoctors/',views.APIOnlineDoctorListView.as_view(),name='onlinedoctorlist'),
+    # path('onlinedoctors/<id>',views.APIOnlineDoctorListView.as_view(),name='onlinedoctordetail'),
     #Doctor Apis
-    path('doctors/',views.HospitalDoctorDetailsView.as_view(),name='doctorlist'),
-    path('doctors/<id>',views.HospitalDoctorDetailsView.as_view(),name='doctordetail'),
+    # path('doctors/',views.HospitalDoctorDetailsView.as_view(),name='doctorlist'),
+    # path('doctors/<id>',views.HospitalDoctorDetailsView.as_view(),name='doctordetail'),
     #HomeDoctor Apis
     path('homevisitdoctors/',views.APIHomevisitDoctorListView.as_view(),name='homevisitdoctorlist'),
     path('homevisitdoctors/<id>',views.APIHomevisitDoctorListView.as_view(),name='homevisitdetail'),

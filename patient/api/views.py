@@ -18,7 +18,7 @@ from patient.models import Orders
 from .serializers import AppointmentSerializer, HomeScreenSerializer, HospitalDoctorHomeScreenSerializer, HospitalDoctorSerialzer, HospitalDoctorsViewSerializer, HospitalHomeScreenSerializer, HospitalsSerializer, LabHomeScreenSerializer, LabsViewSerializer, OnlineDoctorserializer, PharmaHomeScreenSerializer, PharmacysViewSerializer
 
 class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 3
+    page_size = 2
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
@@ -65,9 +65,10 @@ class specialistViewSets(viewsets.ModelViewSet):
 	pagination_class = StandardResultsSetPagination
 	serializer_class = HomeScreenSerializer
 
-class ApiHospitalListAndDetailsView(ListAPIView):
+class ApiHospitalListAndDetailsView(viewsets.ModelViewSet):
 	permission_classes = (IsAuthenticated,)
 	authentication_classes = (TokenAuthentication,)
+	queryset = Hospitals.objects.filter(is_verified = True,admin__is_active = True)
 	pagination_class = StandardResultsSetPagination
 	filter_backends = [SearchFilter,OrderingFilter]
 	filter_fields = (
@@ -75,44 +76,35 @@ class ApiHospitalListAndDetailsView(ListAPIView):
         'city',
     )
 	search_fields = ['hopital_name','specialist','city']
+	def get_serializer_class(self):
+		if self.action == 'list':
+			serializer = HospitalHomeScreenSerializer
+			return serializer
+		if self.action == 'retrieve':
+			serializer = HospitalDoctorsViewSerializer
+			return serializer
+		return HospitalDoctorsViewSerializer	
 
-		# def get_queryset(self):
-		# 	"""
-		# 	Optionally restricts the returned purchases to a given user,
-		# 	by filtering against a `username` query parameter in the URL.
-		# 	"""
-		# 	queryset = Hospitals.objects.filter(is_verified = True,admin__is_active = True)
-		# 	spc = self.request.query_params.get('specialist')
-		# 	if spc is not None:
-		# 		queryset = queryset.filter(specialist=spc)
-		# 	return queryset
-
-	def get(self, request, id=None):
-		# print(request.data['id'])		
-		if id:
-			hospital = get_object_or_404(Hospitals,id = id,is_verified = True,admin__is_active = True)
-			serializer = HospitalDoctorsViewSerializer(hospital)
-			print(serializer.data)
-			return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
-
-		hospital = Hospitals.objects.filter(is_verified = True,admin__is_active = True)
-		serializer = HospitalHomeScreenSerializer(hospital, many=True)
-		return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
-
-class HospitalDoctorDetailsView(APIView):
+class HospitalDoctorDetailsView(viewsets.ModelViewSet):
 	permission_classes = (IsAuthenticated,)
 	authentication_classes = (TokenAuthentication,)
+	queryset = HospitalDoctors.objects.filter(is_verified = True,admin__is_active = True)
 	pagination_class = StandardResultsSetPagination
-
-	def get(self,request,id=None,did=None):
-		if id or did:
-			hospitaldoctors = HospitalDoctors.objects.get(id=id,admin__is_active=True)			
-			serializer = HospitalDoctorSerialzer(hospitaldoctors)
-			return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
-
-		hospital = HospitalDoctors.objects.filter(is_verified=True,admin__is_active = True)
-		serializer = HospitalDoctorHomeScreenSerializer(hospital, many=True)
-		return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+	filter_backends = [SearchFilter,OrderingFilter]
+	filter_fields = (
+        'specialist',
+        'city',
+    )
+	search_fields = ['hopital_name','specialist','city']
+	def get_serializer_class(self):
+		if self.action == 'list':
+			serializer = HospitalDoctorHomeScreenSerializer
+			return serializer
+		if self.action == 'retrieve':
+			serializer = HospitalDoctorSerialzer
+			return serializer
+		return HospitalDoctorSerialzer
+	
 	
 class APIDoctorListView(APIView):
 	permission_classes = (IsAuthenticated,)

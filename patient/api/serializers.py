@@ -91,13 +91,14 @@ class HospitalDoctorSerialzer(serializers.ModelSerializer):
 	# schedules = DoctorSchedulesSerializer(many=True)
 	class Meta:
 		model = HospitalDoctors
-		fields = ['pk','fisrt_name','last_name','profile_pic','degree','gender','is_virtual_available','is_online']
-		
+		fields = ['pk','name_title','fisrt_name','last_name','address','city','pin_code','state','profile_pic','degree','gender','about','dob','opd_charges','home_charges','emergency_charges','online_charges','is_homevisit_available','is_virtual_available','is_online']
+
 	def to_representation(self, instance):
 		response = super().to_representation(instance)
 		print(instance)
 		response['specialist'] = InsideScreenSerializer(instance.specialist).data
-		# response['hospital'] = HospitalsSerializer(instance.hospital).data
+		if instance.is_hospital_added:
+			response['hospital'] = HospitalHomeScreenSerializer(instance.hospital).data
 		return response
 
 class MediaHospitalSerializer(serializers.ModelSerializer):
@@ -156,7 +157,7 @@ class HospitalDoctorsViewSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Hospitals
-		fields = ['hopital_name','about','address1','address2','city','pin_code','state','country','landline','profile_pic','establishment_year','registration_number','alternate_mobile','website','hospitalstaffdoctors','hospitalmedia','hospitalrooms','hospitaldisease','hospitalambulance']
+		fields = ['hopital_name','about','address1','address2','city','pin_code','state','country','profile_pic','establishment_year','hospitalstaffdoctors','hospitalmedia','hospitalrooms','hospitaldisease','hospitalambulance']
 
 
 		def to_representation(self, instance):
