@@ -252,7 +252,7 @@ class PharmacysViewSerializer(serializers.ModelSerializer):
 	
 	class Meta:
 		model = Pharmacy
-		fields = ['pharamcy_name','about','address','pin_code','city','state','profile_pic','establishment_year','pharma_media']
+		fields = ['pharmacy_name','about','address','pin_code','city','state','profile_pic','establishment_year','pharma_media']
 	
 
 	
