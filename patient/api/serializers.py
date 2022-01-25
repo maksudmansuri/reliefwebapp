@@ -2,9 +2,10 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from accounts.models import  HospitalDoctors, Hospitals, Labs, Pharmacy, Specailist
+from discount.models import Campaign
 from front.models import RatingAndComments
 from hospital.models import AmbulanceDetails, DoctorSchedule, HospitalMedias, HospitalRooms, ServiceAndCharges, TimeSlot
-from lab.models import Medias
+from lab.models import HomeVisitCharges, Medias
 from patient.models import Booking, LabTest, OrderBooking, Orders, PicturesForMedicine, Slot
 from radmin.models import Disease, HospitalDisease
 
@@ -59,6 +60,10 @@ class PharmaHomeScreenSerializer(serializers.ModelSerializer):
 		model = Pharmacy
 		fields = ['pk','pharmacy_name','address','city','pin_code','state','profile_pic']
 
+class DiscountSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Campaign
+		fields = ['pk','discount_rate']
 
 """ALl OLD Serializers"""
 
@@ -83,9 +88,10 @@ class DoctorSchedulesSerializer(serializers.ModelSerializer):
 
 class HospitalDoctorSerialzer(serializers.ModelSerializer):
 	# schedules = DoctorSchedulesSerializer(many=True)
+	dicount_hospitaldoctor = DiscountSerializer(many=True)
 	class Meta:
 		model = HospitalDoctors
-		fields = ['pk','name_title','fisrt_name','last_name','address','city','pin_code','state','profile_pic','degree','gender','about','dob','opd_charges','home_charges','emergency_charges','online_charges','is_homevisit_available','is_virtual_available','is_online']
+		fields = ['pk','name_title','fisrt_name','last_name','address','city','pin_code','state','profile_pic','degree','gender','about','dob','opd_charges','home_charges','emergency_charges','online_charges','is_homevisit_available','is_virtual_available','is_online','dicount_hospitaldoctor']
 
 	def to_representation(self, instance):
 		response = super().to_representation(instance)
@@ -96,6 +102,7 @@ class HospitalDoctorSerialzer(serializers.ModelSerializer):
 		return response
 
 class MediaHospitalSerializer(serializers.ModelSerializer):
+	
 	class Meta:
 		model = HospitalMedias
 		fields = ['pk','media_type','media_content','media_desc']
@@ -148,10 +155,11 @@ class HospitalDoctorsViewSerializer(serializers.ModelSerializer):
 	hospitalrooms = RoomsHospitalSerializer(many=True)
 	hospitaldisease = DiseaseHospitalSerializer(many=True)	
 	hospitalambulance = ambulanceHospitalSerializer(many=True)
+	dicount_hospital = DiscountSerializer(many=True)
 
 	class Meta:
 		model = Hospitals
-		fields = ['hopital_name','about','address1','address2','city','pin_code','state','country','profile_pic','establishment_year','hospitalstaffdoctors','hospitalmedia','hospitalrooms','hospitaldisease','hospitalambulance']
+		fields = ['hopital_name','about','address1','address2','city','pin_code','state','country','profile_pic','establishment_year','hospitalstaffdoctors','hospitalmedia','hospitalrooms','hospitaldisease','hospitalambulance','dicount_hospital']
 
 
 		def to_representation(self, instance):
@@ -162,7 +170,7 @@ class HospitalDoctorsViewSerializer(serializers.ModelSerializer):
 			
 """"hospital deatl end"""	
 class DoctorDetailSerialzer(serializers.ModelSerializer):
-
+	
 	class Meta:
 		model = HospitalDoctors
 		fields = "__all__"	
@@ -239,20 +247,28 @@ class MediaHospitalSerializer(serializers.ModelSerializer):
 		model = Medias
 		fields = ['pk','media_type','media_content','media_desc']
 
+class HomevisitLabSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = HomeVisitCharges
+		fields = ['pk','charges']
+
 class LabsViewSerializer(serializers.ModelSerializer):
 	lab_media = MediaHospitalSerializer(many=True)
+	dicount_lab = DiscountSerializer(many=True)
+	HomeVisitCharges = HomevisitLabSerializer(many=True)
 	class Meta:
 		model = Labs
-		fields = ['lab_name','about','address','pin_code','city','state','profile_pic','establishment_year','lab_media']
+		fields = ['lab_name','about','address','pin_code','city','state','country','landline','profile_pic','establishment_year','lab_media','dicount_lab','HomeVisitCharges']
 	
 """
 Pharmacy serializers
 """
 class PharmacysViewSerializer(serializers.ModelSerializer):
-	
+	pharma_media = MediaHospitalSerializer(many=True)
+	dicount_pharmacy = DiscountSerializer(many=True)
 	class Meta:
 		model = Pharmacy
-		fields = ['pharmacy_name','about','address','pin_code','city','state','profile_pic','establishment_year','pharma_media']
+		fields = ['pharmacy_name','about','address','pin_code','city','state','profile_pic','establishment_year','pharma_media','dicount_pharmacy']
 	
 
 	

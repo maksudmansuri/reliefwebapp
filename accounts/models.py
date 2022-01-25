@@ -166,7 +166,7 @@ class Specailist(models.Model):
 
 # class PharmacySpecailist(models.Model):
 #     id                  =models.AutoField(primary_key=True)
-#     specialist_name               =models.CharField(max_length=500,null=True,blank=True)
+#     specialist_name               =zmodels.CharField(max_length=500,null=True,blank=True)
 #     specialist_icon         =models.ImageField(upload_to="Pharmacy/specialist/images",max_length=500,null=True,default="")
 #     created_at          =models.DateTimeField(auto_now_add=True)
 #     updated_at          =models.DateTimeField(auto_now_add=True)
