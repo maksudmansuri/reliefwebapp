@@ -434,7 +434,7 @@ def deleteServicesViews(request,id):
 class ManageMainGalleryView(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):
         try:
-            lab= get_object_or_404(lab,admin=request.user)
+            lab= get_object_or_404(Labs,admin=request.user)
             medias = Medias.objects.filter(lab=lab)
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")
