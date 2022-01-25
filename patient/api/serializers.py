@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from accounts.models import  HospitalDoctors, Hospitals, Labs, Pharmacy, Specailist
+from accounts.models import  HospitalDoctors, Hospitals, Labs, Patients, Pharmacy, Specailist
 from discount.models import Campaign
 from front.models import RatingAndComments
 from hospital.models import AmbulanceDetails, DoctorSchedule, HospitalMedias, HospitalRooms, ServiceAndCharges, TimeSlot
@@ -10,7 +10,9 @@ from patient.models import Booking, LabTest, OrderBooking, Orders, PicturesForMe
 from radmin.models import Disease, HospitalDisease
 
 
-	
+
+
+
 """Serilizer by pages"""
 class HomeScreenSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -21,14 +23,55 @@ class InsideScreenSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Specailist
 		fields = ['specialist_name']
+"""for rating Serilizer"""
+class PatientSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Patients
+		fields = ['fisrt_name','last_name','profile_pic','admin']
 
-class ratingSerilizers(serializers.ModelSerializer):
+class HospitalratingSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Hospitals
+		fields = ['hopital_name','specialist']
+class DoctorRatingSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = HospitalDoctors
+		fields = ['fisrt_name','last_name','specialist']
+class LabRatingSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Labs
+		fields = ['lab_name']
+class PharmacyratingSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Pharmacy
+		fields = ['pharmacy_name']
+
+"""Rating Serializer"""
+class RatingListSerializer(serializers.ModelSerializer):
+
 	class Meta:
 		model = RatingAndComments
-		fields =['pk','patient','HLP','rating','comment'] 
+		fields = ['pk','patient','rating','comment','created_date']
+	
+	def to_representation(self, instance):
+		response = super().to_representation(instance)
+		p = Patients.objects.get(admin=instance.patient)
+		response['patient'] = PatientSerializer(instance.patient).data
+		if instance.HLP.user_type == '2':
+			hlp = Hospitals.objects.get(admin=instance.HLP)
+			response['HLP'] = HospitalratingSerializer(hlp).data
+		if instance.HLP.user_type == '3':
+			hlp = HospitalDoctors.objects.get(admin=instance.HLP)
+			response['HLP'] = DoctorRatingSerializer(hlp).data
+		if instance.HLP.user_type == '5':		
+			hlp = Labs.objects.get(admin=instance.HLP)
+			response['HLP'] = LabRatingSerializer(hlp).data
+		if instance.HLP.user_type == '6':		
+			hlp = Pharmacy.objects.get(admin=instance.HLP)
+			response['HLP'] = PharmacyratingSerializer(hlp).data		
+		return response
 
 class HospitalHomeScreenSerializer(serializers.ModelSerializer):
-	comment_to = ratingSerilizers
 	class Meta:
 		model = Hospitals
 		fields = ['pk','hopital_name','address1','address2','city','pin_code','state','profile_pic']
@@ -37,6 +80,8 @@ class HospitalHomeScreenSerializer(serializers.ModelSerializer):
 		response = super().to_representation(instance)
 		print(instance)
 		response['specialist'] = InsideScreenSerializer(instance.specialist).data
+		sr = RatingAndComments.objects.filter(HLP=instance.admin)
+		response['ratings'] = RatingListSerializer(sr,many=True).data
 		return response
 
 class HospitalDoctorHomeScreenSerializer(serializers.ModelSerializer):
@@ -46,7 +91,8 @@ class HospitalDoctorHomeScreenSerializer(serializers.ModelSerializer):
 
 	def to_representation(self, instance):
 		response = super().to_representation(instance)
-		print(instance)
+		sr = RatingAndComments.objects.filter(HLP=instance.admin)
+		response['ratings'] = RatingListSerializer(sr,many=True).data
 		response['specialist'] = InsideScreenSerializer(instance.specialist).data
 		return response
 	
@@ -54,16 +100,32 @@ class LabHomeScreenSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Labs
 		fields = ['pk','lab_name','address','city','pin_code','state','profile_pic']
+	
+	def to_representation(self, instance):
+		response = super().to_representation(instance)
+		sr = RatingAndComments.objects.filter(HLP=instance.admin)
+		response['ratings'] = RatingListSerializer(sr,many=True).data
+		# response['specialist'] = InsideScreenSerializer(instance.specialist).data
+		return response
 
 class PharmaHomeScreenSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Pharmacy
 		fields = ['pk','pharmacy_name','address','city','pin_code','state','profile_pic']
+	
+	def to_representation(self, instance):
+		response = super().to_representation(instance)
+		sr = RatingAndComments.objects.filter(HLP=instance.admin)
+		response['ratings'] = RatingListSerializer(sr,many=True).data
+		# response['specialist'] = InsideScreenSerializer(instance.specialist).data
+		return response
 
 class DiscountSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Campaign
 		fields = ['pk','discount_rate']
+
+
 
 """ALl OLD Serializers"""
 
@@ -97,10 +159,11 @@ class HospitalDoctorSerialzer(serializers.ModelSerializer):
 		response = super().to_representation(instance)
 		print(instance)
 		response['specialist'] = InsideScreenSerializer(instance.specialist).data
+		sr = RatingAndComments.objects.filter(HLP=instance.admin)
+		response['ratings'] = RatingListSerializer(sr,many=True).data
 		if instance.is_hospital_added:
 			response['hospital'] = HospitalHomeScreenSerializer(instance.hospital).data
 		return response
-
 class MediaHospitalSerializer(serializers.ModelSerializer):
 	
 	class Meta:
@@ -164,7 +227,8 @@ class HospitalDoctorsViewSerializer(serializers.ModelSerializer):
 
 		def to_representation(self, instance):
 			response = super().to_representation(instance)
-			print(instance)
+			sr = RatingAndComments.objects.filter(HLP=instance.admin)
+			response['ratings'] = RatingListSerializer(sr,many=True).data
 			response['specialist'] = InsideScreenSerializer(instance.specialist).data
 			return response
 			
@@ -181,7 +245,7 @@ class ServicesSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = ServiceAndCharges
-		fields = "__all__"
+		fields = ['pk','service_name','service_charge','is_active']
 
 class HospitalForBookingSerializer(serializers.ModelSerializer):
 
@@ -275,5 +339,9 @@ class PharmacysViewSerializer(serializers.ModelSerializer):
 		model = Pharmacy
 		fields = ['pharmacy_name','about','address','pin_code','city','state','profile_pic','establishment_year','pharma_media','dicount_pharmacy']
 	
-
+	def to_representation(self, instance):
+		response = super().to_representation(instance)
+		sr = ServiceAndCharges.objects.filter(user=instance.admin)
+		response['servicer_charge'] = ServicesSerializer(sr,many=True).data
+		return response
 	

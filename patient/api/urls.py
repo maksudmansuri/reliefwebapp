@@ -12,6 +12,7 @@ router.register(r'onlinedoctors', views.APIOnlineDoctorListView)
 router.register(r'homevisitdoctors', views.APIHomevisitDoctorListView)
 router.register(r'labs', views.ApiLabsListAndDetailsView)
 router.register(r'pharmacy', views.ApiPharmacyListAndDetailsView)
+router.register(r'ratings', views.RatingViesStates)
 # router.register(r'pharmacy', views.appointmentlist)
 # router.register(r'delivery-cost', views.DeliveryCostViewSet)
 urlpatterns = [

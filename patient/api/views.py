@@ -13,9 +13,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter,OrderingFilter
+from front.models import RatingAndComments
 from patient.models import OrderBooking, Orders
 
-from .serializers import AppointmentSerializer, HomeScreenSerializer, HospitalDoctorHomeScreenSerializer, HospitalDoctorSerialzer, HospitalDoctorsViewSerializer, HospitalHomeScreenSerializer,LabHomeScreenSerializer, LabsViewSerializer, PharmaHomeScreenSerializer, PharmacysViewSerializer
+from .serializers import AppointmentSerializer, HomeScreenSerializer, HospitalDoctorHomeScreenSerializer, HospitalDoctorSerialzer, HospitalDoctorsViewSerializer, HospitalHomeScreenSerializer,LabHomeScreenSerializer, LabsViewSerializer, PharmaHomeScreenSerializer, PharmacysViewSerializer, RatingListSerializer
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 2
@@ -216,5 +217,27 @@ class AppointmentListView(viewsets.ModelViewSet):
 			serializer = AppointmentSerializer
 			return serializer
 		return AppointmentSerializer
-	
+
+
+"""Rating and Commennts"""
+
+class RatingViesStates(viewsets.ModelViewSet):
+	permission_classes = (IsAuthenticated,)
+	authentication_classes = (TokenAuthentication,)
+	queryset = RatingAndComments.objects.filter(is_active = True)
+	pagination_class = StandardResultsSetPagination
+	filter_backends = [SearchFilter,OrderingFilter]
+	filter_fields = (
+        'specialist',
+        'city',
+    )
+	search_fields = ['hopital_name','specialist','city']
+	def get_serializer_class(self):
+		if self.action == 'list':
+			serializer = RatingListSerializer
+			return serializer
+		if self.action == 'retrieve':
+			serializer = RatingListSerializer
+			return serializer
+		return AppointmentSerializer
 
