@@ -244,10 +244,10 @@ class MediaHospitalSerializer(serializers.ModelSerializer):
 		fields = ['pk','media_type','media_content','media_desc']
 
 class LabsViewSerializer(serializers.ModelSerializer):
-	labmedia = MediaHospitalSerializer(many=True)
+	medias_set = MediaHospitalSerializer(many=True)
 	class Meta:
 		model = Labs
-		fields = ['lab_name','about','address','pin_code','city','state','profile_pic','establishment_year','labmedia']
+		fields = ['lab_name','about','address','pin_code','city','state','profile_pic','establishment_year','medias_set']
 	
 """
 Pharmacy serializers
