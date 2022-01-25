@@ -269,7 +269,7 @@ class HospitalServices(models.Model):
 
 class ServiceAndCharges(models.Model):
     id                      =           models.AutoField(primary_key=True)
-    user                    =           models.ForeignKey(CustomUser,related_name="serviceansdcharge", on_delete=models.CASCADE)
+    user                    =           models.ForeignKey(CustomUser,related_name="serviceandcharges_set", on_delete=models.CASCADE)
     service_name            =           models.CharField(max_length=500,blank=True,null=True,default="")
     service_charge          =           models.FloatField(blank=True,null=True,default=0.0)
     is_active               =           models.BooleanField(blank=True,null=True,default=False)

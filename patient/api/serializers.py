@@ -258,7 +258,7 @@ class LabsViewSerializer(serializers.ModelSerializer):
 	HomeVisitCharges = HomevisitLabSerializer(many=True)
 	class Meta:
 		model = Labs
-		fields = ['lab_name','about','address','pin_code','city','state','country','landline','profile_pic','establishment_year','lab_media','dicount_lab','HomeVisitCharges']
+		fields = ['lab_name','about','address','pin_code','city','state','country','landline','profile_pic','establishment_year','lab_media','dicount_lab','HomeVisitCharges','servicer_charge']
 	
 	def to_representation(self, instance):
 		response = super().to_representation(instance)
