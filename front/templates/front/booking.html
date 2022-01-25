@@ -10,571 +10,617 @@ Booking {% endblock title %}
 
 {% block content %}
 
-		<div class="breadcrumb-bar">
-			<div class="container-fluid">
-				<div class="row align-items-center">
-					<div class="col-md-12 col-12">
-						<nav aria-label="breadcrumb" class="page-breadcrumb">
-							<ol class="breadcrumb">
-								<li class="breadcrumb-item"><a href="{% url 'front_home' %}">Home</a></li>
-								<li class="breadcrumb-item active" aria-current="page">Booking</li>
-							</ol>
-						</nav>
-						<h2 class="breadcrumb-title">Booking</h2>
-					</div>
-				</div>
+<div class="breadcrumb-bar">
+	<div class="container-fluid">
+		<div class="row align-items-center">
+			<div class="col-md-12 col-12">
+				<nav aria-label="breadcrumb" class="page-breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="{% url 'front_home' %}">Home</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Booking</li>
+					</ol>
+				</nav>
+				<h2 class="breadcrumb-title">Booking</h2>
 			</div>
 		</div>
+	</div>
+</div>
 
 
-		<div class="content">
-			<div class="container">
-				<div class="row">
-					<div class="col-12">		
-						
-						{% if doctor.is_hospital_added %}
-						<div class="card">
-							<div class="card-body">
-								<div class="doctor-widget">
-									<div class="doc-info-left">
-										<div class="doctor-img">
-											<img src="{{doctor.hospital.get_photo_url}}" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" class="img-fluid"
-												alt="User Image">
-										</div>
-										<div class="doc-info-cont">
-											<h4 class="doc-name">{{doctor.hospital.hopital_name}}</h4>
-											<p class="doc-speciality">{{doctor.hospital.specialist}}</p>
-											<p class="doc-department"><img src="{{doctor.hospital.specialist.hover_icon}}"
-													class="img-fluid" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'" alt="Speciality">Dentist</p>													
-											<div class="clinic-details">
-												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{doctor.hospital.city}}, {{doctor.hospital.state}} - <a
-														href="javascript:void(0);">Get Directions</a></p>
-												
-											</div>
-											
-										</div>
-									</div>
-									<div class="doc-info-right">
-										
-									</div>
+<div class="content">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+
+				{% if doctor.is_hospital_added %}
+				<div class="card">
+					<div class="card-body">
+						<div class="doctor-widget">
+							<div class="doc-info-left">
+								<div class="doctor-img">
+									<img src="{{doctor.hospital.get_photo_url}}"
+										onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+										class="img-fluid" alt="User Image">
 								</div>
+								<div class="doc-info-cont">
+									<h4 class="doc-name">{{doctor.hospital.hopital_name}}</h4>
+									<p class="doc-speciality">{{doctor.hospital.specialist}}</p>
+									<p class="doc-department"><img src="{{doctor.hospital.specialist.hover_icon}}"
+											class="img-fluid"
+											onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'"
+											alt="Speciality">Dentist</p>
+									<div class="clinic-details">
+										<p class="doc-location"><i class="fas fa-map-marker-alt"></i>
+											{{doctor.hospital.city}}, {{doctor.hospital.state}} - <a
+												href="javascript:void(0);">Get Directions</a></p>
+
+									</div>
+
+								</div>
+							</div>
+							<div class="doc-info-right">
+
 							</div>
 						</div>
-						{% endif %}
-						<div class="card">
-							<div class="card-body">						
+					</div>
+				</div>
+				{% endif %}
+				<div class="card">
+					<div class="card-body">
 
-								<div class="doctor-widget">
-									<div class="doc-info-left">
-										<div class="doctor-img">
-											<a href="#">
-												<img src="{{doctor.get_photo_url}}" class="img-fluid"
-													alt="User Image" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
-											</a>
-										</div>
-										<div class="doc-info-cont">
-											<h4 class="doc-name"><a href="#">{{doctor.name_title}} {{doctor.fisrt_name}} {{doctor.last_name}}</a></h4>
-											<p class="doc-speciality">{{doctor.degree}}
-											</p>
-											
-											<h5 class="doc-department"><img
-													src="{{doctor.hospital.specialist.hover_icon}}" class="img-fluid"
-													alt="Speciality" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">{{doctor.specialist}}</h5>
-													<div class="rating">
-														{% if rating <= 5 and rating > 4 %}
-															<i class="fas fa-star filled"></i>
-															<i class="fas fa-star filled"></i> 
-															<i class="fas fa-star filled"></i>
-															<i class="fas fa-star filled"></i>
-															<i class="fas fa-star filled"></i>
-														{% endif %}
-														{% if rating <= 4 and rating > 3 %}
-															<i class="fas fa-star filled"></i>
-															<i class="fas fa-star filled"></i> 
-															<i class="fas fa-star filled"></i>
-															<i class="fas fa-star filled"></i>
-															<i class="fas fa-star "></i>
-														{% endif %}
-														{% if rating <= 3 and rating > 2 %}
-															<i class="fas fa-star filled"></i>
-															<i class="fas fa-star filled"></i> 
-															<i class="fas fa-star filled"></i>
-															<i class="fas fa-star "></i>
-															<i class="fas fa-star "></i>
-														{% endif %}
-														{% if rating <= 2 and rating > 1 %}
-															<i class="fas fa-star filled"></i>
-															<i class="fas fa-star filled"></i> 
-															<i class="fas fa-star"></i>
-															<i class="fas fa-star"></i>
-															<i class="fas fa-star"></i>
-														{% endif %}
-														{% if rating <= 1 and rating > 0 %}
-															<i class="fas fa-star filled"></i>
-															<i class="fas fa-star"></i> 
-															<i class="fas fa-star"></i>
-															<i class="fas fa-star"></i>
-															<i class="fas fa-star"></i>
-														{% endif %}
-														{% if rating == 0 %}
-															<i class="fas fa-star"></i>
-															<i class="fas fa-star"></i> 
-															<i class="fas fa-star"></i>
-															<i class="fas fa-star"></i>
-															<i class="fas fa-star"></i>
-														{% endif %}
-														<span class="d-inline-block average-rating">({{total_cmns}})</span>
-													</div>
-											<div class="clinic-details">
-												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{doctor.city}},{{doctor.state}}</p>
-												
-											</div>  
-											
-										</div>
+						<div class="doctor-widget">
+							<div class="doc-info-left">
+								<div class="doctor-img">
+									<a href="#">
+										<img src="{{doctor.get_photo_url}}" class="img-fluid" alt="User Image"
+											onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+									</a>
+								</div>
+								<div class="doc-info-cont">
+									<h4 class="doc-name"><a href="#">{{doctor.name_title}} {{doctor.fisrt_name}}
+											{{doctor.last_name}}</a></h4>
+									<p class="doc-speciality">{{doctor.degree}}
+									</p>
+
+									<h5 class="doc-department"><img src="{{doctor.hospital.specialist.hover_icon}}"
+											class="img-fluid" alt="Speciality"
+											onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">{{doctor.specialist}}
+									</h5>
+									<div class="rating">
+										{% if rating <= 5 and rating > 4 %}
+										<i class="fas fa-star filled"></i>
+										<i class="fas fa-star filled"></i>
+										<i class="fas fa-star filled"></i>
+										<i class="fas fa-star filled"></i>
+										<i class="fas fa-star filled"></i>
+										{% endif %}
+										{% if rating <= 4 and rating > 3 %}
+										<i class="fas fa-star filled"></i>
+										<i class="fas fa-star filled"></i>
+										<i class="fas fa-star filled"></i>
+										<i class="fas fa-star filled"></i>
+										<i class="fas fa-star "></i>
+										{% endif %}
+										{% if rating <= 3 and rating > 2 %}
+										<i class="fas fa-star filled"></i>
+										<i class="fas fa-star filled"></i>
+										<i class="fas fa-star filled"></i>
+										<i class="fas fa-star "></i>
+										<i class="fas fa-star "></i>
+										{% endif %}
+										{% if rating <= 2 and rating > 1 %}
+										<i class="fas fa-star filled"></i>
+										<i class="fas fa-star filled"></i>
+										<i class="fas fa-star"></i>
+										<i class="fas fa-star"></i>
+										<i class="fas fa-star"></i>
+										{% endif %}
+										{% if rating <= 1 and rating > 0 %}
+										<i class="fas fa-star filled"></i>
+										<i class="fas fa-star"></i>
+										<i class="fas fa-star"></i>
+										<i class="fas fa-star"></i>
+										<i class="fas fa-star"></i>
+										{% endif %}
+										{% if rating == 0 %}
+										<i class="fas fa-star"></i>
+										<i class="fas fa-star"></i>
+										<i class="fas fa-star"></i>
+										<i class="fas fa-star"></i>
+										<i class="fas fa-star"></i>
+										{% endif %}
+										<span class="d-inline-block average-rating">({{total_cmns}})</span>
 									</div>
-									
-									<div class="doc-info-right">
-										<div class="clini-infos">
-											<ul>
-												<li><i class="fas fa-first-aid"></i>OPD &#8377;{{doctor.opd_charges}}
-												</li>
-												<li><i class="fas fa-first-aid"></i>Emergency
-													{% if doctor.emergency_charges %}&#8377;{{doctor.emergency_charges}}{% else %}
-													NA {% endif %} </li>
-												<li><i class="fas fa-home"></i>Home Visit {% if doctor.home_charges %}
-													&#8377;{{doctor.home_charges}}{% else %} NA {% endif %} </li>
-												<li><i class="fas fa-video"></i>Online {% if doctor.online_charges %}
-													&#8377;{{doctor.online_charges}}{% else %} NA {% endif %}</li>
-											</ul>
-										</div>
-										<div class="doctor-action">
-											{% if doctor.emergency_charges %}
-											<a href="javascript:void(0)" class="btn btn-white call-btn"
-												data-bs-toggle="modal" data-bs-target="#voice_call">
-												<i class="fas fa-first-aid"></i>
+									<div class="clinic-details">
+										<p class="doc-location"><i class="fas fa-map-marker-alt"></i>
+											{{doctor.city}},{{doctor.state}}</p>
 
-											</a>
-											{% endif %}
-											{% if doctor.home_charges %}
-											<a href="javascript:void(0)" class="btn btn-white call-btn"
-												data-bs-toggle="modal" tooltip="Home visit " data-bs-target="#voice_call">
-												<i class="fas fa-home"></i>
-											</a>
-											{% endif %}
-											{% if doctor.is_virtual_available %}
-											<a href="javascript:void(0)" class="btn btn-white call-btn"
-												data-bs-toggle="modal" data-bs-target="#video_call">
-												<i class="fas fa-video"></i>
-											</a>
-											{% endif %}
-
-										</div>
-										
 									</div>
+
+								</div>
+							</div>
+
+							<div class="doc-info-right">
+								<div class="clini-infos">
+									<ul>
+										<li><i class="fas fa-first-aid"></i>OPD &#8377;{{doctor.opd_charges}}
+										</li>
+										<li><i class="fas fa-first-aid"></i>Emergency
+											{% if doctor.emergency_charges %}&#8377;{{doctor.emergency_charges}}{% else %}
+											NA {% endif %} </li>
+										<li><i class="fas fa-home"></i>Home Visit {% if doctor.home_charges %}
+											&#8377;{{doctor.home_charges}}{% else %} NA {% endif %} </li>
+										<li><i class="fas fa-video"></i>Online {% if doctor.online_charges %}
+											&#8377;{{doctor.online_charges}}{% else %} NA {% endif %}</li>
+									</ul>
+								</div>
+								<div class="doctor-action">
+									{% if doctor.emergency_charges %}
+									<a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+										data-bs-target="#voice_call">
+										<i class="fas fa-first-aid"></i>
+
+									</a>
+									{% endif %}
+									{% if doctor.home_charges %}
+									<a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+										tooltip="Home visit " data-bs-target="#voice_call">
+										<i class="fas fa-home"></i>
+									</a>
+									{% endif %}
+									{% if doctor.is_virtual_available %}
+									<a href="javascript:void(0)" class="btn btn-white call-btn" data-bs-toggle="modal"
+										data-bs-target="#video_call">
+										<i class="fas fa-video"></i>
+									</a>
+									{% endif %}
+
 								</div>
 
 							</div>
-						</div>						
-						<div class="card">
-							<div class="card-body pt-0">	
+						</div>
 
-								<nav class="user-tabs mb-4">
-									<ul class="nav nav-tabs nav-tabs-bottom nav-justified">				
-										<li class="nav-item">
-											<a class="nav-link active" href="#booking" data-bs-toggle="tab">Book An Appointment</a>
-										</li>
-										<li class="nav-item">
-											<a class="nav-link" href="#doc_reviews" data-bs-toggle="tab">Doctor's Reviews</a>
-										</li>
-										
-									</ul>
-								</nav>
-								
-								<div class="tab-content pt-0">
-									<div role="tabpanel" id="booking" class="tab-pane fade show active">
-										<div class="row">
-											<div class="col-12 col-sm-4 col-md-6">
-												<span></span>
-												{% if date %}
-												<h4 class="mb-1">Selected Date :- {{date}}</h4>
-												{% else %}
-													<h4 class="mb-1">Today's Date :- {% now "d M Y" %} </h4>
-													<p class="text-muted">{% now "D" %}</p>
-												{% endif %}
-											</div>
-											<div class="col-12 col-sm-8 col-md-6 mb-2">
-												<form method="post" id="newdate">
-													{% csrf_token %}
-													<h4> Select Booking Date</h4>
-													<input type="date" class="form-control scheduleDate" name="scheduleDate" id="scheduleDate" value={{date}} min="2021-05-21" required >
-													<input type="hidden" value="{{doctor.id}}" name="doc_id">
-												
-												</form>
-											</div>
-										</div>
-	
-										<form method="post" action="{% url 'bookappoinment_final' %}" id="bookingform">
-										<div class="card booking-schedule schedule-widget">
-											
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-body pt-0">
+
+						<nav class="user-tabs mb-4">
+							<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+								<li class="nav-item">
+									<a class="nav-link active" href="#booking" data-bs-toggle="tab">Book An
+										Appointment</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="#doc_reviews" data-bs-toggle="tab">Doctor's Reviews</a>
+								</li>
+
+							</ul>
+						</nav>
+
+						<div class="tab-content pt-0">
+							<div role="tabpanel" id="booking" class="tab-pane fade show active">
+								<div class="row">
+									<div class="col-12 col-sm-4 col-md-6">
+										<span></span>
+										{% if date %}
+										<h4 class="mb-1">Selected Date :- {{date}}</h4>
+										{% else %}
+										<h4 class="mb-1">Today's Date :- {% now "d M Y" %} </h4>
+										<p class="text-muted">{% now "D" %}</p>
+										{% endif %}
+									</div>
+									<div class="col-12 col-sm-8 col-md-6 mb-2">
+										<form method="post" id="newdate">
 											{% csrf_token %}
-											<div class="schedule-header">
-												<div class="row">
-													<div class="col-md-12">
-	
-														<div class="day-slot-header">
-															<h4>Slots</h4>
-														</div>
-	
+											<h4> Select Booking Date</h4>
+											<input type="date" class="form-control scheduleDate" name="scheduleDate"
+												id="scheduleDate" value={{date}} min="2021-05-21" required>
+											<input type="hidden" value="{{doctor.id}}" name="doc_id">
+
+										</form>
+									</div>
+								</div>
+
+								<form method="post" action="{% url 'bookappoinment_final' %}" id="bookingform">
+									<div class="card booking-schedule schedule-widget">
+
+										{% csrf_token %}
+										<div class="schedule-header">
+											<div class="row">
+												<div class="col-md-12">
+
+													<div class="day-slot-header">
+														<h4>Slots</h4>
 													</div>
+
 												</div>
 											</div>
-	
-										
-											<div class="schedule-cont">
-												<div class="row">
-													<div class="col-lg-12">
-														
-														<div class="token-slot mt-2">
-															{% for doctorschedule in doctorschedules %}
-																{% if token %}
-															
-																<div class="form-check-inline visits me-0">
-																	<label class="visit-btns">
-																		<input type="radio" class="form-check-input timeslot"  name="timeslot" value="{{doctorschedule.id}}" {% if doctorschedule.is_booked %}disabled{% endif %} required>
-																		
-																		
-																		<span class="visit-rsn" data-bs-toggle="tooltip" title="{% if doctorschedule.is_booked %}Booked{% else %} {{doctorschedule}}{% endif %}">{{doctorschedule}}
-																			</span>
-																	</label>
-																</div>
-																								
-																{% endif %}  
-															{% endfor %}  
-															</div>
-															
-														
-													</div>
-													
-													
-												</div>
-												
-											</div>
-										
 										</div>
-										<div class="row">
-											
-											<div class="col-6">
-												<label class="form-label">Booking Type</label>
-												<select class="form-select" aria-label="Default select example" id="booking_type" name="booking_type" required>
-													<option value="">Select</option>
-													{% if doctor.emergency_charges %}
-													<option value="EMERGENCY">EMERGENCY</option>
-													{% endif %}
-													{% if doctor.opd_charges %}
-													<option value="OPD">OPD</option>
-													{% endif %}
-													{% if doctor.is_virtual_available %}
-													<option value="ONLINE">ONLINE</option>
-													{% endif %}
-													{% if doctor.home_charges %}
-													<option value="HOMEVISIT">HOME VISIT</option>
-													{% endif %}
-												</select>
-												<input type="hidden" value="{{date}}" name="date" id="date">
-												<input type="hidden" value="{{doctor.id}}" name="doctor_id">
-												<input type="hidden" value="hospital" name="orderwhere">
+
+
+										<div class="schedule-cont">
+											<div class="row">
+												<div class="col-lg-12">
+
+													<div class="token-slot mt-2">
+														{% for doctorschedule in doctorschedules %}
+														{% if token %}
+
+														<div class="form-check-inline visits me-0">
+															<label class="visit-btns">
+																<input type="radio" class="form-check-input timeslot"
+																	name="timeslot" value="{{doctorschedule.id}}"
+																	{% if doctorschedule.is_booked %}disabled{% endif %}
+																	required>
+
+
+																<span class="visit-rsn" data-bs-toggle="tooltip"
+																	title="{% if doctorschedule.is_booked %}Booked{% else %} {{doctorschedule}}{% endif %}">{{doctorschedule}}
+																</span>
+															</label>
+														</div>
+
+														{% endif %}
+														{% endfor %}
+													</div>
+
+
+												</div>
+
+
 											</div>
-											<div class="col-6">
-												<div class="form-check">
-												<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')">
+
+										</div>
+
+									</div>
+									<div class="row">
+
+										<div class="col-6">
+											<label class="form-label">Booking Type</label>
+											<select class="form-select" aria-label="Default select example"
+												id="booking_type" name="booking_type" required>
+												<option value="">Select</option>
+												{% if doctor.emergency_charges %}
+												<option value="EMERGENCY">EMERGENCY</option>
+												{% endif %}
+												{% if doctor.opd_charges %}
+												<option value="OPD">OPD</option>
+												{% endif %}
+												{% if doctor.is_virtual_available %}
+												<option value="ONLINE">ONLINE</option>
+												{% endif %}
+												{% if doctor.home_charges %}
+												<option value="HOMEVISIT">HOME VISIT</option>
+												{% endif %}
+											</select>
+											<input type="hidden" value="{{date}}" name="date" id="date">
+											<input type="hidden" value="{{doctor.id}}" name="doctor_id">
+											<input type="hidden" value="hospital" name="orderwhere">
+										</div>
+										<div class="col-6">
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" value=""
+													id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')">
 												<label class="form-check-label" for="flexCheckDefault">
-													Is it for some else ? <a href="#large_someone" data-bs-toggle="modal" class="btn btn-primary btn-sm" tabindex="0">Add New.</span></a>
+													Is it for some else ? <a href="#large_someone"
+														data-bs-toggle="modal" class="btn btn-primary btn-sm"
+														tabindex="0">Add New.</span></a>
 												</label>
 											</div>
-												<div>
-												<select class="form-select mb-3" aria-label="Default select example" id ="someone" name="someone" disabled ="disabled">
+											<div>
+												<select class="form-select mb-3" aria-label="Default select example"
+													id="someone" name="someone" disabled="disabled">
 													{% for someone in someones %}
 													<option value="{{someone.id}}" selected>{{someone}}</option>
 													{% endfor %}
 												</select>
-												</div>
-											</div>
-											
-										</div>
-										
-									
-										<div class="submit-section proceed-btn text-end">
-											<a type="submit" onclick="myFunction()" class="btn btn-primary submit-btn"  value="check" id="acceptbtn">Proceed to Pay</a>
-										</div>
-										</form>
-									</div>
-									<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
-										<!-- Add icon library -->
-										<link rel="stylesheet"
-											href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-				
-										<span class="heading">User Rating</span>
-											{% if  drating <= 5 and drating > 4 %}
-												<i class="fas fa-star checked"></i>
-												<i class="fas fa-star checked"></i>
-												<i class="fas fa-star checked"></i>
-												<i class="fas fa-star checked"></i>
-												<i class="fas fa-star checked"></i>
-												{% endif %}
-												{% if drating <= 4 and drating > 3 %}
-												<i class="fas fa-star checked"></i>
-												<i class="fas fa-star checked"></i>
-												<i class="fas fa-star checked"></i>
-												<i class="fas fa-star checked"></i>
-												<i class="fas fa-star "></i>
-												{% endif %}
-												{% if drating <= 3 and drating > 2 %}
-												<i class="fas fa-star checked"></i>
-												<i class="fas fa-star checked"></i>
-												<i class="fas fa-star checked"></i>
-												<i class="fas fa-star "></i>
-												<i class="fas fa-star "></i>
-												{% endif %}
-												{% if drating <= 2 and drating > 1 %}
-												<i class="fas fa-star checked"></i>
-												<i class="fas fa-star checked"></i>
-												<i class="fas fa-star"></i>
-												<i class="fas fa-star"></i>
-												<i class="fas fa-star"></i>
-												{% endif %}
-												{% if drating <= 1 and drating > 0 %}
-												<i class="fas fa-star checked"></i>
-												<i class="fas fa-star"></i>
-												<i class="fas fa-star"></i>
-												<i class="fas fa-star"></i>
-												<i class="fas fa-star"></i>
-												{% endif %}
-												{% if drating == 0%}
-												<i class="fas fa-star"></i>
-												<i class="fas fa-star"></i>
-												<i class="fas fa-star"></i>
-												<i class="fas fa-star"></i>
-												<i class="fas fa-star"></i>
-												{% endif %}
-										<p>{{drating}} average based on {{total_dcmns}} reviews.</p>
-										<hr style="border:3px solid #f1f1f1">
-				
-										<div class="row">
-											<div class="side">
-												<div>5 star</div>
-											</div>
-											<div class="middle">
-												<div class="bar-container">
-													<div style="width: {{cmn_5_per}}%; height: 18px; background-color: #04AA6D;"></div>
-												</div>
-											</div>
-											<div class="side right">
-												<div>{{cmn_5}}</div>
-											</div>
-											<div class="side">
-												<div>4 star</div>
-											</div>
-											<div class="middle">
-												<div class="bar-container">
-													<div style="width: {{cmn_4_per}}%; height: 18px; background-color: #2196F3;"></div>
-												</div>
-											</div>
-											<div class="side right">
-												<div>{{cmn_4}}</div>
-											</div>
-											<div class="side">
-												<div>3 star</div>
-											</div>
-											<div class="middle">
-												<div class="bar-container">
-													<div style="width: {{cmn_3_per}}%; height: 18px; background-color: #00bcd4;"></div>
-												</div>
-											</div>
-											<div class="side right">
-												<div>{{cmn_3}}</div>
-											</div>
-											<div class="side">
-												<div>2 star</div>
-											</div>
-											<div class="middle">
-												<div class="bar-container">
-													<div style="width: {{cmn_2_per}}%; height: 18px; background-color: #ff9800;"></div>
-												</div>
-											</div>
-											<div class="side right">
-												<div>{{cmn_2}}</div>
-											</div>
-											<div class="side">
-												<div>1 star</div>
-											</div>
-											<div class="middle">
-												<div class="bar-container">
-													<div style="width: {{cmn_1_per}}%; height: 18px; background-color: #f44336;"></div>
-												</div>
-											</div>
-											<div class="side right">
-												<div>{{cmn_1}}</div>
 											</div>
 										</div>
-										<hr style="border:3px solid #f1f1f1">
-										<div class="widget review-listing">
-											<ul class="comments-list">
-												{% for cmn in cmns %}
-												<li>
-													<div class="comment">
-														<img class="avatar avatar-sm rounded-circle" alt="User Image"
-															src="{{cmn.patient.patients.get_photo_url}}"
-															onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
-														<div class="comment-body">
-															<div class="meta-data">
-																<span class="comment-author">{{cmn.patient.name_title}}
-																	{{cmn.patient.patients.fisrt_name}}
-																	{{cmn.patient.patients.last_name}}</span>
-																<span class="comment-date">Reviewed
-																	{{cmn.created_date|naturaltime}}</span>
-																<div class="review-count rating">
-																	{% if cmn.rating == 5 %}
-																	<i class="fas fa-star filled"></i>
-																	<i class="fas fa-star filled"></i> 
-																	<i class="fas fa-star filled"></i>
-																	<i class="fas fa-star filled"></i>
-																	<i class="fas fa-star filled"></i>
-																	{% endif %}
-																	{% if cmn.rating == 4 %}
-																	<i class="fas fa-star filled"></i>
-																	<i class="fas fa-star filled"></i> 
-																	<i class="fas fa-star filled"></i>
-																	<i class="fas fa-star filled"></i>
-																	<i class="fas fa-star "></i>
-																	{% endif %}
-																	{% if cmn.rating == 3 %}
-																	<i class="fas fa-star filled"></i>
-																	<i class="fas fa-star filled"></i> 
-																	<i class="fas fa-star filled"></i>
-																	<i class="fas fa-star "></i>
-																	<i class="fas fa-star "></i>
-																	{% endif %}
-																	{% if cmn.rating == 2 %}
-																	<i class="fas fa-star filled"></i>
-																	<i class="fas fa-star filled"></i> 
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	{% endif %}
-																	{% if cmn.rating == 1 %}
-																	<i class="fas fa-star filled"></i>
-																	<i class="fas fa-star"></i> 
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	{% endif %}
-																	{% if cmn.rating == 0 %}
-																		<i class="fas fa-star"></i>
-																		<i class="fas fa-star"></i> 
-																		<i class="fas fa-star"></i>
-																		<i class="fas fa-star"></i>
-																		<i class="fas fa-star"></i>
-																	{% endif %}
-																</div>
-															</div>
-															{% comment %} <p class="recommended"><i class="far fa-thumbs-up"></i> I recommend
-																the doctor</p> {% endcomment %}
-															<p class="comment-content">
-																{{cmn.comment}}
-															</p>
 
-														</div>
-													</div>							
-				
-												</li>
-												{% endfor %}				
-											</ul>
-				
-											<div class="all-feedback text-center">
-												<a href="#" class="btn btn-primary btn-sm">
-													Show all feedback <strong>({{total_dcmns}})</strong>
-												</a>
-											</div>
-				
-										</div>
-				
-				
-										<div class="write-review">
-											<h4>Write a review for <strong>Dr. {{doctor.fisrt_name|upper}} {{doctor.last_name|upper}}</strong></h4>
+									</div>
+
+									{% comment %} <div class="col-6">
+										<label class="form-label">Discounts</label>
+										<select class="form-select" aria-label="Default select example"
+											id="booking_type" name="booking_type">
+											<option value="">Select Discount</option>
+											{% for discount in discounts %}
+											<option value="{{discount.id}}">{{discount.discount_rate}} %</option>											
+											{% endfor %}
 											
-											{% if user.is_authenticated %}
-											{% if user.user_type == '4' %}
-											<form method="post" id="commentFrom" action="{% url 'ratingandcomment' %}">
-												{% csrf_token %}
-												<div class="form-group"> 
-													<label>Review</label>
-													<div class="star-rating">
-														<input id="star-5" type="radio" name="rating" value="5">
-														<label for="star-5" title="5 stars">
-															<i class="active fa fa-star"></i>
-														</label>
-														<input id="star-4" type="radio" name="rating" value="4">
-														<label for="star-4" title="4 stars">
-															<i class="active fa fa-star"></i>
-														</label>
-														<input id="star-3" type="radio" name="rating" value="3">
-														<label for="star-3" title="3 stars">
-															<i class="active fa fa-star"></i>
-														</label>
-														<input id="star-2" type="radio" name="rating" value="2">
-														<label for="star-2" title="2 stars">
-															<i class="active fa fa-star"></i>
-														</label>
-														<input id="star-1" type="radio" name="rating" value="1">
-														<label for="star-1" title="1 star">
-															<i class="active fa fa-star"></i>
-														</label>
-													</div>
-												</div>
-												<div class="form-group">
-													<label>Your review</label>
-													<textarea id="review_desc" maxlength="100" class="form-control"
-														name="comment"></textarea>
-														<input type="hidden" value="{{doctor.admin.id}}" name="HLP">
-														<input type="hidden" value="doctor" name="pagename">
-														<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span
-																id="chars">100</span> characters
-															remaining</small></div>
-												</div>
-												<hr>
-												<div class="submit-section">
-													<button type="submit" class="btn btn-primary submit-btn">Add Review</button>
-												</div>
-											</form>
-											{% endif %}
-											{% else %}
-				
-											<a class="btn btn-rounded btn-primary"
-												href="{% url 'dologin' %}?next={{ request.path|urlencode }}"><i
-													class="fas fa-user-circle"></i> login /
-												Signup </a>
-											{% endif %}
+										</select>
+										<input type="hidden" value="{{date}}" name="date" id="date">
+										<input type="hidden" value="{{doctor.id}}" name="doctor_id">
+										<input type="hidden" value="hospital" name="orderwhere">
+									</div> {% endcomment %}
+									<div class="submit-section proceed-btn text-end">
+										<a type="submit" onclick="myFunction()" class="btn btn-primary submit-btn"
+											value="check" id="acceptbtn">Proceed to Checkout</a>
+									</div>
+								</form>
+							</div>
+							<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
+								<!-- Add icon library -->
+								<link rel="stylesheet"
+									href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+								<span class="heading">User Rating</span>
+								{% if  drating <= 5 and drating > 4 %}
+								<i class="fas fa-star checked"></i>
+								<i class="fas fa-star checked"></i>
+								<i class="fas fa-star checked"></i>
+								<i class="fas fa-star checked"></i>
+								<i class="fas fa-star checked"></i>
+								{% endif %}
+								{% if drating <= 4 and drating > 3 %}
+								<i class="fas fa-star checked"></i>
+								<i class="fas fa-star checked"></i>
+								<i class="fas fa-star checked"></i>
+								<i class="fas fa-star checked"></i>
+								<i class="fas fa-star "></i>
+								{% endif %}
+								{% if drating <= 3 and drating > 2 %}
+								<i class="fas fa-star checked"></i>
+								<i class="fas fa-star checked"></i>
+								<i class="fas fa-star checked"></i>
+								<i class="fas fa-star "></i>
+								<i class="fas fa-star "></i>
+								{% endif %}
+								{% if drating <= 2 and drating > 1 %}
+								<i class="fas fa-star checked"></i>
+								<i class="fas fa-star checked"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								{% endif %}
+								{% if drating <= 1 and drating > 0 %}
+								<i class="fas fa-star checked"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								{% endif %}
+								{% if drating == 0%}
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								{% endif %}
+								<p>{{drating}} average based on {{total_dcmns}} reviews.</p>
+								<hr style="border:3px solid #f1f1f1">
+
+								<div class="row">
+									<div class="side">
+										<div>5 star</div>
+									</div>
+									<div class="middle">
+										<div class="bar-container">
+											<div
+												style="width: {{cmn_5_per}}%; height: 18px; background-color: #04AA6D;">
+											</div>
 										</div>
-				
+									</div>
+									<div class="side right">
+										<div>{{cmn_5}}</div>
+									</div>
+									<div class="side">
+										<div>4 star</div>
+									</div>
+									<div class="middle">
+										<div class="bar-container">
+											<div
+												style="width: {{cmn_4_per}}%; height: 18px; background-color: #2196F3;">
+											</div>
+										</div>
+									</div>
+									<div class="side right">
+										<div>{{cmn_4}}</div>
+									</div>
+									<div class="side">
+										<div>3 star</div>
+									</div>
+									<div class="middle">
+										<div class="bar-container">
+											<div
+												style="width: {{cmn_3_per}}%; height: 18px; background-color: #00bcd4;">
+											</div>
+										</div>
+									</div>
+									<div class="side right">
+										<div>{{cmn_3}}</div>
+									</div>
+									<div class="side">
+										<div>2 star</div>
+									</div>
+									<div class="middle">
+										<div class="bar-container">
+											<div
+												style="width: {{cmn_2_per}}%; height: 18px; background-color: #ff9800;">
+											</div>
+										</div>
+									</div>
+									<div class="side right">
+										<div>{{cmn_2}}</div>
+									</div>
+									<div class="side">
+										<div>1 star</div>
+									</div>
+									<div class="middle">
+										<div class="bar-container">
+											<div
+												style="width: {{cmn_1_per}}%; height: 18px; background-color: #f44336;">
+											</div>
+										</div>
+									</div>
+									<div class="side right">
+										<div>{{cmn_1}}</div>
 									</div>
 								</div>
-								
+								<hr style="border:3px solid #f1f1f1">
+								<div class="widget review-listing">
+									<ul class="comments-list">
+										{% for cmn in cmns %}
+										<li>
+											<div class="comment">
+												<img class="avatar avatar-sm rounded-circle" alt="User Image"
+													src="{{cmn.patient.patients.get_photo_url}}"
+													onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+												<div class="comment-body">
+													<div class="meta-data">
+														<span class="comment-author">{{cmn.patient.name_title}}
+															{{cmn.patient.patients.fisrt_name}}
+															{{cmn.patient.patients.last_name}}</span>
+														<span class="comment-date">Reviewed
+															{{cmn.created_date|naturaltime}}</span>
+														<div class="review-count rating">
+															{% if cmn.rating == 5 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															{% endif %}
+															{% if cmn.rating == 4 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star "></i>
+															{% endif %}
+															{% if cmn.rating == 3 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star "></i>
+															<i class="fas fa-star "></i>
+															{% endif %}
+															{% if cmn.rating == 2 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															{% endif %}
+															{% if cmn.rating == 1 %}
+															<i class="fas fa-star filled"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															{% endif %}
+															{% if cmn.rating == 0 %}
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															<i class="fas fa-star"></i>
+															{% endif %}
+														</div>
+													</div>
+													{% comment %} <p class="recommended"><i
+															class="far fa-thumbs-up"></i> I recommend
+														the doctor</p> {% endcomment %}
+													<p class="comment-content">
+														{{cmn.comment}}
+													</p>
+
+												</div>
+											</div>
+
+										</li>
+										{% endfor %}
+									</ul>
+
+									<div class="all-feedback text-center">
+										<a href="#" class="btn btn-primary btn-sm">
+											Show all feedback <strong>({{total_dcmns}})</strong>
+										</a>
+									</div>
+
+								</div>
+
+
+								<div class="write-review">
+									<h4>Write a review for <strong>Dr. {{doctor.fisrt_name|upper}}
+											{{doctor.last_name|upper}}</strong></h4>
+
+									{% if user.is_authenticated %}
+									{% if user.user_type == '4' %}
+									<form method="post" id="commentFrom" action="{% url 'ratingandcomment' %}">
+										{% csrf_token %}
+										<div class="form-group">
+											<label>Review</label>
+											<div class="star-rating">
+												<input id="star-5" type="radio" name="rating" value="5">
+												<label for="star-5" title="5 stars">
+													<i class="active fa fa-star"></i>
+												</label>
+												<input id="star-4" type="radio" name="rating" value="4">
+												<label for="star-4" title="4 stars">
+													<i class="active fa fa-star"></i>
+												</label>
+												<input id="star-3" type="radio" name="rating" value="3">
+												<label for="star-3" title="3 stars">
+													<i class="active fa fa-star"></i>
+												</label>
+												<input id="star-2" type="radio" name="rating" value="2">
+												<label for="star-2" title="2 stars">
+													<i class="active fa fa-star"></i>
+												</label>
+												<input id="star-1" type="radio" name="rating" value="1">
+												<label for="star-1" title="1 star">
+													<i class="active fa fa-star"></i>
+												</label>
+											</div>
+										</div>
+										<div class="form-group">
+											<label>Your review</label>
+											<textarea id="review_desc" maxlength="100" class="form-control"
+												name="comment"></textarea>
+											<input type="hidden" value="{{doctor.admin.id}}" name="HLP">
+											<input type="hidden" value="doctor" name="pagename">
+											<div class="d-flex justify-content-between mt-3"><small
+													class="text-muted"><span id="chars">100</span> characters
+													remaining</small></div>
+										</div>
+										<hr>
+										<div class="submit-section">
+											<button type="submit" class="btn btn-primary submit-btn">Add Review</button>
+										</div>
+									</form>
+									{% endif %}
+									{% else %}
+
+									<a class="btn btn-rounded btn-primary"
+										href="{% url 'dologin' %}?next={{ request.path|urlencode }}"><i
+											class="fas fa-user-circle"></i> login /
+										Signup </a>
+									{% endif %}
+								</div>
+
 							</div>
 						</div>
+
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
+</div>
 {% endblock content %}
 
 
 {% block modal_fade %}
-<div class="modal fade bd-example-modal-xl" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-modal="true" role="dialog" id="large_someone">
+<div class="modal fade bd-example-modal-xl" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-modal="true"
+	role="dialog" id="large_someone">
 	<div class="modal-dialog modal-xl">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" id="myLargeModalLabel">Add Your Dependent</h4>
-				<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close" data-original-title="" title=""></button>
+				<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"
+					data-original-title="" title=""></button>
 			</div>
 			<div class="modal-body">
 				<div class="row mb-3">
@@ -584,27 +630,31 @@ Booking {% endblock title %}
 								<h6 class="mb-0 fw-bold ">Patients Basic Inforamtion</h6>
 							</div>
 							<div class="card-body">
-								<form method="post" id="hpatientadd" enctype="multipart/form-data" action = "{% url 'add_someone_as_patient' %}">
+								<form method="post" id="hpatientadd" enctype="multipart/form-data"
+									action="{% url 'add_someone_as_patient' %}">
 									{% csrf_token %}
 									<div class="row g-3 align-items-center">
 										<div class="col-12 col-md-6">
 											<div class="form-group">
 												<div class="change-avatar media_div_row profile-info-widget ">
-													<div class="profile-img booking-doc-img" >
-														<img src="#" alt="User Image" class="img_preview" class="img_preview" onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
+													<div class="profile-img booking-doc-img">
+														<img src="#" alt="User Image" class="img_preview"
+															class="img_preview"
+															onerror="this.onerror=null; this.src='{% static 'newstatic/assets/img/icons/male.png' %}'">
 													</div>
 													<div class="upload-img ">
 														<div class="change-photo-btn">
 															<span><i class="fa fa-upload"></i> Upload Photo *</span>
-															<input type="file" class="upload select_media" name="profile_pic" required> 
+															<input type="file" class="upload select_media"
+																name="profile_pic" required>
 														</div>
 														<small class="form-text text-muted">Allowed JPG, GIF or PNG. Max
 															size of 2MB</small>
 													</div>
 												</div>
 											</div>
-										</div>			
-						
+										</div>
+
 										<div class="col-md-6">
 											<label class="form-label">Title *</label>
 											<select class="form-select" aria-label="Default select example"
@@ -623,15 +673,21 @@ Booking {% endblock title %}
 										</div>
 										<div class="col-md-6">
 											<label for="firstname" class="form-label">First Name *</label>
-											<input type="text" class="form-control" id="firstname" name="fisrt_name" required>
-											<input type="hidden" class="form-control" id="where" name="where" value="add">
-											<input type="hidden" class="form-control" id="id" name="id" value="{{hospital.id}}">
-											<input type="hidden" class="form-control" id="did" name="did" value="{{doctor.id}}">
-											<input type="hidden" class="form-control" id="page_name" name="page_name" value="BOOKING">
+											<input type="text" class="form-control" id="firstname" name="fisrt_name"
+												required>
+											<input type="hidden" class="form-control" id="where" name="where"
+												value="add">
+											<input type="hidden" class="form-control" id="id" name="id"
+												value="{{hospital.id}}">
+											<input type="hidden" class="form-control" id="did" name="did"
+												value="{{doctor.id}}">
+											<input type="hidden" class="form-control" id="page_name" name="page_name"
+												value="BOOKING">
 										</div>
 										<div class="col-md-6">
 											<label for="lastname" class="form-label">Last Name *</label>
-											<input type="text" class="form-control" id="lastname" name="last_name" required>
+											<input type="text" class="form-control" id="lastname" name="last_name"
+												required>
 										</div>
 										<div class="col-md-6">
 											<label for="address" class="form-label">Address </label>
@@ -679,25 +735,34 @@ Booking {% endblock title %}
 														<input class="form-check-input" type="radio" name="gender"
 															id="gender" value="Female"> <label class="form-check-label"
 															for="exampleRadios22">
-														Female
+															Female
 														</label>
 													</div>
 												</div>
 											</div>
 										</div>
 										<div class="col-md-6">
-											<label  class="form-label">Blood Group *</label>
-											<select class="form-select" aria-label="Default select example" name="bloodgroup" required>
+											<label class="form-label">Blood Group *</label>
+											<select class="form-select" aria-label="Default select example"
+												name="bloodgroup" required>
 												<option selected disabled>Blood Group</option>
-												<option {% if patient.bloodgroup == "A+" %}selected{% endif %} value="A+">A+</option>
-												<option {% if patient.bloodgroup == "A-" %}selected{% endif %} value="A-">A-</option>
-												<option {% if patient.bloodgroup == "B+" %}selected{% endif %} value="B+">B+</option>
-												<option {% if patient.bloodgroup == "B-" %}selected{% endif %} value="B-">B-</option>
-												<option {% if patient.bloodgroup == "AB-" %}selected{% endif %} value="AB-">AB-</option>
-												<option {% if patient.bloodgroup == "AB+" %}selected{% endif %} value="AB+">AB+</option>
-												<option {% if patient.bloodgroup == "O-" %}selected{% endif %} value="O-">O-</option>
-												<option {% if patient.bloodgroup == "O+" %}selected{% endif %} value="O+">O+</option>
-												
+												<option {% if patient.bloodgroup == "A+" %}selected{% endif %}
+													value="A+">A+</option>
+												<option {% if patient.bloodgroup == "A-" %}selected{% endif %}
+													value="A-">A-</option>
+												<option {% if patient.bloodgroup == "B+" %}selected{% endif %}
+													value="B+">B+</option>
+												<option {% if patient.bloodgroup == "B-" %}selected{% endif %}
+													value="B-">B-</option>
+												<option {% if patient.bloodgroup == "AB-" %}selected{% endif %}
+													value="AB-">AB-</option>
+												<option {% if patient.bloodgroup == "AB+" %}selected{% endif %}
+													value="AB+">AB+</option>
+												<option {% if patient.bloodgroup == "O-" %}selected{% endif %}
+													value="O-">O-</option>
+												<option {% if patient.bloodgroup == "O+" %}selected{% endif %}
+													value="O+">O+</option>
+
 											</select>
 										</div>
 										<div class="col-md-6">
@@ -707,18 +772,18 @@ Booking {% endblock title %}
 												<option value="Son"> Son</option>
 												<option value="Daughter"> Daughter</option>
 												<option value="Wife"> Wife</option>
-												<option  value="Husband"> Husband</option>
-												<option  value="Mother"> Mother</option>
-												<option  value="Father"> Father</option>
-												<option  value="Brother"> Brother</option>
-												<option  value="Sister"> Sister</option>
-												<option  value="Father in Law"> Father in Law</option>
-												<option  value="Mother in Law"> Mother in Law</option>
-												<option  value="Sister in Law"> Sister in Law</option>
-												<option  value="Brother in Law"> Brother in Law</option>
-												<option  value="Cousin"> Cousin</option>
-												<option  value="Friend"> Friend</option>
-												<option  value="Neighbour"> Neighbour</option>
+												<option value="Husband"> Husband</option>
+												<option value="Mother"> Mother</option>
+												<option value="Father"> Father</option>
+												<option value="Brother"> Brother</option>
+												<option value="Sister"> Sister</option>
+												<option value="Father in Law"> Father in Law</option>
+												<option value="Mother in Law"> Mother in Law</option>
+												<option value="Sister in Law"> Sister in Law</option>
+												<option value="Brother in Law"> Brother in Law</option>
+												<option value="Cousin"> Cousin</option>
+												<option value="Friend"> Friend</option>
+												<option value="Neighbour"> Neighbour</option>
 											</select>
 										</div>
 										<div class="col-md-12">
@@ -747,101 +812,103 @@ Booking {% endblock title %}
 </script>
 
 <script>
-	$(document).ready(function() {
-	$('input.scheduleDate').change(function(){
-		document.getElementById("newdate").submit();		  
-		
+	$(document).ready(function () {
+		$('input.scheduleDate').change(function () {
+			document.getElementById("newdate").submit();
+
 		});
 	});
 </script>
 <script>
 	function myFunction() {
-	var date = document.getElementById("scheduleDate").value;
-	console.log(date)
-	if(date != null && date != "" && date != undefined){
-		var timeslot = $("input[type='radio'][name='timeslot']:checked").val();
-		console.log(timeslot)
-		var booking_type = document.getElementById("booking_type").value;
-		var someone = document.getElementById("someone").value;
-		console.log(booking_type)
-		if(timeslot != undefined && booking_type != undefined && timeslot != "" && booking_type != "" ){
-			alert("Your slot booking is in proceed waitfor moment..");
-			document.getElementById("bookingform").submit();
-		}else{
-			alert("Missing booking type or booking timeslot...");
+		var date = document.getElementById("scheduleDate").value;
+		console.log(date)
+		if (date != null && date != "" && date != undefined) {
+			var timeslot = $("input[type='radio'][name='timeslot']:checked").val();
+			console.log(timeslot)
+			var booking_type = document.getElementById("booking_type").value;
+			var someone = document.getElementById("someone").value;
+			console.log(booking_type)
+			if (timeslot != undefined && booking_type != undefined && timeslot != "" && booking_type != "") {
+				alert("Your slot booking is in proceed waitfor moment..");
+				document.getElementById("bookingform").submit();
+			} else {
+				alert("Missing booking type or booking timeslot...");
+				return false;
+			}
+		} else {
+			alert("Select date first!");
 			return false;
 		}
-	}else{
-		alert("Select date first!");
-		return false;
-	}
-	
-	
-	
-	//window.location.replace("{% url 'checkout' %}");
+
+
+
+		//window.location.replace("{% url 'checkout' %}");
 	}
 </script>
 <script>
-    function checkedFunc(element1Id) {
-    
-        var myLayer = document.getElementById('someone');
-        var element1 = document.getElementById(element1Id);
-    if (element1.checked == true) {
-            myLayer.class = "submit";
-            myLayer.removeAttribute("disabled");
-    } else {
-            myLayer.class = "button:disabled";
-            myLayer.setAttribute("disabled","disabled");
-    };
-    }
+	function checkedFunc(element1Id) {
 
+		var myLayer = document.getElementById('someone');
+		var element1 = document.getElementById(element1Id);
+		if (element1.checked == true) {
+			myLayer.class = "submit";
+			myLayer.removeAttribute("disabled");
+		} else {
+			myLayer.class = "button:disabled";
+			myLayer.setAttribute("disabled", "disabled");
+		};
+	}
 </script>
 <script>
-	$(".submit_btn").click(function(){
-		   var form=new FormData($("#hpatientadd"));
-		  // form.append("long_desc",tinyMCE.activeEditor.getContent());
-		   console.log("hello")
-		   e.preventDefault();
-		   $.ajax({
-			   type: 'POST',
-			   url: "{% url 'add_someone_as_patient' %}",
-			   data:form,
-			   success: function (json) {
-				   console.log(json)
-			   },
-			   error: function (xhr, errmsg, err) {
-   
-			   }
-		   });
-		   //Ajax code
-   
-		   
-		  // setTimeout(location.reload.bind(location), 2000);
-   
-		   //update staff from edit page fade
-		  
-   
-	   })
+	$(".submit_btn").click(function () {
+		var form = new FormData($("#hpatientadd"));
+		// form.append("long_desc",tinyMCE.activeEditor.getContent());
+		console.log("hello")
+		e.preventDefault();
+		$.ajax({
+			type: 'POST',
+			url: "{% url 'add_someone_as_patient' %}",
+			data: form,
+			success: function (json) {
+				console.log(json)
+			},
+			error: function (xhr, errmsg, err) {
+
+			}
+		});
+		//Ajax code
+
+
+		// setTimeout(location.reload.bind(location), 2000);
+
+		//update staff from edit page fade
+
+
+	})
 </script>
 <script>
-	$(document).on("change",".select_media",function(){
-        var img_preview=$(this).parents(".media_div_row").find(".img_preview");
-        showPreviewMedia(this,img_preview);
+	$(document).on("change", ".select_media", function () {
+		var img_preview = $(this).parents(".media_div_row").find(".img_preview");
+		showPreviewMedia(this, img_preview);
 
-    });
+	});
 
-    function showPreviewMedia(input,img_preview){
-        if(input.files && input.files[0]){
-            var reader=new FileReader();
-            reader.onload=function(e){
-            img_preview.attr("src",e.target.result);
-            img_preview.show();
-            img_preview.css({"border":"5px solid primary"});
-            img_preview.css({"border-radius":"2px"});
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
+	function showPreviewMedia(input, img_preview) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				img_preview.attr("src", e.target.result);
+				img_preview.show();
+				img_preview.css({
+					"border": "5px solid primary"
+				});
+				img_preview.css({
+					"border-radius": "2px"
+				});
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
 </script>
 {% endblock custom_js %}
-

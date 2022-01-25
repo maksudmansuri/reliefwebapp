@@ -68,6 +68,13 @@
                         </a>
                     </li>
                    
+                    {% url 'admin_discount' as admin_discount %}
+                    <li {% if request.path == admin_discount %} class="active" {% endif %}>
+                        <a href="{% url 'admin_discount' %}">
+                            <i class="fas fa-tags"></i>
+                            <span>Discount Campaign</span>
+                        </a> 
+                    </li>
                     <li>
                         <a href="#">
                             <i class="fas fa-file-invoice"></i>

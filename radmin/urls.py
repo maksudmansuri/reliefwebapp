@@ -82,4 +82,8 @@ urlpatterns = [
     path('diseaselist',views.DiseaseListView.as_view(),name="diseaselist"),
     path('updatedisease/<id>',views.updateDisease,name="updatedisease"),
     path('deletedisease/<id>',views.deleteDisease,name="deletedisease"),
+
+    #Discount add , delete 
+    path('admin_discount',views.DiscountListView.as_view(),name="admin_discount"),
+    path('detele_discount/<id>',views.DeleteDiscountView,name="detele_discount"),
 ]

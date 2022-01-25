@@ -127,7 +127,7 @@ Booking {% endblock title %}
 													</tr>
 												</thead>
 												<tbody>
-													{% if booking.booking_for == "H" %}
+													{% if booking.booking_for == "H" or booking.booking_for == "D" %}
 													<tr>
 														<td>{{booking.booking_type}} BOOKING<p>
 															[With Dr. {{booking.hospitalstaffdoctor.doctor.fisrt_name}} {{booking.hospitalstaffdoctor.doctor.last_name}}]
@@ -180,15 +180,15 @@ Booking {% endblock title %}
 													{% endif %}
 													<tr>
 														<th>Subtotal:</th>
-														<td><span>&#x20B9;{{booking.amount}}</span></td>
+														<td><span>&#x20B9;{{booking.amount |mul:100|div:90}}</span></td>
 													</tr>
 													<tr>
-														<th>Discount:</th>
-														<td><span>&#x20B9;{{booking.amount |mul:10|div:100}}</span></td>
+														<th>Discount({{booking.discount_rate}}%):</th>
+														<td><span>&#x20B9;{{booking.discount_amount }}</span></td>
 													</tr>
 													<tr>
 														<th>Total Amount:</th>
-														<td><span>&#x20B9;{{booking.amount |mul:90|div:100}}</span></td>
+														<td><span>&#x20B9;{{booking.amount}}</span></td>
 													</tr>
 												</tbody>
 											</table>

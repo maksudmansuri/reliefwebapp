@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'pharmacy',
     'front',
     'patient',
+    'discount',
+    'cart',
     'rest_framework',
     'rest_framework.authtoken',
     'channels',

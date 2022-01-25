@@ -1,3 +1,4 @@
+from msilib.schema import Media
 from django.db.models import fields
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
@@ -6,6 +7,7 @@ from rest_framework.fields import ReadOnlyField
 from accounts.models import  HospitalDoctors, Hospitals, Labs, Pharmacy, Specailist
 from front.models import RatingAndComments
 from hospital.models import AmbulanceDetails, DoctorSchedule, HospitalMedias, HospitalRooms, ServiceAndCharges, TimeSlot
+from lab.models import Medias
 from patient import models
 from patient.models import Booking, LabTest, OrderBooking, Orders, PicturesForMedicine, Slot
 from radmin.models import Disease, HospitalDisease
@@ -236,9 +238,13 @@ class AppointmentSerializer(serializers.ModelSerializer):
 """
 Labs serializers
 """
+class MediaHospitalSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Medias
+		fields = ['pk','media_type','media_content','media_desc']
 
 class LabsViewSerializer(serializers.ModelSerializer):
-	hospitalmedia = MediaHospitalSerializer(many=True)
+	labmedia = MediaHospitalSerializer(many=True)
 	class Meta:
 		model = Labs
 		fields = ['lab_name','about','address','pin_code','city','state','profile_pic','establishment_year','labmedia']

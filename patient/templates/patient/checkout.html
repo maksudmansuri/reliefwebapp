@@ -126,7 +126,7 @@ Booking {% endblock title %}
 											<img src="{{booking.hospitalstaffdoctor.hospital.get_photo_url}}" alt="User Image">
 										</a>
 										<div class="booking-info">
-											<h4><a href="doctor-profile.html">Dr. {{booking.hospitalstaffdoctor.hospital.hopital_name}}</a></h4>
+											<h4><a href="{% url 'hospital_details' booking.hospitalstaffdoctor.hospital.id %}">Dr. {{booking.hospitalstaffdoctor.hospital.hopital_name}}</a></h4>
 											{% comment %} <div class="rating">
 												<i class="fas fa-star filled"></i>
 												<i class="fas fa-star filled"></i>
@@ -197,14 +197,14 @@ Booking {% endblock title %}
 												<li>Mode <span><strong>{{booking.booking_type}}</strong></span></li>
 											</ul>
 											<ul class="booking-fee">
-												<li>Consulting Fee <span>&#x20B9; {{booking.amount}}</span></li>
-												<li>Booking Fee <span>&#x20B9;{{booking.amount |mul:10|div:100}}</span></li>
+												<li>Consulting Fee <span>&#x20B9; {{booking.amount|mul:100|div:90}}</span></li>
+												<li>Discount {{discount_rate}} %<span>- &#x20B9;{{booking.discount_amount}}</span></li>
 											</ul>
 											<div class="booking-total">
 												<ul class="booking-total-list">
 													<li>
 														<span>Total</span>
-														<span class="total-cost">&#x20B9;{{booking.amount |mul:110|div:100}}</span>
+														<span class="total-cost">&#x20B9;{{booking.amount }}</span>
 													</li>
 												</ul>
 											</div>

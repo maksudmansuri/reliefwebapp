@@ -156,6 +156,9 @@ class OrderBooking(models.Model):
     # STATUS_TYPE_CHOICE      =           (("INPROCESS","INPROCESS"),("SUCCESS","SUCCESS"),("FAILED","FAILED"),("CANCELLED","CANCELLED"),(REFUNDPROCESS),("REFUNDED","REFUNDED"))
     payment_status          =           models.CharField(default="",blank=True,null=True,max_length=64)
 
+    discount_rate              =           models.IntegerField(blank=True,null=True,default=1)
+    discount_amount             =           models.IntegerField(blank=True,null=True,default=0)
+    
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()

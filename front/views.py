@@ -18,6 +18,7 @@ import pytz
 from chat.models import Notification
 from accounts.models import AdminHOD, CustomUser, HospitalDoctors, Hospitals, Labs, Patients, Pharmacy, Specailist
 from accounts.views import send_otp
+from discount.models import Campaign
 from relief import settings
 IST = pytz.timezone('Asia/Kolkata')
 from front.models import RatingAndComments
@@ -44,6 +45,7 @@ class FrontView(View):
         for hospital in hospitals:
             total_cmns = RatingAndComments.objects.filter(HLP =hospital.admin).count()
             cmnss = RatingAndComments.objects.filter(HLP =hospital.admin)
+            # cmnss = Hospitals.dicount_hospital.all(dicount_hospital =)
             rating = 0
             for cmn in cmnss: 
                 rating = rating + cmn.rating
@@ -657,6 +659,15 @@ class DoctorDetailsViews(View):
         doctor = get_object_or_404(HospitalDoctors,is_active=True,id=doctor_id)
         # if request.user.user_type == "4":
         doctorschedules = DoctorSchedule.objects.filter(doctor=doctor,is_active=True)
+        # if doctor.is_hospital_added:
+        #     hospital = doctor.hospital
+        #     # discounts = hospital.dicount_hospital.filter(id=doctor.hospital.id)
+        #     discounts = Campaign.objects.filter(target_hospital = hospital)
+        # else:
+        #     discounts = Campaign.objects.filter(target_hospitaldoctor = doctor)
+
+        # print(discounts)
+        
 
         forsome = ""
         if request.user.user_type == "4":
@@ -700,7 +711,7 @@ class DoctorDetailsViews(View):
             cmn_1_per = cmn_1 * 100 / total_cmns
         print(cmn_1_per)
         token =False
-        param = {'doctor':doctor,'doctorschedules':doctorschedules,'token':token,'someones':forsome,'rating':rating,'total_cmns':total_cmns,'cmns':cmns,'total_cmns':total_cmns,'rating':rating,'cmn_5':cmn_5,'cmn_1':cmn_1,'cmn_2':cmn_2,'cmn_3':cmn_3,'cmn_4':cmn_4,'cmn_1_per':cmn_1_per,'cmn_2_per':cmn_2_per,'cmn_3_per':cmn_3_per,'cmn_4_per':cmn_4_per,'cmn_5_per':cmn_5_per,}  
+        param = {'doctor':doctor,'doctorschedules':doctorschedules,'token':token,'someones':forsome,'rating':rating,'total_cmns':total_cmns,'cmns':cmns,'total_cmns':total_cmns,'rating':rating,'cmn_5':cmn_5,'cmn_1':cmn_1,'cmn_2':cmn_2,'cmn_3':cmn_3,'cmn_4':cmn_4,'cmn_1_per':cmn_1_per,'cmn_2_per':cmn_2_per,'cmn_3_per':cmn_3_per,'cmn_4_per':cmn_4_per,'cmn_5_per':cmn_5_per}  
         return render(request,"front/booking.html",param)
         # else:
         #     messages.add_message(request,messages.ERROR,"Your Account is not authorized to book...!")
@@ -962,22 +973,30 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
                 doctorschedule.save()
                 booking.applied_time=doctorschedule.timeslot.schedule
                 booking.hospitalstaffdoctor=hospitalstaffdoctor
+                #discount check and apply
+                
                 try:
                 # if hospitalstaffdoctor.hospital.admin.user_type == "2":
                     booking.HLP=hospitalstaffdoctor.hospital.admin
                     booking.booking_for="H"
+                    ds = Campaign.objects.get(target_hospital = hospitalstaffdoctor.hospital)
+                    
                 except:               
                     booking.HLP=hospitalstaffdoctor.admin
                     booking.booking_for="D"
+                    ds = Campaign.objects.get(target_hospitaldoctor = hospitalstaffdoctor)
                 booking.booking_type=booking_type           
                 if booking_type == "EMERGENCY": 
-                    booking.amount=hospitalstaffdoctor.emergency_charges
+                    booking.amount=hospitalstaffdoctor.emergency_charges                   
                 if booking_type == "OPD":
                     booking.amount=hospitalstaffdoctor.opd_charges
                 if booking_type == "ONLINE":
                     booking.amount=hospitalstaffdoctor.online_charges
                 if booking_type == "HOMEVISIT":
-                    booking.amount=hospitalstaffdoctor.home_charges           
+                    booking.amount=hospitalstaffdoctor.home_charges
+                booking.discount_rate=ds.discount_rate
+                booking.discount_amount= booking.amount * ds.discount_rate/100      
+                booking.amount= booking.amount - booking.discount_amount 
                   
             if where == "lab": 
                 booking.booking_for="L"
@@ -1000,7 +1019,11 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
                     booking.homevisitcharges = homevisticharge.charges
                     total = total + homevisticharge.charges
                 booking.amount = total 
-
+                ds = Campaign.objects.get(target_lab = lab)
+                booking.discount_rate=ds.discount_rate
+                booking.discount_amount= booking.amount * ds.discount_rate/100
+                booking.amount= booking.amount - booking.discount_amount 
+                
             if where == "pharma":
                 if prescription:
                     booking.prescription = prescription
@@ -1013,6 +1036,7 @@ class BookAnAppointmentViews(views.SuccessMessageMixin,View):
                 booking.add_note = add_note
             # booking.invoice = pdfgenerator()
             # print(booking.invoice)
+           
             booking.save()
             tc = 0
             try:

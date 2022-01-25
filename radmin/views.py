@@ -1,6 +1,7 @@
 from datetime import datetime
 import pytz
 from accounts.awsredirect import image
+from discount.models import Campaign
 
 from front.models import RatingAndComments
 IST = pytz.timezone('Asia/Kolkata')
@@ -1125,3 +1126,78 @@ def deleteDisease(request,id):
     messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
     return HttpResponseRedirect(reverse("diseaselist")) 
  
+ 
+class DiscountListView(SuccessMessageMixin,CreateView):    
+    def get(self, request, *args, **kwargs):      
+        discounts=Campaign.objects.all()
+        specialist = Specailist.objects.all() 
+        hospitals = Hospitals.objects.filter(admin__is_active= True,is_verified = True,is_deactive = False) 
+        hospitaldoctors = HospitalDoctors.objects.filter(admin__is_active= True,is_verified = True,is_deactive = False, is_hospital_added = False) 
+        labs = Labs.objects.filter(admin__is_active= True,is_verified = True,is_deactive = False) 
+        pharmacy = Pharmacy.objects.filter(admin__is_active= True,is_verified = True,is_deactive = False) 
+        param={'discounts':discounts,'pharmacy':pharmacy,'labs':labs,'hospitaldoctors':hospitaldoctors,'hospitals':hospitals,'specialist':specialist}
+        return render(request,"radmin/discount.html",param)
+    
+    def post(self, request, *args, **kwargs):
+        discount_rate=request.POST.get("discount_rate")
+        # apply_to=request.POST.get("apply_to")
+        target_specialist_list=request.POST.getlist("target_specialist []")
+        target_hospital_list=request.POST.getlist("target_hospital []")
+        target_hospitaldoctor_list=request.POST.getlist("target_hospitaldoctor []")
+        target_lab_list=request.POST.getlist("target_lab []")
+        target_pharmacy_list=request.POST.getlist("target_pharmacy []")
+       
+        try:
+            all_campaign = Campaign.objects.all()
+           
+            #for specialist discount
+            for target_specialist in target_specialist_list:
+                spc = get_object_or_404(Specailist,id=target_specialist)                
+                discount = Campaign(discount_rate = discount_rate,target_specialist=spc)           
+                discount.save()
+            #for target_hospital discount
+            for target_hospital in target_hospital_list:
+                hsp = get_object_or_404(Hospitals,id=target_hospital)
+                for campaign in all_campaign:
+                    if campaign.target_hospital == hsp:
+                        messages.add_message(request,messages.ERROR,"Duplicate entry for  discount rate")
+                        return HttpResponseRedirect(reverse("admin_discount"))
+                discount = Campaign(discount_rate = discount_rate,target_hospital=hsp)           
+                discount.save()
+            # target_hospitaldoctor
+            for target_hospitaldoctor in target_hospitaldoctor_list:
+                hspdct = get_object_or_404(HospitalDoctors,id=target_hospitaldoctor)
+                for campaign in all_campaign:
+                    if campaign.target_hospitaldoctor == hspdct:
+                        messages.add_message(request,messages.ERROR, "Duplicate entry for  discount rate ")
+                        return HttpResponseRedirect(reverse("admin_discount"))
+                discount = Campaign(discount_rate = discount_rate,target_hospitaldoctor=hspdct)           
+                discount.save()
+            for target_lab in target_lab_list:
+                lb = get_object_or_404(Labs,id=target_lab)
+                for campaign in all_campaign:
+                    if campaign.target_lab == lb:
+                        messages.add_message(request,messages.ERROR, "Duplicate entry for  discount rate ")
+                        return HttpResponseRedirect(reverse("admin_discount"))
+                discount = Campaign(discount_rate = discount_rate,target_lab=lb)           
+                discount.save()
+            for target_pharmacy in target_pharmacy_list:
+                ph = get_object_or_404(Pharmacy,id=target_pharmacy)
+                for campaign in all_campaign:
+                    if campaign.target_pharmacy == ph:
+                        messages.add_message(request,messages.ERROR, "Duplicate entry for  discount rate ")
+                        return HttpResponseRedirect(reverse("admin_discount"))
+                discount = Campaign(discount_rate = discount_rate,target_pharmacy=ph)           
+                discount.save()
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,e)
+        messages.add_message(request,messages.SUCCESS,"Succesfully Added")
+        return HttpResponseRedirect(reverse("admin_discount")) 
+
+def DeleteDiscountView(request,id):
+    disease = get_object_or_404(Campaign,id=id)
+    disease.delete()
+    messages.add_message(request,messages.SUCCESS,"Succesfully deleted")
+    return HttpResponseRedirect(reverse("admin_discount")) 
+ 
+

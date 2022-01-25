@@ -1,0 +1,224 @@
+{% extends './blank-page.html' %}
+{% load static %}
+{% block title %} :: Relief Pro :: Discount and Campaign List{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block content %}
+ 
+<!-- Body: Body -->
+<div class="col-md-7 col-lg-8 col-xl-9">
+        <div class="row align-items-center">
+            <div class="border-0 mb-4">
+                <div
+                    class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                    <h3 class="fw-bold mb-0">Campaign List</h3>
+                    <div class="col-auto d-flex w-sm-100">
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100" data-bs-toggle="modal"
+                            data-bs-target="#depadd">Create Campaign</button>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- Row end  -->
+        <div class="row clearfix g-3">
+            <div class="col-sm-12">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Discount</th>
+                                    <th>Apply to</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for discount in discounts %}
+                                <tr>
+                                    <td>
+                                        <span class="fw-bold">{{forloop.counter}}</span>
+                                    </td>
+                                    <td>
+                                        <span class=" ms-1">{{discount.discount_rate}} %</span>
+                                        {% comment %} <span class="fw-bold ms-1">{{discount.discount_amount}}</span> {% endcomment %}
+                                    </td>
+                                    <td>
+                                        {% if discount.target_specialist %}
+                                        <span class="fw-bold ms-1">Specialist: </span>{{discount.target_specialist}}
+                                        {% elif discount.target_hospital %}
+                                        <span class="fw-bold ms-1">Hospital: </span> {{discount.target_hospital}}
+                                        {% elif discount.target_hospitaldoctor %}
+                                        <span class="fw-bold ms-1">Doctor: </span> {{discount.target_hospitaldoctor}}
+                                        {% elif discount.target_lab %}
+                                        <span class="fw-bold ms-1">Lab: </span>{{discount.target_lab}}
+                                        {% elif discount.target_pharmacy %}
+                                        <span class="fw-bold ms-1">Pharma: </span>{{discount.target_pharmacy}}
+                                       
+                                        {% endif %}
+                                    </td>
+                                    <td class=" dt-body-right">
+                                        <div class="btn-group" role="group" aria-label="Basic outlined example">                                           
+                                            <button type="button" class="btn btn-outline-secondary deleterow1"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#delete_specialities_details{{discount.id}}"><i
+                                                    class="fas fa-trash-alt text-danger"></i></button>
+                                        </div>
+                                    </td><!-- /btn-group -->
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div><!-- Row End -->
+    </div>
+
+
+{% endblock content %}
+{% block modal_fade %}
+
+<!-- Add Department-->
+<div class="modal fade" id="depadd" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title  fw-bold" id="depaddLabel"> Create Campaign</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="deadline-form">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-12">
+                                <label for="depone" class="form-label">Discount Rate *</label>
+                                <input type="text" class="form-control" id="discount_rate" name="discount_rate" maxlength="50" required>
+                               
+                            </div>                           
+                            {% comment %} <div class="col-sm-12">
+                                <label for="deptwo" class="form-label">Apply To *</label>
+                                <select class="select form-control select2-hidden-accessible" id="apply_to" name="apply_to" required>
+                                    <option>Select Dscount Type</option>
+                                    <option value="Booking">Booking</option>
+                                    <option value="Hospitals">Hospitals</option>
+                                    <option value="HospitalDoctors">Doctors</option>
+                                    <option value="Labs">Labs</option>
+                                    <option value="Pharmacy">Pharmacy</option>
+                                    <option value="Specialist">Specialist</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-12">
+                            <strong> <label for="deptwo1" class="form-label">Specialist</label></strong>
+                                {% for specialis in specialist %}<br>
+                                <input type="checkbox"  name="target_specialist []" value="{{specialis.id}}" >
+                                <label for="disease"> {{specialis.specialist_name}}</label><br>
+                                {% endfor %}<br>
+                            </div> {% endcomment %}
+                            <div class="col-sm-12">
+                            <strong> <label for="deptwo2" class="form-label">Hospitals</label></strong>
+                                {% for hospital in hospitals %}<br>
+                                <input type="checkbox"  name="target_hospital []" value="{{hospital.id}}" >
+                                <label for="disease"> {{hospital.hopital_name}}</label><br>
+                                {% endfor %}<br>
+                            </div>
+                            <div class="col-sm-12">
+                                <strong> <label for="deptwo3" class="form-label">Doctors</label> </strong>
+                                    {% for hospital in hospitaldoctors %}<br>
+                                    
+                                    <input type="checkbox"  name="target_hospitaldoctor []" value="{{hospital.id}}">
+                                    <label for="disease">Dr. {{hospital.fisrt_name}}  {{hospital.last_name}}</label><br>
+                                    {% endfor %}<br>
+                                
+                            </div>
+                            <div class="col-sm-12">
+                                <strong><label for="deptwo4" class="form-label">Lab List</label> </strong>
+                                {% for lab in labs %}<br>
+                               
+                                <input type="checkbox"  name="target_lab []" value="{{lab.id}}" >
+                                <label for="disease">Dr. {{lab.lab_name}}</label><br>
+                                {% endfor %}<br>
+                            
+                            </div>
+                            <div class="col-sm-12">
+                                <strong><label for="deptwo4" class="form-label">Pharamcy List</label></strong>
+                                {% for pharma in pharmacy %}<br>
+                               
+                                <input type="checkbox"  name="target_pharmacy []" value="{{pharma.id}}" >
+                                <label for="disease">Dr. {{pharma.pharmacy_name}}</label><br>
+                                {% endfor %}<br>
+                            
+                            </div>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Edit Department-->
+
+
+<!--Delete Specialist-->
+{% for discount in discounts %}
+<div class="modal fade" id="delete_specialities_details{{discount.id}}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title  fw-bold" id="depeditLabel"> Discount Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="deadline-form">
+                    <h4 class="modal-title">Delete</h4>
+                    <p class="mb-4">Are you sure want to delete?</p>
+                    <form method="post" action="{% url 'detele_discount' discount.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">YES </button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock modal_fade %}
+
+{% block custom_js %}
+<script>
+    // project data table
+    $(document).ready(function () {
+        $('#myProjectTable')
+            .addClass('nowrap')
+            .dataTable({
+                responsive: true,
+                columnDefs: [{
+                    targets: [-1, -3],
+                    className: 'dt-body-right'
+                }]
+            });
+        $('.deleterow').on('click', function () {
+            var tablename = $(this).closest('table').DataTable();
+            tablename
+                .row($(this)
+                    .parents('tr'))
+                .remove()
+                .draw();
+
+        });
+    });
+</script>
+<script>
+  
+</script>
+{% endblock custom_js %}
