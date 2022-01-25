@@ -262,7 +262,8 @@ class LabsViewSerializer(serializers.ModelSerializer):
 	
 	def to_representation(self, instance):
 		response = super().to_representation(instance)
-		response['servicer_charge'] = ServicesSerializer(instance.admin.serviceansdcharge).data
+		sr = ServiceAndCharges.objects.filter(user=instance.admin)
+		response['servicer_charge'] = ServicesSerializer(sr,many=True).data
 		return response
 """
 Pharmacy serializers
