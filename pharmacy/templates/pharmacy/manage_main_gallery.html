@@ -97,7 +97,7 @@ $('#mediaform').submit(function(event){
 
     var formData = {
         'media_type': $('input[name=media_type[]').val(),
-        'get_media_content_url[]': $('input[name=get_media_content_url[]]').val(),
+        'get_media_content_url[]': $('input[name=get_media_content_url[]').val(),
         'media_desc': $('input[name=media_desc]').val(),
         'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
     };

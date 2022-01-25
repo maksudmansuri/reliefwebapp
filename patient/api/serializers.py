@@ -170,7 +170,7 @@ class HospitalDoctorsViewSerializer(serializers.ModelSerializer):
 			
 """"hospital deatl end"""	
 class DoctorDetailSerialzer(serializers.ModelSerializer):
-	
+
 	class Meta:
 		model = HospitalDoctors
 		fields = "__all__"	
@@ -260,6 +260,10 @@ class LabsViewSerializer(serializers.ModelSerializer):
 		model = Labs
 		fields = ['lab_name','about','address','pin_code','city','state','country','landline','profile_pic','establishment_year','lab_media','dicount_lab','HomeVisitCharges']
 	
+	def to_representation(self, instance):
+		response = super().to_representation(instance)
+		response['servicer_charge'] = ServicesSerializer(instance.admin.serviceansdcharge).data
+		return response
 """
 Pharmacy serializers
 """
