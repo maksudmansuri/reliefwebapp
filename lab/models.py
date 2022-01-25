@@ -29,7 +29,7 @@ class Medias(models.Model):
     pharmacy                    =           models.ForeignKey(Pharmacy,related_name="pharma_media", on_delete=models.CASCADE,blank=True,null=True,default="")
     media_type              =           models.CharField(max_length=255,blank=True,null=True,default="")
     media_type_choice       =           ((1,"Image"),(2,"Video"))
-    media_content           =           models.ImageField(choices=media_type_choice,blank=True,null=True,default="")
+    media_content           =           models.ImageField(blank=True,null=True,default="")
     media_desc              =           models.CharField(max_length=255,blank=True,null=True,default="")
     is_active               =           models.BooleanField(default=False)     
     is_default              =           models.BooleanField(default=False)     

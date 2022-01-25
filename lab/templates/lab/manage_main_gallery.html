@@ -72,7 +72,7 @@
                 </div>
                 <div class="col-md-12">
                     <label for="formFileMultiple" class="form-label"> File Upload</label>
-                    <input class="form-control" type="file" id="get_media_content_url" name="get_media_content_url[]" multiple="" required="">
+                    <input class="form-control" type="file" id="media_content" name="media_content[]" multiple="" required="">
                 </div>
                 <div class="col-md-12">
                     <label for="formFileMultiple" class="form-label">Description</label>
@@ -97,7 +97,7 @@ $('#mediaform').submit(function(event){
 
     var formData = {
         'media_type': $('input[name=media_type[]').val(),
-        'get_media_content_url[]': $('input[name=get_media_content_url[]]').val(),
+        'media_content[]': $('input[name=media_content[]').val(),
         'media_desc': $('input[name=media_desc]').val(),
         'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
     };

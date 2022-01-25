@@ -447,7 +447,7 @@ class ManageMainGalleryView(SuccessMessageMixin,CreateView):
         media_content_list = request.FILES.getlist('media_content[]')        
         media_desc_list = request.POST.get('media_desc') 
         user= get_object_or_404(Labs,admin=request.user)
-        
+        print(media_type_list,media_content_list,media_desc_list,user)
         i=0
         for media_content in media_content_list:
             hospital_media = Medias(lab=user,media_type=media_type_list,media_desc=media_desc_list,media_content=media_content)

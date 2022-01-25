@@ -448,7 +448,7 @@ class ManageMainGalleryView(SuccessMessageMixin,CreateView):
 
     def post(self, request, *args, **kwargs):
         media_type_list = request.POST.get('media_type')        
-        media_content_list = request.FILES.getlist('media_content[]')        
+        media_content_list = request.FILES.getlist('get_media_content_url[]')        
         media_desc_list = request.POST.get('media_desc') 
         user= get_object_or_404(Pharmacy,admin=request.user)
         
