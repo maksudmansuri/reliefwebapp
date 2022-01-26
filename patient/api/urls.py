@@ -6,6 +6,7 @@ from . import views
 
 router = routers.SimpleRouter()
 router.register(r'specialist', views.specialistViewSets)
+router.register(r'homescreen', views.HomeScreenView)
 router.register(r'hospitalslist', views.ApiHospitalListAndDetailsView)
 router.register(r'doctors', views.HospitalDoctorDetailsView)
 router.register(r'onlinedoctors', views.APIOnlineDoctorListView)
@@ -19,7 +20,7 @@ urlpatterns = [
     path('', include((router.urls, 'relief.patient.api'))),
 
     #New API By page
-    path('homescreen/', views.HomeScreenView.as_view(),name='homescreen'),
+    # path('homescreen/', views.HomeScreenView.as_view(),name='homescreen'),
 
     #Hospital's APIs     
     # re_path('hospitalslist/', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalslist'),

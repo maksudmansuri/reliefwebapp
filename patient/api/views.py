@@ -19,7 +19,7 @@ from patient.models import OrderBooking, Orders
 from .serializers import AppointmentSerializer, HomeScreenSerializer, HospitalDoctorHomeScreenSerializer, HospitalDoctorSerialzer, HospitalDoctorsViewSerializer, HospitalHomeScreenSerializer,LabHomeScreenSerializer, LabsViewSerializer, PharmaHomeScreenSerializer, PharmacysViewSerializer, RatingListSerializer
 
 class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 2
+    page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
@@ -30,33 +30,49 @@ UPDATE_SUCCESS = 'updated'
 CREATE_SUCCESS = 'created'
 """NEw APIS by pages"""
 
-class HomeScreenView(ListAPIView):
+class HomeScreenView(viewsets.ModelViewSet):
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = (IsAuthenticated,)
 	queryset = Specailist.objects.all().order_by('updated_at')
 	pagination_class = StandardResultsSetPagination
 	
-	def get(self, request, format=None, **kwargs):
-		spc = Specailist.objects.all().order_by('updated_at')[:10]
-		specialistserializer = HomeScreenSerializer(spc,many=True)
-		hos = Hospitals.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
-		hospitals = HospitalHomeScreenSerializer(hos,many=True)
-		doc = HospitalDoctors.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
-		doctors = HospitalDoctorHomeScreenSerializer(doc,many=True)
-		lab = Labs.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
-		labs = LabHomeScreenSerializer(lab,many=True)
-		pharma = Pharmacy.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
-		pharmacy = PharmaHomeScreenSerializer(pharma,many=True)
-
-		return Response({
+	def get_serializer_class(self):
+		if self.action == 'list':
+			spc = Specailist.objects.all().order_by('updated_at')
+			specialistserializer = HomeScreenSerializer(spc,many=True)
+			hos = Hospitals.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
+			hospitals = HospitalHomeScreenSerializer(hos,many=True)
+			return Response({
 			"status": "success",
-			'specialists': specialistserializer.data,
-			'hospitals': hospitals.data,
-			'doctors': doctors.data,
-			'labs': labs.data,
-			'Pharmas': pharmacy.data,
+			'specialists': specialistserializer,
+			'hospitals': hospitals,		
 			
 		})
+		if self.action == 'retrieve':
+			serializer = HomeScreenSerializer
+			return serializer
+	
+	# def get(self, request, format=None, **kwargs):
+	# 	spc = Specailist.objects.all().order_by('updated_at')
+	# 	specialistserializer = HomeScreenSerializer(spc,many=True)
+	# 	hos = Hospitals.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
+	# 	hospitals = HospitalHomeScreenSerializer(hos,many=True)
+		# doc = HospitalDoctors.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
+		# doctors = HospitalDoctorHomeScreenSerializer(doc,many=True)
+		# lab = Labs.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
+		# labs = LabHomeScreenSerializer(lab,many=True)
+		# pharma = Pharmacy.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
+		# pharmacy = PharmaHomeScreenSerializer(pharma,many=True)
+
+		# return Response({
+		# 	"status": "success",
+		# 	'specialists': specialistserializer.data,
+		# 	'hospitals': hospitals.data,
+		# 	# 'doctors': doctors.data,
+		# 	# 'labs': labs.data,
+		# 	# 'Pharmas': pharmacy.data,
+			
+		# })
 
 class specialistViewSets(viewsets.ModelViewSet):
 	authentication_classes = (TokenAuthentication,)

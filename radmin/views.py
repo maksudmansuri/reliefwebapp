@@ -55,13 +55,15 @@ class AddHospitalSpecialistView(SuccessMessageMixin,CreateView):
         specialist_name=request.POST.get("specialist_name")
         specialist_icon=request.FILES.get("specialist_icon")
         hover_icon=request.FILES.get("hover_icon")
+        app_icon=request.FILES.get("app_icon")
         try:
-            print(specialist_icon,hover_icon)
             specailist = Specailist.objects.create(specialist_name=specialist_name)
             if specialist_icon:
                 specailist.specialist_icon=specialist_icon
             if hover_icon:
                 specailist.hover_icon=hover_icon           
+            if app_icon:
+                specailist.app_icon=app_icon           
             specailist.save()
         except Exception as e:
             messages.add_message(request,messages.ERROR,e)
@@ -72,7 +74,7 @@ def updateHospitalSpecialist(request,id):
     specialist_name=request.POST.get("specialist_name")
     specialist_icon=request.FILES.get("specialist_icon")
     hover_icon=request.FILES.get("hover_icon")
-    print(specialist_icon,specialist_name)
+    app_icon=request.FILES.get("app_icon")
     
     try: 
         specailist = get_object_or_404(Specailist,id=id)
@@ -82,6 +84,8 @@ def updateHospitalSpecialist(request,id):
             specailist.specialist_icon=specialist_icon
         if hover_icon:
             specailist.hover_icon=hover_icon
+        if app_icon:
+            specailist.app_icon=app_icon   
         specailist.save()
     except Exception as e:
         messages.add_message(request,messages.ERROR,e)

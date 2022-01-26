@@ -22,7 +22,7 @@ import uuid
 
 class ForSome(models.Model):
     id                  =models.AutoField(primary_key=True)
-    profile_pic         =models.ImageField(upload_to="user/profile_pic",max_length=500,null=True,default="")
+    profile_pic         =models.ImageField(max_length=500,null=True,default="")
     patient             =models.ForeignKey(Patients,on_delete=models.CASCADE)
     relationship        =models.CharField(max_length=50,blank=True,null=True,default="")
     name_title          =models.CharField(max_length=50,blank=True,null=True,default="")
@@ -36,7 +36,7 @@ class ForSome(models.Model):
     pin_code            =models.CharField(max_length=250,blank=True,null=True,default="")
     age                 =models.IntegerField(blank=True,null=True)
     phone               =models.CharField(max_length=250,blank=True,null=True,default="")
-    ID_proof            =models.ImageField(upload_to="someone/ID/images",blank=True,null=True,default="")
+    ID_proof            =models.ImageField(blank=True,null=True,default="")
     gender              =models.CharField(max_length=255,null=True,default="")
     add_notes           =models.CharField(max_length=5000,null=True,default="")
     bloodgroup          =models.CharField(max_length=255,null=True,default="")
@@ -69,7 +69,7 @@ class MediacalRecords(models.Model):
     patient                 =           models.ForeignKey(Patients,on_delete=models.CASCADE)
     for_whom                =           models.ForeignKey(ForSome, on_delete=models.CASCADE,null=True,blank=True)
     hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE,null=True,blank=True)
-    prescription            =           models.ImageField(upload_to=None, max_length=256,default="",blank=True,null=True)
+    prescription            =           models.ImageField(max_length=256,default="",blank=True,null=True)
     symptoms                =           models.CharField(default="",blank=True,null=True,max_length=500)
     is_active               =           models.BooleanField(default=False)
     AppoinmentDate          =           models.DateTimeField(default=datetime.datetime(1970,1,1))
@@ -145,10 +145,10 @@ class OrderBooking(models.Model):
     report                  =           models.ImageField(max_length=100,blank=True,null=True,default="")#lab
     services                =           models.ForeignKey(ServiceAndCharges, on_delete=models.CASCADE,null=True, blank=True)#lab
      
-    invoice                 =           models.ImageField(upload_to="booking/invoices",max_length=100,blank=True,null=True,default="")#for all hos,lab,pha
+    invoice                 =           models.ImageField(max_length=100,blank=True,null=True,default="")#for all hos,lab,pha
 
-    prescription            =           models.ImageField(upload_to="booking/prescription", max_length=256,default="",blank=True,null=True)#pharma
-    store_invoice           =           models.ImageField(upload_to="booking/store_invoice", max_length=256,default="",blank=True,null=True)#pharma
+    prescription            =           models.ImageField( max_length=256,default="",blank=True,null=True)#pharma
+    store_invoice           =           models.ImageField( max_length=256,default="",blank=True,null=True)#pharma
     amount                  =           models.FloatField(default=0,blank=True,null=True)
     is_amount_paid          =           models.BooleanField(default=False)#pharmacy
     store_invoice_uploaded     =           models.BooleanField(default=False)#pharmacy
@@ -444,8 +444,8 @@ def slot_status_handler(sender,instance,created, **kwargs):
 class PicturesForMedicine(models.Model):
     id                      =           models.AutoField(primary_key=True)
     patient                 =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    prescription            =           models.ImageField(upload_to=None, max_length=256,default="",blank=True,null=True)
-    store_invoice           =           models.ImageField(upload_to=None, max_length=256,default="",blank=True,null=True)
+    prescription            =           models.ImageField(max_length=256,default="",blank=True,null=True)
+    store_invoice           =           models.ImageField( max_length=256,default="",blank=True,null=True)
     pharmacy                =           models.ForeignKey(Pharmacy, on_delete=models.CASCADE)
     amount                  =           models.FloatField(default=0,blank=True,null=True)
     amount_paid             =           models.BooleanField(default=False)
@@ -569,7 +569,7 @@ class patientFile(models.Model):
     patient                 =           models.ForeignKey(Patients, on_delete=models.CASCADE,null=True) #delete after not in use
     hospitaldoctors         =           models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE,null=True) #delete after not in use
     amount_paid             =           models.FloatField(default=0) #delete after not in use
-    file                    =           models.ImageField(upload_to="patients/documents/file",blank=True,null=True,default="")
+    file                    =           models.ImageField(blank=True,null=True,default="")
     # file_date               =           models.DateField(blank=True,null=True)
     # file_time               =           models.TimeField(blank=True,null=True)
     file_purpose            =           models.CharField(default="",blank=True,null=True,max_length=500)#delete after not in use
