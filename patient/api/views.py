@@ -38,16 +38,11 @@ class HomeScreenView(viewsets.ModelViewSet):
 	
 	def get_serializer_class(self):
 		if self.action == 'list':
-			spc = Specailist.objects.all().order_by('updated_at')
+			spc = Specailist.objects.all().order_by('updated_at')[:10]
 			specialistserializer = HomeScreenSerializer(spc,many=True)
-			hos = Hospitals.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
+			hos = Hospitals.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')
 			hospitals = HospitalHomeScreenSerializer(hos,many=True)
-			return Response({
-			"status": "success",
-			'specialists': specialistserializer,
-			'hospitals': hospitals,		
-			
-		})
+			return specialistserializer,hospitals		
 		if self.action == 'retrieve':
 			serializer = HomeScreenSerializer
 			return serializer
