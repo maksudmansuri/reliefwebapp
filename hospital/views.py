@@ -419,103 +419,103 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
         #     return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id})) 
 
         # print("we are indside a add hspitals")
-        try:
+        # try:
             # opd = OPDTime.objects.get(user=request.user)
             # opd.delete()
             # opdtime= OPDTime(user=request.user,opening_time=opening_time,close_time=close_time,break_start_time=break_start_time,break_end_time=break_end_time,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,is_active=True)
             # opdtime.save()
-            hospital = Hospitals.objects.get(admin=request.user.id)
-            hospital.hopital_name=hopital_name
-            hospital.about=about
-            hospital.registration_number=registration_number
-            hospital.address1=address1
-            hospital.address2=address2
-            hospital.city=city
-            hospital.pin_code=pin_code
-            hospital.state=state
-            hospital.country=country
-            hospital.landline=landline
-            if specialist:
-                specialist1 = get_object_or_404(Specailist,id=specialist)
-                hospital.specialist=specialist1
+        hospital = Hospitals.objects.get(admin=request.user.id)
+        hospital.hopital_name=hopital_name
+        hospital.about=about
+        hospital.registration_number=registration_number
+        hospital.address1=address1
+        hospital.address2=address2
+        hospital.city=city
+        hospital.pin_code=pin_code
+        hospital.state=state
+        hospital.country=country
+        hospital.landline=landline
+        if specialist:
+            specialist1 = get_object_or_404(Specailist,id=specialist)
+            hospital.specialist=specialist1
 
-            if profile_pic:
-                hospital.profile_pic=profile_pic
-                hospital.admin.profile_pic=profile_pic
+        if profile_pic:
+            hospital.profile_pic=profile_pic
+            hospital.admin.profile_pic=profile_pic
 
-            print(registration_proof)
-            if registration_proof:
-               hospital.registration_proof=registration_proof
-                
-            hospital.establishment_year=establishment_year
-            hospital.alternate_mobile=alternate_mobile
-            hospital.website=website
-            hospital.linkedin=linkedin
-            hospital.facebook=facebook
-            hospital.instagram=instagram
-            hospital.twitter=twitter
-            hospital.is_appiled=True
-            hospital.is_verified=False
-            hospital.firm=firm
-            hospital.save()
-            #edit customUSer
-            hospital.admin.first_name=first_name
-            hospital.admin.last_name=last_name
-            hospital.admin.name_title=name_title       
+        print(registration_proof)
+        if registration_proof:
+            hospital.registration_proof=registration_proof
             
-            hospital.admin.save()
-            
-            k=0
-            for insurance_name in insurance_name_list:
-                insurance_id = insurances_id[k]
-                if insurance_id == "blank" and insurance_name != "" : 
-                    insurance =Insurances(hospital=hospital,insurance_type=insurance_type_list[k],insurance_name=insurance_name)
-                    insurance.is_active =True
+        hospital.establishment_year=establishment_year
+        hospital.alternate_mobile=alternate_mobile
+        hospital.website=website
+        hospital.linkedin=linkedin
+        hospital.facebook=facebook
+        hospital.instagram=instagram
+        hospital.twitter=twitter
+        hospital.is_appiled=True
+        hospital.is_verified=False
+        hospital.firm=firm
+        hospital.save()
+        #edit customUSer
+        hospital.admin.first_name=first_name
+        hospital.admin.last_name=last_name
+        hospital.admin.name_title=name_title       
+        print(profile_pic)
+        hospital.admin.save()
+        
+        k=0
+        for insurance_name in insurance_name_list:
+            insurance_id = insurances_id[k]
+            if insurance_id == "blank" and insurance_name != "" : 
+                insurance =Insurances(hospital=hospital,insurance_type=insurance_type_list[k],insurance_name=insurance_name)
+                insurance.is_active =True
+                insurance.save()
+            else:
+                if insurance_name != "":
+                    insurance = Insurances.objects.get(id=insurance_id)
+                    insurance.insurance_type = insurance_type_list[k]
+                    insurance.insurance_name = insurance_name
                     insurance.save()
-                else:
-                    if insurance_name != "":
-                        insurance = Insurances.objects.get(id=insurance_id)
-                        insurance.insurance_type = insurance_type_list[k]
-                        insurance.insurance_name = insurance_name
-                        insurance.save()
 
-                k=k+1
-            print("insurance saved") 
+            k=k+1
+        print("insurance saved") 
 
-            j=0
-            hos_mobiles = HospitalPhones.objects.filter(is_active=True) 
-            for hospital_mobile in hospital_mobile_list:
-                print(hospital_mobile_list)
-                contact_id = contacts_id[j]
-                if contact_id == "blank" and (hospital_mobile != "" or hospital_email_list[j] != ""):
-                    if hos_mobiles:
-                        for hos_mobile in hos_mobiles:
-                            if hospital_mobile == hos_mobile.hospital_mobile or hospital_email_list[j] == hos_mobile.hospital_email :
-                                messages.add_message(request,messages.ERROR," Mobile number or email id is already exist")                    
-                    print("totol blank hai for hos_mobile is newly created !")
-                    hospitalphone =HospitalPhones(hospital=hospital,hospital_mobile=hospital_mobile,hospital_email=hospital_email_list[j])
-                    hospitalphone.is_active =True
+        j=0
+        hos_mobiles = HospitalPhones.objects.filter(is_active=True) 
+        for hospital_mobile in hospital_mobile_list:
+            print(hospital_mobile_list)
+            contact_id = contacts_id[j]
+            if contact_id == "blank" and (hospital_mobile != "" or hospital_email_list[j] != ""):
+                if hos_mobiles:
+                    for hos_mobile in hos_mobiles:
+                        if hospital_mobile == hos_mobile.hospital_mobile or hospital_email_list[j] == hos_mobile.hospital_email :
+                            messages.add_message(request,messages.ERROR," Mobile number or email id is already exist")                    
+                print("totol blank hai for hos_mobile is newly created !")
+                hospitalphone =HospitalPhones(hospital=hospital,hospital_mobile=hospital_mobile,hospital_email=hospital_email_list[j])
+                hospitalphone.is_active =True
+                hospitalphone.save()
+            else:
+                if hospital_mobile != "" or hospital_email_list[j] != "" :
+                    print("update phone number and wemail id !")
+                    hospitalphone = HospitalPhones.objects.get(id=contact_id)
+                    hospitalphone.hospital_mobile = hospital_mobile
+                    hospitalphone.hospital_email = hospital_email_list[j]
                     hospitalphone.save()
-                else:
-                    if hospital_mobile != "" or hospital_email_list[j] != "" :
-                        print("update phone number and wemail id !")
-                        hospitalphone = HospitalPhones.objects.get(id=contact_id)
-                        hospitalphone.hospital_mobile = hospital_mobile
-                        hospitalphone.hospital_email = hospital_email_list[j]
-                        hospitalphone.save()
-                j=j+1
+            j=j+1
 
-            print("phone saved")
+        print("phone saved")
 
-                
             
-            print("All data saved")
+        
+        print("All data saved")
 
            
             # except:
             #     return render(request,"radmin/hospital_add.html") 
-        except Exception as e:
-            messages.add_message(request,messages.ERROR,e)
+        # except Exception as e:
+        #     messages.add_message(request,messages.ERROR,e)
 
         messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
         return HttpResponseRedirect(reverse("hospital_update"))

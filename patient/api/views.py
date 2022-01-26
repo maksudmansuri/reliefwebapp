@@ -1,7 +1,8 @@
 
+
 from django.contrib.auth import models
 from django.shortcuts import get_object_or_404
-from rest_framework import status,viewsets
+from rest_framework import status,viewsets,mixins
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
@@ -19,7 +20,7 @@ from patient.models import OrderBooking, Orders
 from .serializers import AppointmentSerializer, HomeScreenSerializer, HospitalDoctorHomeScreenSerializer, HospitalDoctorSerialzer, HospitalDoctorsViewSerializer, HospitalHomeScreenSerializer,LabHomeScreenSerializer, LabsViewSerializer, PharmaHomeScreenSerializer, PharmacysViewSerializer, RatingListSerializer
 
 class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 1
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
@@ -30,45 +31,36 @@ UPDATE_SUCCESS = 'updated'
 CREATE_SUCCESS = 'created'
 """NEw APIS by pages"""
 
-class HomeScreenView(viewsets.ModelViewSet):
+from drf_multiple_model.views import ObjectMultipleModelAPIView
+from drf_multiple_model.viewsets import ObjectMultipleModelAPIViewSet
+from drf_multiple_model.pagination import MultipleModelLimitOffsetPagination
+class LimitPagination(MultipleModelLimitOffsetPagination):
+    default_limit = 10
+
+class HomeScreenView(ObjectMultipleModelAPIViewSet):
+
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = (IsAuthenticated,)
-	queryset = Specailist.objects.all().order_by('updated_at')
-	pagination_class = StandardResultsSetPagination
+	pagination_class = LimitPagination
+	queryset = Specailist.objects.all().order_by('updated_at')[:10]
+	querylist = [
+		{'queryset': queryset, 'serializer_class': HomeScreenSerializer},
+		{'queryset': Hospitals.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at'), 'serializer_class': HospitalHomeScreenSerializer},
+		
+	]
 	
-	def get_serializer_class(self):
-		if self.action == 'list':
-			spc = Specailist.objects.all().order_by('updated_at')[:10]
-			specialistserializer = HomeScreenSerializer(spc,many=True)
-			hos = Hospitals.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')
-			hospitals = HospitalHomeScreenSerializer(hos,many=True)
-			return specialistserializer,hospitals		
-		if self.action == 'retrieve':
-			serializer = HomeScreenSerializer
-			return serializer
+class DoctorScreenView(ObjectMultipleModelAPIViewSet):
+
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated,)
+	pagination_class = LimitPagination
+	queryset = Specailist.objects.all().order_by('updated_at')[:10]
+	querylist = [
+		{'queryset': queryset, 'serializer_class': HomeScreenSerializer},
+		{'queryset': Hospitals.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at'), 'serializer_class': HospitalHomeScreenSerializer},
+		
+	]
 	
-	# def get(self, request, format=None, **kwargs):
-	# 	spc = Specailist.objects.all().order_by('updated_at')
-	# 	specialistserializer = HomeScreenSerializer(spc,many=True)
-	# 	hos = Hospitals.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
-	# 	hospitals = HospitalHomeScreenSerializer(hos,many=True)
-		# doc = HospitalDoctors.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
-		# doctors = HospitalDoctorHomeScreenSerializer(doc,many=True)
-		# lab = Labs.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
-		# labs = LabHomeScreenSerializer(lab,many=True)
-		# pharma = Pharmacy.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at')[:10]
-		# pharmacy = PharmaHomeScreenSerializer(pharma,many=True)
-
-		# return Response({
-		# 	"status": "success",
-		# 	'specialists': specialistserializer.data,
-		# 	'hospitals': hospitals.data,
-		# 	# 'doctors': doctors.data,
-		# 	# 'labs': labs.data,
-		# 	# 'Pharmas': pharmacy.data,
-			
-		# })
-
 class specialistViewSets(viewsets.ModelViewSet):
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = (IsAuthenticated,)

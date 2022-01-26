@@ -87,6 +87,7 @@ class CustomUser(AbstractBaseUser):
     otp_session_id  = models.CharField(max_length=120, null=True, default = "")
     otp              = models.CharField(max_length=120, null=True, default = "")
     profile_pic         =models.ImageField(max_length=500,null=True,default="")
+    profile_pic         =models.ImageField(max_length=500,null=True,default="")
     # force_to_psswd_chngd = models.BooleanField(blank=False, default=True) 
     USERNAME_FIELD = 'email' 
 

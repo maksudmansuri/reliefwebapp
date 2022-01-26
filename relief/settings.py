@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'cart',
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_multiple_model',
     'channels',
     'chat',
     'mathfilters',
