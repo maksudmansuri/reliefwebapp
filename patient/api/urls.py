@@ -6,8 +6,8 @@ from . import views
 
 router = routers.SimpleRouter()
 router.register(r'specialist', views.specialistViewSets)
-router.register(r'homescreen', views.HomeScreenView)
-router.register(r'doctorscreen', views.DoctorScreenView)
+# router.register(r'homescreen', views.HomeScreenView)
+# router.register(r'doctorspec', views.DoctorScreenView)
 router.register(r'hospitalslist', views.ApiHospitalListAndDetailsView)
 router.register(r'doctors', views.HospitalDoctorDetailsView)
 router.register(r'onlinedoctors', views.APIOnlineDoctorListView)

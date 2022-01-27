@@ -17,7 +17,7 @@ from radmin.models import Disease, HospitalDisease
 class HomeScreenSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Specailist
-		fields = ['pk','specialist_name','hover_icon','specialist_icon']
+		fields = ['pk','specialist_name','app_icon']
 
 class InsideScreenSerializer(serializers.ModelSerializer):
 	class Meta:

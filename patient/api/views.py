@@ -1,12 +1,12 @@
 
 
-from django.contrib.auth import models
+
 from django.shortcuts import get_object_or_404
 from rest_framework import status,viewsets,mixins
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.generics import ListAPIView
+
 from rest_framework.response import Response
-from rest_framework.views import APIView
+
 from django_filters.rest_framework import DjangoFilterBackend
 
 from accounts.models import HospitalDoctors, Hospitals, Labs, Pharmacy, Specailist
@@ -30,36 +30,25 @@ DELETE_SUCCESS = 'deleted'
 UPDATE_SUCCESS = 'updated'
 CREATE_SUCCESS = 'created'
 """NEw APIS by pages"""
-
+from rest_framework.decorators import action
 from drf_multiple_model.views import ObjectMultipleModelAPIView
 from drf_multiple_model.viewsets import ObjectMultipleModelAPIViewSet
 from drf_multiple_model.pagination import MultipleModelLimitOffsetPagination
 class LimitPagination(MultipleModelLimitOffsetPagination):
     default_limit = 10
 
-class HomeScreenView(ObjectMultipleModelAPIViewSet):
+# class HomeScreenView(ObjectMultipleModelAPIViewSet):
 
-	authentication_classes = (TokenAuthentication,)
-	permission_classes = (IsAuthenticated,)
-	pagination_class = LimitPagination
-	queryset = Specailist.objects.all().order_by('updated_at')[:10]
-	querylist = [
-		{'queryset': queryset, 'serializer_class': HomeScreenSerializer},
-		{'queryset': Hospitals.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at'), 'serializer_class': HospitalHomeScreenSerializer},
+# 	authentication_classes = (TokenAuthentication,)
+# 	permission_classes = (IsAuthenticated,)
+# 	pagination_class = LimitPagination
+# 	queryset = Specailist.objects.all().order_by('updated_at')[:10]
+# 	querylist = [
+# 		{'queryset': queryset, 'serializer_class': HomeScreenSerializer},
+# 		{'queryset': Hospitals.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at'), 'serializer_class': HospitalHomeScreenSerializer},
 		
-	]
-	
-class DoctorScreenView(ObjectMultipleModelAPIViewSet):
+# 	]
 
-	authentication_classes = (TokenAuthentication,)
-	permission_classes = (IsAuthenticated,)
-	pagination_class = LimitPagination
-	queryset = Specailist.objects.all().order_by('updated_at')[:10]
-	querylist = [
-		{'queryset': queryset, 'serializer_class': HomeScreenSerializer},
-		{'queryset': Hospitals.objects.filter(is_verified = True,admin__is_active = True).order_by('updated_at'), 'serializer_class': HospitalHomeScreenSerializer},
-		
-	]
 	
 class specialistViewSets(viewsets.ModelViewSet):
 	authentication_classes = (TokenAuthentication,)
@@ -70,8 +59,10 @@ class specialistViewSets(viewsets.ModelViewSet):
 
 class ApiHospitalListAndDetailsView(viewsets.ModelViewSet):
 	permission_classes = (IsAuthenticated,)
-	authentication_classes = (TokenAuthentication,)
+	authentication_classes = (TokenAuthentication,)	
 	queryset = Hospitals.objects.filter(is_verified = True,admin__is_active = True)
+	
+	
 	pagination_class = StandardResultsSetPagination
 	filter_backends = [SearchFilter,OrderingFilter]
 	filter_fields = (
@@ -79,6 +70,20 @@ class ApiHospitalListAndDetailsView(viewsets.ModelViewSet):
         'city',
     )
 	search_fields = ['hopital_name','specialist','city']
+
+	@action(methods=['get'],detail=False, url_path='spcdoct')
+	def recent_users(self, request,spid=None):
+		sp = get_object_or_404(Specailist,id=spid)
+		hspl = Hospitals.objects.filter(is_verified = True,admin__is_active = True,specialist = sp)
+
+		page = self.paginate_queryset(hspl)
+		if page is not None:
+			serializer = self.get_serializer(page, many=True)
+			return self.get_paginated_response(serializer.data)
+
+		serializer = self.get_serializer(hspl, many=True)
+		return Response(serializer.data)
+
 	def get_serializer_class(self):
 		if self.action == 'list':
 			serializer = HospitalHomeScreenSerializer
